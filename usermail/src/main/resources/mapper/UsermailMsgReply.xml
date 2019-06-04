@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyMapper">
+
+  <resultMap id="BaseResultMap" type="UsermailMsgReply">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="parent_msgid" property="parentMsgid" jdbcType="VARCHAR"/>
+    <result column="msgid" property="msgid" jdbcType="VARCHAR"/>
+    <result column="from" property="from" jdbcType="VARCHAR"/>
+    <result column="to" property="to" jdbcType="VARCHAR"/>
+    <result column="seq_no" property="seqNo" jdbcType="BIGINT"/>
+    <result column="msg" property="msg" jdbcType="VARCHAR"/>
+    <result column="status" property="status" jdbcType="INTEGER"/>
+    <result column="type" property="type" jdbcType="INTEGER"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    <result column="owner" property="owner" jdbcType="VARCHAR"/>
+    <result column="sessionid" property="sessionid" jdbcType="VARCHAR"/>
+    <result column="zip_msg" property="zipMsg" jdbcType="BLOB"/>
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    `id`,
+    `parent_msgid`,
+    `msgid`,
+    `from`,
+    `to`,
+    `seq_no`,
+    `msg`,
+    `status`,
+    `type`,
+    `create_time`,
+    `update_time`,
+    `owner`,
+    `sessionid`,
+    `zip_msg`
+  </sql>
+
+  <insert id="insert" parameterType="UsermailMsgReply">
+    insert into usermail_msg_reply (`id`, `parent_msgid`, `msgid`, `from`, `to`, `seq_no`, `status`, `type`, `owner`,
+                                    `sessionid`, `zip_msg`)
+    values (#{id,jdbcType=BIGINT}, #{parentMsgid,jdbcType=VARCHAR}, #{msgid,jdbcType=VARCHAR},
+            #{from,jdbcType=VARCHAR}, #{to,jdbcType=VARCHAR}, #{seqNo,jdbcType=BIGINT},
+            #{status,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{owner,jdbcType=VARCHAR},
+            #{sessionid,jdbcType=VARCHAR}, #{zipMsg,jdbcType=BLOB})
+  </insert>
+
+  <update id="revertUsermailReply" parameterType="UsermailMsgReply">
+    update usermail_msg_reply
+    set `status` = #{status}, `zip_msg` = null, `update_time` = CURRENT_TIMESTAMP()
+    <where>
+      `status`= 0
+      <if test="parentMsgid != null">
+        and `parent_msgid` = #{parentMsgid,jdbcType=VARCHAR}
+      </if>
+      <if test="msgid != null">
+        and `msgid` = #{msgid,jdbcType=VARCHAR}
+      </if>
+      <if test="owner != null">
+        and `owner` = #{owner,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </update>
+
+  <select id="getMsgReplys" parameterType="QueryMsgReplyDto" resultMap="BaseResultMap">
+    select *
+    from `usermail_msg_reply`
+    where `parent_msgid` = #{parentMsgid,jdbcType=VARCHAR}
+    and `owner` = #{owner,jdbcType=VARCHAR}
+    <if test="fromSeqNo != 0">
+      <if test="signal == 'before'.toString()">
+        and `seq_no` &lt; #{fromSeqNo,jdbcType=BIGINT}
+        order by seq_no DESC limit #{pageSize}
+      </if>
+      <if test="signal == 'after'.toString()">
+        and `seq_no` &gt; #{fromSeqNo,jdbcType=BIGINT}
+        order by seq_no ASC limit #{pageSize}
+      </if>
+    </if>
+    <if test="fromSeqNo == 0">
+      order by seq_no DESC limit #{pageSize}
+    </if>
+  </select>
+
+  <sql id="WhereSql">
+    <where>
+      <if test="parentMsgid != null">
+        and `parent_msgid` = #{parentMsgid,jdbcType=VARCHAR}
+      </if>
+      <if test="msgid != null">
+        and `msgid` = #{msgid,jdbcType=VARCHAR}
+      </if>
+      <if test="from != null">
+        and `from` = #{from,jdbcType=VARCHAR}
+      </if>
+      <if test="to != null">
+        and `to` = #{to,jdbcType=VARCHAR}
+      </if>
+      <if test="owner != null">
+        and `owner` = #{owner,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+
+  <delete id="deleteBatchMsgReplyStatus">
+    delete from usermail_msg_reply
+    where `owner`=#{owner}
+    and `msgid` in
+    <foreach collection="msgIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
+
+  <delete id="deleteMsgByParentIdAndOwner">
+    delete from `usermail_msg_reply`
+    WHERE
+    `owner` = #{owner}
+    and parent_msgid in
+    <foreach collection="parentMsgIds" index="index" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </delete>
+
+  <delete id="batchDeleteBySessionId">
+    delete
+    from `usermail_msg_reply`
+    where `sessionid` = #{sessionid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="getMsgReplyByCondition" parameterType="UsermailMsgReply" resultMap="BaseResultMap">
+    select *
+    from `usermail_msg_reply`
+    <include refid="WhereSql"/>
+  </select>
+
+  <update id="destoryAfterRead">
+    update `usermail_msg_reply`
+    set `status`= #{status,jdbcType=INTEGER},
+        `zip_msg` = null,
+        `update_time` = CURRENT_TIMESTAMP()
+    where `status`= 0
+      and `msgid` = #{msgid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+  <update id="batchUpdateByParentMsgIds">
+    update usermail_msg_reply
+    set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
+    <where>
+      `owner` = #{owner,jdbcType=VARCHAR}
+      and `parent_msgid` in
+      <foreach item="parentMsgId" collection="parentMsgIds"
+        open="(" separator="," close=")">
+        #{parentMsgId}
+      </foreach>
+    </where>
+  </update>
+
+  <delete id="batchDeleteByStatus">
+    delete
+    from `usermail_msg_reply`
+    where `status` = #{status,jdbcType=INTEGER}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="getLastUsermailReply" resultMap="BaseResultMap">
+    select *
+    from `usermail_msg_reply`
+    where
+      `parent_msgid` = #{parentMsgid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+      and `status` = #{status,jdbcType=INTEGER}
+    order by seq_no desc limit 1
+  </select>
+</mapper>

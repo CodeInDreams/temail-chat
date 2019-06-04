@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.syswin.temail.usermail.infrastructure.domain.UsermailBoxMapper">
+  <resultMap id="UsermailBoxResultMap" type="UsermailBox">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="sessionid" jdbcType="VARCHAR" property="sessionid"/>
+    <result column="mail2" jdbcType="VARCHAR" property="mail2"/>
+    <result column="owner" jdbcType="VARCHAR" property="owner"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="archive_status" jdbcType="INTEGER" property="archiveStatus"/>
+  </resultMap>
+
+  <sql id="selectColumn">
+    `id`,`sessionid`,`mail2`,`owner`,`create_time`,`archive_status`
+  </sql>
+
+  <insert id="saveUsermailBox" parameterType="UserMail" keyProperty="id">
+		insert into usermail_box (`id`,`sessionid`,`mail2`,`owner` )
+		values (#{id}, #{sessionid}, #{mail2}, #{owner} )
+	</insert>
+
+  <delete id="deleteByOwnerAndTo" parameterType="String">
+   delete from usermail_box
+   where `owner` = #{owner,jdbcType=VARCHAR}
+   and `mail2` = #{mail2,jdbcType=VARCHAR}
+  </delete>
+
+
+  <select id="selectByOwnerAndTo" parameterType="String">
+    select * from usermail_box
+    where `owner` = #{owner,jdbcType=VARCHAR}
+    and `mail2` = #{mail2,jdbcType=VARCHAR}
+  </select>
+
+  <!--<select id="getBySessionid" parameterType="String" resultMap="UsermailBoxResultMap">-->
+    <!--select-->
+    <!--<include refid="selectColumn"/>-->
+    <!--from usermail_box-->
+    <!--where `sessionid` = #{sessionid,jdbcType=VARCHAR}-->
+  <!--</select>-->
+
+  <select id="selectUsermailBox" resultMap="UsermailBoxResultMap">
+    select
+    <include refid="selectColumn"/>
+    from `usermail_box`
+    where `owner` = #{owner,jdbcType=VARCHAR}
+    and  `mail2` = #{mail2,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getUsermailBoxByOwner" resultMap="UsermailBoxResultMap">
+    select
+    <include refid="selectColumn"/>
+    from `usermail_box`
+    where `owner` = #{owner,jdbcType=VARCHAR}
+    <if test="archiveStatus != -1">
+      and `archive_status` = #{archiveStatus}
+    </if>
+  </select>
+
+  <update id="updateArchiveStatus">
+    update `usermail_box`
+    set `archive_status` = #{archiveStatus},`update_time` = CURRENT_TIMESTAMP()
+    where `mail2` = #{mail2,jdbcType=VARCHAR}
+    and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+</mapper>
+

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.syswin.temail.usermail.infrastructure.domain.UsermailMapper">
+  <resultMap id="UserMailResultMap" type="UserMail">
+    <id column="id" jdbcType="BIGINT" property="id"/>
+    <result column="msgid" jdbcType="VARCHAR" property="msgid"/>
+    <result column="sessionid" jdbcType="VARCHAR" property="sessionid"/>
+    <result column="from" jdbcType="VARCHAR" property="from"/>
+    <result column="to" jdbcType="VARCHAR" property="to"/>
+    <result column="type" jdbcType="INTEGER" property="type"/>
+    <result column="status" jdbcType="INTEGER" property="status"/>
+    <result column="seq_no" jdbcType="BIGINT" property="seqNo"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    <result column="message" jdbcType="VARCHAR" property="message"/>
+    <result column="at" jdbcType="VARCHAR" property="at"/>
+    <result column="topic" jdbcType="VARCHAR" property="topic"/>
+    <result column="last_reply_msgid" jdbcType="VARCHAR" property="lastReplyMsgId"/>
+    <result column="reply_count" jdbcType="INTEGER" property="replyCount"/>
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    <result column="owner" jdbcType="VARCHAR" property="owner"/>
+    <result column="zip_msg" jdbcType="BLOB" property="zipMsg"/>
+    <result column="author" jdbcType="VARCHAR" property="author"/>
+    <result column="filter" jdbcType="VARCHAR" property="filter"/>
+  </resultMap>
+
+  <!--<sql id="selectColumn">-->
+    <!--`id`-->
+    <!--,-->
+    <!--`msgid`,-->
+    <!--`sessionid`,-->
+    <!--`from`,-->
+    <!--`to`,-->
+    <!--`type`,-->
+    <!--`status`,-->
+    <!--`seq_no`,-->
+    <!--`create_time`,-->
+    <!--`at`,-->
+    <!--`topic`,-->
+    <!--`last_reply_msgid`,-->
+    <!--`reply_count`,-->
+    <!--`update_time`,-->
+    <!--`owner`,-->
+    <!--`zip_msg`-->
+  <!--</sql>-->
+
+  <insert id="saveUsermail" parameterType="UserMail" keyProperty="id">
+    insert into usermail (`id`, `msgid`, `sessionid`, `from`, `to`, `type`, `status`, `seq_no`, `owner`,
+                          `at`, `topic`, `zip_msg`, `author`,`filter`)
+    values (#{id}, #{msgid}, #{sessionid}, #{from}, #{to}, #{type}, 0, #{seqNo}, #{owner}, #{at}, #{topic}, #{zipMsg}, #{author}, #{filter})
+  </insert>
+
+  <!--<update id="updateUsermailFromMsg" >-->
+  <!--update usermail-->
+  <!--set `from_msg`= #{fromMsg,jdbcType=VARCHAR}-->
+  <!--where-->
+  <!--`msgid` =#{msgid,jdbcType=VARCHAR}-->
+  <!--</update>-->
+
+  <!--<update id="updateUsermailToMsg" >-->
+  <!--update usermail-->
+  <!--set `to_msg`= #{toMsg,jdbcType=VARCHAR}-->
+  <!--where-->
+  <!--`msgid` =#{msgid,jdbcType=VARCHAR}-->
+  <!--</update>-->
+
+
+  <select id="getUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
+    select *
+    from usermail
+    where
+    `sessionid` =#{sessionid,jdbcType=VARCHAR}
+    and `owner` = #{owner,jdbcType=VARCHAR}
+    <if test="fromSeqNo != 0">
+      <if test="signal == 'before'.toString()">
+        and `seq_no` &lt; #{fromSeqNo,jdbcType=BIGINT}
+        order by seq_no DESC limit #{pageSize}
+      </if>
+      <if test="signal == 'after'.toString()">
+        and `seq_no` &gt; #{fromSeqNo,jdbcType=BIGINT}
+        order by seq_no ASC limit #{pageSize}
+      </if>
+    </if>
+    <if test="fromSeqNo == 0">
+      order by seq_no DESC limit #{pageSize}
+    </if>
+  </select>
+
+  <update id="revertUsermail" parameterType="umQuery">
+    update usermail
+    set `status`= #{status,jdbcType=INTEGER},
+        `zip_msg` = null,
+        `update_time`=CURRENT_TIMESTAMP()
+    where `status`= 0
+      and `msgid` =#{msgid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getLastUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
+    select *
+    from usermail
+    where
+      `sessionid` = #{sessionid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+    order by seq_no desc limit 1
+  </select>
+
+  <delete id="removeMsg">
+    delete from `usermail`
+    where `msgid` in
+    <foreach item="msgId" collection="msgIds"
+      open="(" separator="," close=")">
+      #{msgId}
+    </foreach>
+    and `owner` = #{owner,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="getUsermailByMsgid" parameterType="String" resultMap="UserMailResultMap">
+    select *
+    from usermail
+    where
+      `msgid` = #{msgid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </select>
+
+  <update id="destoryAfterRead" parameterType="umQuery">
+    update `usermail`
+    set `status`= #{status,jdbcType=INTEGER},
+        `zip_msg` = null,
+        `update_time`=CURRENT_TIMESTAMP()
+    where
+      `msgid` = #{msgid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="batchDeleteBySessionId">
+    delete
+    from `usermail`
+    where `sessionid` = #{sessionid,jdbcType=VARCHAR}
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </delete>
+
+  <select id="getUsermailListByMsgid" resultMap="UserMailResultMap">
+    select *
+    from `usermail`
+    where `msgid` = #{msgid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getUsermailByFromToMsgIds" resultMap="UserMailResultMap">
+    select *
+    from `usermail`
+    where `msgid` in
+    <foreach item="msgId" collection="msgIds" open="(" close=")" separator=",">
+      #{msgId}
+    </foreach>
+    and `owner` = #{from, jdbcType=VARCHAR};
+  </select>
+
+  <update id="updateReplyCountAndLastReplyMsgid">
+    update `usermail`
+    set `reply_count` = reply_count+ #{count},`update_time` = CURRENT_TIMESTAMP(),`last_reply_msgid` = #{lastReplyMsgid}
+    where `msgid` = #{msgid} and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateStatusByMsgIds">
+    update `usermail`
+    set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
+    where `msgid` in
+    <foreach item="msgId" collection="msgIds" open="(" close=")" separator=",">
+      #{msgId}
+    </foreach>
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateStatusByTemail">
+    update `usermail`
+    set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
+    where `status`= 4
+    <if test="trashMails != null">
+      and `msgid` in
+      <foreach item="trashMail" collection="trashMails"
+        open="(" separator="," close=")">
+        #{trashMail.msgId}
+      </foreach>
+    </if>
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="removeMsgByStatus">
+    delete from `usermail`
+    where `status`= #{status,jdbcType=INTEGER}
+    <if test="trashMails != null">
+      and `msgid` in
+      <foreach item="trashMail" collection="trashMails"
+        open="(" separator="," close=")">
+        #{trashMail.msgId}
+      </foreach>
+    </if>
+      and `owner` = #{owner,jdbcType=VARCHAR}
+  </delete>
+  <select id="getUsermailByStatus" parameterType="QueryTrashDto" resultMap="UserMailResultMap">
+    select *
+    from `usermail`
+    where
+    `status`= #{status,jdbcType=INTEGER}
+    and `owner` = #{owner,jdbcType=VARCHAR}
+    <if test="updateTime != null and signal == 'before'.toString() ">
+      and `update_time` <![CDATA[<]]> #{updateTime}
+    </if>
+    <if test="updateTime != null and signal == 'after'.toString() ">
+      and `update_time` <![CDATA[>]]> #{updateTime}
+    </if>
+    order by update_time desc limit #{pageSize}
+  </select>
+
+</mapper>
+
