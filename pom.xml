@@ -14,7 +14,6 @@
     <module>usermail-core</module>
     <module>usermail-redis</module>
     <module>usermail-mq-impl</module>
-    <module>usermail-encrypt</module>
   </modules>
 
   <properties>

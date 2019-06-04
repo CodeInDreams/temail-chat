@@ -77,10 +77,10 @@
       <groupId>com.syswin.temail</groupId>
       <artifactId>usermail-cassandra</artifactId>
       <!--<exclusions>-->
-        <!--<exclusion>-->
-          <!--<groupId>com.datastax.cassandra</groupId>-->
-          <!--<artifactId>cassandra-driver-core</artifactId>-->
-        <!--</exclusion>-->
+      <!--<exclusion>-->
+      <!--<groupId>com.datastax.cassandra</groupId>-->
+      <!--<artifactId>cassandra-driver-core</artifactId>-->
+      <!--</exclusion>-->
       <!--</exclusions>-->
     </dependency>
     <dependency>
@@ -90,6 +90,10 @@
     <dependency>
       <groupId>com.syswin.temail</groupId>
       <artifactId>usermail-mq-impl</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.syswin.temail</groupId>
+      <artifactId>temail-sharding</artifactId>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
@@ -111,8 +115,8 @@
     </dependency>
 
     <!--<dependency>-->
-      <!--<groupId>com.amazonaws.serverless</groupId>-->
-      <!--<artifactId>aws-serverless-java-container-spring</artifactId>-->
+    <!--<groupId>com.amazonaws.serverless</groupId>-->
+    <!--<artifactId>aws-serverless-java-container-spring</artifactId>-->
     <!--</dependency>-->
 
 
@@ -136,10 +140,7 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.syswin.temail</groupId>
-      <artifactId>temail-sharding</artifactId>
-    </dependency>
+
 
   </dependencies>
 
@@ -156,25 +157,25 @@
         </configuration>
       </plugin>
       <!--<plugin>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<goals>-->
-              <!--<goal>repackage</goal>-->
-            <!--</goals>-->
-          <!--</execution>-->
-        <!--</executions>-->
+      <!--<groupId>org.springframework.boot</groupId>-->
+      <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+      <!--<executions>-->
+      <!--<execution>-->
+      <!--<goals>-->
+      <!--<goal>repackage</goal>-->
+      <!--</goals>-->
+      <!--</execution>-->
+      <!--</executions>-->
       <!--</plugin>-->
       <!--<plugin>-->
-        <!--<groupId>org.apache.maven.plugins</groupId>-->
-        <!--<artifactId>maven-jar-plugin</artifactId>-->
-        <!--<version>2.4</version>-->
-        <!--<configuration>-->
-          <!--<excludes>-->
-            <!--<exclude>**/application.properties</exclude>-->
-          <!--</excludes>-->
-        <!--</configuration>-->
+      <!--<groupId>org.apache.maven.plugins</groupId>-->
+      <!--<artifactId>maven-jar-plugin</artifactId>-->
+      <!--<version>2.4</version>-->
+      <!--<configuration>-->
+      <!--<excludes>-->
+      <!--<exclude>**/application.properties</exclude>-->
+      <!--</excludes>-->
+      <!--</configuration>-->
       <!--</plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -245,15 +246,11 @@
                 </include>
                 <include>
                   <groupId>com.syswin.temail</groupId>
-                  <artifactId>usermail-blacklist</artifactId>
-                </include>
-                <include>
-                  <groupId>com.syswin.temail</groupId>
-                  <artifactId>proxysql-transacional</artifactId>
-                </include>
-                <include>
-                  <groupId>com.syswin.temail</groupId>
                   <artifactId>usermail-cassandra</artifactId>
+                </include>
+                <include>
+                  <groupId>com.syswin.temail</groupId>
+                  <artifactId>temail-sharding</artifactId>
                 </include>
               </includes>
             </configuration>
