@@ -87,16 +87,20 @@ public class UmQueryDTO implements java.io.Serializable {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     UmQueryDTO umQueryDto = (UmQueryDTO) o;
     return fromSeqNo == umQueryDto.fromSeqNo &&
-            pageSize == umQueryDto.pageSize &&
-            status == umQueryDto.status &&
-            Objects.equals(msgid, umQueryDto.msgid) &&
-            Objects.equals(sessionid, umQueryDto.sessionid) &&
-            Objects.equals(owner, umQueryDto.owner) &&
-            Objects.equals(signal, umQueryDto.signal);
+        pageSize == umQueryDto.pageSize &&
+        status == umQueryDto.status &&
+        Objects.equals(msgid, umQueryDto.msgid) &&
+        Objects.equals(sessionid, umQueryDto.sessionid) &&
+        Objects.equals(owner, umQueryDto.owner) &&
+        Objects.equals(signal, umQueryDto.signal);
   }
 
   @Override
