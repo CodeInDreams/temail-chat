@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.domains.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.ArrayList;
 import java.util.List;

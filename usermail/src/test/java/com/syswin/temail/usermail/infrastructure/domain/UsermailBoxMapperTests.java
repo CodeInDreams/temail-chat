@@ -5,11 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.domains.UsermailBox;
-import com.syswin.temail.usermail.domains.UsermailBoxRepo;
-import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

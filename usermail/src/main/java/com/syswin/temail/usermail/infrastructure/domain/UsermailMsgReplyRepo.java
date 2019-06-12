@@ -1,6 +1,7 @@
-package com.syswin.temail.usermail.domains;
+package com.syswin.temail.usermail.infrastructure.domain;
 
 
+import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.List;
 

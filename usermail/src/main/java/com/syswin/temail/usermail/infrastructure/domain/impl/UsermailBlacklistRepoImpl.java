@@ -1,7 +1,8 @@
-package com.syswin.temail.usermail.infrastructure.domain;
+package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.UsermailBlacklist;
-import com.syswin.temail.usermail.domains.UsermailBlacklistRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

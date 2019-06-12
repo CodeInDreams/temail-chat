@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.domains.UsermailBlacklist;
-import com.syswin.temail.usermail.domains.UsermailBlacklistRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import org.junit.Test;
 import org.mockito.Mockito;
 

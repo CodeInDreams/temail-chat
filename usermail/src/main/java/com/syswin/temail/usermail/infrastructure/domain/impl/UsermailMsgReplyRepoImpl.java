@@ -1,8 +1,9 @@
-package com.syswin.temail.usermail.infrastructure.domain;
+package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.domains.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

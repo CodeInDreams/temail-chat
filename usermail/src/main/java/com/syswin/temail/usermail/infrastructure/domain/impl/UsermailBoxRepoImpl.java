@@ -1,7 +1,8 @@
-package com.syswin.temail.usermail.infrastructure.domain;
+package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.UsermailBox;
-import com.syswin.temail.usermail.domains.UsermailBoxRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

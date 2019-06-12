@@ -7,7 +7,6 @@ import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.domains.UsermailRepo;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.ArrayList;
 import java.util.List;

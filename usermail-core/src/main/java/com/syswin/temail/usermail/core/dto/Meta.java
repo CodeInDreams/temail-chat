@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 
 @ApiModel(value = "元信息")
-public class Meta implements java.io.Serializable{
+public class Meta implements java.io.Serializable {
 
   @ApiModelProperty("at列表")
   private String at = "";

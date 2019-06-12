@@ -1,5 +1,6 @@
-package com.syswin.temail.usermail.domains;
+package com.syswin.temail.usermail.infrastructure.domain;
 
+import com.syswin.temail.usermail.domains.UsermailBox;
 import java.util.List;
 
 public interface UsermailBoxRepo {
