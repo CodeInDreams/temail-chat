@@ -28,7 +28,7 @@
   </delete>
 
 
-  <select id="selectByOwnerAndTo" parameterType="String">
+  <select id="selectByOwnerAndTo" parameterType="String" resultType="UsermailBox">
     select * from usermail_box
     where `owner` = #{owner,jdbcType=VARCHAR}
     and `mail2` = #{mail2,jdbcType=VARCHAR}

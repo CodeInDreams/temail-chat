@@ -61,6 +61,17 @@ public class UsermailBoxMapperTests {
   }
 
   @Test
+  public void selectByOwnerAndTo() {
+    String owner = "mailsend1@temail.com";
+    String mail2 = "mailreceive1@temail.com";
+    UsermailBox box = new UsermailBox(123L, "test-session-owner3", mail2, owner);
+    usermailBoxRepo.saveUsermailBox(box);
+    List<UsermailBox> usermailBoxes = usermailBoxRepo.selectByOwnerAndTo(owner, mail2);
+    assertThat(usermailBoxes).isNotNull();
+    assertThat(usermailBoxes.size()).isOne();
+  }
+
+  @Test
   public void updateArchiveStatus() {
     UsermailBox box = new UsermailBox(24355, "test-session-owner3", "mailreceive1@msgseal.com",
         "mailsend1@msgseal.com");
