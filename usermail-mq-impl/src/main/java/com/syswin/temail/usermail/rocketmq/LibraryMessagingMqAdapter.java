@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class LibraryMessagingMqAdapter implements IMqAdapter {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(LibraryMessagingMqAdapter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(LibraryMessagingMqAdapter.class);
   private final Map<String, MqProducer> rocketMqProducers;
   private final RocketMqProperties rocketMqProperties;
 
@@ -23,12 +23,12 @@ public class LibraryMessagingMqAdapter implements IMqAdapter {
 
   @Override
   public void init() {
-
+    // Do nothing
   }
 
   @Override
   public void destroy() {
-
+    // Do nothing
   }
 
   @Override
