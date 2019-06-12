@@ -33,9 +33,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,7 +56,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "发送消息(0x 0001)", notes = "[from]发送消息给[to]")
-  @RequestMapping(value = "/usermail", method = RequestMethod.POST)
+  @PostMapping(value = "/usermail")
   public ResultDTO createUsermail(
       HttpServletRequest request,
       @Valid @RequestBody CreateUsermailDTO usermail) {
@@ -82,7 +84,7 @@ public class UsermailAgentController {
 
 
   @ApiOperation(value = "同步单聊会话消息(0x 0003)", notes = "接收者拉取邮件及附件相关信息")
-  @RequestMapping(value = "/usermail", method = RequestMethod.GET)
+  @GetMapping(value = "/usermail")
   public ResultDTO getMails(
       HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
@@ -103,7 +105,7 @@ public class UsermailAgentController {
 
 
   @ApiOperation(value = "撤回消息(0x 0005)", notes = "撤回消息")
-  @RequestMapping(value = "/revert", method = RequestMethod.PUT)
+  @PutMapping(value = "/revert")
   public ResultDTO revert(
       HttpServletRequest request,
       @RequestBody @Valid UsermailDTO usermail) {
@@ -116,7 +118,7 @@ public class UsermailAgentController {
 
 
   @ApiOperation(value = "同步会话列表(0x 0002)", notes = "同步[from]会话列表")
-  @RequestMapping(value = "/usermail/mailboxes", method = RequestMethod.GET)
+  @GetMapping(value = "/usermail/mailboxes")
   public ResultDTO mailboxes(
       HttpServletRequest request,
       @ApiParam(value = "发送者mail", required = true) @RequestParam(value = "from", defaultValue = "") String from,
@@ -137,7 +139,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "删除消息(0x 0004)", notes = "删除消息")
-  @RequestMapping(value = "/usermail/msg/remove", method = RequestMethod.PUT)
+  @PutMapping(value = "/usermail/msg/remove")
   public ResultDTO removeMsg(HttpServletRequest request,
       @RequestBody @Valid UmDeleteMailDTO usermail) {
     ResultDTO resultDto = new ResultDTO();
@@ -148,7 +150,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "阅后即焚消息已焚(0x 0006)", notes = "阅后即焚")
-  @RequestMapping(value = "/usermail/msg/destory", method = RequestMethod.PUT)
+  @PutMapping(value = "/usermail/msg/destory")
   public ResultDTO destroyAfterRead(HttpServletRequest request,
       @Valid @RequestBody UsermailDTO usermail) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
@@ -158,7 +160,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "删除会话(0x 1004)")
-  @RequestMapping(value = "/usermail/session", method = RequestMethod.DELETE)
+  @DeleteMapping(value = "/usermail/session")
   public ResultDTO deleteSession(HttpServletRequest request, @RequestBody @Valid DeleteMailBoxQueryDTO queryDto) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService.deleteSession(cdtpHeaderDto, queryDto);
@@ -166,7 +168,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "批量查询消息(0x 1009)")
-  @RequestMapping(value = "/usermail/msg", method = RequestMethod.GET)
+  @GetMapping(value = "/usermail/msg")
   public ResultDTO batchQueryMsgs(HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "接收者", required = true) @RequestParam(value = "to", defaultValue = "") String to,
@@ -182,7 +184,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "批量查询消息回复总数(0x 100A)")
-  @RequestMapping(value = "/usermail/replyCount", method = RequestMethod.GET)
+  @GetMapping(value = "/usermail/replyCount")
   public ResultDTO batchQueryMsgsReplyCount(HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "接收者", required = true) @RequestParam(value = "to", defaultValue = "") String to,
@@ -199,7 +201,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "移送消息到废纸篓(0x 2000)", notes = "移送废纸篓")
-  @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.POST)
+  @PostMapping(value = "/usermail/msg/trash")
   public ResultDTO moveMsgToTrash(HttpServletRequest request,
       @RequestBody @Valid MoveTrashMailDTO trashMailDto) {
     ResultDTO resultDto = new ResultDTO();
@@ -210,7 +212,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "还原废纸篓消息(0x 2001)", notes = "还原废纸篓消息")
-  @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.PUT)
+  @PutMapping(value = "/usermail/msg/trash")
   public ResultDTO revertMsgToTrash(HttpServletRequest request,
       @RequestBody @Valid TrashMailsDTO revertTrashMailDto) {
     ResultDTO resultDto = new ResultDTO();
@@ -221,7 +223,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "删除废纸篓消息(0x 2002)", notes = "删除废纸篓消息")
-  @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.DELETE)
+  @DeleteMapping(value = "/usermail/msg/trash")
   public ResultDTO removeMsgFromTrash(HttpServletRequest request,
       @RequestBody @Valid TrashMailsDTO revertTrashMailDto) {
     ResultDTO resultDto = new ResultDTO();
@@ -232,7 +234,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "清空废纸篓消息(0x 2003)", notes = "清空废纸篓")
-  @RequestMapping(value = "/usermail/msg/trash/clear", method = RequestMethod.DELETE)
+  @DeleteMapping(value = "/usermail/msg/trash/clear")
   public ResultDTO clearMsgFromTrash(HttpServletRequest request,
       @RequestBody String from) {
 
@@ -247,7 +249,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "同步废纸篓消息(0x 2004)", notes = "还拉取废纸篓消息")
-  @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.GET)
+  @GetMapping(value = "/usermail/msg/trash")
   public ResultDTO getMsgFromTrash(
       HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
@@ -265,7 +267,7 @@ public class UsermailAgentController {
   }
 
   @ApiOperation(value = "单聊会话归档 (0x 2005)", notes = "单聊归档")
-  @RequestMapping(value = "/usermail/msg/archive", method = RequestMethod.PUT)
+  @PutMapping(value = "/usermail/msg/archive")
   public ResultDTO updateUsermailBoxArchiveStatus(HttpServletRequest request, @RequestBody @Valid
       UpdateArchiveDTO dto) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);

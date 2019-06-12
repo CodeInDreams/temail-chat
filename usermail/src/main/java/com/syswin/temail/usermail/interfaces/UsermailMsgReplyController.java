@@ -21,9 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,7 +43,7 @@ public class UsermailMsgReplyController {
   }
 
   @ApiOperation(value = "发送单聊回复消息(0x 0001 1005)", notes = "发送单聊回复消息")
-  @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.POST)
+  @PostMapping(value = "/usermail/msg/reply")
   public ResultDTO sendMailMsgReply(@RequestBody @Valid UsermailMsgReplyDTO msgReplyDto,
       HttpServletRequest request) {
     ResultDTO resultDto = new ResultDTO();
@@ -67,7 +69,7 @@ public class UsermailMsgReplyController {
   }
 
   @ApiOperation(value = "撤回单聊回复消息(0x 0001 1006)", notes = "撤回单聊回复消息")
-  @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.PUT)
+  @PutMapping(value = "/usermail/msg/reply")
   public ResultDTO revertMailMsgReply(@Valid @RequestBody UsermailMsgReplyDTO msgReplyDto, HttpServletRequest request) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailMsgReplyService
@@ -77,7 +79,7 @@ public class UsermailMsgReplyController {
   }
 
   @ApiOperation(value = "删除单聊回复消息(0x 0001 1007)", notes = "删除单聊回复消息")
-  @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.DELETE)
+  @DeleteMapping(value = "/usermail/msg/reply")
   public ResultDTO removeMailMsgReplys(@Valid @RequestBody UsermailMsgReplyDTO msgReplyDto,
       HttpServletRequest request) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
@@ -89,7 +91,7 @@ public class UsermailMsgReplyController {
 
 
   @ApiOperation(value = "拉取单聊回复消息(0x 0001 1008)", notes = "拉取单聊回复消息")
-  @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.GET)
+  @GetMapping(value = "/usermail/msg/reply")
   public ResultDTO getMailMsgReplys(HttpServletRequest request,
       @ApiParam(value = "源消息msgid", required = true) @RequestParam(value = "parentMsgId", defaultValue = "") String parentMsgid,
       @ApiParam(value = "分页大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
@@ -106,7 +108,7 @@ public class UsermailMsgReplyController {
   }
 
   @ApiOperation(value = "阅后即焚回复消息已焚(0x 100B)", notes = "回复消息阅后即焚")
-  @RequestMapping(value = "/usermail/msg/reply/destory", method = RequestMethod.PUT)
+  @PutMapping(value = "/usermail/msg/reply/destory")
   public ResultDTO destoryAfterRead(HttpServletRequest request,
       @RequestBody @Valid ReplyDestoryDTO replyDestoryDto) {
     ResultDTO resultDto = new ResultDTO();
