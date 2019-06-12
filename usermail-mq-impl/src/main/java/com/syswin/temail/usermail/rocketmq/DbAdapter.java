@@ -2,7 +2,6 @@ package com.syswin.temail.usermail.rocketmq;
 
 import com.syswin.temail.data.consistency.application.TemailMqSender;
 import com.syswin.temail.usermail.core.IMqAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class DbAdapter implements IMqAdapter {
 
