@@ -18,16 +18,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class ConvertMsgServiceTest {
 
   private INosqlMsgTemplate nosqlMsgTemplate = Mockito.mock(INosqlMsgTemplate.class);
@@ -39,9 +33,9 @@ public class ConvertMsgServiceTest {
   @Test
   public void convertMsgTest() {
     List<Map<String, Object>> nosqlColumnList = new ArrayList<>();
-    List idList = new ArrayList();
+    List<Long> idList = new ArrayList<>();
     List<Usermail> usermails = new ArrayList<>();
-    for(int i=0;i<10;i++){
+    for (int i = 0; i < 10; i++) {
       Usermail userMail = new Usermail();
       userMail.setSessionid("sessionId");
       String from = "from@syswin.com";
@@ -50,31 +44,35 @@ public class ConvertMsgServiceTest {
       userMail.setFrom(from);
       userMail.setTo(to);
       userMail.setOwner(from);
-      if( i%2 == 0 ) {
+      if (i % 2 == 0) {
         userMail.setZipMsg(msgCompressor.zip("test message".getBytes()));
       } else {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(ID,userMail.getId());
-        map.put(MESSAGE,ByteBuffer.wrap(msgCompressor.zip("test message".getBytes())));
+        map.put(ID, userMail.getId());
+        map.put(MESSAGE, ByteBuffer.wrap(msgCompressor.zip("test message".getBytes())));
         nosqlColumnList.add(map);
         idList.add(userMail.getId());
       }
       userMail.setMsgid(UUID.randomUUID().toString());
       userMail.setSeqNo(11);
       userMail.setType(TemailType.TYPE_NORMAL_0);
-      userMail.setStatus(TemailStatus.STATUS_NORMAL_0);
+      userMail.setStatus(
+          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTORY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
       userMail.setMessage("");
       userMail.setAuthor(from);
       userMail.setFilter(null);
       usermails.add(userMail);
     }
 
-    Mockito.when(nosqlMsgTemplate.listMsg(KEYSPACE_USERMAILAGENT, TABLE_USERMAIL, idList.toArray(), ID, MESSAGE)).thenReturn(nosqlColumnList);
+    Mockito.when(nosqlMsgTemplate.listMsg(KEYSPACE_USERMAILAGENT, TABLE_USERMAIL, idList.toArray(), ID, MESSAGE))
+        .thenReturn(nosqlColumnList);
     List<Usermail> convertMsg = convertMsgService.convertMsg(usermails);
 
     convertMsg.forEach(usermail -> {
-      if (StringUtils.isNotEmpty(usermail.getMsgid())) {
+      if (usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
         Assertions.assertThat(usermail.getMessage()).isNotEmpty();
+      } else if (usermail.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
+        Assertions.assertThat(usermail.getMessage()).isEmpty();
       }
     });
 
@@ -84,9 +82,9 @@ public class ConvertMsgServiceTest {
   public void convertReplyMsg() {
 
     List<Map<String, Object>> nosqlColumnList = new ArrayList<>();
-    List idList = new ArrayList();
+    List<Long> idList = new ArrayList<>();
     List<UsermailMsgReply> msgReplys = new ArrayList<>();
-    for(int i=0;i<10;i++){
+    for (int i = 0; i < 10; i++) {
       UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
       usermailMsgReply.setSessionid("sessionId");
       String from = "from@syswin.com";
@@ -95,28 +93,35 @@ public class ConvertMsgServiceTest {
       usermailMsgReply.setFrom(from);
       usermailMsgReply.setTo(to);
       usermailMsgReply.setOwner(from);
-      if( i%2 == 0 ) {
+      if (i % 2 == 0) {
         usermailMsgReply.setZipMsg(msgCompressor.zip("test message".getBytes()));
       } else {
         HashMap<String, Object> map = new HashMap<>();
-        map.put(ID,usermailMsgReply.getId());
-        map.put(MESSAGE,ByteBuffer.wrap(msgCompressor.zip("test message".getBytes())));
+        map.put(ID, usermailMsgReply.getId());
+        map.put(MESSAGE, ByteBuffer.wrap(msgCompressor.zip("test message".getBytes())));
         nosqlColumnList.add(map);
         idList.add(usermailMsgReply.getId());
       }
       usermailMsgReply.setMsgid(UUID.randomUUID().toString());
       usermailMsgReply.setSeqNo(11);
       usermailMsgReply.setType(TemailType.TYPE_NORMAL_0);
-      usermailMsgReply.setStatus(TemailStatus.STATUS_NORMAL_0);
+      usermailMsgReply.setStatus(
+          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTORY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
       usermailMsgReply.setMsg("");
       usermailMsgReply.setParentMsgid(UUID.randomUUID().toString());
       msgReplys.add(usermailMsgReply);
     }
-    Mockito.when(nosqlMsgTemplate.listMsg(KEYSPACE_USERMAILAGENT, TABLE_USERMAIL_MSG_REPLY, idList.toArray(), ID, MESSAGE)).thenReturn(nosqlColumnList);
+    Mockito
+        .when(nosqlMsgTemplate.listMsg(KEYSPACE_USERMAILAGENT, TABLE_USERMAIL_MSG_REPLY, idList.toArray(), ID, MESSAGE))
+        .thenReturn(nosqlColumnList);
     List<UsermailMsgReply> usermailMsgReplies = convertMsgService.convertReplyMsg(msgReplys);
 
     usermailMsgReplies.forEach(usermailMsgReply -> {
-      Assertions.assertThat(usermailMsgReply.getMsg()).isNotEmpty();
+      if (usermailMsgReply.getStatus() == TemailStatus.STATUS_NORMAL_0) {
+        Assertions.assertThat(usermailMsgReply.getMsg()).isNotEmpty();
+      } else if (usermailMsgReply.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
+        Assertions.assertThat(usermailMsgReply.getMsg()).isEmpty();
+      }
     });
   }
 }
