@@ -17,7 +17,7 @@ import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.dto.TrashMailDto;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -248,7 +248,7 @@ public class Usermail2NotfyMqServiceTest {
     String owner = "a@msgseal.com";
     String to = "a@msgseal.com";
     String msgId = "1132";
-    List<TrashMailDto> trashMailDtos = Arrays.asList(new TrashMailDto(owner,to,msgId));
+    List<TrashMailDTO> trashMailDtos = Arrays.asList(new TrashMailDTO(owner,to,msgId));
     int type = SessionEventType.EVENT_TYPE_36;
     usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo,owner,trashMailDtos,type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);

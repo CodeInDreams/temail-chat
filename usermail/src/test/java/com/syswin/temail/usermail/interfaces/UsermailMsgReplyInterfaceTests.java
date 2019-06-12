@@ -13,7 +13,7 @@ import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailStoreType;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.dto.UsermailMsgReplyDto;
+import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,8 +43,8 @@ public class UsermailMsgReplyInterfaceTests {
   @Test
   @Ignore
   public void testUsermailMsgReply() throws InterruptedException {
-    UsermailMsgReplyDto msgReply = createMsg(TemailType.TYPE_NORMAL_0, TemailStoreType.STORE_TYPE_FROM_2);
-    UsermailMsgReplyDto msgReply2 = createMsg(TemailType.TYPE_NORMAL_0, TemailStoreType.STORE_TYPE_FROM_2);
+    UsermailMsgReplyDTO msgReply = createMsg(TemailType.TYPE_NORMAL_0, TemailStoreType.STORE_TYPE_FROM_2);
+    UsermailMsgReplyDTO msgReply2 = createMsg(TemailType.TYPE_NORMAL_0, TemailStoreType.STORE_TYPE_FROM_2);
 
     //发送一条回复消息
     createMsyReply(msgReply.getFrom(), msgReply.getTo(), msgReply.getMsgId()
@@ -57,7 +57,7 @@ public class UsermailMsgReplyInterfaceTests {
     assertAfterRevert(replyMsgs, msgReply.getParentMsgId());
 
     //删除单聊回复消息
-    //UsermailMsgReplyDto msgReply2 = createMsg(TemailType.TYPE_NORMAL_0, TemailStoreType.STORE_TYPE_TO_1);
+    //UsermailMsgReplyDTO msgReply2 = createMsg(TemailType.TYPE_NORMAL_0, TemailStoreType.STORE_TYPE_TO_1);
 
     createMsyReply(msgReply2.getFrom(), msgReply2.getTo(), msgReply2.getMsgId()
         , msgReply2.getType(), msgReply2.getMsgIds(), msgReply2.getStoreType(), msgReply2.getParentMsgId(),
@@ -141,7 +141,7 @@ public class UsermailMsgReplyInterfaceTests {
   }
 
 
-  private UsermailMsgReplyDto createMsg(int msgType, int stortType) {
+  private UsermailMsgReplyDTO createMsg(int msgType, int stortType) {
     long timestampLong = generateTimestamp();
     String timestamp = String.valueOf(timestampLong);
     String date = generateDate(timestampLong);
@@ -153,7 +153,7 @@ public class UsermailMsgReplyInterfaceTests {
     msgIds.add(msgId);
     String parentMsgId = "syswin-1543456947958";
     int attachmentSize = 100;
-    UsermailMsgReplyDto usermailMsgReplyDto = new UsermailMsgReplyDto(msgId, from, to, msgType, msg, parentMsgId,
+    UsermailMsgReplyDTO usermailMsgReplyDto = new UsermailMsgReplyDTO(msgId, from, to, msgType, msg, parentMsgId,
         attachmentSize, msgIds, stortType);
     return usermailMsgReplyDto;
   }

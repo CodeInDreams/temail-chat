@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.application;
 
 import static org.mockito.Mockito.verify;
 
-import com.syswin.temail.usermail.dto.GroupChatEventDto;
+import com.syswin.temail.usermail.dto.GroupChatEventDTO;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -18,7 +18,7 @@ public class GroupChatServiceTest {
   public void saveGroupChatMailBoxInfo() {
     String from = "from@temail.com";
     String to = "to@temail.com";
-    GroupChatEventDto groupChatEventDto = new GroupChatEventDto();
+    GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom(from);
     groupChatEventDto.setTo(to);
     groupChatService.syncGroupChatMemberEvent(groupChatEventDto);
@@ -29,7 +29,7 @@ public class GroupChatServiceTest {
   public void deleteGroupChatMailBoxInfo() {
     String from = "from@temail.com";
     String to = "to@temail.com";
-    GroupChatEventDto groupChatEventDto = new GroupChatEventDto();
+    GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom(from);
     groupChatEventDto.setTo(to);
     groupChatService.removeGroupChatMemeberEvent(groupChatEventDto);

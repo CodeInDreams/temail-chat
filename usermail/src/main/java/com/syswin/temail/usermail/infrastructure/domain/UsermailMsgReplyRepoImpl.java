@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.dto.QueryMsgReplyDto;
+import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,7 +23,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   @Override
-  public List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDto dto) {
+  public List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto) {
     return usermailMsgReplyMapper.getMsgReplys(dto);
   }
 

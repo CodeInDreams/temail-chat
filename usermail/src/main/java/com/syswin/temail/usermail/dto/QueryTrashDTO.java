@@ -4,8 +4,8 @@ import java.sql.Timestamp;
 import java.util.Objects;
 import org.apache.ibatis.type.Alias;
 
-@Alias("QueryTrashDto")
-public class QueryTrashDto implements java.io.Serializable {
+@Alias("QueryTrashDTO")
+public class QueryTrashDTO implements java.io.Serializable {
 
   private Timestamp updateTime;
   private int pageSize;
@@ -13,7 +13,7 @@ public class QueryTrashDto implements java.io.Serializable {
   private String signal;
   private String owner;
 
-  public QueryTrashDto(Timestamp updateTime, int pageSize, int status, String signal, String owner) {
+  public QueryTrashDTO(Timestamp updateTime, int pageSize, int status, String signal, String owner) {
     this.updateTime = updateTime;
     this.pageSize = pageSize;
     this.status = status;
@@ -21,7 +21,7 @@ public class QueryTrashDto implements java.io.Serializable {
     this.owner = owner;
   }
 
-  public QueryTrashDto() {
+  public QueryTrashDTO() {
   }
 
   public Timestamp getUpdateTime() {
@@ -66,7 +66,7 @@ public class QueryTrashDto implements java.io.Serializable {
 
   @Override
   public String toString() {
-    return "QueryTrashDto{" +
+    return "QueryTrashDTO{" +
         "updateTime=" + updateTime +
         ", pageSize=" + pageSize +
         ", status=" + status +
@@ -83,7 +83,7 @@ public class QueryTrashDto implements java.io.Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    QueryTrashDto that = (QueryTrashDto) o;
+    QueryTrashDTO that = (QueryTrashDTO) o;
     return pageSize == that.pageSize &&
         status == that.status &&
         updateTime.equals(that.updateTime) &&

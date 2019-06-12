@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 
-public class UpdateArchiveDto implements Serializable {
+public class UpdateArchiveDTO implements Serializable {
 
   @ApiModelProperty(value = "发件人(要归档会话的消息人)")
   @NotEmpty
@@ -16,10 +16,10 @@ public class UpdateArchiveDto implements Serializable {
   private int archiveStatus;
 
 
-  public UpdateArchiveDto() {
+  public UpdateArchiveDTO() {
   }
 
-  public UpdateArchiveDto(String from, String to, int archiveStatus) {
+  public UpdateArchiveDTO(String from, String to, int archiveStatus) {
     this.from = from;
     this.to = to;
     this.archiveStatus = archiveStatus;
@@ -51,7 +51,7 @@ public class UpdateArchiveDto implements Serializable {
 
   @Override
   public String toString() {
-    return "UpdateArchiveDto{" +
+    return "UpdateArchiveDTO{" +
         "from='" + from + '\'' +
         ", to='" + to + '\'' +
         ", archiveStatus='" + archiveStatus + '\'' +

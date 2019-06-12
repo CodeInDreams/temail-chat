@@ -6,11 +6,10 @@ import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.dto.QueryMsgReplyDto;
+import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +61,7 @@ public class UsermailMsgReplyTests {
 
   @Test
   public void getMsgReplys() {
-    QueryMsgReplyDto dto = new QueryMsgReplyDto();
+    QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
     dto.setParentMsgid("syswin-1543456947958");
     dto.setOwner("A2018");
     dto.setFromSeqNo(0);

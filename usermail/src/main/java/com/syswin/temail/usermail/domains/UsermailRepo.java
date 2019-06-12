@@ -1,8 +1,8 @@
 package com.syswin.temail.usermail.domains;
 
-import com.syswin.temail.usermail.dto.QueryTrashDto;
-import com.syswin.temail.usermail.dto.TrashMailDto;
-import com.syswin.temail.usermail.dto.UmQueryDto;
+import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
+import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 
@@ -11,13 +11,13 @@ public interface UsermailRepo {
 
   void saveUsermail(Usermail usermail);
 
-  List<Usermail> getUsermail(UmQueryDto umQueryDto);
+  List<Usermail> getUsermail(UmQueryDTO umQueryDto);
 
   Usermail getUsermailByMsgid(String msgid, String owner);
 
-  List<Usermail> getLastUsermail(UmQueryDto umQueryDto);
+  List<Usermail> getLastUsermail(UmQueryDTO umQueryDto);
 
-  int revertUsermail(UmQueryDto umQueryDto);
+  int revertUsermail(UmQueryDTO umQueryDto);
 
   int removeMsg(List<String> msgIds, String owner);
 
@@ -33,10 +33,10 @@ public interface UsermailRepo {
 
   int updateStatusByMsgIds(List<String> msgIds, String owner, int status);
 
-  int removeMsgByStatus(List<TrashMailDto> trashMails, String owner, int status);
+  int removeMsgByStatus(List<TrashMailDTO> trashMails, String owner, int status);
 
-  int updateStatusByTemail(List<TrashMailDto> trashMails, String owner, int status);
+  int updateStatusByTemail(List<TrashMailDTO> trashMails, String owner, int status);
 
-  List<Usermail> getUsermailByStatus(QueryTrashDto queryDto);
+  List<Usermail> getUsermailByStatus(QueryTrashDTO queryDto);
 
 }

@@ -15,7 +15,7 @@ import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.core.util.SeqIdFilter;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.dto.QueryMsgReplyDto;
+import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.domains.UsermailRepo;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyRepo;
 import java.util.ArrayList;
@@ -150,7 +150,7 @@ public class UsermailMsgReplyService {
   public List<UsermailMsgReply> getMsgReplys(CdtpHeaderDto cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
       String signal, String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
-    QueryMsgReplyDto dto = new QueryMsgReplyDto();
+    QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
     dto.setFromSeqNo(seqId);
     dto.setPageSize(pageSize);
     dto.setParentMsgid(parentMsgid);

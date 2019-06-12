@@ -1,9 +1,9 @@
 package com.syswin.temail.usermail.infrastructure.domain;
 
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.dto.QueryTrashDto;
-import com.syswin.temail.usermail.dto.TrashMailDto;
-import com.syswin.temail.usermail.dto.UmQueryDto;
+import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
+import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,13 +13,13 @@ public interface UsermailMapper {
 
   void saveUsermail(Usermail usermail);
 
-  List<Usermail> getUsermail(UmQueryDto umQueryDto);
+  List<Usermail> getUsermail(UmQueryDTO umQueryDto);
 
   Usermail getUsermailByMsgid(@Param("msgid") String msgid, @Param("owner") String owner);
 
-  List<Usermail> getLastUsermail(UmQueryDto umQueryDto);
+  List<Usermail> getLastUsermail(UmQueryDTO umQueryDto);
 
-  int revertUsermail(UmQueryDto umQueryDto);
+  int revertUsermail(UmQueryDTO umQueryDto);
 
   int removeMsg(@Param("msgIds") List<String> msgIds, @Param("owner") String owner);
 
@@ -37,12 +37,12 @@ public interface UsermailMapper {
   int updateStatusByMsgIds(@Param("msgIds") List<String> msgIds, @Param("owner") String owner,
       @Param("status") int status);
 
-  int removeMsgByStatus(@Param("trashMails") List<TrashMailDto> trashMails, @Param("owner") String owner,
+  int removeMsgByStatus(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
       @Param("status") int status);
 
-  int updateStatusByTemail(@Param("trashMails") List<TrashMailDto> trashMails, @Param("owner") String owner,
+  int updateStatusByTemail(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
       @Param("status") int status);
 
-  List<Usermail> getUsermailByStatus(QueryTrashDto queryDto);
+  List<Usermail> getUsermailByStatus(QueryTrashDTO queryDto);
 
 }

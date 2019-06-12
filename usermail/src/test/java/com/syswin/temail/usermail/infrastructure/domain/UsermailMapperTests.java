@@ -8,13 +8,12 @@ import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailRepo;
-import com.syswin.temail.usermail.dto.UmQueryDto;
+import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -66,7 +65,7 @@ public class UsermailMapperTests {
 
     long lastSeqno = 0;
 
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setPageSize(2);
     umQueryDto.setFromSeqNo(lastSeqno);
     umQueryDto.setSessionid(SESSIONID);
@@ -79,7 +78,7 @@ public class UsermailMapperTests {
 
   @Test
   public void getLastUsermail() {
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("to@syswin.com");
     List<Usermail> usermails = usermailRepo.getLastUsermail(umQueryDto);
@@ -111,7 +110,7 @@ public class UsermailMapperTests {
 
   @Test
   public void getUsermail() {
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("from@syswin.com");
     umQueryDto.setPageSize(10);
@@ -121,7 +120,7 @@ public class UsermailMapperTests {
 
   @Test
   public void getUsermailWithSeqId() {
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("from@syswin.com");
     umQueryDto.setPageSize(10);
@@ -225,7 +224,7 @@ public class UsermailMapperTests {
     userMail.setAuthor(from);
     userMail.setFilter(null);
     usermailRepo.saveUsermail(userMail);
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setStatus(TemailStatus.STATUS_REVERT_1);
     umQueryDto.setOwner(from);
     umQueryDto.setMsgid("3a2s1asd1c1a5s");

@@ -7,7 +7,7 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 
 @ApiModel(value = "废纸篓信息")
-public class MoveTrashMailDto implements Serializable {
+public class MoveTrashMailDTO implements Serializable {
 
   @ApiModelProperty(value = "消息会话所有者邮箱地址")
   @NotEmpty
@@ -19,10 +19,10 @@ public class MoveTrashMailDto implements Serializable {
   @NotEmpty
   private List<String> msgIds;
 
-  public MoveTrashMailDto() {
+  public MoveTrashMailDTO() {
   }
 
-  public MoveTrashMailDto(String from,String to, List<String> msgIds) {
+  public MoveTrashMailDTO(String from,String to, List<String> msgIds) {
     this.from = from;
     this.to = to;
     this.msgIds = msgIds;
@@ -54,7 +54,7 @@ public class MoveTrashMailDto implements Serializable {
 
   @Override
   public String toString() {
-    return "MoveTrashMailDto{" +
+    return "MoveTrashMailDTO{" +
         "from='" + from + '\'' +
         ", to='" + to + '\'' +
         ", msgIds=" + msgIds +

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
 
-public class UsermailMsgReplyDto implements Serializable {
+public class UsermailMsgReplyDTO implements Serializable {
 
   @ApiModelProperty(value = "发送者")
   @NotEmpty
@@ -30,7 +30,7 @@ public class UsermailMsgReplyDto implements Serializable {
   @ApiModelProperty(value = "(int) 1 存收件人收件箱 2 存发件人收件箱")
   private int storeType;
 
-  public UsermailMsgReplyDto(String msgId, String from, String to, int type, String mssage,
+  public UsermailMsgReplyDTO(String msgId, String from, String to, int type, String mssage,
       String parentMsgId, int attachmentSize,List<String> msgIds,int storeType) {
     this.msgId = msgId;
     this.from = from;
@@ -43,7 +43,7 @@ public class UsermailMsgReplyDto implements Serializable {
     this.storeType = storeType;
   }
 
-  public UsermailMsgReplyDto() {
+  public UsermailMsgReplyDTO() {
   }
 
 
@@ -121,7 +121,7 @@ public class UsermailMsgReplyDto implements Serializable {
 
   @Override
   public String toString() {
-    return "UsermailMsgReplyDto{" +
+    return "UsermailMsgReplyDTO{" +
         "from='" + from + '\'' +
         ", to='" + to + '\'' +
         ", msgData='" + msgData + '\'' +

@@ -11,8 +11,8 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.dto.ReplyDestoryDto;
-import com.syswin.temail.usermail.dto.UsermailMsgReplyDto;
+import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
+import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -42,7 +42,7 @@ public class UsermailMsgReplyController {
 
   @ApiOperation(value = "发送单聊回复消息(0x 0001 1005)", notes = "发送单聊回复消息")
   @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.POST)
-  public ResultDto sendMailMsgReply(@RequestBody @Valid UsermailMsgReplyDto msgReplyDto,
+  public ResultDto sendMailMsgReply(@RequestBody @Valid UsermailMsgReplyDTO msgReplyDto,
       HttpServletRequest request) {
     ResultDto resultDto = new ResultDto();
     umBlacklistProxy.checkInBlacklist(msgReplyDto.getFrom(), msgReplyDto.getTo());
@@ -67,7 +67,7 @@ public class UsermailMsgReplyController {
 
   @ApiOperation(value = "撤回单聊回复消息(0x 0001 1006)", notes = "撤回单聊回复消息")
   @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.PUT)
-  public ResultDto revertMailMsgReply(@Valid @RequestBody UsermailMsgReplyDto msgReplyDto, HttpServletRequest request) {
+  public ResultDto revertMailMsgReply(@Valid @RequestBody UsermailMsgReplyDTO msgReplyDto, HttpServletRequest request) {
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailMsgReplyService
         .revertMsgReply(cdtpHeaderDto, msgReplyDto.getParentMsgId(), msgReplyDto.getMsgId(), msgReplyDto.getFrom(),
@@ -77,7 +77,7 @@ public class UsermailMsgReplyController {
 
   @ApiOperation(value = "删除单聊回复消息(0x 0001 1007)", notes = "删除单聊回复消息")
   @RequestMapping(value = "/usermail/msg/reply", method = RequestMethod.DELETE)
-  public ResultDto removeMailMsgReplys(@Valid @RequestBody UsermailMsgReplyDto msgReplyDto,
+  public ResultDto removeMailMsgReplys(@Valid @RequestBody UsermailMsgReplyDTO msgReplyDto,
       HttpServletRequest request) {
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailMsgReplyService
@@ -107,7 +107,7 @@ public class UsermailMsgReplyController {
   @ApiOperation(value = "阅后即焚回复消息已焚(0x 100B)", notes = "回复消息阅后即焚")
   @RequestMapping(value = "/usermail/msg/reply/destory", method = RequestMethod.PUT)
   public ResultDto destoryAfterRead(HttpServletRequest request,
-      @RequestBody @Valid ReplyDestoryDto replyDestoryDto) {
+      @RequestBody @Valid ReplyDestoryDTO replyDestoryDto) {
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailMsgReplyService

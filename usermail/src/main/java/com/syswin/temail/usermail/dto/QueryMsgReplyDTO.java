@@ -3,8 +3,8 @@ package com.syswin.temail.usermail.dto;
 import java.io.Serializable;
 import org.apache.ibatis.type.Alias;
 
-@Alias("QueryMsgReplyDto")
-public class QueryMsgReplyDto implements Serializable {
+@Alias("QueryMsgReplyDTO")
+public class QueryMsgReplyDTO implements Serializable {
 
   private long fromSeqNo;
   private int pageSize;
@@ -72,7 +72,7 @@ public class QueryMsgReplyDto implements Serializable {
 
   @Override
   public String toString() {
-    return "QueryMsgReplyDto{" +
+    return "QueryMsgReplyDTO{" +
         "fromSeqNo=" + fromSeqNo +
         ", pageSize=" + pageSize +
         ", msgid='" + msgid + '\'' +

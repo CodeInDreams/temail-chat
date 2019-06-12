@@ -5,7 +5,7 @@ import com.syswin.temail.usermail.common.Contants.SessionEventKey;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
-import com.syswin.temail.usermail.dto.TrashMailDto;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class UsermailMqService {
    * 废纸篓消息还原、删除
    */
   public void sendMqRemoveTrash(String owner,
-      List<TrashMailDto> trashMailDtoList, int type) {
+      List<TrashMailDTO> trashMailDtoList, int type) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(7);
     map.put(SessionEventKey.FROM, owner);

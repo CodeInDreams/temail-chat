@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
 
-public class UmDeleteMailDto implements Serializable {
+public class UmDeleteMailDTO implements Serializable {
     @ApiModelProperty(value = "消息ID列表")
     @NotEmpty
     private List<String> msgIds;
@@ -76,7 +76,7 @@ public class UmDeleteMailDto implements Serializable {
         this.seqNo = seqNo;
     }
 
-    public UmDeleteMailDto(List<String> msgIds, String from, String to, int type, String message, long seqNo) {
+    public UmDeleteMailDTO(List<String> msgIds, String from, String to, int type, String message, long seqNo) {
         this.msgIds = msgIds;
         this.from = from;
         this.to = to;
@@ -85,12 +85,12 @@ public class UmDeleteMailDto implements Serializable {
         this.seqNo = seqNo;
     }
 
-    public UmDeleteMailDto() {
+    public UmDeleteMailDTO() {
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("UsermailDto{");
+        final StringBuilder sb = new StringBuilder("UsermailDTO{");
         sb.append("msgId='").append(msgIds).append('\'');
         sb.append(", from='").append(from).append('\'');
         sb.append(", to='").append(to).append('\'');

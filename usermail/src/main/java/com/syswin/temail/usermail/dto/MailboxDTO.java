@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "temail收件箱信息")
-public class MailboxDto implements java.io.Serializable {
+public class MailboxDTO implements java.io.Serializable {
 
   @ApiModelProperty(value = "会话类型")
   private int sessionType = 1;
@@ -71,10 +71,10 @@ public class MailboxDto implements java.io.Serializable {
     this.archiveStatus = archiveStatus;
   }
 
-  public MailboxDto() {
+  public MailboxDTO() {
   }
 
-  public MailboxDto(int sessionType, String to, String title, boolean onTop, Usermail lastMsg, Integer archiveStatus) {
+  public MailboxDTO(int sessionType, String to, String title, boolean onTop, Usermail lastMsg, Integer archiveStatus) {
     this.sessionType = sessionType;
     this.to = to;
     this.title = title;
@@ -85,7 +85,7 @@ public class MailboxDto implements java.io.Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("MailboxDto{");
+    final StringBuilder sb = new StringBuilder("MailboxDTO{");
     sb.append("sessionType=").append(sessionType);
     sb.append(", to='").append(to).append('\'');
     sb.append(", title='").append(title).append('\'');

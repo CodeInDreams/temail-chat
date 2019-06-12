@@ -8,7 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 
 @ApiModel(value = "temail信息")
-public class UsermailDto implements Serializable {
+public class UsermailDTO implements Serializable {
 
   @ApiModelProperty(value = "消息ID")
   @NotEmpty
@@ -81,10 +81,10 @@ public class UsermailDto implements Serializable {
     this.message = message;
   }
 
-  public UsermailDto() {
+  public UsermailDTO() {
   }
 
-  public UsermailDto(String msgId, String from, String to, int type, String message, long seqNo) {
+  public UsermailDTO(String msgId, String from, String to, int type, String message, long seqNo) {
     this.msgId = msgId;
     this.from = from;
     this.to = to;
@@ -95,7 +95,7 @@ public class UsermailDto implements Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("UsermailDto{");
+    final StringBuilder sb = new StringBuilder("UsermailDTO{");
     sb.append("msgId='").append(msgId).append('\'');
     sb.append(", from='").append(from).append('\'');
     sb.append(", to='").append(to).append('\'');

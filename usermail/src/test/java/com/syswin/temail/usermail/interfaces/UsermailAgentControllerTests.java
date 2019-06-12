@@ -18,15 +18,15 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.dto.CreateUsermailDto;
-import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDto;
-import com.syswin.temail.usermail.dto.MailboxDto;
-import com.syswin.temail.usermail.dto.MoveTrashMailDto;
-import com.syswin.temail.usermail.dto.TrashMailDto;
-import com.syswin.temail.usermail.dto.TrashMailsDto;
-import com.syswin.temail.usermail.dto.UmDeleteMailDto;
-import com.syswin.temail.usermail.dto.UpdateArchiveDto;
-import com.syswin.temail.usermail.dto.UsermailDto;
+import com.syswin.temail.usermail.dto.CreateUsermailDTO;
+import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
+import com.syswin.temail.usermail.dto.MailboxDTO;
+import com.syswin.temail.usermail.dto.MoveTrashMailDTO;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
+import com.syswin.temail.usermail.dto.TrashMailsDTO;
+import com.syswin.temail.usermail.dto.UmDeleteMailDTO;
+import com.syswin.temail.usermail.dto.UpdateArchiveDTO;
+import com.syswin.temail.usermail.dto.UsermailDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -78,7 +78,7 @@ public class UsermailAgentControllerTests {
 
   @Test
   public void shouldNotSendWhenInBlacklist() throws Exception {
-    CreateUsermailDto usermailDto = new CreateUsermailDto(
+    CreateUsermailDTO usermailDto = new CreateUsermailDTO(
         "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         "bob@temail.com", "alice@temail.com", 0, 1, "test_from_data", 100);
     Mockito.doThrow(new IllegalGMArgsException(RESULT_CODE.ERROR_IN_BLACKLIST))
@@ -101,7 +101,7 @@ public class UsermailAgentControllerTests {
 
   @Test
   public void shouldSendWhenNotInBlacklist() throws Exception {
-    CreateUsermailDto usermailDto = new CreateUsermailDto(
+    CreateUsermailDTO usermailDto = new CreateUsermailDTO(
         "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         "bob@temail.com", "alice@temail.com", 0, 1, "test_from_data", 100);
     Mockito.doNothing().when(mockUmBlacklistProxy)
@@ -147,7 +147,7 @@ public class UsermailAgentControllerTests {
 
   @Test
   public void shouldSuccessWhenRevert() throws Exception {
-    UsermailDto usermailDto = new UsermailDto("123213123123", "bob@temail.com", "alice@temail.com",
+    UsermailDTO usermailDto = new UsermailDTO("123213123123", "bob@temail.com", "alice@temail.com",
         0, "test message", 0);
     Mockito.doNothing().when(usermailService)
         .revert(headerInfo, "bob@temail.com", "alice@temail.com", "123213123123");
@@ -165,9 +165,9 @@ public class UsermailAgentControllerTests {
 
   @Test
   public void shouldGetListWhenPullMailboxes() throws Exception {
-    List<MailboxDto> mailboxDto = Arrays.asList(
-        new MailboxDto(1, "alice@temail.com", "title", false, new Usermail(), 0),
-        new MailboxDto(1, "jack@temail.com", "title", false, new Usermail(), 0)
+    List<MailboxDTO> mailboxDto = Arrays.asList(
+        new MailboxDTO(1, "alice@temail.com", "title", false, new Usermail(), 0),
+        new MailboxDTO(1, "jack@temail.com", "title", false, new Usermail(), 0)
     );
     Mockito.doReturn(mailboxDto).when(usermailService).mailboxes(headerInfo, "bob@temail.com", -1, null);
     ObjectMapper mapper = new ObjectMapper();
@@ -189,7 +189,7 @@ public class UsermailAgentControllerTests {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("123213123123");
     msgIds.add("59598095904");
-    UmDeleteMailDto umDeleteMailDto = new UmDeleteMailDto(msgIds, "bob@temail.com", "alice@temail.com",
+    UmDeleteMailDTO umDeleteMailDto = new UmDeleteMailDTO(msgIds, "bob@temail.com", "alice@temail.com",
         0, "test message", 0);
     Mockito.doNothing().when(usermailService)
         .removeMsg(headerInfo, "bob@temail.com", "alice@temail.com", msgIds);
@@ -207,7 +207,7 @@ public class UsermailAgentControllerTests {
 
   @Test
   public void shouldDestoryMessage() throws Exception {
-    UsermailDto usermailDto = new UsermailDto("123213123123", "bob@temail.com", "alice@temail.com",
+    UsermailDTO usermailDto = new UsermailDTO("123213123123", "bob@temail.com", "alice@temail.com",
         0, "test message", 0);
     Mockito.doNothing().when(usermailService)
         .destroyAfterRead(headerInfo, "bob@temail.com", "alice@temail.com", "123213123123");
@@ -225,7 +225,7 @@ public class UsermailAgentControllerTests {
 
   @Test
   public void shouldDeleteSession() throws Exception {
-    DeleteMailBoxQueryDto queryDto = new DeleteMailBoxQueryDto("bob@temail.com", "alice@temail.com", true);
+    DeleteMailBoxQueryDTO queryDto = new DeleteMailBoxQueryDTO("bob@temail.com", "alice@temail.com", true);
     Mockito.doReturn(true).when(usermailService).deleteSession(headerInfo, queryDto);
     ObjectMapper mapper = new ObjectMapper();
     mockMvc.perform(
@@ -335,7 +335,7 @@ public class UsermailAgentControllerTests {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("123213123123");
     msgIds.add("59598095904");
-    MoveTrashMailDto moveTrashMailDto = new MoveTrashMailDto("bob@temail.com", "alice@temail.com", msgIds);
+    MoveTrashMailDTO moveTrashMailDto = new MoveTrashMailDTO("bob@temail.com", "alice@temail.com", msgIds);
     Mockito.doNothing().when(usermailService)
         .moveMsgToTrash(headerInfo, "bob@temail.com", "alice@temail.com", msgIds);
     ObjectMapper mapper = new ObjectMapper();
@@ -355,11 +355,11 @@ public class UsermailAgentControllerTests {
     String msgId = "123213123123";
     String msgId2 = "59598095904";
     String from = "a.@temail";
-    List<TrashMailDto> mailDtoList = Arrays.asList(
-        new TrashMailDto("bob@temail.com", "alice@temail.com", msgId),
-        new TrashMailDto("bob2@temail.com", "alice2@temail.com", msgId2)
+    List<TrashMailDTO> mailDtoList = Arrays.asList(
+        new TrashMailDTO("bob@temail.com", "alice@temail.com", msgId),
+        new TrashMailDTO("bob2@temail.com", "alice2@temail.com", msgId2)
     );
-    TrashMailsDto trashMailsDto = new TrashMailsDto(from, mailDtoList);
+    TrashMailsDTO trashMailsDto = new TrashMailsDTO(from, mailDtoList);
     Mockito.doNothing().when(usermailService)
         .revertMsgToTrash(headerInfo, "bob@temail.com", mailDtoList);
     ObjectMapper mapper = new ObjectMapper();
@@ -379,11 +379,11 @@ public class UsermailAgentControllerTests {
     String msgId = "123213123123";
     String msgId2 = "59598095904";
     String from = "a.@temail";
-    List<TrashMailDto> mailDtoList = Arrays.asList(
-        new TrashMailDto("bob@temail.com", "alice@temail.com", msgId),
-        new TrashMailDto("bob2@temail.com", "alice2@temail.com", msgId2)
+    List<TrashMailDTO> mailDtoList = Arrays.asList(
+        new TrashMailDTO("bob@temail.com", "alice@temail.com", msgId),
+        new TrashMailDTO("bob2@temail.com", "alice2@temail.com", msgId2)
     );
-    TrashMailsDto trashMailsDto = new TrashMailsDto(from, mailDtoList);
+    TrashMailsDTO trashMailsDto = new TrashMailsDTO(from, mailDtoList);
     Mockito.doNothing().when(usermailService)
         .removeMsgFromTrash(headerInfo, "bob@temail.com", mailDtoList);
     ObjectMapper mapper = new ObjectMapper();
@@ -446,8 +446,8 @@ public class UsermailAgentControllerTests {
   }
   @Test
   public void shouldUpdateUsermailBoxArchiveStatus() throws Exception {
-    UpdateArchiveDto archiveDto =
-        new UpdateArchiveDto("bob@temail.com", "alice@temail.com", 1);
+    UpdateArchiveDTO archiveDto =
+        new UpdateArchiveDTO("bob@temail.com", "alice@temail.com", 1);
     Mockito.doNothing().when(usermailService)
         .updateUsermailBoxArchiveStatus(headerInfo, archiveDto.getFrom(), archiveDto.getTo(),
             archiveDto.getArchiveStatus());

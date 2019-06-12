@@ -13,7 +13,7 @@ import com.google.gson.JsonParser;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
-import com.syswin.temail.usermail.dto.TrashMailDto;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -31,9 +31,9 @@ public class UsermailUsermail2NotfyMqServiceTest {
   public void sendMqRemoveTrash() {
     String temail = "from@msgseal.com";
     String to = "to@msgseal.com";
-    List<TrashMailDto> trashMailDtos = Arrays.asList(
-        new TrashMailDto(temail, to, "12"),
-        new TrashMailDto(temail, to, "122")
+    List<TrashMailDTO> trashMailDtos = Arrays.asList(
+        new TrashMailDTO(temail, to, "12"),
+        new TrashMailDTO(temail, to, "122")
     );
     int type = UsermailAgentEventType.TRASH_REMOVE_0;
     usermailMqService.sendMqRemoveTrash(temail, trashMailDtos, type);

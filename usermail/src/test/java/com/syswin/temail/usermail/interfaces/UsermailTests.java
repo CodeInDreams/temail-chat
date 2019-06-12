@@ -9,8 +9,8 @@ import com.syswin.temail.usermail.common.Contants.TemailStoreType;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.dto.CreateUsermailDto;
-import com.syswin.temail.usermail.dto.MailboxDto;
+import com.syswin.temail.usermail.dto.CreateUsermailDTO;
+import com.syswin.temail.usermail.dto.MailboxDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -46,7 +46,7 @@ public class UsermailTests {
     List<String> msgIds = new ArrayList<>();
     String msgId = "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1539415620000";
     msgIds.add(msgId);
-    CreateUsermailDto nomalMsg = createMsg(TemailStoreType.STORE_TYPE_TO_1, TemailType.TYPE_NORMAL_0);
+    CreateUsermailDTO nomalMsg = createMsg(TemailStoreType.STORE_TYPE_TO_1, TemailType.TYPE_NORMAL_0);
     //发送一条普通消息
     createUsermail(nomalMsg.getFrom(), nomalMsg.getTo(), nomalMsg.getMsgData(), TemailStoreType.STORE_TYPE_TO_1, nomalMsg.getMsgId(),
         TemailType.TYPE_NORMAL_0);
@@ -65,7 +65,7 @@ public class UsermailTests {
     response = getMails(nomalMsg.getTo(), nomalMsg.getFrom(), pageSize, seqId);
     assertGetMailsAfterRevert(response, nomalMsg.getMsgId());
     //A重新发送一条阅后即焚消息，B拉取
-    CreateUsermailDto DARMsg = createMsg(TemailStoreType.STORE_TYPE_TO_1, TemailType.TYPE_NORMAL_0);
+    CreateUsermailDTO DARMsg = createMsg(TemailStoreType.STORE_TYPE_TO_1, TemailType.TYPE_NORMAL_0);
     //发送一条阅后即焚消息
     createUsermail(DARMsg.getFrom(), DARMsg.getTo(), DARMsg.getMsgData(), TemailStoreType.STORE_TYPE_TO_1, DARMsg.getMsgId(),
         TemailType.TYPE_DESTORY_AFTER_READ_1);
@@ -76,7 +76,7 @@ public class UsermailTests {
   }
 
   //生成一条消息。注意，只是生成一条消息内的数据元素，不发送
-  private CreateUsermailDto createMsg(int storeType, int msgType) {
+  private CreateUsermailDTO createMsg(int storeType, int msgType) {
     //生成时间戳
     long timestampLong = generateTimestamp();
     String timestamp = String.valueOf(timestampLong);
@@ -87,18 +87,18 @@ public class UsermailTests {
     String msgId = "syswin-" + timestamp;
     int attachmentSize = 100;
     //生成消息
-    CreateUsermailDto createUsermailDto = new CreateUsermailDto(msgId, from, to, msgType, storeType,
+    CreateUsermailDTO createUsermailDto = new CreateUsermailDTO(msgId, from, to, msgType, storeType,
         msg, attachmentSize);
     return createUsermailDto;
   }
 
   //从response中获取mailboxDto 会话列表
-  private MailboxDto getMailboxDtoInfo(String response) {
+  private MailboxDTO getMailboxDtoInfo(String response) {
     Gson gs = new Gson();
     JsonParser jsonParser = new JsonParser();
     JsonObject root = jsonParser.parse(response).getAsJsonObject();
     JsonObject data = root.get("data").getAsJsonArray().get(0).getAsJsonObject();
-    MailboxDto mailboxDto = gs.fromJson(data, MailboxDto.class);
+    MailboxDTO mailboxDto = gs.fromJson(data, MailboxDTO.class);
     //lastMsg在json转对象时有数据丢失，重设lastMsg
     //seqId --> seqNo  msgId -> msgid, 前面的是json tag，后面是对应类中的field
     JsonObject lastMsg = data.get("lastMsg").getAsJsonObject();
@@ -125,7 +125,7 @@ public class UsermailTests {
 
   //验证同步单聊会话 列表 的返回值response中，会话列表不为空，最后一条消息的msgId是否是参数中的msgId
   private void assertMailboxes(String response, String msgId) {
-    MailboxDto mailboxDto = getMailboxDtoInfo(response);
+    MailboxDTO mailboxDto = getMailboxDtoInfo(response);
     Usermail usermail = mailboxDto.getLastMsg();
     Assert.assertNotNull(mailboxDto.getLastMsg());
     Assert.assertEquals(usermail.getMsgid(), msgId);

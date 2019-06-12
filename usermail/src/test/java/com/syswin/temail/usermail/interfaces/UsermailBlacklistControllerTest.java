@@ -13,7 +13,7 @@ import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.domains.UsermailBlacklist;
-import com.syswin.temail.usermail.dto.BlacklistDto;
+import com.syswin.temail.usermail.dto.BlacklistDTO;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -56,7 +56,7 @@ public class UsermailBlacklistControllerTest {
 
   @Test
   public void shouldAddBlacklist() throws Exception {
-    BlacklistDto blacklistDto = new BlacklistDto("temail", "blacklist");
+    BlacklistDTO blacklistDto = new BlacklistDTO("temail", "blacklist");
     UsermailBlacklist blacklist = new UsermailBlacklist(blacklistDto.getTemailAddress(),
         blacklistDto.getBlackedAddress());
     Mockito.doReturn(1).when(usermailBlacklistService).save(blacklist);
@@ -74,7 +74,7 @@ public class UsermailBlacklistControllerTest {
 
   @Test
   public void shouldRemoveBlacklist() throws Exception {
-    BlacklistDto blacklistDto = new BlacklistDto("temail", "blacklist");
+    BlacklistDTO blacklistDto = new BlacklistDTO("temail", "blacklist");
     UsermailBlacklist blacklist = new UsermailBlacklist(blacklistDto.getTemailAddress(),
         blacklistDto.getBlackedAddress());
     Mockito.doReturn(1).when(usermailBlacklistService).remove(blacklist);

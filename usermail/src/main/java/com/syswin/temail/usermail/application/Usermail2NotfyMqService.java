@@ -6,7 +6,7 @@ import com.syswin.temail.usermail.common.Contants.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.dto.TrashMailDto;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -225,7 +225,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * 废纸篓消息还原、删除
    */
   public void sendMqTrashMsgOpratorNotify(CdtpHeaderDto headerInfo, String owner,
-      List<TrashMailDto> trashMailDtoList, int type) {
+      List<TrashMailDTO> trashMailDtoList, int type) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(9);
     map.put(CDTP_HEADER, headerInfo.getCdtpHeader());

@@ -20,12 +20,12 @@ import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailBox;
-import com.syswin.temail.usermail.dto.CreateUsermailDto;
-import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDto;
-import com.syswin.temail.usermail.dto.MailboxDto;
-import com.syswin.temail.usermail.dto.QueryTrashDto;
-import com.syswin.temail.usermail.dto.TrashMailDto;
-import com.syswin.temail.usermail.dto.UmQueryDto;
+import com.syswin.temail.usermail.dto.CreateUsermailDTO;
+import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
+import com.syswin.temail.usermail.dto.MailboxDTO;
+import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
+import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.domains.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.domains.UsermailBoxRepo;
 import com.syswin.temail.usermail.domains.UsermailRepo;
@@ -88,7 +88,7 @@ public class UsermailServiceTest {
     String msgData = "msgData";
     int attachmentSize = 100;
     int eventType = SessionEventType.EVENT_TYPE_0;
-    CreateUsermailDto createUsermailDto = new CreateUsermailDto(msgid, from, to, type, storeType,
+    CreateUsermailDTO createUsermailDto = new CreateUsermailDTO(msgid, from, to, type, storeType,
         msgData, attachmentSize);
 
     when(usermailAdapter.getPkID()).thenReturn(1L);
@@ -125,7 +125,7 @@ public class UsermailServiceTest {
     int pageSize = 10;
     String filterSeqIds = "";
     when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setFromSeqNo(fromSeqNo);
     umQueryDto.setSessionid("sessionid");
     umQueryDto.setPageSize(pageSize);
@@ -152,9 +152,9 @@ public class UsermailServiceTest {
     String msgid = "msgid";
     usermail2NotfyMqService.sendMqAfterUpdateStatus(headerInfo, from, to, msgid, SessionEventType.EVENT_TYPE_2);
     usermailService.revert(xPacketId, header, from, to, from, msgid);
-    ArgumentCaptor<UmQueryDto> queryDtoCaptor = ArgumentCaptor.forClass(UmQueryDto.class);
+    ArgumentCaptor<UmQueryDTO> queryDtoCaptor = ArgumentCaptor.forClass(UmQueryDTO.class);
     Mockito.verify(usermailRepo).revertUsermail(queryDtoCaptor.capture());
-    UmQueryDto umQueryDto = queryDtoCaptor.getValue();
+    UmQueryDTO umQueryDto = queryDtoCaptor.getValue();
     assertEquals(from, umQueryDto.getOwner());
     assertEquals(msgid, umQueryDto.getMsgid());
   }
@@ -170,11 +170,11 @@ public class UsermailServiceTest {
     usermailBoxes.add(usermailBox);
     when(usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus)).thenReturn(usermailBoxes);
     usermailBox.setSessionid(sessionid);
-    UmQueryDto umQueryDto = new UmQueryDto();
+    UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid(sessionid);
     umQueryDto.setOwner(from);
     when(usermailRepo.getLastUsermail(umQueryDto)).thenReturn(singletonList(new Usermail()));
-    List<MailboxDto> list = usermailService.mailboxes(headerInfo, from, 0, null);
+    List<MailboxDTO> list = usermailService.mailboxes(headerInfo, from, 0, null);
     assertNotNull(list);
   }
 
@@ -300,7 +300,7 @@ public class UsermailServiceTest {
     String to = "to@msgseal.com";
     String sessionID = "sessionId";
     when(usermailSessionService.getSessionID(to, from)).thenReturn(sessionID);
-    DeleteMailBoxQueryDto queryDto = new DeleteMailBoxQueryDto(from, to, true);
+    DeleteMailBoxQueryDTO queryDto = new DeleteMailBoxQueryDTO(from, to, true);
     usermailService.deleteSession(headerInfo, queryDto);
     verify(usermail2NotfyMqService)
         .sendMqAfterDeleteSession(headerInfo, from, to, queryDto.isDeleteAllMsg(), SessionEventType.EVENT_TYPE_4);
@@ -368,9 +368,9 @@ public class UsermailServiceTest {
   public void revertMsgToTrash() {
     String temail = "from@msgseal.com";
     String to = "to@msgseal.com";
-    List<TrashMailDto> trashMailDtos = Arrays.asList(
-        new TrashMailDto(temail, to, "12"),
-        new TrashMailDto(temail, to, "122")
+    List<TrashMailDTO> trashMailDtos = Arrays.asList(
+        new TrashMailDTO(temail, to, "12"),
+        new TrashMailDTO(temail, to, "122")
     );
     List<String> msgIds = new ArrayList<>();
     msgIds.add(trashMailDtos.get(0).getMsgId());
@@ -378,7 +378,7 @@ public class UsermailServiceTest {
     usermailService.revertMsgToTrash(headerInfo, temail, trashMailDtos);
     verify(usermail2NotfyMqService)
         .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_36);
-    ArgumentCaptor<List<TrashMailDto>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
@@ -403,16 +403,16 @@ public class UsermailServiceTest {
   public void removeMsgFromTrash() {
     String temail = "from@msgseal.com";
     String to = "to@msgseal.com";
-    List<TrashMailDto> trashMailDtos = Arrays.asList(
-        new TrashMailDto(temail, to, "12"),
-        new TrashMailDto(temail, to, "122")
+    List<TrashMailDTO> trashMailDtos = Arrays.asList(
+        new TrashMailDTO(temail, to, "12"),
+        new TrashMailDTO(temail, to, "122")
     );
     List<String> msgIds = new ArrayList<>();
     msgIds.add(trashMailDtos.get(0).getMsgId());
     msgIds.add(trashMailDtos.get(1).getMsgId());
     usermailService.removeMsgFromTrash(temail, trashMailDtos);
 
-    ArgumentCaptor<List<TrashMailDto>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
@@ -433,15 +433,15 @@ public class UsermailServiceTest {
   public void removeMsgFromTrash2() {
     String temail = "from@msgseal.com";
     String to = "to@msgseal.com";
-    List<TrashMailDto> trashMailDtos = Arrays.asList(
-        new TrashMailDto(temail, to, "12"),
-        new TrashMailDto(temail, to, "122")
+    List<TrashMailDTO> trashMailDtos = Arrays.asList(
+        new TrashMailDTO(temail, to, "12"),
+        new TrashMailDTO(temail, to, "122")
     );
     usermailService.removeMsgFromTrash(headerInfo, temail, trashMailDtos);
     verify(usermail2NotfyMqService)
         .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_37);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<List<TrashMailDto>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<Integer> typeCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailMqService)
         .sendMqRemoveTrash(temailCaptor.capture(), listArgumentCaptor.capture(), typeCaptor.capture());
@@ -456,7 +456,7 @@ public class UsermailServiceTest {
     String temail = "from@msgseal.com";
     usermailService.clearMsgFromTrash(temail);
 
-    ArgumentCaptor<List<TrashMailDto>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
@@ -480,7 +480,7 @@ public class UsermailServiceTest {
     long timestamp = 11111;
     int pageSize = 20;
     String signal = "before";
-    QueryTrashDto queryTrashDto = new QueryTrashDto(new Timestamp(timestamp), pageSize, TemailStatus.STATUS_TRASH_4,
+    QueryTrashDTO queryTrashDto = new QueryTrashDTO(new Timestamp(timestamp), pageSize, TemailStatus.STATUS_TRASH_4,
         signal, temail);
     List<Usermail> result = Arrays.asList(
         new Usermail(22, "111", "", temail, "", 0, TemailType.TYPE_NORMAL_0, temail, "", 0, "".getBytes(), temail, null)
@@ -488,9 +488,9 @@ public class UsermailServiceTest {
     when(usermailRepo.getUsermailByStatus((queryTrashDto))).thenReturn(result);
     when(convertMsgService.convertMsg(result)).thenReturn(result);
     List<Usermail> msgFromTrash = usermailService.getMsgFromTrash(headerInfo, temail, timestamp, pageSize, signal);
-    ArgumentCaptor<QueryTrashDto> trashCaptor = ArgumentCaptor.forClass(QueryTrashDto.class);
+    ArgumentCaptor<QueryTrashDTO> trashCaptor = ArgumentCaptor.forClass(QueryTrashDTO.class);
     verify(usermailRepo).getUsermailByStatus(trashCaptor.capture());
-    QueryTrashDto dtos = trashCaptor.getValue();
+    QueryTrashDTO dtos = trashCaptor.getValue();
     assertEquals(temail, dtos.getOwner());
     assertEquals(msgFromTrash, result);
 

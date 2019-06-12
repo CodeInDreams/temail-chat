@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @ApiModel(value = "废纸篓信息列表")
-public class TrashMailsDto implements Serializable {
+public class TrashMailsDTO implements Serializable {
 
   @NotBlank
   @ApiModelProperty(value = "消息会话所有者邮箱地址")
@@ -18,12 +18,12 @@ public class TrashMailsDto implements Serializable {
   @Valid
   @NotEmpty
   @ApiModelProperty(value = "废纸篓消息列表")
-  private List<TrashMailDto> trashMails;
+  private List<TrashMailDTO> trashMails;
 
-  public TrashMailsDto() {
+  public TrashMailsDTO() {
   }
 
-  public TrashMailsDto(@NotEmpty String from, List<TrashMailDto> trashMails) {
+  public TrashMailsDTO(@NotEmpty String from, List<TrashMailDTO> trashMails) {
     this.from = from;
     this.trashMails = trashMails;
   }
@@ -36,17 +36,17 @@ public class TrashMailsDto implements Serializable {
     this.from = from;
   }
 
-  public List<TrashMailDto> getTrashMails() {
+  public List<TrashMailDTO> getTrashMails() {
     return trashMails;
   }
 
-  public void setTrashMails(List<TrashMailDto> trashMails) {
+  public void setTrashMails(List<TrashMailDTO> trashMails) {
     this.trashMails = trashMails;
   }
 
   @Override
   public String toString() {
-    return "TrashMailsDto{" +
+    return "TrashMailsDTO{" +
         "from='" + from + '\'' +
         ", trashMails=" + trashMails +
         '}';

@@ -2,9 +2,9 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailRepo;
-import com.syswin.temail.usermail.dto.QueryTrashDto;
-import com.syswin.temail.usermail.dto.TrashMailDto;
-import com.syswin.temail.usermail.dto.UmQueryDto;
+import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
+import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -25,7 +25,7 @@ public class UsermailRepoImpl implements UsermailRepo {
   }
 
   @Override
-  public List<Usermail> getUsermail(UmQueryDto umQueryDto) {
+  public List<Usermail> getUsermail(UmQueryDTO umQueryDto) {
     return usermailMapper.getUsermail(umQueryDto);
   }
 
@@ -35,12 +35,12 @@ public class UsermailRepoImpl implements UsermailRepo {
   }
 
   @Override
-  public List<Usermail> getLastUsermail(UmQueryDto umQueryDto) {
+  public List<Usermail> getLastUsermail(UmQueryDTO umQueryDto) {
     return usermailMapper.getLastUsermail(umQueryDto);
   }
 
   @Override
-  public int revertUsermail(UmQueryDto umQueryDto) {
+  public int revertUsermail(UmQueryDTO umQueryDto) {
     return usermailMapper.revertUsermail(umQueryDto);
   }
 
@@ -80,17 +80,17 @@ public class UsermailRepoImpl implements UsermailRepo {
   }
 
   @Override
-  public int removeMsgByStatus(List<TrashMailDto> trashMails, String owner, int status) {
+  public int removeMsgByStatus(List<TrashMailDTO> trashMails, String owner, int status) {
     return usermailMapper.removeMsgByStatus(trashMails, owner, status);
   }
 
   @Override
-  public int updateStatusByTemail(List<TrashMailDto> trashMails, String owner, int status) {
+  public int updateStatusByTemail(List<TrashMailDTO> trashMails, String owner, int status) {
     return usermailMapper.updateStatusByTemail(trashMails, owner, status);
   }
 
   @Override
-  public List<Usermail> getUsermailByStatus(QueryTrashDto queryDto) {
+  public List<Usermail> getUsermailByStatus(QueryTrashDTO queryDto) {
     return usermailMapper.getUsermailByStatus(queryDto);
   }
 

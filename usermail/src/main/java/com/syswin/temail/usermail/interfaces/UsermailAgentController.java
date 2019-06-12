@@ -14,14 +14,14 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.dto.CreateUsermailDto;
-import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDto;
-import com.syswin.temail.usermail.dto.MailboxDto;
-import com.syswin.temail.usermail.dto.MoveTrashMailDto;
-import com.syswin.temail.usermail.dto.TrashMailsDto;
-import com.syswin.temail.usermail.dto.UmDeleteMailDto;
-import com.syswin.temail.usermail.dto.UpdateArchiveDto;
-import com.syswin.temail.usermail.dto.UsermailDto;
+import com.syswin.temail.usermail.dto.CreateUsermailDTO;
+import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
+import com.syswin.temail.usermail.dto.MailboxDTO;
+import com.syswin.temail.usermail.dto.MoveTrashMailDTO;
+import com.syswin.temail.usermail.dto.TrashMailsDTO;
+import com.syswin.temail.usermail.dto.UmDeleteMailDTO;
+import com.syswin.temail.usermail.dto.UpdateArchiveDTO;
+import com.syswin.temail.usermail.dto.UsermailDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -57,7 +57,7 @@ public class UsermailAgentController {
   @RequestMapping(value = "/usermail", method = RequestMethod.POST)
   public ResultDto createUsermail(
       HttpServletRequest request,
-      @Valid @RequestBody CreateUsermailDto usermail) {
+      @Valid @RequestBody CreateUsermailDTO usermail) {
     umBlacklistProxy.checkInBlacklist(usermail.getFrom(), usermail.getTo());
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
@@ -104,7 +104,7 @@ public class UsermailAgentController {
   @RequestMapping(value = "/revert", method = RequestMethod.PUT)
   public ResultDto revert(
       HttpServletRequest request,
-      @RequestBody @Valid UsermailDto usermail) {
+      @RequestBody @Valid UsermailDTO usermail) {
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
@@ -129,7 +129,7 @@ public class UsermailAgentController {
     } else {
       mailboxMap = gson.fromJson(usermailBoxes, Map.class);
     }
-    List<MailboxDto> list = usermailService.mailboxes(cdtpHeaderDto, from, archiveStatus, mailboxMap);
+    List<MailboxDTO> list = usermailService.mailboxes(cdtpHeaderDto, from, archiveStatus, mailboxMap);
     resultDto.setData(list);
     return resultDto;
   }
@@ -137,7 +137,7 @@ public class UsermailAgentController {
   @ApiOperation(value = "删除消息(0x 0004)", notes = "删除消息")
   @RequestMapping(value = "/usermail/msg/remove", method = RequestMethod.PUT)
   public ResultDto removeMsg(HttpServletRequest request,
-      @RequestBody @Valid UmDeleteMailDto usermail) {
+      @RequestBody @Valid UmDeleteMailDTO usermail) {
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
@@ -148,7 +148,7 @@ public class UsermailAgentController {
   @ApiOperation(value = "阅后即焚消息已焚(0x 0006)", notes = "阅后即焚")
   @RequestMapping(value = "/usermail/msg/destory", method = RequestMethod.PUT)
   public ResultDto destroyAfterRead(HttpServletRequest request,
-      @Valid @RequestBody UsermailDto usermail) {
+      @Valid @RequestBody UsermailDTO usermail) {
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
         .destroyAfterRead(cdtpHeaderDto, usermail.getFrom(), usermail.getTo(), usermail.getMsgId());
@@ -157,7 +157,7 @@ public class UsermailAgentController {
 
   @ApiOperation(value = "删除会话(0x 1004)")
   @RequestMapping(value = "/usermail/session", method = RequestMethod.DELETE)
-  public ResultDto deleteSession(HttpServletRequest request, @RequestBody @Valid DeleteMailBoxQueryDto queryDto) {
+  public ResultDto deleteSession(HttpServletRequest request, @RequestBody @Valid DeleteMailBoxQueryDTO queryDto) {
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService.deleteSession(cdtpHeaderDto, queryDto);
     return new ResultDto();
@@ -199,7 +199,7 @@ public class UsermailAgentController {
   @ApiOperation(value = "移送消息到废纸篓(0x 2000)", notes = "移送废纸篓")
   @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.POST)
   public ResultDto moveMsgToTrash(HttpServletRequest request,
-      @RequestBody @Valid MoveTrashMailDto trashMailDto) {
+      @RequestBody @Valid MoveTrashMailDTO trashMailDto) {
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
@@ -210,7 +210,7 @@ public class UsermailAgentController {
   @ApiOperation(value = "还原废纸篓消息(0x 2001)", notes = "还原废纸篓消息")
   @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.PUT)
   public ResultDto revertMsgToTrash(HttpServletRequest request,
-      @RequestBody @Valid TrashMailsDto revertTrashMailDto) {
+      @RequestBody @Valid TrashMailsDTO revertTrashMailDto) {
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
@@ -221,7 +221,7 @@ public class UsermailAgentController {
   @ApiOperation(value = "删除废纸篓消息(0x 2002)", notes = "删除废纸篓消息")
   @RequestMapping(value = "/usermail/msg/trash", method = RequestMethod.DELETE)
   public ResultDto removeMsgFromTrash(HttpServletRequest request,
-      @RequestBody @Valid TrashMailsDto revertTrashMailDto) {
+      @RequestBody @Valid TrashMailsDTO revertTrashMailDto) {
     ResultDto resultDto = new ResultDto();
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
@@ -265,7 +265,7 @@ public class UsermailAgentController {
   @ApiOperation(value = "单聊会话归档 (0x 2005)", notes = "单聊归档")
   @RequestMapping(value = "/usermail/msg/archive", method = RequestMethod.PUT)
   public ResultDto updateUsermailBoxArchiveStatus(HttpServletRequest request, @RequestBody @Valid
-      UpdateArchiveDto dto) {
+      UpdateArchiveDTO dto) {
     CdtpHeaderDto cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService.updateUsermailBoxArchiveStatus(cdtpHeaderDto, dto.getFrom(), dto.getTo(), dto.getArchiveStatus());
     return new ResultDto();

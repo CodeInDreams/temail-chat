@@ -3,7 +3,7 @@ package com.syswin.temail.usermail.interfaces;
 import com.syswin.temail.usermail.application.UsermailBlacklistService;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.domains.UsermailBlacklist;
-import com.syswin.temail.usermail.dto.BlacklistDto;
+import com.syswin.temail.usermail.dto.BlacklistDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -31,7 +31,7 @@ public class UsermailBlacklistController {
   @ApiOperation(value = "添加黑名单(1000)")
   @PostMapping(value = "/blacklist")
   public ResultDto createBlacklist(HttpServletRequest request,
-      @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDto blacklistDto) {
+      @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDTO blacklistDto) {
     usermailBlacklistService.save(new UsermailBlacklist(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
     return new ResultDto();
   }
@@ -39,7 +39,7 @@ public class UsermailBlacklistController {
   @ApiOperation(value = "删除黑名单(1001)")
   @DeleteMapping(value = "/blacklist")
   public ResultDto removeBlacklist(HttpServletRequest request,
-      @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDto blacklistDto) {
+      @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDTO blacklistDto) {
     usermailBlacklistService.remove(new UsermailBlacklist(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
     return new ResultDto();
   }

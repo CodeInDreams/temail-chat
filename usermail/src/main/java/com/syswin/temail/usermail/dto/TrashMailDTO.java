@@ -7,7 +7,7 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 
 @ApiModel(value = "废纸篓信息")
-public class TrashMailDto implements Serializable {
+public class TrashMailDTO implements Serializable {
 
   @NotBlank
   @ApiModelProperty(value = "消息会话所有者邮箱地址")
@@ -21,13 +21,13 @@ public class TrashMailDto implements Serializable {
   @ApiModelProperty(value = "消息ID")
   private String msgId;
 
-  public TrashMailDto(String from, String to, String msgId) {
+  public TrashMailDTO(String from, String to, String msgId) {
     this.from = from;
     this.to = to;
     this.msgId = msgId;
   }
 
-  public TrashMailDto() {
+  public TrashMailDTO() {
   }
 
 
@@ -57,7 +57,7 @@ public class TrashMailDto implements Serializable {
 
   @Override
   public String toString() {
-    return "TrashMailDto{" +
+    return "TrashMailDTO{" +
         "from='" + from + '\'' +
         ", to='" + to + '\'' +
         ", msgId='" + msgId + '\'' +
@@ -72,7 +72,7 @@ public class TrashMailDto implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    TrashMailDto that = (TrashMailDto) o;
+    TrashMailDTO that = (TrashMailDTO) o;
     return Objects.equals(from, that.from) &&
         Objects.equals(to, that.to) &&
         Objects.equals(msgId, that.msgId);

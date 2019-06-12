@@ -10,7 +10,7 @@ import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Contants.SessionEventKey;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
 import com.syswin.temail.usermail.core.IMQConsumer;
-import com.syswin.temail.usermail.dto.TrashMailDto;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class UsermailMQConsumer implements IMQConsumer {
         JsonElement trashJsonElement = root.get(SessionEventKey.TRASH_MSG_INFO);
         if (!StringUtils.isEmpty(trashJsonElement)) {
           String trashMsgInfo = trashJsonElement.getAsString();
-          List<TrashMailDto> trashMailDtos = new Gson().fromJson(trashMsgInfo, new TypeToken<List<TrashMailDto>>() {
+          List<TrashMailDTO> trashMailDtos = new Gson().fromJson(trashMsgInfo, new TypeToken<List<TrashMailDTO>>() {
           }.getType());
           usermailService.removeMsgFromTrash(temail, trashMailDtos);
         } else {

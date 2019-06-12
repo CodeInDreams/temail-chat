@@ -5,7 +5,7 @@ import com.syswin.temail.usermail.application.UsermailMsgReplyService;
 import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Contants.SessionEventKey;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
-import com.syswin.temail.usermail.dto.TrashMailDto;
+import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,11 +39,11 @@ public class UsermailMQConsumerTest {
   @Test
   public void consume0Test(){
 
-    TrashMailDto trashMailDto = new TrashMailDto();
+    TrashMailDTO trashMailDto = new TrashMailDTO();
     trashMailDto.setFrom(from);
     trashMailDto.setTo(to);
     trashMailDto.setMsgId(msgId);
-    List<TrashMailDto> trashMailDtos = new ArrayList<>();
+    List<TrashMailDTO> trashMailDtos = new ArrayList<>();
     trashMailDtos.add(trashMailDto);
     usermailMQConsumer.consumer(getTestMessage(UsermailAgentEventType.TRASH_REMOVE_0));
     Mockito.verify(usermailService).removeMsgFromTrash(from, trashMailDtos);
@@ -81,11 +81,11 @@ public class UsermailMQConsumerTest {
 
   private String getTestMessage(int type){
     Gson gson = new Gson();
-    TrashMailDto trashMailDto = new TrashMailDto();
+    TrashMailDTO trashMailDto = new TrashMailDTO();
     trashMailDto.setFrom(from);
     trashMailDto.setTo(to);
     trashMailDto.setMsgId(msgId);
-    List<TrashMailDto> trashMailDtos = new ArrayList<>();
+    List<TrashMailDTO> trashMailDtos = new ArrayList<>();
     trashMailDtos.add(trashMailDto);
     Map<String, Object> map = new HashMap<>();
     map.put(SessionEventKey.CDTP_HEADER, cdtpHeader);

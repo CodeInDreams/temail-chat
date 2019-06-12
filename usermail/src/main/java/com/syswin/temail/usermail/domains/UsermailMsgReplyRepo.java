@@ -1,14 +1,14 @@
 package com.syswin.temail.usermail.domains;
 
 
-import com.syswin.temail.usermail.dto.QueryMsgReplyDto;
+import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.List;
 
 public interface UsermailMsgReplyRepo {
 
   int insert(UsermailMsgReply record);
 
-  List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDto dto);
+  List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto);
 
   int deleteBatchMsgReplyStatus(String owner, List<String> msgIds);
 

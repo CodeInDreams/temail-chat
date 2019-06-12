@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
 
 @ApiModel(value = "黑名单关系")
-public class BlacklistDto implements java.io.Serializable {
+public class BlacklistDTO implements java.io.Serializable {
 
   @ApiModelProperty(value = "黑名单发起者temail地址")
   @JsonProperty(value = "from")
@@ -17,10 +17,10 @@ public class BlacklistDto implements java.io.Serializable {
   @NotEmpty
   private String blackedAddress;
 
-  public BlacklistDto() {
+  public BlacklistDTO() {
   }
 
-  public BlacklistDto(String temailAddress, String blackedAddress) {
+  public BlacklistDTO(String temailAddress, String blackedAddress) {
     this.temailAddress = temailAddress;
     this.blackedAddress = blackedAddress;
   }
@@ -43,7 +43,7 @@ public class BlacklistDto implements java.io.Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("BlacklistDto{");
+    final StringBuilder sb = new StringBuilder("BlacklistDTO{");
     sb.append("temailAddress='").append(temailAddress).append('\'');
     sb.append(", blackedAddress='").append(blackedAddress).append('\'');
     sb.append('}');

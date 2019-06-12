@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syswin.temail.usermail.application.GroupChatService;
 import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.dto.GroupChatEventDto;
+import com.syswin.temail.usermail.dto.GroupChatEventDTO;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +50,7 @@ public class GroupChatAgentControllerTests {
 
   @Test
   public void createGroupChatMailBox() throws Exception {
-    GroupChatEventDto groupChatEventDto = new GroupChatEventDto();
+    GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom("asd@t.email");
     groupChatEventDto.setTo("groupChat@t.email");
     Mockito.doNothing().when(groupChatService).syncGroupChatMemberEvent(groupChatEventDto);
@@ -68,7 +68,7 @@ public class GroupChatAgentControllerTests {
 
   @Test
   public void deleteGroupChatMailBox() throws Exception {
-    GroupChatEventDto groupChatEventDto = new GroupChatEventDto();
+    GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom("asd@t.email");
     groupChatEventDto.setTo("groupChat@t.email");
     Mockito.doNothing().when(groupChatService).removeGroupChatMemeberEvent(groupChatEventDto);

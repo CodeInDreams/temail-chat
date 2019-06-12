@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 
 @ApiModel(value = "创建temail时消息信息")
-public class CreateUsermailDto implements Serializable {
+public class CreateUsermailDTO implements Serializable {
 
   @NotBlank(message = "msgId不能为空")
   @ApiModelProperty(value = "消息ID")
@@ -122,7 +122,7 @@ public class CreateUsermailDto implements Serializable {
     this.filter = filter;
   }
 
-  public CreateUsermailDto(String msgId, String from, String to, int type, int storeType, String msgData,int attachmentSize) {
+  public CreateUsermailDTO(String msgId, String from, String to, int type, int storeType, String msgData,int attachmentSize) {
     this.msgId = msgId;
     this.from = from;
     this.to = to;
@@ -132,12 +132,12 @@ public class CreateUsermailDto implements Serializable {
     this.attachmentSize = attachmentSize;
   }
 
-  public CreateUsermailDto() {
+  public CreateUsermailDTO() {
   }
 
   @Override
   public String toString() {
-    return "CreateUsermailDto{" +
+    return "CreateUsermailDTO{" +
         "msgId='" + msgId + '\'' +
         ", from='" + from + '\'' +
         ", to='" + to + '\'' +

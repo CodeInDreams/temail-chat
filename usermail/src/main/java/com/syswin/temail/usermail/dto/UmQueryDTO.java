@@ -4,7 +4,7 @@ import java.util.Objects;
 import org.apache.ibatis.type.Alias;
 
 @Alias("umQuery")
-public class UmQueryDto implements java.io.Serializable {
+public class UmQueryDTO implements java.io.Serializable {
 
   private static final long serialVersionUID = -1986555435518993672L;
   private long fromSeqNo;
@@ -73,7 +73,7 @@ public class UmQueryDto implements java.io.Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("UmQueryDto{");
+    final StringBuilder sb = new StringBuilder("UmQueryDTO{");
     sb.append("fromSeqNo=").append(fromSeqNo);
     sb.append(", pageSize=").append(pageSize);
     sb.append(", msgid='").append(msgid).append('\'');
@@ -89,7 +89,7 @@ public class UmQueryDto implements java.io.Serializable {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
-    UmQueryDto umQueryDto = (UmQueryDto) o;
+    UmQueryDTO umQueryDto = (UmQueryDTO) o;
     return fromSeqNo == umQueryDto.fromSeqNo &&
             pageSize == umQueryDto.pageSize &&
             status == umQueryDto.status &&

@@ -19,8 +19,8 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.core.dto.ResultDto;
 import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.dto.ReplyDestoryDto;
-import com.syswin.temail.usermail.dto.UsermailMsgReplyDto;
+import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
+import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ public class UsermailMsgReplyControllerTests {
   public void shouldSendUsermailMsgReplyWhenNotInBlackList() throws Exception {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("12344321");
-    UsermailMsgReplyDto msgReply = new UsermailMsgReplyDto("12344321", "from", "to", TemailType.TYPE_NORMAL_0, "msg000",
+    UsermailMsgReplyDTO msgReply = new UsermailMsgReplyDTO("12344321", "from", "to", TemailType.TYPE_NORMAL_0, "msg000",
         "syswin-11111111", 100, msgIds,
         TemailStoreType.STORE_TYPE_FROM_2);
     Mockito.doNothing().when(umBlacklistProxy).checkInBlacklist(msgReply.getFrom(), msgReply.getTo());
@@ -98,7 +98,7 @@ public class UsermailMsgReplyControllerTests {
   public void shouldNotSendMsgReplyWhenInBlackList() throws Exception {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("173849");
-    UsermailMsgReplyDto msgReply = new UsermailMsgReplyDto("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
+    UsermailMsgReplyDTO msgReply = new UsermailMsgReplyDTO("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
         100, msgIds, 1);
     Mockito.doThrow(new IllegalGMArgsException(RESULT_CODE.ERROR_IN_BLACKLIST)).when(umBlacklistProxy)
         .checkInBlacklist(msgReply.getFrom(), msgReply.getTo());
@@ -123,7 +123,7 @@ public class UsermailMsgReplyControllerTests {
   public void shouldSuccessWhenRevertMsgReply() throws Exception {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("173849");
-    UsermailMsgReplyDto msgReply = new UsermailMsgReplyDto("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
+    UsermailMsgReplyDTO msgReply = new UsermailMsgReplyDTO("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
         100, msgIds, 1);
     Mockito.doNothing().when(usermailMsgReplyService)
         .removeMsgReplys(headerInfo, "1233", msgIds, "from@temail", "to@temail");
@@ -143,7 +143,7 @@ public class UsermailMsgReplyControllerTests {
   public void shouldSuccessWhenRemoveMsgReply() throws Exception {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("173849");
-    UsermailMsgReplyDto msgReply = new UsermailMsgReplyDto("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
+    UsermailMsgReplyDTO msgReply = new UsermailMsgReplyDTO("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
         100, msgIds, 1);
     Mockito.doNothing().when(usermailMsgReplyService)
         .removeMsgReplys(headerInfo, "1233", msgIds, "from@temail", "to@temail");
@@ -193,7 +193,7 @@ public class UsermailMsgReplyControllerTests {
     String from = "XXXX@qq.com";
     String to = "YYYY@qq.com";
     String msgId = "09876";
-    ReplyDestoryDto replyDestoryDto = new ReplyDestoryDto(from, to, msgId);
+    ReplyDestoryDTO replyDestoryDto = new ReplyDestoryDTO(from, to, msgId);
     Mockito.doNothing().when(usermailMsgReplyService)
         .destoryAfterRead(headerInfo, from, to, msgId);
     ObjectMapper mapper = new ObjectMapper();

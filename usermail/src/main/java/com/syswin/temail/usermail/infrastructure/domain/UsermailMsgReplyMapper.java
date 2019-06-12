@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.dto.QueryMsgReplyDto;
+import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ public interface UsermailMsgReplyMapper {
 
   int insert(UsermailMsgReply record);
 
-  List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDto dto);
+  List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto);
 
   int deleteBatchMsgReplyStatus(@Param("owner") String owner, @Param("msgIds") List<String> msgIds);
 

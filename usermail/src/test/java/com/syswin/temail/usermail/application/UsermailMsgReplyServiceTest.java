@@ -12,7 +12,7 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
-import com.syswin.temail.usermail.dto.QueryMsgReplyDto;
+import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.domains.UsermailRepo;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyRepo;
 import java.util.ArrayList;
@@ -197,14 +197,14 @@ public class UsermailMsgReplyServiceTest {
     usermailMsgReplyList.add(usermailMsgReply);
     when(usermailRepo.getUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailRepo.getUsermailByMsgid(parentMsgid, owner)).thenReturn(usermail);
-    when(usermailMsgReplyRepo.getMsgReplys(Mockito.any(QueryMsgReplyDto.class)))
+    when(usermailMsgReplyRepo.getMsgReplys(Mockito.any(QueryMsgReplyDTO.class)))
         .thenReturn(usermailMsgReplyList);
     when(convertMsgService.convertReplyMsg(usermailMsgReplyList)).thenReturn(usermailMsgReplyList);
     List<UsermailMsgReply> result = usermailMsgReplyService
         .getMsgReplys(headerInfo, parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
-    ArgumentCaptor<QueryMsgReplyDto> argumentCaptor = ArgumentCaptor.forClass(QueryMsgReplyDto.class);
+    ArgumentCaptor<QueryMsgReplyDTO> argumentCaptor = ArgumentCaptor.forClass(QueryMsgReplyDTO.class);
     verify(usermailMsgReplyRepo).getMsgReplys(argumentCaptor.capture());
-    QueryMsgReplyDto queryMsgReplyDto = argumentCaptor.getValue();
+    QueryMsgReplyDTO queryMsgReplyDto = argumentCaptor.getValue();
     Assert.assertEquals(pageSize, queryMsgReplyDto.getPageSize());
     Assert.assertEquals(seqId, queryMsgReplyDto.getFromSeqNo());
     Assert.assertEquals(signal, queryMsgReplyDto.getSignal());

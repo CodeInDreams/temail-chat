@@ -6,7 +6,7 @@ import java.util.Objects;
 import javax.validation.constraints.NotBlank;
 
 @ApiModel(value = "群事件信息")
-public class GroupChatEventDto {
+public class GroupChatEventDTO {
 
   @NotBlank(message = "from不能为空")
   @ApiModelProperty(value = "发起人temail")
@@ -34,7 +34,7 @@ public class GroupChatEventDto {
 
   @Override
   public String toString() {
-    return "GroupChatEventDto{" +
+    return "GroupChatEventDTO{" +
         "from='" + from + '\'' +
         ", to='" + to + '\'' +
         '}';
@@ -48,7 +48,7 @@ public class GroupChatEventDto {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    GroupChatEventDto that = (GroupChatEventDto) o;
+    GroupChatEventDTO that = (GroupChatEventDTO) o;
     return Objects.equals(from, that.from) &&
         Objects.equals(to, that.to);
   }
