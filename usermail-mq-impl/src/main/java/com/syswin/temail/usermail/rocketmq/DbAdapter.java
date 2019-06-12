@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class DbAdapter implements IMqAdapter {
 
-
-  @Autowired
   private TemailMqSender temailMqSender;
+
+  public DbAdapter(TemailMqSender temailMqSender) {
+    this.temailMqSender = temailMqSender;
+  }
 
   @Override
   public void init() {

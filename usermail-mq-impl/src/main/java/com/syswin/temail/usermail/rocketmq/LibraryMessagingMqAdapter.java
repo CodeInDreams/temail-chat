@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class LibraryMessagingMqAdapter implements IMqAdapter {
 
   private final Logger LOGGER = LoggerFactory.getLogger(LibraryMessagingMqAdapter.class);
-  private Map<String, MqProducer> rocketMqProducers;
-  @Autowired
-  private RocketMqProperties rocketMqProperties;
+  private final Map<String, MqProducer> rocketMqProducers;
+  private final RocketMqProperties rocketMqProperties;
 
-  public LibraryMessagingMqAdapter(Map<String, MqProducer> rocketMqProducers) {
+  public LibraryMessagingMqAdapter(Map<String, MqProducer> rocketMqProducers, RocketMqProperties rocketMqProperties) {
     this.rocketMqProducers = rocketMqProducers;
+    this.rocketMqProperties = rocketMqProperties;
   }
 
   @Override

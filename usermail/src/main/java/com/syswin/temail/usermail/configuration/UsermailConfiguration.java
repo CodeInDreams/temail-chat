@@ -18,10 +18,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UsermailConfiguration {
 
-
-  @Autowired
-  private RocketMqProperties rocketMqProperties;
-
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "ROCKETMQ", matchIfMissing = true)
   MqClient mqclient(UsermailConfig config, UsermailMQConsumer usermailMQConsumer) {
@@ -49,7 +45,7 @@ public class UsermailConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")
-  MqProducerConfig usermailProducerConfig(UsermailConfig usermailConfig) {
+  MqProducerConfig usermailProducerConfig(UsermailConfig usermailConfig, RocketMqProperties rocketMqProperties) {
     return new MqProducerConfig(rocketMqProperties.getProducerGroup(),
         usermailConfig.mqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(usermailConfig.mqType));
   }

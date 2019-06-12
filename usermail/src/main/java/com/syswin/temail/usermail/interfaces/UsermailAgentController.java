@@ -89,7 +89,8 @@ public class UsermailAgentController {
       @ApiParam(value = "接收者", required = true) @RequestParam(value = "to", defaultValue = "") String to,
       @ApiParam(value = "分页`大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
       @ApiParam(value = "上次消息拉取SeqNo", required = true) @RequestParam(value = "seqId", defaultValue = "0") long seqId,
-      @ApiParam(value = "向前向后拉取标识", required = true, defaultValue = "before") @RequestParam(value = "signal", defaultValue = "before") String signal,
+      @ApiParam(value = "向前向后拉取标识", required = true, defaultValue = "before") @RequestParam(value = "signal",
+          defaultValue = "before") String signal,
       @ApiParam(value = "过滤的seqId") @RequestParam(value = "filterSeqIds", required = false, defaultValue = "") String filterSeqIds) {
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
@@ -275,5 +276,5 @@ public class UsermailAgentController {
   private CdtpHeaderDTO getHeaderInfoFromRequest(HttpServletRequest request) {
     return new CdtpHeaderDTO(request.getHeader(CDTP_HEADER), request.getHeader(X_PACKET_ID));
   }
-  
+
 }
