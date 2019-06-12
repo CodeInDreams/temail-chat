@@ -19,7 +19,7 @@ public class MsgCompressor {
   }
 
   public byte[] zipWithDecode(final String data) {
-    byte[] zip = new byte[0];
+    byte[] zip;
     try {
       zip = gzip.zip(Base64.getUrlDecoder().decode(data.getBytes("utf-8")));
     } catch (IOException e) {
@@ -29,7 +29,7 @@ public class MsgCompressor {
   }
 
   public String unzipEncode(final byte[] data) {
-    String s = null;
+    String s;
     try {
       s = new String(Base64.getUrlEncoder().encode(gzip.unzip(data)), "utf-8");
     } catch (IOException e) {
@@ -39,7 +39,7 @@ public class MsgCompressor {
   }
 
   public byte[] zip(final String data) {
-    byte[] zip = new byte[0];
+    byte[] zip;
     try {
       zip = gzip.zip(data.getBytes("utf-8"));
     } catch (IOException e) {
@@ -49,7 +49,7 @@ public class MsgCompressor {
   }
 
   public String unzip(final byte[] data) {
-    String s = null;
+    String s;
     try {
       s = new String(gzip.unzip(data), "utf-8");
     } catch (IOException e) {
