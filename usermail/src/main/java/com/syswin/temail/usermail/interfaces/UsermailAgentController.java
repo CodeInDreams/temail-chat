@@ -65,7 +65,8 @@ public class UsermailAgentController {
     String owner;
     String other;
     if (storeType == TemailStoreType.STORE_TYPE_TO_1) {
-      owner = usermail.getTo();//owner消息所属人 store_type_to_1表示存收件人收件箱，所以owner为to即为收件人
+      // owner消息所属人 store_type_to_1表示存收件人收件箱，所以owner为to即为收件人
+      owner = usermail.getTo();
       other = usermail.getFrom();
     } else if (storeType == TemailStoreType.STORE_TYPE_FROM_2) {
       owner = usermail.getFrom();

@@ -124,7 +124,8 @@ public class Constants {
     String TEMAIL = "temail";
     String MESSAGE = "message";
     String DELETE_ALL_MSG = "deleteAllMsg";
-    String PARENT_MSGID = "parentMsgId";//回复父消息id
+    // 回复父消息id
+    String PARENT_MSGID = "parentMsgId";
     String ATTACHMENT_SIZE = "attachmentSize";
     String TRASH_MSG_INFO = "trashMsgInfo";
     String REPLY_MSG_PARENT_ID = "replyMsgParentId";

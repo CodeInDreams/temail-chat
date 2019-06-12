@@ -60,9 +60,11 @@ public class MqClient {
               return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
               LOGGER.error("MQ consumer execption", e);
-              return ConsumeConcurrentlyStatus.RECONSUME_LATER; //稍后再试
+              // 稍后再试
+              return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS; //消费成功
+            // 消费成功
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
           });
       consumer.start();
     } catch (MQClientException e) {
