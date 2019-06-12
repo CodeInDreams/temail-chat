@@ -9,7 +9,7 @@ import com.syswin.temail.usermail.application.UsermailMsgReplyService;
 import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Contants.SessionEventKey;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
-import com.syswin.temail.usermail.core.IMQConsumer;
+import com.syswin.temail.usermail.core.IMqConsumer;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.List;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class UsermailMQConsumer implements IMQConsumer {
+public class UsermailMQConsumer implements IMqConsumer {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UsermailMQConsumer.class);
 

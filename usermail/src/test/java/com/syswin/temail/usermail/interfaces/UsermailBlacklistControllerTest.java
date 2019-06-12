@@ -10,8 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syswin.temail.usermail.application.UsermailBlacklistService;
 import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.core.dto.ResultDto;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.domains.UsermailBlacklist;
 import com.syswin.temail.usermail.dto.BlacklistDTO;
 import java.util.Arrays;
@@ -40,7 +40,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 public class UsermailBlacklistControllerTest {
 
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}", "{xPacketId:value}");
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}", "{xPacketId:value}");
   @Autowired
   private WebApplicationContext wac;
 
@@ -108,7 +108,7 @@ public class UsermailBlacklistControllerTest {
             .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .param("temailAddress", teamilAddress))
         .andReturn();
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(blackedAddresses);
     assertThat(result.getResponse().getContentAsString())
         .isEqualTo(mapper.writeValueAsString(resultDto));

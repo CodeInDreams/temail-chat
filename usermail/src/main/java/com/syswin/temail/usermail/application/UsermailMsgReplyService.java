@@ -9,8 +9,8 @@ import com.syswin.temail.usermail.common.Contants.SessionEventType;
 import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.core.util.SeqIdFilter;
 import com.syswin.temail.usermail.domains.Usermail;
@@ -59,7 +59,7 @@ public class UsermailMsgReplyService {
   }
 
   @TemailShardingTransactional( shardingField = "#owner")
-  public Map createMsgReply(CdtpHeaderDto cdtpHeaderDto, String from, String to, String message, String msgId,
+  public Map createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message, String msgId,
       String parentMsgId, int type, int attachmentSize, String owner) {
     String sessionid = usermailSessionService.getSessionID(from, to);
     msgReplyTypeValidate(parentMsgId, owner);
@@ -109,7 +109,7 @@ public class UsermailMsgReplyService {
   }
 
   @TemailShardingTransactional( shardingField = "#from")
-  public void revertMsgReply(CdtpHeaderDto cdtpHeaderDto, String parentMsgReplyId, String msgId, String from,
+  public void revertMsgReply(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, String msgId, String from,
       String to) {
     msgReplyTypeValidate(parentMsgReplyId);
     usermailMqService.sendMqRevertReplyMsg(cdtpHeaderDto.getxPacketId(), cdtpHeaderDto.getCdtpHeader(), from, to, to,
@@ -121,11 +121,11 @@ public class UsermailMsgReplyService {
   }
 
   @TemailShardingTransactional( shardingField = "#from")
-  public void removeMsgReplys(CdtpHeaderDto cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
+  public void removeMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
       String to) {
     Usermail usermail = msgReplyTypeValidate(parentMsgReplyId, from);
     if (CollectionUtils.isEmpty(msgIds)) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_REQUEST_PARAM);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_REQUEST_PARAM);
     }
     LOGGER.info("Label-delete-usermail-reply: delete reply messages，from = {},to = {},msgIds = {}", from, to, msgIds);
     int count = usermailMsgReplyRepo.deleteBatchMsgReplyStatus(from, msgIds);
@@ -147,7 +147,7 @@ public class UsermailMsgReplyService {
   }
 
   @TemailShardingTransactional( shardingField = "#owner")
-  public List<UsermailMsgReply> getMsgReplys(CdtpHeaderDto cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
+  public List<UsermailMsgReply> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
       String signal, String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
     QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
@@ -192,7 +192,7 @@ public class UsermailMsgReplyService {
   }
 
   @TemailShardingTransactional( shardingField = "#from")
-  public void destoryAfterRead(CdtpHeaderDto headerInfo, String from, String to, String msgId) {
+  public void destoryAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
     usermailMsgReply.setOwner(from);
     usermailMsgReply.setMsgid(msgId);
@@ -220,7 +220,7 @@ public class UsermailMsgReplyService {
     List<Usermail> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
     if (CollectionUtils.isEmpty(usermails)) {
       LOGGER.warn("parentMsgId status is error:{}", parentMsgId);
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_ILLEGAL_PARENT_MSG_ID);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_ILLEGAL_PARENT_MSG_ID);
     }
     return usermails;
   }
@@ -234,7 +234,7 @@ public class UsermailMsgReplyService {
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0
         && usermailByMsgid.getStatus() != TemailStatus.STATUS_TRASH_4)) {
       LOGGER.warn("parentMsgId is {}", parentMsgId);
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_ILLEGAL_PARENT_MSG_ID);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_ILLEGAL_PARENT_MSG_ID);
     }
     return usermailByMsgid;
   }

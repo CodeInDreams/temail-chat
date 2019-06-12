@@ -18,6 +18,7 @@ public class Contants {
     ERROR_FILTER_SEQIDS(567, "seqID过滤参数格式错误，无法正确解析 ");
     private int code;
     private String message;
+
     RESULT_CODE(int code, String message) {
       this.code = code;
       this.message = message;

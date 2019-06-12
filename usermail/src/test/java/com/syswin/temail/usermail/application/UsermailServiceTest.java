@@ -15,8 +15,8 @@ import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailBox;
@@ -58,7 +58,7 @@ public class UsermailServiceTest {
       usermailMqService, new MsgCompressor(), convertMsgService
   );
 
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}",
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
 
   @Test
@@ -136,7 +136,7 @@ public class UsermailServiceTest {
     when(usermailRepo.getUsermail(any())).thenReturn(usermails);
     List<Usermail> list = usermailService.getMails(headerInfo, from, to, fromSeqNo, pageSize, filterSeqIds, "before");
     System.out.println(list);
-    ArgumentCaptor<CdtpHeaderDto> argumentCaptor1 = ArgumentCaptor.forClass(CdtpHeaderDto.class);
+    ArgumentCaptor<CdtpHeaderDTO> argumentCaptor1 = ArgumentCaptor.forClass(CdtpHeaderDTO.class);
     ArgumentCaptor<String> argumentCaptor2 = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> argumentCaptor3 = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<Usermail>> argumentCaptor4 = ArgumentCaptor.forClass(List.class);
@@ -532,7 +532,7 @@ public class UsermailServiceTest {
     assertEquals(archiveStatus, status);
   }
 
-  @Test(expected = IllegalGMArgsException.class)
+  @Test(expected = IllegalGmArgsException.class)
   public void failUpdateUsermailBoxArchiveStatus() {
     String from = "from@msgseal.com";
     String to = "to@msgseal.com";

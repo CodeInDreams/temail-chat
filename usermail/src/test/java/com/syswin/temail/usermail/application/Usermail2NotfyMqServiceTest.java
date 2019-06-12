@@ -15,7 +15,7 @@ import com.google.gson.JsonParser;
 import com.syswin.temail.usermail.common.Contants.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class Usermail2NotfyMqServiceTest {
   private final IMqAdapter mqAdapter = Mockito.mock(IMqAdapter.class);
   private final UsermailConfig usermailConfig = new UsermailConfig();
   private final Usermail2NotfyMqService usermail2NotfyMqService = new Usermail2NotfyMqService(mqAdapter, usermailConfig);
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}",
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
 
   @Test

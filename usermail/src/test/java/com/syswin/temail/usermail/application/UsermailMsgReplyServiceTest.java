@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
@@ -33,7 +33,7 @@ public class UsermailMsgReplyServiceTest {
   private final UsermailSessionService usermailSessionService = Mockito.mock(UsermailSessionService.class);
   private final Usermail2NotfyMqService usermail2NotfyMqService = Mockito.mock(Usermail2NotfyMqService.class);
   private final UsermailMqService usermailMqService = Mockito.mock(UsermailMqService.class);
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}",
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
   private MsgCompressor msgCompressor = new MsgCompressor();
   private final ConvertMsgService convertMsgService = Mockito.mock(ConvertMsgService.class);
@@ -230,7 +230,7 @@ public class UsermailMsgReplyServiceTest {
     verify(usermailMqService)
         .sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
             reply.getParentMsgid());
-   /* ArgumentCaptor<CdtpHeaderDto> headerDtoArgumentCaptor = ArgumentCaptor.forClass(CdtpHeaderDto.class);
+   /* ArgumentCaptor<CdtpHeaderDTO> headerDtoArgumentCaptor = ArgumentCaptor.forClass(CdtpHeaderDTO.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);

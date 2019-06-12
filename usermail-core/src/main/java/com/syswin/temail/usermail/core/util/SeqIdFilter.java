@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.core.util;
 
 import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class SeqIdFilter {
         }
       }
     } catch (Exception e) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_FILTER_SEQIDS, strFilter);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_FILTER_SEQIDS, strFilter);
     }
   }
 

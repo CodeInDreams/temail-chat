@@ -5,7 +5,7 @@ import com.syswin.temail.usermail.common.Contants.SessionEventKey;
 import com.syswin.temail.usermail.common.Contants.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
     this.usermailConfig = usermailConfig;
   }
 
-  public void sendMqMsgSaveMail(CdtpHeaderDto headerInfo, String from, String to, String owner, String msgid,
+  public void sendMqMsgSaveMail(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgid,
       String toMsg, long seqNo, int eventType, int attachmentSize, String author, List<String> filter) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(18);
@@ -51,7 +51,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息状态变化时，通知MQ
    */
-  public void sendMqAfterUpdateStatus(CdtpHeaderDto headerInfo, String from, String to,
+  public void sendMqAfterUpdateStatus(CdtpHeaderDTO headerInfo, String from, String to,
       String msgid, int type) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(10);
@@ -88,7 +88,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 删除会话
    */
-  public void sendMqAfterDeleteSession(CdtpHeaderDto headerInfo, String from, String to, boolean deleteAllMsg,
+  public void sendMqAfterDeleteSession(CdtpHeaderDTO headerInfo, String from, String to, boolean deleteAllMsg,
       int eventType) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(11);
@@ -106,7 +106,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 发送消息回复
    */
-  public void sendMqSaveMsgReply(CdtpHeaderDto headerInfo, String from, String to, String owner, String msgId,
+  public void sendMqSaveMsgReply(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgId,
       String toMsg, long seqNo, int attachmentSize, String parentMsgId) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(17);
@@ -150,7 +150,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息回复更新状态时，通知MQ
    */
-  public void sendMqAfterUpdateMsgReply(CdtpHeaderDto headerInfo, String from, String to,
+  public void sendMqAfterUpdateMsgReply(CdtpHeaderDTO headerInfo, String from, String to,
       String msgId, int type, String parentMsgId) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(12);
@@ -169,7 +169,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息回复删除时，通知MQ
    */
-  public void sendMqAfterRemoveMsgReply(CdtpHeaderDto headerInfo, String from, String to, String owner,
+  public void sendMqAfterRemoveMsgReply(CdtpHeaderDTO headerInfo, String from, String to, String owner,
       List<String> msgIds, int type, String parentMsgId) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(13);
@@ -189,7 +189,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 单聊归档
    */
-  public void sendMqAfterUpdateArchiveStatus(CdtpHeaderDto headerInfo, String from, String to,int type) {
+  public void sendMqAfterUpdateArchiveStatus(CdtpHeaderDTO headerInfo, String from, String to,int type) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(9);
     map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
@@ -205,7 +205,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息移入废纸篓
    */
-  public void sendMqMoveTrashNotify(CdtpHeaderDto headerInfo, String from, String to,
+  public void sendMqMoveTrashNotify(CdtpHeaderDTO headerInfo, String from, String to,
       List<String> msgids, int type) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(12);
@@ -224,7 +224,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 废纸篓消息还原、删除
    */
-  public void sendMqTrashMsgOpratorNotify(CdtpHeaderDto headerInfo, String owner,
+  public void sendMqTrashMsgOpratorNotify(CdtpHeaderDTO headerInfo, String owner,
       List<TrashMailDTO> trashMailDtoList, int type) {
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>(9);

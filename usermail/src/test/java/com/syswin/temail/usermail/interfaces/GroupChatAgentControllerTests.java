@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syswin.temail.usermail.application.GroupChatService;
 import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.dto.GroupChatEventDTO;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 public class GroupChatAgentControllerTests {
 
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}",
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
 
   @Autowired

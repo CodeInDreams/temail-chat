@@ -7,7 +7,7 @@ import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
 import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailStoreType;
 import com.syswin.temail.usermail.common.Contants.TemailType;
-import com.syswin.temail.usermail.core.dto.ResultDto;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
@@ -368,7 +368,7 @@ public class UsermailTests {
 
     String url = "http://localhost:8090" + "/usermail/msg?" + "from=" + from + "&to=" + to + "&msgIds=" + msgIdsURLParam;
 
-    ResponseEntity<ResultDto> result = restTemplate.getForEntity(url, ResultDto.class);
+    ResponseEntity<ResultDTO> result = restTemplate.getForEntity(url, ResultDTO.class);
     Assert.assertTrue(result.getStatusCode().is2xxSuccessful());
     ArrayList<LinkedHashMap> data = (ArrayList<LinkedHashMap>) result.getBody().getData();
     Assert.assertEquals(data.get(0).get("msgId"), msgIds.get(0));
@@ -390,7 +390,7 @@ public class UsermailTests {
 //    String msgIdsURLParam = msgId1 + "," + msgId2;
 //    String url = usermailUrl + "/usermail/msg?" + "from=" + from + "&to=" + to + "&msgIds=" + msgIdsURLParam;
 //
-//    ResponseEntity<ResultDto> result = restTemplate.getForEntity(url, ResultDto.class);
+//    ResponseEntity<ResultDTO> result = restTemplate.getForEntity(url, ResultDTO.class);
 //    Assert.assertTrue(result.getStatusCode().is2xxSuccessful());
 //    ArrayList<LinkedHashMap> data = (ArrayList<LinkedHashMap>) result.getBody().getData();
 //    Assert.assertEquals(data.get(0).get("msgId"), msgId1);

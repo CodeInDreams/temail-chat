@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.io.Serializable;
 
 @JsonInclude(Include.NON_NULL)
-public class ResultDto implements Serializable {
+public class ResultDTO implements Serializable {
 
   private int code = 200;
   private String message = "success";
@@ -13,7 +13,7 @@ public class ResultDto implements Serializable {
   private String type;
   private String xPacketId;
 
-  public ResultDto() {
+  public ResultDTO() {
   }
 
   public String getxPacketId() {
@@ -24,7 +24,7 @@ public class ResultDto implements Serializable {
     this.xPacketId = xPacketId;
   }
 
-  public ResultDto(Object data) {
+  public ResultDTO(Object data) {
     this.data = data;
   }
 
@@ -62,7 +62,7 @@ public class ResultDto implements Serializable {
 
   @Override
   public String toString() {
-    return "ResultDto{" +
+    return "ResultDTO{" +
         "code=" + code +
         ", message='" + message + '\'' +
         ", data=" + data +

@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.core.util;
 
 
 import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -14,7 +14,7 @@ public class MsgCompressor {
     try {
       return gzip.zip(data);
     } catch (IOException e) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_MSG_ZIP);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_MSG_ZIP);
     }
   }
 
@@ -23,7 +23,7 @@ public class MsgCompressor {
     try {
       zip = gzip.zip(Base64.getUrlDecoder().decode(data.getBytes("utf-8")));
     } catch (IOException e) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_MSG_DECODE, data);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_MSG_DECODE, data);
     }
     return zip;
   }
@@ -33,7 +33,7 @@ public class MsgCompressor {
     try {
       s = new String(Base64.getUrlEncoder().encode(gzip.unzip(data)), "utf-8");
     } catch (IOException e) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_MSG_ENCODE);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_MSG_ENCODE);
     }
     return s;
   }
@@ -43,7 +43,7 @@ public class MsgCompressor {
     try {
       zip = gzip.zip(data.getBytes("utf-8"));
     } catch (IOException e) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_MSG_DECODE, data);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_MSG_DECODE, data);
     }
     return zip;
   }
@@ -53,7 +53,7 @@ public class MsgCompressor {
     try {
       s = new String(gzip.unzip(data), "utf-8");
     } catch (IOException e) {
-      throw new IllegalGMArgsException(RESULT_CODE.ERROR_MSG_ENCODE);
+      throw new IllegalGmArgsException(RESULT_CODE.ERROR_MSG_ENCODE);
     }
     return s;
   }

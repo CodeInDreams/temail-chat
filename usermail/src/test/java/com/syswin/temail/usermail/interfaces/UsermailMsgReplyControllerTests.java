@@ -15,9 +15,9 @@ import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
 import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
 import com.syswin.temail.usermail.common.Contants.TemailStoreType;
 import com.syswin.temail.usermail.common.Contants.TemailType;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.core.dto.ResultDto;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
@@ -50,7 +50,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 public class UsermailMsgReplyControllerTests {
 
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}", "xPacketId:value");
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}", "xPacketId:value");
 
   @Autowired
   private WebApplicationContext wac;
@@ -100,7 +100,7 @@ public class UsermailMsgReplyControllerTests {
     msgIds.add("173849");
     UsermailMsgReplyDTO msgReply = new UsermailMsgReplyDTO("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
         100, msgIds, 1);
-    Mockito.doThrow(new IllegalGMArgsException(RESULT_CODE.ERROR_IN_BLACKLIST)).when(umBlacklistProxy)
+    Mockito.doThrow(new IllegalGmArgsException(RESULT_CODE.ERROR_IN_BLACKLIST)).when(umBlacklistProxy)
         .checkInBlacklist(msgReply.getFrom(), msgReply.getTo());
     Map<String, Object> map = new HashMap<>();
     map.put("msgId", "12344321");
@@ -183,7 +183,7 @@ public class UsermailMsgReplyControllerTests {
             .param("seqId", seqId + "")
             .param("signal", signal)
             .param("from", owner)).andReturn();
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(usermailMsgReplies);
     Assert.assertEquals(mapper.writeValueAsString(resultDto), result.getResponse().getContentAsString());
   }

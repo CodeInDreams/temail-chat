@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.core;
 
-public interface IMQConsumer {
+public interface IMqConsumer {
 
   boolean consumer(String message);
 

@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.interfaces;
 
 import com.syswin.temail.usermail.application.GroupChatService;
-import com.syswin.temail.usermail.core.dto.ResultDto;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.dto.GroupChatEventDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,18 +23,18 @@ public class GroupChatAgentController {
 
   @ApiOperation(value = "添加群成员(0x 0001 2006)", notes = "入群事件")
   @PostMapping(value = "/groupchat/event")
-  public ResultDto syncGroupChatMemberEvent(HttpServletRequest request,
+  public ResultDTO syncGroupChatMemberEvent(HttpServletRequest request,
       @ApiParam(value = "群事件信息", required = true) @RequestBody @Valid GroupChatEventDTO groupChatEventDto) {
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     groupChatService.syncGroupChatMemberEvent(groupChatEventDto);
     return resultDto;
   }
 
   @ApiOperation(value = "出群事件(0x 0001 2007)", notes = "出群事件")
   @DeleteMapping(value = "/groupchat/event")
-  public ResultDto syncGroupChatMemberRemoveEvent(HttpServletRequest request,
+  public ResultDTO syncGroupChatMemberRemoveEvent(HttpServletRequest request,
       @ApiParam(value = "群事件信息", required = true) @RequestBody @Valid GroupChatEventDTO groupChatEventDto) {
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     groupChatService.removeGroupChatMemeberEvent(groupChatEventDto);
     return resultDto;
   }

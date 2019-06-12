@@ -3,22 +3,22 @@ package com.syswin.temail.usermail.core.dto;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CdtpHeaderDto implements Serializable {
+public class CdtpHeaderDTO implements Serializable {
 
   private String xPacketId;
   private String cdtpHeader;
 
-  public CdtpHeaderDto(String cdtpHeader, String xPacketId) {
+  public CdtpHeaderDTO(String cdtpHeader, String xPacketId) {
     this.cdtpHeader = cdtpHeader;
     this.xPacketId = xPacketId;
   }
 
   private static class SingletonHolder {
 
-    private final static CdtpHeaderDto instance = new CdtpHeaderDto("", "");
+    private final static CdtpHeaderDTO instance = new CdtpHeaderDTO("", "");
   }
 
-  public static CdtpHeaderDto getInstance() {
+  public static CdtpHeaderDTO getInstance() {
     return SingletonHolder.instance;
   }
 
@@ -47,7 +47,7 @@ public class CdtpHeaderDto implements Serializable {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    CdtpHeaderDto that = (CdtpHeaderDto) o;
+    CdtpHeaderDTO that = (CdtpHeaderDTO) o;
     return Objects.equals(xPacketId, that.xPacketId) &&
         Objects.equals(cdtpHeader, that.cdtpHeader);
   }
@@ -59,7 +59,7 @@ public class CdtpHeaderDto implements Serializable {
 
   @Override
   public String toString() {
-    return "CdtpHeaderDto{" +
+    return "CdtpHeaderDTO{" +
         "xPacketId='" + xPacketId + '\'' +
         ", cdtpHeader='" + cdtpHeader + '\'' +
         '}';

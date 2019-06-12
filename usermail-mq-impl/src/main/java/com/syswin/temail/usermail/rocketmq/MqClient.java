@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.rocketmq;
 
-import com.syswin.temail.usermail.core.IMQConsumer;
+import com.syswin.temail.usermail.core.IMqConsumer;
 import com.syswin.temail.usermail.core.exception.UserMailException;
 import javax.annotation.PostConstruct;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -21,10 +21,10 @@ public class MqClient {
   private String tag;
   private String groupName;
   private String namesrvAddr;
-  private IMQConsumer imqConsumer;
+  private IMqConsumer imqConsumer;
   private MessageModel messageModel;
 
-  public MqClient(String topic, String tag, String groupName, String namesrvAddr, IMQConsumer imqConsumer, RocketMQModel MQModelType) {
+  public MqClient(String topic, String tag, String groupName, String namesrvAddr, IMqConsumer imqConsumer, RocketMQModel MQModelType) {
     this.topic = topic;
     this.tag = tag;
     this.groupName = groupName;

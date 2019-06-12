@@ -12,9 +12,9 @@ import com.syswin.temail.usermail.common.Contants.TemailStatus;
 import com.syswin.temail.usermail.common.Contants.TemailType;
 import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.Meta;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.core.util.SeqIdFilter;
 import com.syswin.temail.usermail.domains.Usermail;
@@ -88,7 +88,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#owner")
-  public Map sendMail(CdtpHeaderDto headerInfo, CreateUsermailDTO usermail, String owner, String other) {
+  public Map sendMail(CdtpHeaderDTO headerInfo, CreateUsermailDTO usermail, String owner, String other) {
     String from = usermail.getFrom();
     String to = usermail.getTo();
     String msgid = usermail.getMsgId();
@@ -134,7 +134,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public List<Usermail> getMails(CdtpHeaderDto headerInfo, String from, String to, long fromSeqNo,
+  public List<Usermail> getMails(CdtpHeaderDTO headerInfo, String from, String to, long fromSeqNo,
       int pageSize, String filterSeqIds, String signal) {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setFromSeqNo(fromSeqNo);
@@ -160,7 +160,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public void revert(CdtpHeaderDto headerInfo, String from, String to, String msgid) {
+  public void revert(CdtpHeaderDTO headerInfo, String from, String to, String msgid) {
     usermailMqService.sendMqRevertMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgid);
     usermailMqService
         .sendMqRevertMsg(headerInfo.getxPacketId() + PACKET_ID_SUFFIX, headerInfo.getCdtpHeader(), from, to, from,
@@ -187,7 +187,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public List<MailboxDTO> mailboxes(CdtpHeaderDto headerInfo, String from, int archiveStatus,
+  public List<MailboxDTO> mailboxes(CdtpHeaderDTO headerInfo, String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
     List<UsermailBox> usermailBox = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
     List<MailboxDTO> resultDto = new ArrayList<>(usermailBox.size());
@@ -219,7 +219,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public void removeMsg(CdtpHeaderDto headerInfo, String from, String to, List<String> msgIds) {
+  public void removeMsg(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     // msg 內容更新为空串
     LOGGER.info("Label-delete-usermail-msg: delete msg by msgIds,from is {},to is {},ids is {}", from, to, msgIds);
     usermailRepo.removeMsg(msgIds, from);
@@ -245,7 +245,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public void destroyAfterRead(CdtpHeaderDto headerInfo, String from, String to, String msgId) {
+  public void destroyAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
     usermailMqService.sendMqDestroyMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId);
     usermailMqService
         .sendMqDestroyMsg(headerInfo.getxPacketId() + PACKET_ID_SUFFIX, headerInfo.getCdtpHeader(), from, to, from,
@@ -269,7 +269,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#queryDto.from")
-  public boolean deleteSession(CdtpHeaderDto cdtpHeaderDto, DeleteMailBoxQueryDTO queryDto) {
+  public boolean deleteSession(CdtpHeaderDTO cdtpHeaderDto, DeleteMailBoxQueryDTO queryDto) {
     usermailBoxRepo.deleteByOwnerAndTo(queryDto.getFrom(), queryDto.getTo());
     LOGGER.info("Label-delete-usermail-session: delete session, params is {}", queryDto);
     if (queryDto.isDeleteAllMsg()) {
@@ -296,13 +296,13 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public List<Usermail> batchQueryMsgs(CdtpHeaderDto cdtpHeaderDto, String from, String to, List<String> msgIds) {
+  public List<Usermail> batchQueryMsgs(CdtpHeaderDTO cdtpHeaderDto, String from, String to, List<String> msgIds) {
     List<Usermail> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public List<Usermail> batchQueryMsgsReplyCount(CdtpHeaderDto cdtpHeaderDto, String from, String to,
+  public List<Usermail> batchQueryMsgsReplyCount(CdtpHeaderDTO cdtpHeaderDto, String from, String to,
       List<String> msgIds) {
     List<Usermail> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     for (int i = 0; i < usermailList.size(); i++) {
@@ -313,14 +313,14 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public void moveMsgToTrash(CdtpHeaderDto headerInfo, String from, String to, List<String> msgIds) {
+  public void moveMsgToTrash(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     usermailRepo.updateStatusByMsgIds(msgIds, from, TemailStatus.STATUS_TRASH_4);
     usermailMsgReplyRepo.batchUpdateByParentMsgIds(from, msgIds, TemailStatus.STATUS_TRASH_4);
     usermail2NotfyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
   }
 
   @TemailShardingTransactional(shardingField = "#temail")
-  public void revertMsgToTrash(CdtpHeaderDto headerInfo, String temail, List<TrashMailDTO> trashMails) {
+  public void revertMsgToTrash(CdtpHeaderDTO headerInfo, String temail, List<TrashMailDTO> trashMails) {
     List<String> msgIds = new ArrayList<>(trashMails.size());
     for (TrashMailDTO dto : trashMails) {
       msgIds.add(dto.getMsgId());
@@ -331,7 +331,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#temail")
-  public void removeMsgFromTrash(CdtpHeaderDto headerInfo, String temail, List<TrashMailDTO> trashMails) {
+  public void removeMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, List<TrashMailDTO> trashMails) {
     usermailMqService.sendMqRemoveTrash(temail, trashMails, UsermailAgentEventType.TRASH_REMOVE_0);
     LOGGER
         .info("Label-delete-usermail-trash: Remove msg from trash, params is temail:{},msginfo:{}", temail, trashMails);
@@ -359,7 +359,7 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#temail")
-  public List<Usermail> getMsgFromTrash(CdtpHeaderDto headerInfo, String temail, long timestamp, int pageSize,
+  public List<Usermail> getMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, long timestamp, int pageSize,
       String signal) {
     QueryTrashDTO queryDto = new QueryTrashDTO();
     queryDto.setOwner(temail);
@@ -372,11 +372,11 @@ public class UsermailService {
   }
 
   @TemailShardingTransactional(shardingField = "#from")
-  public void updateUsermailBoxArchiveStatus(CdtpHeaderDto headerInfo, String from, String to, int archiveStatus) {
+  public void updateUsermailBoxArchiveStatus(CdtpHeaderDTO headerInfo, String from, String to, int archiveStatus) {
     LOGGER.info("update usermail archiveStatus , from={},to={},archiveStatus={}", from, to, archiveStatus);
     if ((archiveStatus != TemailArchiveStatus.STATUS_NORMAL_0
         && archiveStatus != TemailArchiveStatus.STATUS_ARCHIVE_1)) {
-      throw new IllegalGMArgsException(ERROR_REQUEST_PARAM);
+      throw new IllegalGmArgsException(ERROR_REQUEST_PARAM);
     }
     usermailBoxRepo.updateArchiveStatus(from, to, archiveStatus);
     if (archiveStatus == TemailArchiveStatus.STATUS_NORMAL_0) {

@@ -14,9 +14,9 @@ import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
 import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
-import com.syswin.temail.usermail.core.dto.CdtpHeaderDto;
-import com.syswin.temail.usermail.core.dto.ResultDto;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
@@ -57,7 +57,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 public class UsermailAgentControllerTests {
 
-  private CdtpHeaderDto headerInfo = new CdtpHeaderDto("{CDTP-header:value}",
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
 
   @Autowired
@@ -81,7 +81,7 @@ public class UsermailAgentControllerTests {
     CreateUsermailDTO usermailDto = new CreateUsermailDTO(
         "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         "bob@temail.com", "alice@temail.com", 0, 1, "test_from_data", 100);
-    Mockito.doThrow(new IllegalGMArgsException(RESULT_CODE.ERROR_IN_BLACKLIST))
+    Mockito.doThrow(new IllegalGmArgsException(RESULT_CODE.ERROR_IN_BLACKLIST))
         .when(mockUmBlacklistProxy).checkInBlacklist("bob@temail.com", "alice@temail.com");
     Map<String, Object> map = new HashMap<>();
     map.put("msgId", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
@@ -178,7 +178,7 @@ public class UsermailAgentControllerTests {
             .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .param("from", "bob@temail.com"))
         .andReturn();
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(mailboxDto);
     assertThat(result.getResponse().getContentAsString())
         .isEqualTo(mapper.writeValueAsString(resultDto));
@@ -276,7 +276,7 @@ public class UsermailAgentControllerTests {
         .param("msgIds", msgIdStrArray)
     ).andReturn();
     ObjectMapper mapper = new ObjectMapper();
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(expectMailList);
     String expect = mapper.writeValueAsString(resultDto);
     String actual = result.getResponse().getContentAsString();
@@ -323,7 +323,7 @@ public class UsermailAgentControllerTests {
         .param("msgIds", msgIdStrArray)
     ).andReturn();
     ObjectMapper mapper = new ObjectMapper();
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(expectMailList);
     String expect = mapper.writeValueAsString(resultDto);
     String actual = result.getResponse().getContentAsString();
@@ -438,7 +438,7 @@ public class UsermailAgentControllerTests {
             .param("signal", "before"))
         .andReturn();
     ObjectMapper mapper = new ObjectMapper();
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(usermails);
     String expect = mapper.writeValueAsString(resultDto);
     String actual = result.getResponse().getContentAsString();

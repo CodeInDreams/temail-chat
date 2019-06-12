@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.interfaces;
 
 import com.syswin.temail.usermail.application.UsermailBlacklistService;
-import com.syswin.temail.usermail.core.dto.ResultDto;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.domains.UsermailBlacklist;
 import com.syswin.temail.usermail.dto.BlacklistDTO;
 import io.swagger.annotations.ApiOperation;
@@ -30,39 +30,39 @@ public class UsermailBlacklistController {
 
   @ApiOperation(value = "添加黑名单(1000)")
   @PostMapping(value = "/blacklist")
-  public ResultDto createBlacklist(HttpServletRequest request,
+  public ResultDTO createBlacklist(HttpServletRequest request,
       @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDTO blacklistDto) {
     usermailBlacklistService.save(new UsermailBlacklist(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
-    return new ResultDto();
+    return new ResultDTO();
   }
 
   @ApiOperation(value = "删除黑名单(1001)")
   @DeleteMapping(value = "/blacklist")
-  public ResultDto removeBlacklist(HttpServletRequest request,
+  public ResultDTO removeBlacklist(HttpServletRequest request,
       @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDTO blacklistDto) {
     usermailBlacklistService.remove(new UsermailBlacklist(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
-    return new ResultDto();
+    return new ResultDTO();
   }
 
   @ApiOperation(value = "查询发起者拉黑关系列表")
   @GetMapping(value = "/blacklist")
-  public ResultDto findBlacklists(
+  public ResultDTO findBlacklists(
       @ApiParam(value = "发起者temail地址", required = true) @RequestParam(value = "temailAddress", defaultValue = "") String temailAddress) {
     List<UsermailBlacklist> usermailBlacklists = usermailBlacklistService.findByTemailAddress(temailAddress);
     List<String> blackedAddresses = usermailBlacklists.stream()
         .map(UsermailBlacklist::getBlackedAddress).collect(Collectors.toList());
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(blackedAddresses);
     return resultDto;
   }
 
   @ApiOperation(value = "[from]给[to]时，判断是否被[to]加在黑名单中")
   @GetMapping(value = "/inblacklist")
-  public ResultDto isInBlacklists(
+  public ResultDTO isInBlacklists(
       @ApiParam(value = "发起人", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "收件人", required = true) @RequestParam(value = "to", defaultValue = "") String to) {
     int inBlacklist = usermailBlacklistService.isInBlacklist(from, to);
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setData(inBlacklist);
     return resultDto;
   }

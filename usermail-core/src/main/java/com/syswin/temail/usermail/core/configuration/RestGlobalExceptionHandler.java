@@ -1,8 +1,8 @@
 package com.syswin.temail.usermail.core.configuration;
 
 import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
-import com.syswin.temail.usermail.core.dto.ResultDto;
-import com.syswin.temail.usermail.core.exception.IllegalGMArgsException;
+import com.syswin.temail.usermail.core.dto.ResultDTO;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import java.util.Enumeration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +26,7 @@ public class RestGlobalExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-  public ResultDto handleException(HttpServletRequest request, HttpServletResponse response, Exception e) {
+  public ResultDTO handleException(HttpServletRequest request, HttpServletResponse response, Exception e) {
     Enumeration<String> headerNames = request.getHeaderNames();
     StringBuilder bufHeader = new StringBuilder();
     while (headerNames.hasMoreElements()) {
@@ -43,15 +43,15 @@ public class RestGlobalExceptionHandler {
     }
     LOGGER.error("500-Parameter=[{}],Header=[{}]:", bufParam.toString(), bufHeader.toString(), e);
 
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setCode(RESULT_CODE.ERROR_SERVER.getCode());
     resultDto.setMessage(RESULT_CODE.ERROR_SERVER.getMessage() + ",异常信息为:" + e.getMessage());
     return resultDto;
   }
 
-  @ExceptionHandler(IllegalGMArgsException.class)
+  @ExceptionHandler(IllegalGmArgsException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResultDto handleException(HttpServletRequest request, HttpServletResponse response, IllegalGMArgsException e) {
+  public ResultDTO handleException(HttpServletRequest request, HttpServletResponse response, IllegalGmArgsException e) {
     Enumeration<String> headerNames = request.getHeaderNames();
     StringBuilder bufHeader = new StringBuilder();
     while (headerNames.hasMoreElements()) {
@@ -67,7 +67,7 @@ public class RestGlobalExceptionHandler {
       bufParam.append(paramKey).append("=").append(paramValue).append(";");
     }
     LOGGER.warn("400-Parameter=[{}],Header=[{}]:", bufParam.toString(), bufHeader.toString(), e);
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setCode(e.getResultCode().getCode());
     resultDto.setMessage(e.getResultCode().getMessage() + (e.getMessage() == null ? "" :  ": " + e.getMessage()));
     return resultDto;
@@ -75,9 +75,9 @@ public class RestGlobalExceptionHandler {
 
   @ExceptionHandler(DuplicateKeyException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResultDto handleException(HttpServletRequest request, HttpServletResponse response, DuplicateKeyException e) {
+  public ResultDTO handleException(HttpServletRequest request, HttpServletResponse response, DuplicateKeyException e) {
     LOGGER.warn("Database key conflict", e);
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setCode(RESULT_CODE.ERROR_DATABASE_KEY_ID.getCode());
     resultDto.setMessage(RESULT_CODE.ERROR_DATABASE_KEY_ID.getMessage() + e.getMessage());
     return resultDto;
@@ -85,10 +85,10 @@ public class RestGlobalExceptionHandler {
 
   @ExceptionHandler(value = {BindException.class, MethodArgumentNotValidException.class})
   @ResponseStatus(HttpStatus.BAD_REQUEST)
-  public ResultDto handleBindException(HttpServletRequest request, HttpServletResponse response, Exception e) {
+  public ResultDTO handleBindException(HttpServletRequest request, HttpServletResponse response, Exception e) {
     LOGGER.warn("parameter binding exception", e);
 
-    ResultDto resultDto = new ResultDto();
+    ResultDTO resultDto = new ResultDTO();
     resultDto.setCode(RESULT_CODE.ERROR_REQUEST_PARAM.getCode());
     resultDto.setMessage(RESULT_CODE.ERROR_REQUEST_PARAM.getMessage());
 
