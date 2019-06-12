@@ -10,7 +10,6 @@ import com.syswin.temail.usermail.redis.RedisUsermailAdapter;
 import com.syswin.temail.usermail.rocketmq.MqClient;
 import com.syswin.temail.usermail.rocketmq.RocketMqProperties;
 import java.util.function.Consumer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
