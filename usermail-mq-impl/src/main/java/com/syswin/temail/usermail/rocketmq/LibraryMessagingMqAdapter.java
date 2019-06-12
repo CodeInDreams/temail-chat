@@ -16,7 +16,7 @@ public class LibraryMessagingMqAdapter implements IMqAdapter {
   private final Logger LOGGER = LoggerFactory.getLogger(LibraryMessagingMqAdapter.class);
   private Map<String, MqProducer> rocketMqProducers;
   @Autowired
-  private RocketMqProperties rocketMQProperties;
+  private RocketMqProperties rocketMqProperties;
 
   public LibraryMessagingMqAdapter(Map<String, MqProducer> rocketMqProducers) {
     this.rocketMqProducers = rocketMqProducers;
@@ -34,7 +34,7 @@ public class LibraryMessagingMqAdapter implements IMqAdapter {
 
   @Override
   public boolean sendMessage(String topic, String tag, String message) {
-    MqProducer mqProducer = rocketMqProducers.get(rocketMQProperties.getProducerGroup());
+    MqProducer mqProducer = rocketMqProducers.get(rocketMqProperties.getProducerGroup());
     if (mqProducer == null) {
       LOGGER.debug("no mq producer!");
       return false;

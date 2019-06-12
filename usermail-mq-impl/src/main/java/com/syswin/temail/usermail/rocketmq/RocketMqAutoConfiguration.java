@@ -18,9 +18,9 @@ public class RocketMqAutoConfiguration {
 
   @Bean(initMethod = "init", destroyMethod = "destroy")
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "ROCKETMQ")
-  public IMqAdapter imq(RocketMqProperties rocketMQProperties) {
+  public IMqAdapter imq(RocketMqProperties rocketMqProperties) {
     logger.info("MQAdapter [rocketmq] started");
-    return new RocketMqAdapter(rocketMQProperties.getProducerGroup(), rocketMQProperties.getHost());
+    return new RocketMqAdapter(rocketMqProperties.getProducerGroup(), rocketMqProperties.getHost());
   }
 
   @Bean
