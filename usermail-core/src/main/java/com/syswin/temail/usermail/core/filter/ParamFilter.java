@@ -22,6 +22,7 @@ public class ParamFilter implements Filter {
   private static final Logger LOGGER = LoggerFactory.getLogger(ParamFilter.class);
 
 
+  @Override
   public void destroy() {
     // Nothing to do
   }

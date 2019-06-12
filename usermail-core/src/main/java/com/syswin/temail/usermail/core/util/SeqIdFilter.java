@@ -53,7 +53,7 @@ public class SeqIdFilter {
   }
 
   private boolean lastSeqId(long seqId) {
-    if (last == -1l) {
+    if (last == -1L) {
       return false;
     }
     if (after) {
