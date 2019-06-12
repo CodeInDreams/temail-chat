@@ -11,23 +11,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(RocketMQProperties.class)
-public class RocketMQAutoConfiguration {
+@EnableConfigurationProperties(RocketMqProperties.class)
+public class RocketMqAutoConfiguration {
 
-  private static final Logger logger = LoggerFactory.getLogger(RocketMQAutoConfiguration.class);
+  private static final Logger logger = LoggerFactory.getLogger(RocketMqAutoConfiguration.class);
 
   @Bean(initMethod = "init", destroyMethod = "destroy")
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "ROCKETMQ")
-  public IMqAdapter imq(RocketMQProperties rocketMQProperties) {
+  public IMqAdapter imq(RocketMqProperties rocketMQProperties) {
     logger.info("MQAdapter [rocketmq] started");
-    return new RocketMQAdapter(rocketMQProperties.getProducerGroup(), rocketMQProperties.getHost());
+    return new RocketMqAdapter(rocketMQProperties.getProducerGroup(), rocketMQProperties.getHost());
   }
 
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", matchIfMissing = true, havingValue = "DB")
   public IMqAdapter dbImq() {
     logger.info("MQAdapter [DB] started");
-    return new DBAdapter();
+    return new DbAdapter();
   }
 
   @Bean

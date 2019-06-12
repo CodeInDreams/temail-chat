@@ -3,7 +3,7 @@ package com.syswin.temail.usermail.rocketmq;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.rocketmq")
-public class RocketMQProperties {
+public class RocketMqProperties {
 
   private String host;
   private String producerGroup;

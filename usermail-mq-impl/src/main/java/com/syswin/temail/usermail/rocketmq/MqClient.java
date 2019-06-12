@@ -13,9 +13,9 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MQClient {
+public class MqClient {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(MQClient.class);
+  private final Logger LOGGER = LoggerFactory.getLogger(MqClient.class);
 
   private String topic;
   private String tag;
@@ -24,7 +24,7 @@ public class MQClient {
   private IMQConsumer imqConsumer;
   private MessageModel messageModel;
 
-  public MQClient(String topic, String tag, String groupName, String namesrvAddr, IMQConsumer imqConsumer, RocketMQModel MQModelType) {
+  public MqClient(String topic, String tag, String groupName, String namesrvAddr, IMQConsumer imqConsumer, RocketMQModel MQModelType) {
     this.topic = topic;
     this.tag = tag;
     this.groupName = groupName;

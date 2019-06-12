@@ -7,8 +7,8 @@ import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.interfaces.UsermailMQConsumer;
 import com.syswin.temail.usermail.redis.RedisUsermailAdapter;
-import com.syswin.temail.usermail.rocketmq.MQClient;
-import com.syswin.temail.usermail.rocketmq.RocketMQProperties;
+import com.syswin.temail.usermail.rocketmq.MqClient;
+import com.syswin.temail.usermail.rocketmq.RocketMqProperties;
 import java.util.function.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -20,13 +20,13 @@ public class UsermailConfiguration {
 
 
   @Autowired
-  private RocketMQProperties rocketMQProperties;
+  private RocketMqProperties rocketMQProperties;
 
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "ROCKETMQ", matchIfMissing = true)
-  MQClient mqclient(UsermailConfig config, UsermailMQConsumer usermailMQConsumer) {
-    return new MQClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer,
-        config.namesrvAddr, usermailMQConsumer, MQClient.RocketMQModel.CLUSTERING);
+  MqClient mqclient(UsermailConfig config, UsermailMQConsumer usermailMQConsumer) {
+    return new MqClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer,
+        config.namesrvAddr, usermailMQConsumer, MqClient.RocketMQModel.CLUSTERING);
   }
 
   @Bean

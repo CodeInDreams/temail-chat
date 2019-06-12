@@ -12,14 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StopWatch;
 
-public class RocketMQAdapter implements IMqAdapter {
+public class RocketMqAdapter implements IMqAdapter {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(RocketMQAdapter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqAdapter.class);
 
   //生产者的组名
   private DefaultMQProducer producer;
 
-  RocketMQAdapter(String productGroup, String namesrvAddr) {
+  RocketMqAdapter(String productGroup, String namesrvAddr) {
     producer = new DefaultMQProducer(productGroup);
     //指定NameServer地址，多个地址以 ; 隔开
     producer.setNamesrvAddr(namesrvAddr);
@@ -33,7 +33,7 @@ public class RocketMQAdapter implements IMqAdapter {
   public void init() {
     try {
       producer.start();
-      LOGGER.info("RocketMQAdapter started");
+      LOGGER.info("RocketMqAdapter started");
     } catch (MQClientException e) {
       throw new UserMailException("rocketmq start error:", e);
     }
@@ -43,13 +43,13 @@ public class RocketMQAdapter implements IMqAdapter {
   public void destroy() {
     if (producer != null) {
       producer.shutdown();
-      LOGGER.info("RocketMQAdapter shutdowned");
+      LOGGER.info("RocketMqAdapter shutdowned");
     }
   }
 
   @Override
   public boolean sendMessage(String topic, String tag, String message) {
-    LOGGER.info("RocketMQAdapter send message topic=[{}], tag=[{}], message=[{}]", topic, tag, message);
+    LOGGER.info("RocketMqAdapter send message topic=[{}], tag=[{}], message=[{}]", topic, tag, message);
     //创建一个消息实例，包含 topic、tag 和 消息体
     //如下：topic 为 "TopicTest"，tag 为 "push"
     Message mqMessage = new Message(topic, tag, (message).getBytes());

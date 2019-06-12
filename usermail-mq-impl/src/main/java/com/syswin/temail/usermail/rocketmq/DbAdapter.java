@@ -4,7 +4,7 @@ import com.syswin.temail.data.consistency.application.TemailMqSender;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class DBAdapter implements IMqAdapter {
+public class DbAdapter implements IMqAdapter {
 
 
   @Autowired

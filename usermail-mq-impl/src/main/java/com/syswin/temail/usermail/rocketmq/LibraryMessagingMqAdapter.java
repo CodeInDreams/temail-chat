@@ -16,7 +16,7 @@ public class LibraryMessagingMqAdapter implements IMqAdapter {
   private final Logger LOGGER = LoggerFactory.getLogger(LibraryMessagingMqAdapter.class);
   private Map<String, MqProducer> rocketMqProducers;
   @Autowired
-  private RocketMQProperties rocketMQProperties;
+  private RocketMqProperties rocketMQProperties;
 
   public LibraryMessagingMqAdapter(Map<String, MqProducer> rocketMqProducers) {
     this.rocketMqProducers = rocketMqProducers;
