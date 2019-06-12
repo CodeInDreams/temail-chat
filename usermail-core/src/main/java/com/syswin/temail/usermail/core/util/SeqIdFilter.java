@@ -22,13 +22,13 @@ public class SeqIdFilter {
 
   private void init(String strFilter) {
     try {
-      String[] ss = strFilter.split(",");
+      String[] filters = strFilter.split(",");
       existSeqId = new ArrayList<>();
-      for (int i = 0; i < ss.length; i++) {
-        String tmp = ss[i];
-        String[] sss = tmp.split("_");
-        long start = Long.parseLong(sss[0]);
-        long end = Long.parseLong(sss[1]);
+      for (int i = 0; i < filters.length; i++) {
+        String tmp = filters[i];
+        String[] filterRange = tmp.split("_");
+        long start = Long.parseLong(filterRange[0]);
+        long end = Long.parseLong(filterRange[1]);
         if (end == -1) {
           last = start;
         } else {

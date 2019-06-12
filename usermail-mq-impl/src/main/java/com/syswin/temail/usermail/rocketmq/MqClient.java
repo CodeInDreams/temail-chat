@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 public class MqClient {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(MqClient.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MqClient.class);
 
   private String topic;
   private String tag;
@@ -24,13 +24,13 @@ public class MqClient {
   private IMqConsumer imqConsumer;
   private MessageModel messageModel;
 
-  public MqClient(String topic, String tag, String groupName, String namesrvAddr, IMqConsumer imqConsumer, RocketMQModel MQModelType) {
+  public MqClient(String topic, String tag, String groupName, String namesrvAddr, IMqConsumer imqConsumer, RocketMQModel mqModelType) {
     this.topic = topic;
     this.tag = tag;
     this.groupName = groupName;
     this.namesrvAddr = namesrvAddr;
     this.imqConsumer = imqConsumer;
-    if (MQModelType == RocketMQModel.BROADCASTING) {
+    if (mqModelType == RocketMQModel.BROADCASTING) {
       this.messageModel = MessageModel.BROADCASTING;
     } else {
       this.messageModel = MessageModel.CLUSTERING;

@@ -15,7 +15,7 @@ public class CdtpHeaderDTO implements Serializable {
 
   private static class SingletonHolder {
 
-    private final static CdtpHeaderDTO instance = new CdtpHeaderDTO("", "");
+    private static final CdtpHeaderDTO instance = new CdtpHeaderDTO("", "");
   }
 
   public static CdtpHeaderDTO getInstance() {

@@ -13,12 +13,12 @@ public class DbAdapter implements IMqAdapter {
 
   @Override
   public void init() {
-
+    // Do nothing
   }
 
   @Override
   public void destroy() {
-
+    // Do nothing
   }
 
   @Override

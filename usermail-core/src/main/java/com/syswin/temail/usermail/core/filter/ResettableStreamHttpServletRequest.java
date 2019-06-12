@@ -70,7 +70,7 @@ public class ResettableStreamHttpServletRequest extends
 
       @Override
       public void setReadListener(ReadListener readListener) {
-
+        // Do nothing
       }
     }
   }
