@@ -30,7 +30,7 @@ public class LibraryMessagingMqAdapterTest {
 
   @Before
   public void setUp() {
-    ReflectionTestUtils.setField(libraryMessagingMqAdapter, "rocketMQProperties", rocketMQProperties);
+    ReflectionTestUtils.setField(libraryMessagingMqAdapter, "rocketMqProperties", rocketMQProperties);
   }
 
   @Test
