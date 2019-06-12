@@ -29,7 +29,7 @@ public class UsermailMqService {
   public void sendMqRemoveTrash(String owner,
       List<TrashMailDto> trashMailDtoList, int type) {
     Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>(7);
     map.put(SessionEventKey.FROM, owner);
     map.put(SessionEventKey.TIMESTAMP, System.currentTimeMillis());
     map.put(SessionEventKey.SESSION_MESSAGE_TYPE, type);
@@ -41,7 +41,7 @@ public class UsermailMqService {
   }
 
   public void sendMqDestroyMsg(String xPacketId, String cdtpHeader,  String from, String to, String owner, String msgId) {
-    Map<String, Object> map = new HashMap<>(4);
+    Map<String, Object> map = new HashMap<>(12);
     map.put(SessionEventKey.X_PACKET_ID, xPacketId);
     map.put(SessionEventKey.CDTP_HEADER, cdtpHeader);
     map.put(SessionEventKey.OWNER, owner);
@@ -55,7 +55,7 @@ public class UsermailMqService {
   }
 
   public void sendMqRevertMsg(String xPacketId, String cdtpHeader,  String from, String to, String owner, String msgid) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>(12);
     map.put(SessionEventKey.OWNER, owner);
     map.put(SessionEventKey.FROM, from);
     map.put(SessionEventKey.TO, to);
@@ -69,7 +69,7 @@ public class UsermailMqService {
   }
 
   public void sendMqRevertReplyMsg(String xPacketId, String cdtpHeader,  String from, String to, String owner, String parentMsgReplyId, String msgId) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>(13);
     map.put(SessionEventKey.X_PACKET_ID, xPacketId);
     map.put(SessionEventKey.CDTP_HEADER, cdtpHeader);
     map.put(SessionEventKey.OWNER, owner);
@@ -86,7 +86,7 @@ public class UsermailMqService {
 
   public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader,  String from, String to, String owner, String msgId, String parentMsgId) {
 
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>(13);
     map.put(SessionEventKey.X_PACKET_ID, xPacketId);
     map.put(SessionEventKey.CDTP_HEADER, cdtpHeader);
     map.put(SessionEventKey.FROM, from);
@@ -101,7 +101,7 @@ public class UsermailMqService {
   }
 
   public void sendMqRemoveGroupMemberMsg(String groupTemail, String temail) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>(7);
     map.put(SessionEventKey.GROUP_TEMAIL, groupTemail);
     map.put(SessionEventKey.TEMAIL, temail);
     map.put(SessionEventKey.TIMESTAMP, System.currentTimeMillis());
