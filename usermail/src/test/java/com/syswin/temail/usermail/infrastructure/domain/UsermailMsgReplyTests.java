@@ -7,6 +7,7 @@ import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -133,6 +134,88 @@ public class UsermailMsgReplyTests {
     int count  = usermailMsgReplyRepo.destoryAfterRead("A@systoontest.com","test111111", TemailStatus.STATUS_DESTORY_AFTER_READ_2);
     Assert.assertEquals(1,count);
     Assert.assertTrue(true);
+  }
+
+  @Test
+  public void batchUpdateByParentMsgIdsTest() {
+    String owner = "A2018";
+
+    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    String parentMsgid = "syswin-1543456947958";
+    usermailMsgReply.setParentMsgid(parentMsgid);
+    usermailMsgReply.setFrom("A2018");
+    usermailMsgReply.setStatus(0);
+    usermailMsgReply.setMsgid("syswin-154357200521211212953");
+    usermailMsgReply.setId(184112);
+    usermailMsgReply.setSeqNo(0);
+    usermailMsgReply.setTo("B2018");
+    usermailMsgReply.setOwner(owner);
+    usermailMsgReply.setType(1);
+    usermailMsgReply.setMsg("testsavemethod");
+    usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
+    usermailMsgReplyRepo.insert(usermailMsgReply);
+    List<String> parentMsgids = Arrays.asList(parentMsgid);
+    int status = TemailStatus.STATUS_TRASH_4;
+    int count = usermailMsgReplyRepo.batchUpdateByParentMsgIds(owner, parentMsgids, status);
+
+    assertThat(count).isOne();
+  }
+
+  @Test
+  public void batchDeleteByStatusTest() {
+    String owner = "A2018";
+    int status = TemailStatus.STATUS_NORMAL_0;
+
+    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    usermailMsgReply.setParentMsgid("syswin-1543456947958");
+    usermailMsgReply.setFrom("A2018");
+    usermailMsgReply.setStatus(status);
+    usermailMsgReply.setMsgid("syswin-154357200521211212953");
+    usermailMsgReply.setId(184112);
+    usermailMsgReply.setSeqNo(0);
+    usermailMsgReply.setTo("B2018");
+    usermailMsgReply.setOwner(owner);
+    usermailMsgReply.setType(1);
+    usermailMsgReply.setMsg("testsavemethod");
+    usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
+    usermailMsgReplyRepo.insert(usermailMsgReply);
+
+    int count = usermailMsgReplyRepo.batchDeleteByStatus(owner, status);
+
+    assertThat(count).isOne();
+  }
+
+  @Test
+  public void getLastUsermailReplyTest() {
+    String owner = "A2018";
+    String parentMsgid = "syswin-1543456947958";
+    int status = TemailStatus.STATUS_NORMAL_0;
+    int seqNo_first = 0;
+    int seqNo_second = 1;
+
+    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    usermailMsgReply.setParentMsgid(parentMsgid);
+    usermailMsgReply.setFrom("A2018");
+    usermailMsgReply.setStatus(status);
+    usermailMsgReply.setMsgid("syswin-154357200521211212953");
+    usermailMsgReply.setId(184112);
+    usermailMsgReply.setSeqNo(seqNo_first);
+    usermailMsgReply.setTo("B2018");
+    usermailMsgReply.setOwner(owner);
+    usermailMsgReply.setType(1);
+    usermailMsgReply.setMsg("testsavemethod");
+    usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
+    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReply.setId(184113);
+    usermailMsgReply.setMsgid("syswin-154357200521211212954");
+    usermailMsgReply.setSeqNo(seqNo_second);
+    usermailMsgReplyRepo.insert(usermailMsgReply);
+
+    UsermailMsgReply lastUsermailReply = usermailMsgReplyRepo.getLastUsermailReply(parentMsgid, owner, status);
+
+    assertThat(lastUsermailReply).isNotNull();
+    assertThat(lastUsermailReply.getSeqNo()).isEqualTo(seqNo_second);
+
   }
 
   @Test
