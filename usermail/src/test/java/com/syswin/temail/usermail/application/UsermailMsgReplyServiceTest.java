@@ -5,8 +5,8 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.syswin.temail.usermail.common.Contants.TemailStatus;
-import com.syswin.temail.usermail.common.Contants.TemailType;
+import com.syswin.temail.usermail.common.Constants.TemailStatus;
+import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.util.MsgCompressor;

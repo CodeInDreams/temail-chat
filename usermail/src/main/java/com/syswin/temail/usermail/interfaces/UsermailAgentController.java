@@ -1,15 +1,15 @@
 package com.syswin.temail.usermail.interfaces;
 
-import static com.syswin.temail.usermail.common.Contants.HttpHeaderKey.CDTP_HEADER;
-import static com.syswin.temail.usermail.common.Contants.HttpHeaderKey.X_PACKET_ID;
-import static com.syswin.temail.usermail.common.Contants.RESULT_CODE.ERROR_REQUEST_PARAM;
+import static com.syswin.temail.usermail.common.Constants.HttpHeaderKey.CDTP_HEADER;
+import static com.syswin.temail.usermail.common.Constants.HttpHeaderKey.X_PACKET_ID;
+import static com.syswin.temail.usermail.common.Constants.RESULT_CODE.ERROR_REQUEST_PARAM;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailService;
-import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
-import com.syswin.temail.usermail.common.Contants.TemailStoreType;
+import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;

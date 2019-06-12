@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.core.configuration;
 
-import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
+import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import java.util.Enumeration;

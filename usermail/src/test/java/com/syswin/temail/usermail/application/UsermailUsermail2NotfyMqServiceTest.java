@@ -1,16 +1,16 @@
 package com.syswin.temail.usermail.application;
 
-import static com.syswin.temail.usermail.common.Contants.SessionEventKey.FROM;
-import static com.syswin.temail.usermail.common.Contants.SessionEventKey.MSGID;
-import static com.syswin.temail.usermail.common.Contants.SessionEventKey.OWNER;
-import static com.syswin.temail.usermail.common.Contants.SessionEventKey.REPLY_MSG_PARENT_ID;
-import static com.syswin.temail.usermail.common.Contants.SessionEventKey.SESSION_MESSAGE_TYPE;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.FROM;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.MSGID;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.OWNER;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.REPLY_MSG_PARENT_ID;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.SESSION_MESSAGE_TYPE;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
+import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.dto.TrashMailDTO;

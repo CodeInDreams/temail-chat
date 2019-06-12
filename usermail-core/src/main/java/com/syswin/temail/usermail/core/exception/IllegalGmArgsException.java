@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.core.exception;
 
 
-import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
+import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
 
 public class IllegalGmArgsException extends RuntimeException {
 

@@ -3,7 +3,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.syswin.temail.usermail.UsermailAgentApplication;
-import com.syswin.temail.usermail.common.Contants.TemailStatus;
+import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.ArrayList;

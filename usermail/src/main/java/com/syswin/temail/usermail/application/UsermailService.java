@@ -1,16 +1,16 @@
 package com.syswin.temail.usermail.application;
 
 
-import static com.syswin.temail.usermail.common.Contants.RESULT_CODE.ERROR_REQUEST_PARAM;
-import static com.syswin.temail.usermail.common.Contants.SessionEventKey.PACKET_ID_SUFFIX;
+import static com.syswin.temail.usermail.common.Constants.RESULT_CODE.ERROR_REQUEST_PARAM;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.PACKET_ID_SUFFIX;
 
 import com.google.gson.Gson;
 import com.syswin.temail.transactional.TemailShardingTransactional;
-import com.syswin.temail.usermail.common.Contants.SessionEventType;
-import com.syswin.temail.usermail.common.Contants.TemailArchiveStatus;
-import com.syswin.temail.usermail.common.Contants.TemailStatus;
-import com.syswin.temail.usermail.common.Contants.TemailType;
-import com.syswin.temail.usermail.common.Contants.UsermailAgentEventType;
+import com.syswin.temail.usermail.common.Constants.SessionEventType;
+import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
+import com.syswin.temail.usermail.common.Constants.TemailStatus;
+import com.syswin.temail.usermail.common.Constants.TemailType;
+import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.Meta;

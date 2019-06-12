@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.common;
 
-public class Contants {
+public class Constants {
 
   public enum RESULT_CODE {
     SUCCESS(200, "success"),

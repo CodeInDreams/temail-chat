@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.application;
 
-import com.syswin.temail.usermail.common.Contants.RESULT_CODE;
+import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

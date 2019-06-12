@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.configuration;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
+import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syswin.temail.usermail.application.UsermailBlacklistService;
-import com.syswin.temail.usermail.common.Contants.HttpHeaderKey;
+import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.domains.UsermailBlacklist;

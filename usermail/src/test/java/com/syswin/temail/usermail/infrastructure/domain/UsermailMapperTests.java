@@ -3,8 +3,8 @@ package com.syswin.temail.usermail.infrastructure.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.syswin.temail.usermail.UsermailAgentApplication;
-import com.syswin.temail.usermail.common.Contants.TemailStatus;
-import com.syswin.temail.usermail.common.Contants.TemailType;
+import com.syswin.temail.usermail.common.Constants.TemailStatus;
+import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.UmQueryDTO;

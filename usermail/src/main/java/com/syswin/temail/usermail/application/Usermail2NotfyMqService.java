@@ -1,8 +1,8 @@
 package com.syswin.temail.usermail.application;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.common.Contants.SessionEventKey;
-import com.syswin.temail.usermail.common.Contants.SessionEventType;
+import com.syswin.temail.usermail.common.Constants.SessionEventKey;
+import com.syswin.temail.usermail.common.Constants.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
