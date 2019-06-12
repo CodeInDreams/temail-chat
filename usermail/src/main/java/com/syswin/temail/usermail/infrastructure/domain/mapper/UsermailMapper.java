@@ -1,4 +1,4 @@
-package com.syswin.temail.usermail.infrastructure.domain;
+package com.syswin.temail.usermail.infrastructure.domain.mapper;
 
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;

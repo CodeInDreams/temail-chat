@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.syswin.temail.usermail.infrastructure.domain.UsermailMapper">
+<mapper namespace="com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper">
   <resultMap id="UserMailResultMap" type="UserMail">
     <id column="id" jdbcType="BIGINT" property="id"/>
     <result column="msgid" jdbcType="VARCHAR" property="msgid"/>

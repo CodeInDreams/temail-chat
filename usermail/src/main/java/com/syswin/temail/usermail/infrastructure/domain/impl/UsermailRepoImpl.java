@@ -5,7 +5,7 @@ import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMapper;
+import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
