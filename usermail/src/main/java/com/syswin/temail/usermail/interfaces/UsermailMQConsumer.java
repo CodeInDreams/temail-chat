@@ -28,11 +28,17 @@ public class UsermailMQConsumer implements IMqConsumer {
   private final UsermailMsgReplyService usermailMsgReplyService;
 
   @Autowired
-  public UsermailMQConsumer(UsermailService usermailService, UsermailMsgReplyService usermailMsgReplyService){
+  public UsermailMQConsumer(UsermailService usermailService, UsermailMsgReplyService usermailMsgReplyService) {
     this.usermailService = usermailService;
     this.usermailMsgReplyService = usermailMsgReplyService;
   }
 
+  /**
+   * 单聊mq异步处理消费端
+   *
+   * @param message mq消息
+   * @return boolean
+   */
   @Override
   public boolean consumer(String message) {
     JsonParser parser = new JsonParser();

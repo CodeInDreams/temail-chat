@@ -42,6 +42,14 @@ public class UsermailMsgReplyController {
     this.usermailMsgReplyService = usermailMsgReplyService;
   }
 
+  /**
+   * 发送单聊回复消息
+   *
+   * @param msgReplyDto 请求参数{@link UsermailMsgReplyDTO}
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @return 返回ResultDTO对象
+   * @See ResultDTO
+   */
   @ApiOperation(value = "发送单聊回复消息(0x 0001 1005)", notes = "发送单聊回复消息")
   @PostMapping(value = "/usermail/msg/reply")
   public ResultDTO sendMailMsgReply(@RequestBody @Valid UsermailMsgReplyDTO msgReplyDto,
@@ -68,6 +76,14 @@ public class UsermailMsgReplyController {
     return resultDto;
   }
 
+  /**
+   * 撤回单聊消息
+   *
+   * @param msgReplyDto 请求参数{@link UsermailMsgReplyDTO}
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @return 返回ResultDTO对象
+   * @See ResultDTO
+   */
   @ApiOperation(value = "撤回单聊回复消息(0x 0001 1006)", notes = "撤回单聊回复消息")
   @PutMapping(value = "/usermail/msg/reply")
   public ResultDTO revertMailMsgReply(@Valid @RequestBody UsermailMsgReplyDTO msgReplyDto, HttpServletRequest request) {
@@ -78,6 +94,14 @@ public class UsermailMsgReplyController {
     return new ResultDTO();
   }
 
+  /**
+   * 删除单聊回复消息
+   *
+   * @param msgReplyDto 请求参数{@link UsermailMsgReplyDTO}
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @return 返回ResultDTO对象
+   * @See ResultDTO
+   */
   @ApiOperation(value = "删除单聊回复消息(0x 0001 1007)", notes = "删除单聊回复消息")
   @DeleteMapping(value = "/usermail/msg/reply")
   public ResultDTO removeMailMsgReplys(@Valid @RequestBody UsermailMsgReplyDTO msgReplyDto,
@@ -89,7 +113,19 @@ public class UsermailMsgReplyController {
     return new ResultDTO();
   }
 
-
+  /**
+   * 拉取单聊回复消息列表。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param parentMsgid 单聊消息id
+   * @param pageSize 分页大小
+   * @param seqId 上次消息拉取seqId
+   * @param from 消息所属人
+   * @param signal 向前向后拉取标识
+   * @param filterSeqIds 断层的seqId范围
+   * @return 返回ResultDTO对象，结果包含回复消息列表{@link UsermailMsgReply}。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "拉取单聊回复消息(0x 0001 1008)", notes = "拉取单聊回复消息")
   @GetMapping(value = "/usermail/msg/reply")
   public ResultDTO getMailMsgReplys(HttpServletRequest request,
@@ -107,6 +143,14 @@ public class UsermailMsgReplyController {
     return resultDto;
   }
 
+  /**
+   * 更新类型为阅后即焚的回复消息的状态为阅后已焚
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param replyDestoryDto 请求参数{@link ReplyDestoryDTO}
+   * @return 返回ResultDTO对象
+   * @See ResultDTO
+   */
   @ApiOperation(value = "阅后即焚回复消息已焚(0x 100B)", notes = "回复消息阅后即焚")
   @PutMapping(value = "/usermail/msg/reply/destory")
   public ResultDTO destoryAfterRead(HttpServletRequest request,
@@ -119,6 +163,13 @@ public class UsermailMsgReplyController {
     return resultDto;
   }
 
+  /**
+   * 获取HttpServletRequest指定header信息。
+   *
+   * @param request HttpServletRequest
+   * @return CdtpHeaderDTO
+   * @See CdtpHeaderDTO
+   */
   private CdtpHeaderDTO getHeaderInfoFromRequest(HttpServletRequest request) {
     return new CdtpHeaderDTO(request.getHeader(CDTP_HEADER), request.getHeader(X_PACKET_ID));
   }

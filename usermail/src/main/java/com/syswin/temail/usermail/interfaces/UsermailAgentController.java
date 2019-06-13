@@ -55,6 +55,14 @@ public class UsermailAgentController {
     this.umBlacklistProxy = umBlacklistProxy;
   }
 
+  /**
+   * from向to发送单聊消息
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param usermail 请求参数，包含发送者{@link CreateUsermailDTO#getFrom()},接收者{@link CreateUsermailDTO#getTo()}等。
+   * @return 返回ResultDTO对象，返回内容包括该消息的msgid与序列号seqId。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "发送消息(0x 0001)", notes = "[from]发送消息给[to]")
   @PostMapping(value = "/usermail")
   public ResultDTO createUsermail(
@@ -82,7 +90,19 @@ public class UsermailAgentController {
     return resultDto;
   }
 
-
+  /**
+   * 发送者拉取指定单聊会话消息，该消息存储在发送者收件箱。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param from 发送者
+   * @param to 接收者
+   * @param pageSize 会话消息列表每页最大数量。
+   * @param seqId 指定会话消息从seqId开始进行拉取。
+   * @param signal 会话消息从seqId开始向前或者向后拉取，如果signal等于before,则小于seqId拉取，如果signal等于after,则大于seqId拉取。
+   * @param filterSeqIds 指定seqId的消息会被返回，默认为空，不做过滤。
+   * @return 返回ResultDTO对象，包含会话消息列表。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "同步单聊会话消息(0x 0003)", notes = "接收者拉取邮件及附件相关信息")
   @GetMapping(value = "/usermail")
   public ResultDTO getMails(
@@ -103,7 +123,14 @@ public class UsermailAgentController {
     return resultDto;
   }
 
-
+  /**
+   * 撤回已发送消息
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param usermail 根据{@link UsermailDTO#getFrom()}，{@link UsermailDTO#getFrom()}，{@link UsermailDTO#getMsgId()}撤回该消息。
+   * @return 返回ResultDTO对象
+   * @See ResultDTO
+   */
   @ApiOperation(value = "撤回消息(0x 0005)", notes = "撤回消息")
   @PutMapping(value = "/revert")
   public ResultDTO revert(
@@ -116,7 +143,16 @@ public class UsermailAgentController {
     return resultDto;
   }
 
-
+  /**
+   * 增量拉取发送者会话列表。可根据会话的归档状态进行拉取，也可通过本地会话列表参数进行增量拉取。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param from 发送者
+   * @param archiveStatus 会话归档状态，0 正常 1 已归档 -1 全部（默认）。
+   * @param usermailBoxes 本地会话列表
+   * @return 返回ResultDTO对象，返回内容包含会话列表{@link MailboxDTO}
+   * @See ResultDTO
+   */
   @ApiOperation(value = "同步会话列表(0x 0002)", notes = "同步[from]会话列表")
   @GetMapping(value = "/usermail/mailboxes")
   public ResultDTO mailboxes(
@@ -138,6 +174,15 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 通过发送者{@link UmDeleteMailDTO#getFrom()}，接收者{@link UmDeleteMailDTO#getTo()}，消息id{@link
+   * UmDeleteMailDTO#getMsgIds()}批量删除单聊消息。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param usermail 请求参数
+   * @return 返回ResultDTO对象
+   * @See ResultDTO
+   */
   @ApiOperation(value = "删除消息(0x 0004)", notes = "删除消息")
   @PutMapping(value = "/usermail/msg/remove")
   public ResultDTO removeMsg(HttpServletRequest request,
@@ -149,6 +194,14 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 更新类型为阅后即焚的消息的状态为阅后已焚。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param usermail 请求参数
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "阅后即焚消息已焚(0x 0006)", notes = "阅后即焚")
   @PutMapping(value = "/usermail/msg/destory")
   public ResultDTO destroyAfterRead(HttpServletRequest request,
@@ -159,6 +212,15 @@ public class UsermailAgentController {
     return new ResultDTO();
   }
 
+  /**
+   * 删除{@link DeleteMailBoxQueryDTO#getFrom()}与{@link DeleteMailBoxQueryDTO#getTo()}的单聊会话关系，可以通过参数{@link
+   * DeleteMailBoxQueryDTO#isDeleteAllMsg()}控制是否删除会话消息。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param queryDto 请求参数。
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "删除会话(0x 1004)")
   @DeleteMapping(value = "/usermail/session")
   public ResultDTO deleteSession(HttpServletRequest request, @RequestBody @Valid DeleteMailBoxQueryDTO queryDto) {
@@ -167,6 +229,16 @@ public class UsermailAgentController {
     return new ResultDTO();
   }
 
+  /**
+   * 批量查询发送者与接收者会话消息。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param from 发送者。
+   * @param to 接收者。
+   * @param msgIds 批量的消息id。
+   * @return 返回ResultDTO对象，返回内容包含批量消息内容{@link Usermail}。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "批量查询消息(0x 1009)")
   @GetMapping(value = "/usermail/msg")
   public ResultDTO batchQueryMsgs(HttpServletRequest request,
@@ -183,6 +255,16 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 批量查询发送者与接收者会话消息的回复消息总数。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param from 发送者。
+   * @param to 接收者。
+   * @param msgIds 批量的消息id。
+   * @return 返回ResultDTO对象，返回内容包含批量消息内容{@link Usermail}。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "批量查询消息回复总数(0x 100A)")
   @GetMapping(value = "/usermail/replyCount")
   public ResultDTO batchQueryMsgsReplyCount(HttpServletRequest request,
@@ -200,6 +282,15 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 将发送者与接收者单聊会话消息批量移入废纸篓。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param trashMailDto 发送者{@link MoveTrashMailDTO#getFrom()},接收者{@link MoveTrashMailDTO#getTo()}， 消息id{@link
+   * MoveTrashMailDTO#getMsgIds()}
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "移送消息到废纸篓(0x 2000)", notes = "移送废纸篓")
   @PostMapping(value = "/usermail/msg/trash")
   public ResultDTO moveMsgToTrash(HttpServletRequest request,
@@ -211,6 +302,14 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 将发送者与接收者单聊会话消息批量从废纸篓还原。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param revertTrashMailDto 发送者{@link TrashMailsDTO#getFrom()},需要从废纸篓还原的消息{@link TrashMailsDTO#getTrashMails()}。
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "还原废纸篓消息(0x 2001)", notes = "还原废纸篓消息")
   @PutMapping(value = "/usermail/msg/trash")
   public ResultDTO revertMsgToTrash(HttpServletRequest request,
@@ -222,6 +321,14 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 将发送者与接收者单聊会话消息批量从废纸篓中删除
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param revertTrashMailDto 发送者{@link TrashMailsDTO#getFrom()},需要从废纸篓还原的消息{@link TrashMailsDTO#getTrashMails()}。
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "删除废纸篓消息(0x 2002)", notes = "删除废纸篓消息")
   @DeleteMapping(value = "/usermail/msg/trash")
   public ResultDTO removeMsgFromTrash(HttpServletRequest request,
@@ -233,6 +340,14 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 清除发送者废纸篓消息
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param from 发送者
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "清空废纸篓消息(0x 2003)", notes = "清空废纸篓")
   @DeleteMapping(value = "/usermail/msg/trash/clear")
   public ResultDTO clearMsgFromTrash(HttpServletRequest request,
@@ -248,13 +363,24 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 拉取发送者废纸篓消息列表
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param from 发送者
+   * @param pageSize 每次拉取数量
+   * @param timestamp 上次消息拉取timestamp
+   * @param signal 向前向后拉取标识，值为before或者after,默认before。
+   * @return 返回ResultDTO对象，包含废纸篓消息列表，具体字段见{@Link Usermail}。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "同步废纸篓消息(0x 2004)", notes = "还拉取废纸篓消息")
   @GetMapping(value = "/usermail/msg/trash")
   public ResultDTO getMsgFromTrash(
       HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
-      @ApiParam(value = "分页`大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
-      @ApiParam(value = "上次消息拉取SeqNo", required = true) @RequestParam(value = "timestamp", defaultValue = "0") long timestamp,
+      @ApiParam(value = "分页大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
+      @ApiParam(value = "上次消息拉取timestamp", required = true) @RequestParam(value = "timestamp", defaultValue = "0") long timestamp,
       @ApiParam(value = "向前向后拉取标识", required = true) @RequestParam(value = "signal", defaultValue = "before") String signal) {
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
@@ -266,6 +392,15 @@ public class UsermailAgentController {
     return resultDto;
   }
 
+  /**
+   * 将发送者与接收者会话，在发送者收件箱移入/移出归档列表。
+   *
+   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
+   * @param dto 请求参数，发送者{@link UpdateArchiveDTO#getFrom()}，接收者{@link UpdateArchiveDTO#getTo()}， 归档状态{@link
+   * UpdateArchiveDTO#getArchiveStatus()}，0 移出归档列表 1 移入归档列表。
+   * @return 返回ResultDTO对象。
+   * @See ResultDTO
+   */
   @ApiOperation(value = "单聊会话归档 (0x 2005)", notes = "单聊归档")
   @PutMapping(value = "/usermail/msg/archive")
   public ResultDTO updateUsermailBoxArchiveStatus(HttpServletRequest request, @RequestBody @Valid
@@ -275,6 +410,13 @@ public class UsermailAgentController {
     return new ResultDTO();
   }
 
+  /**
+   * 获取HttpServletRequest指定header信息。
+   *
+   * @param request HttpServletRequest
+   * @return CdtpHeaderDTO
+   * @See CdtpHeaderDTO
+   */
   private CdtpHeaderDTO getHeaderInfoFromRequest(HttpServletRequest request) {
     return new CdtpHeaderDTO(request.getHeader(CDTP_HEADER), request.getHeader(X_PACKET_ID));
   }
