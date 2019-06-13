@@ -18,7 +18,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   }
 
   /**
-   * 新增黑名单
+   * @param usermailBlacklist 黑名单信息
+   * @description 新增黑名单
    */
   @Override
   public int insert(UsermailBlacklist usermailBlacklist) {
@@ -26,7 +27,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   }
 
   /**
-   * 根据发起者和被拉黑者删除黑名单信息
+   * @param usermailBlacklist 黑名单信息
+   * @description 根据发起者和被拉黑者删除黑名单信息
    */
   @Override
   public int deleteByAddresses(UsermailBlacklist usermailBlacklist) {
@@ -34,7 +36,9 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   }
 
   /**
-   * 根据发起者和被拉黑者查找黑名单信息
+   * @param temailAddress 发起者地址
+   * @param blackedAddress 被拉黑地址
+   * @description 根据发起者和被拉黑者查找黑名单信息
    */
   @Override
   public UsermailBlacklist selectByAddresses(String temailAddress, String blackedAddress) {
@@ -42,7 +46,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   }
 
   /**
-   * 查找当前地址的黑名单列表
+   * @param temailAddress 当前地址
+   * @description 查找当前地址的黑名单列表
    */
   @Override
   public List<UsermailBlacklist> selectByTemailAddress(String temailAddress) {
@@ -50,7 +55,9 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   }
 
   /**
-   * 判断收件人是否在发件人黑名单(0:不在;1:在)
+   * @param temailAddress 当前地址
+   * @param blackedAddress 被拉黑地址
+   * @description 判断收件人是否在发件人黑名单(0 : 不在 ; 1 : 在)
    */
   @Override
   public int countByAddresses(String temailAddress, String blackedAddress) {

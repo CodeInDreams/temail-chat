@@ -19,7 +19,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 新增回复消息
+   * @param record 回复消息信息
+   * @description 新增回复消息
    */
   @Override
   public int insert(UsermailMsgReply record) {
@@ -27,7 +28,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 查询指定消息的回复消息列表
+   * @param dto 查询消息条件
+   * @description 查询指定消息的回复消息列表
    */
   @Override
   public List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto) {
@@ -35,7 +37,9 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 根据msgId批量删除回复消息
+   * @param owner 消息拥有者
+   * @param msgIds 消息id列表
+   * @description 根据msgId批量删除回复消息
    */
   @Override
   public int deleteBatchMsgReplyStatus(String owner, List<String> msgIds) {
@@ -43,7 +47,9 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 根据sessionId批量删除回复消息
+   * @param sessionId 会话id
+   * @param owner 拥有者
+   * @description 根据sessionId批量删除回复消息
    */
   @Override
   public int batchDeleteBySessionId(String sessionId, String owner) {
@@ -51,7 +57,9 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 根据父消息删除回复消息
+   * @param owner 拥有者
+   * @param parentMsgIds 父消息id列表
+   * @description 根据父消息删除回复消息
    */
   @Override
   public int deleteMsgByParentIdAndOwner(String owner, List<String> parentMsgIds) {
@@ -59,7 +67,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 根据条件查询回复消息列表
+   * @param usermailMsgReply 查询回复消息列表条件
+   * @description 根据条件查询回复消息列表
    */
   @Override
   public UsermailMsgReply getMsgReplyByCondition(UsermailMsgReply usermailMsgReply) {
@@ -67,7 +76,10 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 回复消息阅后即焚
+   * @param owner 拥有者
+   * @param msgid 消息id
+   * @param status 消息状态
+   * @description 回复消息阅后即焚
    */
   @Override
   public int destoryAfterRead(String owner, String msgid, int status) {
@@ -75,7 +87,10 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 根据父消息批量修改消息状态
+   * @param owner 拥有者
+   * @param parentMsgIds 父消息id列表
+   * @param status 消息状态
+   * @description 根据父消息批量修改消息状态
    */
   @Override
   public int batchUpdateByParentMsgIds(String owner, List<String> parentMsgIds, int status) {
@@ -83,7 +98,9 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 根据用户和消息状态批量删除消息
+   * @param owner 拥有者
+   * @param status 消息状态
+   * @description 根据用户和消息状态批量删除消息
    */
   @Override
   public int batchDeleteByStatus(String owner, int status) {
@@ -91,7 +108,10 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 获取最近一条回复消息
+   * @param parentMsgid 父消息id
+   * @param owner 拥有者
+   * @param status 消息状态
+   * @description 获取最近一条回复消息
    */
   @Override
   public UsermailMsgReply getLastUsermailReply(String parentMsgid, String owner, int status) {
@@ -99,7 +119,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   }
 
   /**
-   * 撤回用户回复的消息
+   * @param usermailMsgReply 撤回的消息信息
+   * @description 撤回用户回复的消息
    */
   @Override
   public int revertUsermailReply(UsermailMsgReply usermailMsgReply) {
