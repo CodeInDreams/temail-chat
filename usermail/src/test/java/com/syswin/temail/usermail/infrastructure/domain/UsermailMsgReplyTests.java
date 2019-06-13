@@ -15,6 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @Import(UsermailAgentApplication.class)
 @ActiveProfiles("test")
+@DirtiesContext
 public class UsermailMsgReplyTests {
 
   @Autowired
@@ -124,7 +126,7 @@ public class UsermailMsgReplyTests {
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("test111111");
     usermailMsgReply.setOwner("A@systoontest.com");
-    usermailMsgReply.setId(1841112);
+    usermailMsgReply.setId(183);
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setType(1);
@@ -138,15 +140,15 @@ public class UsermailMsgReplyTests {
 
   @Test
   public void batchUpdateByParentMsgIdsTest() {
-    String owner = "A2018";
+    String owner = "A2019";
 
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
     String parentMsgid = "syswin-1543456947958";
     usermailMsgReply.setParentMsgid(parentMsgid);
-    usermailMsgReply.setFrom("A2018");
+    usermailMsgReply.setFrom("A2019");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(184112);
+    usermailMsgReply.setId(185);
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);
@@ -171,7 +173,7 @@ public class UsermailMsgReplyTests {
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(status);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(184112);
+    usermailMsgReply.setId(184114);
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);
