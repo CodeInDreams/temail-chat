@@ -142,7 +142,7 @@ public class UsermailService {
         .sendMqMsgSaveMail(headerInfo, from, to, owner, msgid, usermail.getMsgData(), seqNo, eventType, attachmentSize,
             author, filter);
     usermailAdapter.setLastMsgId(owner, other, msgid);
-    Map<String, Object> result = new HashMap<>();
+    Map<String, Object> result = new HashMap<>(4);
     result.put("msgId", msgid);
     result.put("seqId", mail.getSeqNo());
     return result;

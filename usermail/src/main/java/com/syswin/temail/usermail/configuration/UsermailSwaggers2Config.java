@@ -46,7 +46,7 @@ public class UsermailSwaggers2Config {
   }
 
   private String generateExampleCdtpHeader() {
-    Map<String, String> cdtpHeaderMap = new HashMap<>();
+    Map<String, String> cdtpHeaderMap = new HashMap<>(2);
     cdtpHeaderMap.put("header", "temail-usermailagent_example-header");
     return new Gson().toJson(cdtpHeaderMap);
   }
