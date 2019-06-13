@@ -12,6 +12,24 @@ public class UsermailSessionServiceTest {
     UsermailSessionService usermailSessionService = new UsermailSessionService();
     String sessionID = usermailSessionService.getSessionID(from, to);
     Assert.assertNotNull(sessionID);
+    from = "test5@syswin,com";
+    to = "test1@syswin,com";
+    String finalSessionId = usermailSessionService.getSessionID(from, to);
+    Assert.assertNotNull(finalSessionId);
+    String fromNullSessionId = null;
+    String toNullSessionId = null;
+    try {
+      from = null;
+      fromNullSessionId = usermailSessionService.getSessionID(from, to);
+    } catch (IllegalArgumentException e) {}
+    Assert.assertNull(fromNullSessionId);
+    from = "from";
+    to = null;
+    try {
+      toNullSessionId = usermailSessionService.getSessionID(from, to);
+    } catch (IllegalArgumentException e) {}
+    Assert.assertNull(toNullSessionId);
+
   }
 
 }
