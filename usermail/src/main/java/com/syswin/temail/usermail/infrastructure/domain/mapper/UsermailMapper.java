@@ -12,111 +12,138 @@ import org.springframework.stereotype.Repository;
 public interface UsermailMapper {
 
   /**
+   * 保存单聊消息
+   *
    * @param usermail 单聊消息
-   * @description 保存单聊消息
    */
   void saveUsermail(Usermail usermail);
 
   /**
+   * 根据用户会话id查询消息列表
+   *
    * @param umQueryDto 消息列表查询条件
-   * @description 根据用户会话id查询消息列表
+   * @return 消息列表
    */
   List<Usermail> getUsermail(UmQueryDTO umQueryDto);
 
   /**
+   * 根据msgId获取消息
+   *
    * @param msgid 消息id
    * @param owner 消息拥有者
-   * @description 根据msgId获取消息
+   * @return 消息信息
    */
   Usermail getUsermailByMsgid(@Param("msgid") String msgid, @Param("owner") String owner);
 
   /**
+   * 获取用户最新一条消息
+   *
    * @param umQueryDto 查询条件
-   * @description 获取用户最新一条消息
+   * @return 消息列表
    */
   List<Usermail> getLastUsermail(UmQueryDTO umQueryDto);
 
   /**
+   * 撤回消息
+   *
    * @param umQueryDto 撤回条件
-   * @description 撤回消息
+   * @return 撤回的数量
    */
   int revertUsermail(UmQueryDTO umQueryDto);
 
   /**
+   * 批量删除消息
+   *
    * @param msgIds 消息列表
    * @param owner 消息拥有者
-   * @description 批量删除消息
+   * @return 删除的数量
    */
   int removeMsg(@Param("msgIds") List<String> msgIds, @Param("owner") String owner);
 
   /**
+   * 阅后即焚
+   *
    * @param owner 消息拥有者
    * @param msgid 消息id
    * @param status 消息状态
-   * @description 阅后即焚
    */
   void destoryAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status);
 
   /**
+   * 根据会话id批量删除消息
+   *
    * @param sessionId 会话id
    * @param owner 拥有者
-   * @description 根据会话id批量删除消息
+   * @return 删除的数量
    */
   int batchDeleteBySessionId(@Param("sessionid") String sessionId, @Param("owner") String owner);
 
   /**
+   * 根据msgId获取用户消息列表
+   *
    * @param msgid 消息id
-   * @description 根据msgId获取用户消息列表
+   * @return 消息列表
    */
   List<Usermail> getUsermailListByMsgid(@Param("msgid") String msgid);
 
   /**
+   * 根据msgIds获取消息列表
+   *
    * @param from 发件人
    * @param msgIds 消息列表
-   * @description 根据msgIds获取消息列表
+   * @return 消息列表
    */
   List<Usermail> getUsermailByFromToMsgIds(@Param("from") String from, @Param("msgIds") List<String> msgIds);
 
   /**
+   * 更新消息的回复数
+   *
    * @param msgid 消息id
    * @param owner 拥有者
    * @param count 要增加的数量
    * @param lastReplyMsgid 最近的msgId
-   * @description 更新消息的回复数
    */
   void updateReplyCountAndLastReplyMsgid(@Param("msgid") String msgid, @Param("owner") String owner,
       @Param("count") int count, @Param("lastReplyMsgid") String lastReplyMsgid);
 
   /**
+   * 根据msgIds批量更新消息状态
+   *
    * @param msgIds 消息id列表
    * @param owner 拥有者
    * @param status 消息状态
-   * @description 根据msgIds批量更新消息状态
+   * @return 更新的数量
    */
   int updateStatusByMsgIds(@Param("msgIds") List<String> msgIds, @Param("owner") String owner,
       @Param("status") int status);
 
   /**
+   * 根据用户的消息状态批量删除消息
+   *
    * @param trashMails 要删除的消息列表
    * @param owner 消息拥有者
    * @param status 消息状态
-   * @description 根据用户的消息状态批量删除消息
+   * @return 删除的数量
    */
   int removeMsgByStatus(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
       @Param("status") int status);
 
   /**
+   * 根据msgIds批量移入废纸篓
+   *
    * @param trashMails 要删除的消息列表
    * @param owner 消息拥有着
    * @param status 消息状态
-   * @description 根据msgIds批量移入废纸篓
+   * @return 更新的数量
    */
   int updateStatusByTemail(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
       @Param("status") int status);
 
   /**
+   * 查询指定状态的消息列表
+   *
    * @param queryDto 查询条件
-   * @description 查询指定状态的消息列表
+   * @return 消息列表
    */
   List<Usermail> getUsermailByStatus(QueryTrashDTO queryDto);
 
