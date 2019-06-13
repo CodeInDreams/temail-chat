@@ -161,7 +161,7 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void sendMail_crossMsg() {
+  public void sendMailWhenCrossMsg() {
     String header = "CDTP-header";
     String msgid = "msgId";
     String from = "from@temail.com";
@@ -201,7 +201,7 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void getMails_filterSeqIdsIsEmpty() {
+  public void getMailsWhenFilterSeqIdsIsEmpty() {
     String header = "CDTP-header";
     String from = "from@temail.com";
     String to = "to@temail.com";
