@@ -34,7 +34,8 @@ public class Usermail2NotfyMqServiceTest {
 
   private final IMqAdapter mqAdapter = Mockito.mock(IMqAdapter.class);
   private final UsermailConfig usermailConfig = new UsermailConfig();
-  private final Usermail2NotfyMqService usermail2NotfyMqService = new Usermail2NotfyMqService(mqAdapter, usermailConfig);
+  private final Usermail2NotfyMqService usermail2NotfyMqService = new Usermail2NotfyMqService(mqAdapter,
+      usermailConfig);
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
 
@@ -78,7 +79,6 @@ public class Usermail2NotfyMqServiceTest {
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor.capture(), messageCaptor.capture());
-//    String value1 = argumentCaptor1.capture();
     String value = messageCaptor.getValue();
     System.out.println(value);
     JsonParser parser = new JsonParser();
@@ -91,7 +91,7 @@ public class Usermail2NotfyMqServiceTest {
 
 
   @Test
-  public void sendMqUpdateMsg(){
+  public void sendMqUpdateMsg() {
     String xPacketId = UUID.randomUUID().toString();
     String cdtpHeader = "header";
     String from = "from@systoontest.com";
@@ -99,16 +99,16 @@ public class Usermail2NotfyMqServiceTest {
     String owner = from;
     String msgid = "835u389";
     int type = SessionEventType.EVENT_TYPE_2;
-    usermail2NotfyMqService.sendMqUpdateMsg(xPacketId,cdtpHeader,from,to,owner,msgid,type);
+    usermail2NotfyMqService.sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgid, type);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> mapCaptor = ArgumentCaptor.forClass(String.class);
-    verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic),fromCaptor.capture(),mapCaptor.capture());
-    assertEquals(from,fromCaptor.getValue());
+    verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic), fromCaptor.capture(), mapCaptor.capture());
+    assertEquals(from, fromCaptor.getValue());
     String value = mapCaptor.getValue();
     JsonParser parser = new JsonParser();
     JsonObject jsonObject = parser.parse(value).getAsJsonObject();
-    assertEquals(to,jsonObject.get(TO).getAsString());
-    assertEquals(msgid,jsonObject.get(MSGID).getAsString());
+    assertEquals(to, jsonObject.get(TO).getAsString());
+    assertEquals(msgid, jsonObject.get(MSGID).getAsString());
   }
 
 
@@ -157,7 +157,7 @@ public class Usermail2NotfyMqServiceTest {
   }
 
   @Test
-  public void  sendSaveMsgReply(){
+  public void sendSaveMsgReply() {
     String from = "from@temail";
     String to = "to@temail";
     String owner = from;
@@ -167,7 +167,8 @@ public class Usermail2NotfyMqServiceTest {
     int attachmentSize = 100;
     String parentMsgId = "1938";
 
-    usermail2NotfyMqService.sendMqSaveMsgReply(headerInfo,from,to,owner,msgId,toMsg,seqNo,attachmentSize,parentMsgId);
+    usermail2NotfyMqService
+        .sendMqSaveMsgReply(headerInfo, from, to, owner, msgId, toMsg, seqNo, attachmentSize, parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -177,13 +178,13 @@ public class Usermail2NotfyMqServiceTest {
     JsonObject object = parser.parse(value).getAsJsonObject();
     assertEquals(from, object.get(FROM).getAsString());
     assertEquals(to, object.get(TO).getAsString());
-    assertEquals(msgId,object.get(MSGID).getAsString());
+    assertEquals(msgId, object.get(MSGID).getAsString());
     Assert.assertEquals(from, tagCaptor.getValue());
   }
 
 
   @Test
-  public void sendMqAfterUpdateMsgReply(){
+  public void sendMqAfterUpdateMsgReply() {
     String xPacketId = UUID.randomUUID().toString();
     String cdtpHeader = "1header";
     String from = "from@temail";
@@ -193,7 +194,7 @@ public class Usermail2NotfyMqServiceTest {
     int type = 0;
     String parentMsgId = "1938";
 
-    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(xPacketId,cdtpHeader,from,to,owner,msgId,type,parentMsgId);
+    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(xPacketId, cdtpHeader, from, to, owner, msgId, type, parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -203,12 +204,12 @@ public class Usermail2NotfyMqServiceTest {
     JsonObject object = parser.parse(value).getAsJsonObject();
     assertEquals(from, object.get(FROM).getAsString());
     assertEquals(to, object.get(TO).getAsString());
-    assertEquals(msgId,object.get(MSGID).getAsString());
+    assertEquals(msgId, object.get(MSGID).getAsString());
     Assert.assertEquals(from, tagCaptor.getValue());
   }
 
   @Test
-  public void sendMqAfterRemoveMsgReply(){
+  public void sendMqAfterRemoveMsgReply() {
     String from = "from@temail";
     String to = "to@temail";
     String owner = from;
@@ -217,7 +218,7 @@ public class Usermail2NotfyMqServiceTest {
     msgIds.add(msgId);
     int type = 0;
     String parentMsgId = "1938";
-    usermail2NotfyMqService.sendMqAfterRemoveMsgReply(headerInfo,from,to,owner,msgIds,type,parentMsgId);
+    usermail2NotfyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, owner, msgIds, type, parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -232,63 +233,63 @@ public class Usermail2NotfyMqServiceTest {
   }
 
   @Test
-  public void sendMqAfterUpdateArchiveStatus() throws Exception{
+  public void sendMqAfterUpdateArchiveStatus() throws Exception {
     String from = "a@msgseal.com";
     String to = "b@msgseal.com";
     int type = SessionEventType.EVENT_TYPE_33;
 
-    usermail2NotfyMqService.sendMqAfterUpdateArchiveStatus(headerInfo,from,to,type);
+    usermail2NotfyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-    verify(mqAdapter).sendMessage(topicCaptor.capture(),tagCaptor.capture(),messageCaptor.capture());
+    verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor.capture(), messageCaptor.capture());
     String message = messageCaptor.getValue();
     JsonParser parser = new JsonParser();
     JsonObject object = parser.parse(message).getAsJsonObject();
-    assertEquals(from,object.get(FROM).getAsString());
-    assertEquals(to,object.get(TO).getAsString());
-    assertEquals(from,tagCaptor.getValue());
+    assertEquals(from, object.get(FROM).getAsString());
+    assertEquals(to, object.get(TO).getAsString());
+    assertEquals(from, tagCaptor.getValue());
   }
 
   @Test
-  public void sendMqMoveTrashNotify() throws Exception{
+  public void sendMqMoveTrashNotify() throws Exception {
     String from = "a@msgseal.com";
     String to = "b@msgseal.com";
     String msgId = "3747475";
     List<String> msgIds = new ArrayList<>();
     msgIds.add(msgId);
     int type = SessionEventType.EVENT_TYPE_35;
-    usermail2NotfyMqService.sendMqMoveTrashNotify(headerInfo,from,to,msgIds,type);
+    usermail2NotfyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-    verify(mqAdapter).sendMessage(topicCaptor.capture(),tagCaptor
-    .capture(),messageCaptor.capture());
+    verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor
+        .capture(), messageCaptor.capture());
     String message = messageCaptor.getValue();
     JsonParser parser = new JsonParser();
     JsonObject object = parser.parse(message).getAsJsonObject();
-    assertEquals(from,object.get(FROM).getAsString());
-    assertEquals(to,object.get(TO).getAsString());
-    assertEquals(from,tagCaptor.getValue());
+    assertEquals(from, object.get(FROM).getAsString());
+    assertEquals(to, object.get(TO).getAsString());
+    assertEquals(from, tagCaptor.getValue());
   }
 
   @Test
-  public void sendMqTrashMsgOpratorNotify() throws Exception{
+  public void sendMqTrashMsgOpratorNotify() throws Exception {
     String owner = "a@msgseal.com";
     String to = "a@msgseal.com";
     String msgId = "1132";
-    List<TrashMailDTO> trashMailDtos = Arrays.asList(new TrashMailDTO(owner,to,msgId));
+    List<TrashMailDTO> trashMailDtos = Arrays.asList(new TrashMailDTO(owner, to, msgId));
     int type = SessionEventType.EVENT_TYPE_36;
-    usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo,owner,trashMailDtos,type);
+    usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo, owner, trashMailDtos, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
-    verify(mqAdapter).sendMessage(topicCaptor.capture(),tagCaptor
-        .capture(),messageCaptor.capture());
+    verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor
+        .capture(), messageCaptor.capture());
     String message = messageCaptor.getValue();
     JsonParser parser = new JsonParser();
     JsonObject object = parser.parse(message).getAsJsonObject();
-    assertEquals(owner,object.get(OWNER).getAsString());
-    assertEquals(owner,tagCaptor.getValue());
+    assertEquals(owner, object.get(OWNER).getAsString());
+    assertEquals(owner, tagCaptor.getValue());
   }
 }

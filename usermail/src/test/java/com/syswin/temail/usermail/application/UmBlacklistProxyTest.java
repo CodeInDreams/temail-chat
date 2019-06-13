@@ -11,9 +11,9 @@ import org.mockito.Mockito;
 
 public class UmBlacklistProxyTest {
 
-  UsermailBlacklistService usermailBlacklistService = Mockito
-      .mock(UsermailBlacklistService.class);
+  UsermailBlacklistService usermailBlacklistService = Mockito.mock(UsermailBlacklistService.class);
   UmBlacklistProxy umBlacklistProxy = new UmBlacklistProxy(usermailBlacklistService);
+
   @Test
   public void checkInBlacklist() {
     String from = "from@syswin.com";
@@ -28,11 +28,11 @@ public class UmBlacklistProxyTest {
   }
 
   @Test(expected = IllegalGmArgsException.class)
-  public void checkTemailIsInBlacklist(){
-     int count = 1;
-     String from = "from@syswin.com";
-     String blacker = "blacklist@syswin.com";
-     when(usermailBlacklistService.isInBlacklist(from,blacker)).thenReturn(count);
-     umBlacklistProxy.checkInBlacklist(from,blacker);
+  public void checkTemailIsInBlacklist() {
+    int count = 1;
+    String from = "from@syswin.com";
+    String blacker = "blacklist@syswin.com";
+    when(usermailBlacklistService.isInBlacklist(from, blacker)).thenReturn(count);
+    umBlacklistProxy.checkInBlacklist(from, blacker);
   }
 }
