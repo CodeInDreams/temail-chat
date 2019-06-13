@@ -48,7 +48,7 @@
   <insert id="saveUsermail" parameterType="UserMail" keyProperty="id">
     insert into usermail (`id`, `msgid`, `sessionid`, `from`, `to`, `type`, `status`, `seq_no`, `owner`,
                           `at`, `topic`, `zip_msg`, `author`,`filter`)
-    values (#{id}, #{msgid}, #{sessionid}, #{from}, #{to}, #{type}, 0, #{seqNo}, #{owner}, #{at}, #{topic}, #{zipMsg}, #{author}, #{filter})
+    values (#{id}, #{msgid}, #{sessionid}, #{from}, #{to}, #{type}, #{status}, #{seqNo}, #{owner}, #{at}, #{topic}, #{zipMsg}, #{author}, #{filter})
   </insert>
 
   <!--<update id="updateUsermailFromMsg" >-->
