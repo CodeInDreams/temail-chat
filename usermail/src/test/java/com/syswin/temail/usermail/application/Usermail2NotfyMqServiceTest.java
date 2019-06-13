@@ -8,6 +8,7 @@ import static com.syswin.temail.usermail.common.Constants.SessionEventKey.SEQ_NO
 import static com.syswin.temail.usermail.common.Constants.SessionEventKey.TO;
 import static com.syswin.temail.usermail.common.Constants.SessionEventKey.TO_MSG;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import com.google.gson.JsonObject;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -86,6 +88,29 @@ public class Usermail2NotfyMqServiceTest {
     Assert.assertEquals(msgid, jsonObj.get("msgid").getAsString());
     Assert.assertEquals(from, tagCaptor.getValue());
   }
+
+
+  @Test
+  public void sendMqUpdateMsg(){
+    String xPacketId = UUID.randomUUID().toString();
+    String cdtpHeader = "header";
+    String from = "from@systoontest.com";
+    String to = "to@systoontest.com";
+    String owner = from;
+    String msgid = "835u389";
+    int type = SessionEventType.EVENT_TYPE_2;
+    usermail2NotfyMqService.sendMqUpdateMsg(xPacketId,cdtpHeader,from,to,owner,msgid,type);
+    ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> mapCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic),fromCaptor.capture(),mapCaptor.capture());
+    assertEquals(from,fromCaptor.getValue());
+    String value = mapCaptor.getValue();
+    JsonParser parser = new JsonParser();
+    JsonObject jsonObject = parser.parse(value).getAsJsonObject();
+    assertEquals(to,jsonObject.get(TO).getAsString());
+    assertEquals(msgid,jsonObject.get(MSGID).getAsString());
+  }
+
 
   @Test
   @Ignore
@@ -156,15 +181,19 @@ public class Usermail2NotfyMqServiceTest {
     Assert.assertEquals(from, tagCaptor.getValue());
   }
 
+
   @Test
   public void sendMqAfterUpdateMsgReply(){
+    String xPacketId = UUID.randomUUID().toString();
+    String cdtpHeader = "1header";
     String from = "from@temail";
     String to = "to@temail";
+    String owner = to;
     String msgId = "12344";
     int type = 0;
     String parentMsgId = "1938";
 
-    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(headerInfo,from,to,msgId,type,parentMsgId);
+    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(xPacketId,cdtpHeader,from,to,owner,msgId,type,parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);

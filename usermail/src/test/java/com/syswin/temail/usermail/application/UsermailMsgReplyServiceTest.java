@@ -94,6 +94,7 @@ public class UsermailMsgReplyServiceTest {
     String header = "CDTP-header";
     String to = "to@temail.com";
     String from = "from@temail.com";
+    String owner = to;
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
     int type = 1;
@@ -103,7 +104,7 @@ public class UsermailMsgReplyServiceTest {
     when(usermailMsgReplyRepo.revertUsermailReply(Mockito.any(UsermailMsgReply.class))).thenReturn(1);
     when(usermailRepo.getUsermailByMsgid(anyString(), anyString())).thenReturn(new Usermail());
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
-    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(headerInfo, from, to, msgid, type, parentMsgid);
+    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid, type, parentMsgid);
     ArgumentCaptor<UsermailMsgReply> msgReplyCaptor = ArgumentCaptor.forClass(UsermailMsgReply.class);
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> parentMsgIdCaptor = ArgumentCaptor.forClass(String.class);

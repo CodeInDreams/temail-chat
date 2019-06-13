@@ -147,24 +147,6 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
   }
 
-  /**
-   * 消息回复更新状态时，通知MQ
-   */
-  public void sendMqAfterUpdateMsgReply(CdtpHeaderDTO headerInfo, String from, String to,
-      String msgId, int type, String parentMsgId) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(12);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    map.put(MSGID, msgId);
-    map.put(PARENT_MSGID, parentMsgId);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
-  }
 
   /**
    * 消息回复删除时，通知MQ
