@@ -6,6 +6,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsermailSessionService {
 
+  /**
+   * 获取sessionId
+   * @param from
+   * @param to
+   * @return sessionId
+   */
   public String getSessionID(String from, String to) {
     if (null == from || "".equals(from)) {
       throw new IllegalArgumentException("param [from] is illegal");

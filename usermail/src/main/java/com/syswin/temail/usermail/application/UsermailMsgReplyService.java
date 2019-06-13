@@ -58,7 +58,19 @@ public class UsermailMsgReplyService {
     this.convertMsgService = convertMsgService;
   }
 
-  @TemailShardingTransactional( shardingField = "#owner")
+  /**
+   * @Description  发送单聊回复消息
+   * @param cdtpHeaderDto packet头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param message 发送的消息
+   * @param msgId 消息id
+   * @param parentMsgId 父消息id
+   * @param type 消息类型
+   * @param attachmentSize 附件大小
+   * @param owner 消息所属人
+   */
+  @TemailShardingTransactional(shardingField = "#owner")
   public Map createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message, String msgId,
       String parentMsgId, int type, int attachmentSize, String owner) {
     String sessionid = usermailSessionService.getSessionID(from, to);
@@ -83,7 +95,17 @@ public class UsermailMsgReplyService {
     return result;
   }
 
-  @TemailShardingTransactional( shardingField = "#owner")
+  /**
+   * @Description 撤回单聊回复消息
+   * @param xPacketId 包id
+   * @param cdtpHeader 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所属人
+   * @param replyMsgParentId 父消息id
+   * @param msgId 消息id
+   */
+  @TemailShardingTransactional(shardingField = "#owner")
   public void revertMsgReply(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String replyMsgParentId, String msgId) {
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
@@ -108,7 +130,15 @@ public class UsermailMsgReplyService {
     }
   }
 
-  @TemailShardingTransactional( shardingField = "#from")
+  /**
+   * @Description 撤回单聊回复消息
+   * @param cdtpHeaderDto 头信息
+   * @param parentMsgReplyId 父消息id
+   * @param msgId 消息id
+   * @param from 发件人
+   * @param to 收件人
+   */
+  @TemailShardingTransactional(shardingField = "#from")
   public void revertMsgReply(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, String msgId, String from,
       String to) {
     msgReplyTypeValidate(parentMsgReplyId);
@@ -120,7 +150,15 @@ public class UsermailMsgReplyService {
             parentMsgReplyId, msgId);
   }
 
-  @TemailShardingTransactional( shardingField = "#from")
+  /**
+   * @Description 删除单聊回复消息
+   * @param cdtpHeaderDto 头信息
+   * @param parentMsgReplyId 父消息id
+   * @param msgIds 消息id列表
+   * @param from 发件人
+   * @param to 收件人
+   */
+  @TemailShardingTransactional(shardingField = "#from")
   public void removeMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
       String to) {
     Usermail usermail = msgReplyTypeValidate(parentMsgReplyId, from);
@@ -142,11 +180,24 @@ public class UsermailMsgReplyService {
       }
     }
     usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgReplyId, usermail.getOwner(), -count, lastReplyMsgId);
-    usermail2NotfyMqService.sendMqAfterRemoveMsgReply(cdtpHeaderDto, from, to, from, msgIds, SessionEventType.EVENT_TYPE_20,
-        parentMsgReplyId);
+    usermail2NotfyMqService
+        .sendMqAfterRemoveMsgReply(cdtpHeaderDto, from, to, from, msgIds, SessionEventType.EVENT_TYPE_20,
+            parentMsgReplyId);
   }
 
-  @TemailShardingTransactional( shardingField = "#owner")
+
+  /**
+   * @Description 拉取单聊回复消息
+   * @param cdtpHeaderDto 头信息
+   * @param parentMsgid 父消息id
+   * @param pageSize 分页大小
+   * @param seqId  回复消息序列号、上次消息拉取seqId
+   * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
+   * @param owner 消息所属人
+   * @param filterSeqIds 过滤断层seqId
+   * @return  拉取到的单聊回复消息列表
+   */
+  @TemailShardingTransactional(shardingField = "#owner")
   public List<UsermailMsgReply> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
       String signal, String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
@@ -172,7 +223,17 @@ public class UsermailMsgReplyService {
     return dataFilter;
   }
 
-  @TemailShardingTransactional( shardingField = "#owner")
+  /**
+   * @Description 阅后即焚回复消息
+   * @param xPacketId 包id
+   * @param cdtpHeader 头信息
+   * @param from 收件人
+   * @param to 发件人
+   * @param owner 消息所属人
+   * @param msgId 消息id
+   * @param replyMsgParentId 父消息id
+   */
+  @TemailShardingTransactional(shardingField = "#owner")
   public void destoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
       String replyMsgParentId) {
     int count = usermailMsgReplyRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
@@ -185,13 +246,21 @@ public class UsermailMsgReplyService {
     Usermail usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
-      usermail2NotfyMqService.sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_26);
+      usermail2NotfyMqService
+          .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_26);
     } else {
       LOGGER.warn("label-mq-destory-after-read: parentMsgId={},not-exist", replyMsgParentId);
     }
   }
 
-  @TemailShardingTransactional( shardingField = "#from")
+  /**
+   * @Description 阅后即焚回复消息
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to  收件人
+   * @param msgId 消息id
+   */
+  @TemailShardingTransactional(shardingField = "#from")
   public void destoryAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
     usermailMsgReply.setOwner(from);
@@ -214,7 +283,9 @@ public class UsermailMsgReplyService {
 
 
   /**
-   * 校验源消息类型是否为合法
+   * @Description 校验源消息类型是否为合法
+   * @param parentMsgId 父消息id
+   * @return 单聊对象列表
    */
   private List<Usermail> msgReplyTypeValidate(String parentMsgId) {
     List<Usermail> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
@@ -226,7 +297,10 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * 校验源消息类型是否为合法
+   * @Description 校验源消息类型是否为合法
+   * @param parentMsgId 父消息id
+   * @param owner 消息所属人
+   * @return 单聊对象信息
    */
   public Usermail msgReplyTypeValidate(String parentMsgId, String owner) {
 

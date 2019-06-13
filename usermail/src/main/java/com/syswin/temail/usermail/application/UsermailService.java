@@ -75,6 +75,13 @@ public class UsermailService {
     this.convertMsgService = convertMsgService;
   }
 
+  /**
+   * 保存单聊会话信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所属人
+   * @return  sessionId
+   */
   public String saveUsermailBoxInfo(String from, String to, String owner) {
     String sessionId = usermailSessionService.getSessionID(from, to);
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
@@ -87,6 +94,14 @@ public class UsermailService {
     return sessionId;
   }
 
+  /**
+   * 发送单聊消息
+   * @param headerInfo 头信息
+   * @param usermail
+   * @param owner
+   * @param other
+   * @return
+   */
   @TemailShardingTransactional(shardingField = "#owner")
   public Map sendMail(CdtpHeaderDTO headerInfo, CreateUsermailDTO usermail, String owner, String other) {
     String from = usermail.getFrom();
@@ -133,6 +148,17 @@ public class UsermailService {
     return result;
   }
 
+  /**
+   * 同步单聊会话消息
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param fromSeqNo 消息序列号
+   * @param pageSize 分页大小
+   * @param filterSeqIds 过滤断层seqId
+   * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
+   * @return  单聊会话消息
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public List<Usermail> getMails(CdtpHeaderDTO headerInfo, String from, String to, long fromSeqNo,
       int pageSize, String filterSeqIds, String signal) {
@@ -159,6 +185,13 @@ public class UsermailService {
     return resultFilter;
   }
 
+  /**
+   * 撤回单聊消息
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param msgid 消息id
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public void revert(CdtpHeaderDTO headerInfo, String from, String to, String msgid) {
     usermailMqService.sendMqRevertMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgid);
@@ -167,6 +200,15 @@ public class UsermailService {
             msgid);
   }
 
+  /**
+   * 撤回单聊消息
+   * @param xPacketId 包id
+   * @param cdtpHeader 头信息
+   * @param from 发件人
+   * @param to  收件人
+   * @param owner 消息所属人
+   * @param msgid 消息id
+   */
   @TemailShardingTransactional(shardingField = "#owner")
   public void revert(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
     UmQueryDTO umQueryDto = new UmQueryDTO();
@@ -186,6 +228,14 @@ public class UsermailService {
 
   }
 
+  /**
+   * 同步会话列表
+   * @param headerInfo 包id
+   * @param from 发件人
+   * @param archiveStatus 归档状态（ 0代表还原归档  1代表归档）
+   * @param usermailBoxes 会话
+   * @return 收件箱列表
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public List<MailboxDTO> mailboxes(CdtpHeaderDTO headerInfo, String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
@@ -218,6 +268,13 @@ public class UsermailService {
     return resultDto;
   }
 
+  /**
+   * 删除单聊消息
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param msgIds 待删除的消息id列表
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public void removeMsg(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     // msg 內容更新为空串
@@ -244,6 +301,13 @@ public class UsermailService {
     }
   }
 
+  /**
+   * 单聊消息阅后即焚
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param msgId 消息id
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public void destroyAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
     usermailMqService.sendMqDestroyMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId);
@@ -252,6 +316,15 @@ public class UsermailService {
             msgId);
   }
 
+  /**
+   * 单聊消息阅后即焚
+   * @param xPacketId 包id
+   * @param cdtpHeader 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所属人
+   * @param msgId 消息id
+   */
   @TemailShardingTransactional(shardingField = "#owner")
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
@@ -268,6 +341,12 @@ public class UsermailService {
     }
   }
 
+  /**
+   * 删除会话
+   * @param cdtpHeaderDto
+   * @param queryDto
+   * @return 删除成功的标志
+   */
   @TemailShardingTransactional(shardingField = "#queryDto.from")
   public boolean deleteSession(CdtpHeaderDTO cdtpHeaderDto, DeleteMailBoxQueryDTO queryDto) {
     usermailBoxRepo.deleteByOwnerAndTo(queryDto.getFrom(), queryDto.getTo());
@@ -285,6 +364,12 @@ public class UsermailService {
     return true;
   }
 
+  /**
+   * 删除群聊会话
+   * @param groupTemail 群聊地址
+   * @param owner 消息所属人
+   * @return 删除成功的标志
+   */
   @TemailShardingTransactional(shardingField = "#owner")
   public boolean deleteGroupChatSession(String groupTemail, String owner) {
     usermailBoxRepo.deleteByOwnerAndTo(owner, groupTemail);
@@ -295,12 +380,28 @@ public class UsermailService {
     return true;
   }
 
+  /**
+   * 批量查询单聊信息
+   * @param cdtpHeaderDto 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param msgIds 消息id列表
+   * @return 单聊对象列表
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public List<Usermail> batchQueryMsgs(CdtpHeaderDTO cdtpHeaderDto, String from, String to, List<String> msgIds) {
     List<Usermail> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
   }
 
+  /**
+   * 批量查询单聊回复消息
+   * @param cdtpHeaderDto 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param msgIds 消息id列表
+   * @return 单聊回复消息列表
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public List<Usermail> batchQueryMsgsReplyCount(CdtpHeaderDTO cdtpHeaderDto, String from, String to,
       List<String> msgIds) {
@@ -312,6 +413,13 @@ public class UsermailService {
     return usermailList;
   }
 
+  /**
+   * 移送消息到废纸篓
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param msgIds 待移送到废纸篓的消息id列表
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public void moveMsgToTrash(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     usermailRepo.updateStatusByMsgIds(msgIds, from, TemailStatus.STATUS_TRASH_4);
@@ -319,6 +427,12 @@ public class UsermailService {
     usermail2NotfyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
   }
 
+  /**
+   * 还原废纸篓消息
+   * @param headerInfo 头信息
+   * @param temail 执行操作的temail
+   * @param trashMails 待还原的废纸篓消息列表
+   */
   @TemailShardingTransactional(shardingField = "#temail")
   public void revertMsgToTrash(CdtpHeaderDTO headerInfo, String temail, List<TrashMailDTO> trashMails) {
     List<String> msgIds = new ArrayList<>(trashMails.size());
@@ -330,6 +444,12 @@ public class UsermailService {
     usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }
 
+  /**
+   * 删除废纸篓消息
+   * @param headerInfo 头信息
+   * @param temail 被操作的temail
+   * @param trashMails 待删除的废纸篓消息列表
+   */
   @TemailShardingTransactional(shardingField = "#temail")
   public void removeMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, List<TrashMailDTO> trashMails) {
     usermailMqService.sendMqRemoveTrash(temail, trashMails, UsermailAgentEventType.TRASH_REMOVE_0);
@@ -338,6 +458,11 @@ public class UsermailService {
     usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
   }
 
+  /**
+   * 删除废纸篓消息
+   * @param temail 被操作的temail
+   * @param trashMails 待删除的废纸篓消息
+   */
   @TemailShardingTransactional(shardingField = "#temail")
   public void removeMsgFromTrash(String temail, List<TrashMailDTO> trashMails) {
     List<String> msgIds = new ArrayList<>(trashMails.size());
@@ -351,6 +476,10 @@ public class UsermailService {
     usermailMsgReplyRepo.deleteMsgByParentIdAndOwner(temail, msgIds);
   }
 
+  /**
+   * 清空废纸篓消息
+   * @param temail 被操作的temail
+   */
   @TemailShardingTransactional(shardingField = "#temail")
   public void clearMsgFromTrash(String temail) {
     usermailRepo.removeMsgByStatus(null, temail, TemailStatus.STATUS_TRASH_4);
@@ -358,6 +487,15 @@ public class UsermailService {
     usermailMsgReplyRepo.batchDeleteByStatus(temail, TemailStatus.STATUS_TRASH_4);
   }
 
+  /**
+   * 同步废纸篓消息列表
+   * @param headerInfo 头信息
+   * @param temail 操作的temail
+   * @param timestamp 时间戳
+   * @param pageSize 分页大小
+   * @param signal  向前向后拉取标识，before向前拉取，after向后拉取，默认before
+   * @return 废纸篓消息列表
+   */
   @TemailShardingTransactional(shardingField = "#temail")
   public List<Usermail> getMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, long timestamp, int pageSize,
       String signal) {
@@ -371,6 +509,13 @@ public class UsermailService {
     return convertMsgService.convertMsg(result);
   }
 
+  /**
+   * 单聊会话归档
+   * @param headerInfo 头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param archiveStatus 归档状态（ 0代表还原归档 1代表归档）
+   */
   @TemailShardingTransactional(shardingField = "#from")
   public void updateUsermailBoxArchiveStatus(CdtpHeaderDTO headerInfo, String from, String to, int archiveStatus) {
     LOGGER.info("update usermail archiveStatus , from={},to={},archiveStatus={}", from, to, archiveStatus);
