@@ -135,7 +135,6 @@ public class UsermailServiceTest {
     usermails.add(usermail1);
     when(usermailRepo.getUsermail(any())).thenReturn(usermails);
     List<Usermail> list = usermailService.getMails(headerInfo, from, to, fromSeqNo, pageSize, filterSeqIds, "before");
-    System.out.println(list);
     ArgumentCaptor<CdtpHeaderDTO> argumentCaptor1 = ArgumentCaptor.forClass(CdtpHeaderDTO.class);
     ArgumentCaptor<String> argumentCaptor2 = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> argumentCaptor3 = ArgumentCaptor.forClass(String.class);
@@ -290,7 +289,6 @@ public class UsermailServiceTest {
     Mockito.when(usermailRepo.getUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
 
     actualMailList = usermailService.batchQueryMsgsReplyCount(headerInfo, from, to, msgIds);
-    System.out.println("actualMailList:" + actualMailList);
     Assert.assertEquals(actualMailList, expectMailList);
   }
 

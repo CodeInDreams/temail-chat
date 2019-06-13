@@ -32,10 +32,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext
-public class UsermailMapperTests {
+public class UsermailMapperTest {
 
   private static final String SESSIONID = "sessionid-1";
-  private static Logger logger = LoggerFactory.getLogger(UsermailMapperTests.class);
+  private static Logger logger = LoggerFactory.getLogger(UsermailMapperTest.class);
   @Autowired
   private UsermailRepo usermailRepo;
   private String msgid;
@@ -53,7 +53,7 @@ public class UsermailMapperTests {
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
-    userMail.setId(100L);
+    userMail.setId(101L);
     userMail.setFrom(from);
     userMail.setTo(to);
     userMail.setOwner(from);
@@ -82,7 +82,6 @@ public class UsermailMapperTests {
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("to@syswin.com");
     List<Usermail> usermails = usermailRepo.getLastUsermail(umQueryDto);
-    System.out.println(usermails);
     Assert.assertEquals(0, usermails.size());
   }
 
@@ -110,23 +109,59 @@ public class UsermailMapperTests {
 
   @Test
   public void getUsermail() {
+    Usermail userMail = new Usermail();
+    userMail.setSessionid(SESSIONID);
+    String from = "from@syswin.com";
+    String to = "to@syswin.com";
+    userMail.setId(102L);
+    userMail.setFrom(from);
+    userMail.setTo(to);
+    userMail.setOwner(from);
+    userMail.setZipMsg(msgCompressor.zip("test message".getBytes()));
+    userMail.setMsgid(msgid);
+    userMail.setSeqNo(11);
+    userMail.setType(TemailType.TYPE_NORMAL_0);
+    userMail.setStatus(TemailStatus.STATUS_NORMAL_0);
+    userMail.setMessage("");
+    userMail.setAuthor(from);
+    userMail.setFilter(null);
+    usermailRepo.saveUsermail(userMail);
+
     UmQueryDTO umQueryDto = new UmQueryDTO();
-    umQueryDto.setSessionid("123456789");
+    umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner("from@syswin.com");
     umQueryDto.setPageSize(10);
     List<Usermail> usermails = usermailRepo.getUsermail(umQueryDto);
-    System.out.println(usermails);
+    assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
   @Test
   public void getUsermailWithSeqId() {
+    Usermail userMail = new Usermail();
+    userMail.setSessionid(SESSIONID);
+    String from = "from@syswin.com";
+    String to = "to@syswin.com";
+    userMail.setId(100L);
+    userMail.setFrom(from);
+    userMail.setTo(to);
+    userMail.setOwner(from);
+    userMail.setZipMsg(msgCompressor.zip("test message".getBytes()));
+    userMail.setMsgid(msgid);
+    userMail.setSeqNo(11);
+    userMail.setType(TemailType.TYPE_NORMAL_0);
+    userMail.setStatus(TemailStatus.STATUS_NORMAL_0);
+    userMail.setMessage("");
+    userMail.setAuthor(from);
+    userMail.setFilter(null);
+    usermailRepo.saveUsermail(userMail);
+
     UmQueryDTO umQueryDto = new UmQueryDTO();
-    umQueryDto.setSessionid("123456789");
-    umQueryDto.setOwner("from@syswin.com");
+    umQueryDto.setSessionid(SESSIONID);
+    umQueryDto.setOwner(from);
     umQueryDto.setPageSize(10);
-    umQueryDto.setFromSeqNo(40);
+    umQueryDto.setFromSeqNo(10);
     List<Usermail> usermails = usermailRepo.getUsermail(umQueryDto);
-    System.out.println(usermails);
+    assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
   @Test
@@ -199,7 +234,6 @@ public class UsermailMapperTests {
     usermailRepo.updateReplyCountAndLastReplyMsgid(msgId, from, 1, lastReplyMsgid);
     //验证最新回复消息id与消息回复总数（1）是否正常更新
     Usermail usermailUpdated = usermailRepo.getUsermailByMsgid(msgId, from);
-    System.out.println("usermailUpdated" + usermailUpdated.toString());
     Assert.assertEquals(usermailUpdated.getLastReplyMsgId(), lastReplyMsgid);
     Assert.assertTrue(usermailUpdated.getReplyCount() == 1);
   }

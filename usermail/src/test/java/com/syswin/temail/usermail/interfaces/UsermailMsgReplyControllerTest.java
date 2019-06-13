@@ -48,7 +48,7 @@ import org.springframework.web.context.WebApplicationContext;
 @AutoConfigureMockMvc
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
-public class UsermailMsgReplyControllerTests {
+public class UsermailMsgReplyControllerTest {
 
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}", "xPacketId:value");
 

@@ -19,7 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 @Import(UsermailAgentApplication.class)
 @ActiveProfiles("test")
-public class UsermailBoxMapperTests {
+public class UsermailBoxMapperTest {
 
   @Autowired
   private UsermailBoxRepo usermailBoxRepo;

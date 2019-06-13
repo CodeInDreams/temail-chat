@@ -32,7 +32,7 @@ import org.springframework.web.client.RestTemplate;
  * 单聊集成测试
  */
 @Ignore
-public class UsermailTests {
+public class UsermailTest {
 
   private static final String usermailUrl = "http://127.0.0.1:8090";
   private RestTemplate restTemplate = new RestTemplate();

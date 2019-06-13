@@ -56,7 +56,6 @@ public class Usermail2NotfyMqServiceTest {
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor.capture(), messageCaptor.capture());
     String value = messageCaptor.getValue();
-    System.out.println(value);
     JsonParser parser = new JsonParser();
     JsonObject jsonObj = parser.parse(value).getAsJsonObject();
     assertEquals(from, jsonObj.get(FROM).getAsString());
@@ -80,7 +79,6 @@ public class Usermail2NotfyMqServiceTest {
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor.capture(), messageCaptor.capture());
     String value = messageCaptor.getValue();
-    System.out.println(value);
     JsonParser parser = new JsonParser();
     JsonObject jsonObj = parser.parse(value).getAsJsonObject();
     Assert.assertEquals(from, jsonObj.get("from").getAsString());
@@ -128,7 +126,6 @@ public class Usermail2NotfyMqServiceTest {
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(topicCaptor.capture(), tagCaptor.capture(), messageCaptor.capture());
     String value = messageCaptor.getValue();
-    System.out.println(value);
     JsonParser parser = new JsonParser();
     JsonObject jsonObj = parser.parse(value).getAsJsonObject();
     assertEquals(from, jsonObj.get(FROM).getAsString());

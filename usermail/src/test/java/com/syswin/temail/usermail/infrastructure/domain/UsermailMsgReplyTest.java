@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Import(UsermailAgentApplication.class)
 @ActiveProfiles("test")
 @DirtiesContext
-public class UsermailMsgReplyTests {
+public class UsermailMsgReplyTest {
 
   @Autowired
   private UsermailMsgReplyRepo usermailMsgReplyRepo;
@@ -143,12 +143,12 @@ public class UsermailMsgReplyTests {
     String owner = "A2019";
 
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
-    String parentMsgid = "syswin-1543456947958";
+    String parentMsgid = "syswin-1543456947959";
     usermailMsgReply.setParentMsgid(parentMsgid);
     usermailMsgReply.setFrom("A2019");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(185);
+    usermailMsgReply.setId(184113);
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);

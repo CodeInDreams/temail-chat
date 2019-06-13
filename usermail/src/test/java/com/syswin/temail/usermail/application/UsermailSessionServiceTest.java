@@ -11,7 +11,6 @@ public class UsermailSessionServiceTest {
     String to = "to@syswin.com";
     UsermailSessionService usermailSessionService = new UsermailSessionService();
     String sessionID = usermailSessionService.getSessionID(from, to);
-    System.out.println(sessionID);
     Assert.assertNotNull(sessionID);
   }
 

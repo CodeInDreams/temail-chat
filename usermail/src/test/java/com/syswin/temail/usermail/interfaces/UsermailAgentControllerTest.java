@@ -55,7 +55,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class UsermailAgentControllerTests {
+public class UsermailAgentControllerTest {
 
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");

@@ -35,7 +35,7 @@ import org.springframework.web.client.RestTemplate;
 /**
  * 单聊回复集成测试
  */
-public class UsermailMsgReplyInterfaceTests {
+public class UsermailMsgReplyInterfaceTest {
 
   private static final String usermailUrl = "http://127.0.0.1:8090";
   private RestTemplate restTemplate = new RestTemplate();
