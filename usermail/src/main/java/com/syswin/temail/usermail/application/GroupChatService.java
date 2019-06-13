@@ -16,6 +16,12 @@ public class GroupChatService {
     this.usermailMqService = usermailMqService;
   }
 
+
+  /**
+   * @param dto 入群事件参数
+   * @return void
+   * @description 群聊入群事件，新建会话
+   */
   @TemailShardingTransactional(shardingField = "#dto.to")
   public void syncGroupChatMemberEvent(GroupChatEventDTO dto) {
     String groupTemail = dto.getFrom();
@@ -23,6 +29,12 @@ public class GroupChatService {
     usermailService.saveUsermailBoxInfo(groupTemail, temail, temail);
   }
 
+
+  /**
+   * @param dto 出群事件参数
+   * @return void
+   * @description 群聊出群事件，删除会话
+   */
   @TemailShardingTransactional(shardingField = "#dto.to")
   public void removeGroupChatMemeberEvent(GroupChatEventDTO dto) {
     String groupTemail = dto.getFrom();

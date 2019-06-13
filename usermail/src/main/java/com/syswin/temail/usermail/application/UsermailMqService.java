@@ -24,7 +24,11 @@ public class UsermailMqService {
   }
 
   /**
-   * 废纸篓消息还原、删除
+   * @param owner 消息所有人
+   * @param trashMailDtoList 被操作的消息列表
+   * @param type 0:删除废纸篓消息
+   * @return void
+   * @description 删除废纸篓消息
    */
   public void sendMqRemoveTrash(String owner,
       List<TrashMailDTO> trashMailDtoList, int type) {
@@ -40,7 +44,18 @@ public class UsermailMqService {
     mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, s);
   }
 
-  public void sendMqDestroyMsg(String xPacketId, String cdtpHeader,  String from, String to, String owner, String msgId) {
+  /**
+   * @param xPacketId 包id
+   * @param cdtpHeader packet头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所有人
+   * @param msgId 消息id
+   * @return void
+   * @description 单聊消息阅后即焚
+   */
+  public void sendMqDestroyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
+      String msgId) {
     Map<String, Object> map = new HashMap<>(12);
     map.put(SessionEventKey.X_PACKET_ID, xPacketId);
     map.put(SessionEventKey.CDTP_HEADER, cdtpHeader);
@@ -54,7 +69,17 @@ public class UsermailMqService {
     mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gs.toJson(map));
   }
 
-  public void sendMqRevertMsg(String xPacketId, String cdtpHeader,  String from, String to, String owner, String msgid) {
+  /**
+   * @param xPacketId 包id
+   * @param cdtpHeader packet头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所有人
+   * @param msgid 消息id
+   * @return void
+   * @description 单聊消息撤回
+   */
+  public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
     Map<String, Object> map = new HashMap<>(12);
     map.put(SessionEventKey.OWNER, owner);
     map.put(SessionEventKey.FROM, from);
@@ -68,7 +93,19 @@ public class UsermailMqService {
     mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(map));
   }
 
-  public void sendMqRevertReplyMsg(String xPacketId, String cdtpHeader,  String from, String to, String owner, String parentMsgReplyId, String msgId) {
+  /**
+   * @param xPacketId 包id
+   * @param cdtpHeader packet头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所有人
+   * @param parentMsgReplyId 父消息id
+   * @param msgId 消息id
+   * @return void
+   * @description 单聊回复消息撤回
+   */
+  public void sendMqRevertReplyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
+      String parentMsgReplyId, String msgId) {
     Map<String, Object> map = new HashMap<>(13);
     map.put(SessionEventKey.X_PACKET_ID, xPacketId);
     map.put(SessionEventKey.CDTP_HEADER, cdtpHeader);
@@ -84,7 +121,19 @@ public class UsermailMqService {
 
   }
 
-  public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader,  String from, String to, String owner, String msgId, String parentMsgId) {
+  /**
+   * @param xPacketId 包id
+   * @param cdtpHeader packet头信息
+   * @param from 发件人
+   * @param to 收件人
+   * @param owner 消息所有人
+   * @param msgId 消息id
+   * @param parentMsgId 父消息id
+   * @return void
+   * @description 单聊回复消息阅后即焚
+   */
+  public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
+      String msgId, String parentMsgId) {
 
     Map<String, Object> map = new HashMap<>(13);
     map.put(SessionEventKey.X_PACKET_ID, xPacketId);
@@ -100,6 +149,12 @@ public class UsermailMqService {
     mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(map));
   }
 
+  /**
+   * @param groupTemail 群聊地址
+   * @param temail 被移除人地址
+   * @return void
+   * @description 群聊移除群成员事件
+   */
   public void sendMqRemoveGroupMemberMsg(String groupTemail, String temail) {
     Map<String, Object> map = new HashMap<>(7);
     map.put(SessionEventKey.GROUP_TEMAIL, groupTemail);
