@@ -5,6 +5,7 @@ import static com.syswin.temail.usermail.common.Constants.SessionEventKey.MSGID;
 import static com.syswin.temail.usermail.common.Constants.SessionEventKey.OWNER;
 import static com.syswin.temail.usermail.common.Constants.SessionEventKey.REPLY_MSG_PARENT_ID;
 import static com.syswin.temail.usermail.common.Constants.SessionEventKey.SESSION_MESSAGE_TYPE;
+import static com.syswin.temail.usermail.common.Constants.SessionEventKey.TEMAIL;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
@@ -139,6 +140,25 @@ public class UsermailUsermail2NotfyMqServiceTest {
     assertEquals(owner, object.get(OWNER).getAsString());
     assertEquals(parentMsgReplyId, object.get(REPLY_MSG_PARENT_ID).getAsString());
     assertEquals(UsermailAgentEventType.DESTROY_AFTER_READ_REPLY_MSG_5, object.get(SESSION_MESSAGE_TYPE).getAsInt());
+  }
+
+  @Test
+  public void sendMqRemoveGroupMemberMsg() {
+    String groupTemail = "g.kk@syswin.com";
+    String temail = "temail@syswin.com";
+    usermailMqService.sendMqRemoveGroupMemberMsg(groupTemail, temail);
+
+    ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> groupTemailCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mqAdapter)
+        .sendMessage(topicCaptor.capture(), groupTemailCaptor.capture(), messageCaptor.capture());
+    String value = messageCaptor.getValue();
+    JsonParser parser = new JsonParser();
+    JsonObject jsonObject = parser.parse(value).getAsJsonObject();
+    assertEquals(groupTemail, groupTemailCaptor.getValue());
+    assertEquals(temail, jsonObject.get(TEMAIL).getAsString());
+    assertEquals(UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6, jsonObject.get(SESSION_MESSAGE_TYPE).getAsInt());
   }
 
 }
