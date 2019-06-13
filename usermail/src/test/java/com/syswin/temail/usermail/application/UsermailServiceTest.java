@@ -1,14 +1,19 @@
 package com.syswin.temail.usermail.application;
 
 import static com.syswin.temail.usermail.common.Constants.TemailType.TYPE_DESTORY_AFTER_READ_1;
-import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_SMART_NULLS;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
+import com.syswin.temail.usermail.common.Constants.SessionEventKey;
 import com.syswin.temail.usermail.common.Constants.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
@@ -26,14 +31,14 @@ import com.syswin.temail.usermail.dto.MailboxDTO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,7 +55,6 @@ public class UsermailServiceTest {
   private final Usermail2NotfyMqService usermail2NotfyMqService = Mockito
       .mock(Usermail2NotfyMqService.class, RETURNS_SMART_NULLS);
   private final UsermailMqService usermailMqService = Mockito.mock(UsermailMqService.class, RETURNS_SMART_NULLS);
-  private final UsermailBlacklistRepo usermailBlacklistRepo = Mockito.mock(UsermailBlacklistRepo.class);
   private final ConvertMsgService convertMsgService = Mockito.mock(ConvertMsgService.class);
   private final UsermailService usermailService = new UsermailService(
       usermailRepo, usermailBoxRepo, usermailMsgReplyRepo, usermailAdapter, usermailSessionService,
@@ -77,7 +81,7 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void sendMail() {
+  public void sendMailWhenNormal() {
     String header = "CDTP-header";
     String msgid = "msgId";
     String from = "from@temail.com";
@@ -117,7 +121,87 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void getMails() {
+  public void sendMailWhenDestoryAfterRead() {
+    String header = "CDTP-header";
+    String msgid = "msgId";
+    String from = "from@temail.com";
+    String to = "to@temail.com";
+    String owner = "from@temail.com";
+    int type = TemailType.TYPE_DESTORY_AFTER_READ_1;
+    int storeType = 2;
+    String msgData = "msgData";
+    int attachmentSize = 100;
+    int eventType = SessionEventType.EVENT_TYPE_0;
+    CreateUsermailDTO createUsermailDto = new CreateUsermailDTO(msgid, from, to, type, storeType,
+        msgData, attachmentSize);
+
+    when(usermailAdapter.getPkID()).thenReturn(1L);
+    when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
+    when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
+
+    usermail2NotfyMqService
+        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
+    usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
+
+    ArgumentCaptor<UsermailBox> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBox.class);
+    verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
+    UsermailBox usermailBox = argumentCaptor1.getValue();
+    assertEquals(to, usermailBox.getMail2());
+    assertEquals("sessionid", usermailBox.getSessionid());
+    assertEquals(1L, usermailBox.getId());
+
+    ArgumentCaptor<Usermail> argumentCaptor2 = ArgumentCaptor.forClass(Usermail.class);
+    verify(usermailRepo).saveUsermail(argumentCaptor2.capture());
+    Usermail usermail = argumentCaptor2.getValue();
+    assertEquals(from, usermail.getFrom());
+    assertEquals(to, usermail.getTo());
+    assertEquals(msgid, usermail.getMsgid());
+    //assertEquals(msgData, usermail.getMessage());
+    assertEquals(type, usermail.getType());
+  }
+
+  @Test
+  public void sendMail_crossMsg() {
+    String header = "CDTP-header";
+    String msgid = "msgId";
+    String from = "from@temail.com";
+    String to = "to@temail.com";
+    String owner = "from@temail.com";
+    int type = TemailType.TYPE_CROSS_DOMAIN_GROUP_EVENT_2;
+    int storeType = 2;
+    String msgData = "msgData";
+    int attachmentSize = 100;
+    int eventType = SessionEventType.EVENT_TYPE_0;
+    CreateUsermailDTO createUsermailDto = new CreateUsermailDTO(msgid, from, to, type, storeType,
+        msgData, attachmentSize);
+
+    when(usermailAdapter.getPkID()).thenReturn(1L);
+    when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
+    when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
+
+    usermail2NotfyMqService
+        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
+    usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
+
+    ArgumentCaptor<UsermailBox> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBox.class);
+    verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
+    UsermailBox usermailBox = argumentCaptor1.getValue();
+    assertEquals(to, usermailBox.getMail2());
+    assertEquals("sessionid", usermailBox.getSessionid());
+    assertEquals(1L, usermailBox.getId());
+
+    ArgumentCaptor<Usermail> argumentCaptor2 = ArgumentCaptor.forClass(Usermail.class);
+    verify(usermailRepo).saveUsermail(argumentCaptor2.capture());
+    Usermail usermail = argumentCaptor2.getValue();
+    assertEquals(from, usermail.getFrom());
+    assertEquals(to, usermail.getTo());
+    assertEquals(msgid, usermail.getMsgid());
+    //assertEquals(msgData, usermail.getMessage());
+    assertEquals(type, usermail.getType());
+  }
+
+  @Test
+  public void getMails_filterSeqIdsIsEmpty() {
     String header = "CDTP-header";
     String from = "from@temail.com";
     String to = "to@temail.com";
@@ -135,67 +219,161 @@ public class UsermailServiceTest {
     usermails.add(usermail1);
     when(usermailRepo.getUsermail(any())).thenReturn(usermails);
     List<Usermail> list = usermailService.getMails(headerInfo, from, to, fromSeqNo, pageSize, filterSeqIds, "before");
-    ArgumentCaptor<CdtpHeaderDTO> argumentCaptor1 = ArgumentCaptor.forClass(CdtpHeaderDTO.class);
-    ArgumentCaptor<String> argumentCaptor2 = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> argumentCaptor3 = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<List<Usermail>> argumentCaptor4 = ArgumentCaptor.forClass(List.class);
     assertNotNull(list);
+  }
+
+  @Test
+  public void getMailsWhenFilterSeqIdsIsNotEmpty() {
+    String from = "from@temail.com";
+    String to = "to@temail.com";
+    long fromSeqNo = 0L;
+    int pageSize = 10;
+    // 过去seqNo=1(包含1)的消息，‘-1’表示不限
+    String filterSeqIds = "1_-1";
+    String sessionid = "sessionid";
+    when(usermailSessionService.getSessionID(from, to)).thenReturn(sessionid);
+    UmQueryDTO umQueryDto = new UmQueryDTO();
+    umQueryDto.setFromSeqNo(fromSeqNo);
+    umQueryDto.setSessionid(sessionid);
+    umQueryDto.setPageSize(pageSize);
+    umQueryDto.setOwner(from);
+    List<Usermail> usermails = new ArrayList<>();
+    Usermail usermail_1 = new Usermail();
+    usermail_1.setId(1L);
+    usermail_1.setFrom(from);
+    usermail_1.setTo(to);
+    usermail_1.setOwner(from);
+    usermail_1.setSeqNo(0);
+    Usermail usermail_2 = new Usermail();
+    usermail_2.setId(2L);
+    usermail_2.setFrom(from);
+    usermail_2.setTo(to);
+    usermail_2.setOwner(from);
+    usermail_2.setSeqNo(1);
+    usermails.add(usermail_1);
+    usermails.add(usermail_2);
+
+    when(convertMsgService.convertMsg(any())).thenReturn(usermails);
+
+    List<Usermail> list = usermailService.getMails(headerInfo, from, to, fromSeqNo, pageSize, filterSeqIds, "before");
+
+    assertNotNull(list);
+    assertThat(list.size()).isOne();
+    assertThat(list.get(0).getSeqNo()).isEqualTo(usermail_1.getSeqNo());
   }
 
   @Test
   public void revert() {
+    String cdtpheader = "cdtpheader";
+    String packetId = "packetId";
+    CdtpHeaderDTO headerDTO = new CdtpHeaderDTO(cdtpheader, packetId);
+    String from = "from";
+    String to = "to";
+    String msgid = "msgid";
+
+    usermailService.revert(headerDTO, from, to, msgid);
+
+    verify(usermailMqService).sendMqRevertMsg(packetId, cdtpheader, from, to, to, msgid);
+    verify(usermailMqService)
+        .sendMqRevertMsg(packetId + SessionEventKey.PACKET_ID_SUFFIX, cdtpheader, from, to, from, msgid);
+  }
+
+  @Test
+  public void revertWhenConsumerHandler() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String from = "from@temail.com";
     String to = "to@temail.com";
+    String owner = from;
     String msgid = "msgid";
-    usermail2NotfyMqService.sendMqAfterUpdateStatus(headerInfo, from, to, msgid, SessionEventType.EVENT_TYPE_2);
-    usermailService.revert(xPacketId, header, from, to, from, msgid);
+    when(usermailRepo.revertUsermail(any(UmQueryDTO.class))).thenReturn(1);
+    usermailService.revert(xPacketId, header, from, to, owner, msgid);
     ArgumentCaptor<UmQueryDTO> queryDtoCaptor = ArgumentCaptor.forClass(UmQueryDTO.class);
-    Mockito.verify(usermailRepo).revertUsermail(queryDtoCaptor.capture());
+    verify(usermailRepo).revertUsermail(queryDtoCaptor.capture());
     UmQueryDTO umQueryDto = queryDtoCaptor.getValue();
     assertEquals(from, umQueryDto.getOwner());
     assertEquals(msgid, umQueryDto.getMsgid());
+    verify(usermail2NotfyMqService)
+        .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
+
+    // 验证撤回失败的情况
+    when(usermailRepo.revertUsermail(any(UmQueryDTO.class))).thenReturn(0);
+    usermailService.revert(xPacketId, header, from, to, owner, msgid);
+    verify(usermail2NotfyMqService, times(1))
+        .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
   }
 
   @Test
   public void mailboxes() {
-    String header = "CDTP-header";
     String from = "from@temail.com";
-    String sessionid = "sessionid";
     int archiveStatus = TemailArchiveStatus.STATUS_NORMAL_0;
-    UsermailBox usermailBox = new UsermailBox();
-    List<UsermailBox> usermailBoxes = new ArrayList<>();
-    usermailBoxes.add(usermailBox);
-    when(usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus)).thenReturn(usermailBoxes);
-    usermailBox.setSessionid(sessionid);
-    UmQueryDTO umQueryDto = new UmQueryDTO();
-    umQueryDto.setSessionid(sessionid);
-    umQueryDto.setOwner(from);
-    when(usermailRepo.getLastUsermail(umQueryDto)).thenReturn(singletonList(new Usermail()));
-    List<MailboxDTO> list = usermailService.mailboxes(headerInfo, from, 0, null);
+    String to_1 = "to_1";
+    String localMsgid_1 = "msgid_1";
+    String sessionid_1 = "sessionid_1";
+    String to_2 = "to_2";
+    String localMsgid_2 = "msgid_2";
+    String sessionod_2 = "sessionod_2";
+    Map<String, String> localMailBoxes = ImmutableMap.of(to_1, localMsgid_1, to_2, localMsgid_2);
+    UsermailBox box_1 = new UsermailBox(1L, sessionid_1, to_1, from);
+    UsermailBox box_2 = new UsermailBox(2L, sessionod_2, to_2, from);
+    when(usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus)).thenReturn(Arrays.asList(box_1, box_2));
+    when(usermailAdapter.getLastMsgId(from, to_1)).thenReturn(localMsgid_1);
+    when(usermailAdapter.getLastMsgId(from, to_2)).thenReturn("msgid_other");
+    Usermail lastUsermail_to_2 = new Usermail(1L, "msgid_2_actualLast", sessionod_2, from, to_2,
+        TemailStatus.STATUS_NORMAL_0, TemailType.TYPE_NORMAL_0, from, "", 3);
+    when(convertMsgService.convertMsg(any())).thenReturn(Arrays.asList(lastUsermail_to_2));
+
+    List<MailboxDTO> list = usermailService.mailboxes(headerInfo, from, 0, localMailBoxes);
     assertNotNull(list);
+    assertThat(list.size()).isOne();
+    assertThat(list.get(0).getTo()).isEqualTo(to_2);
+    assertThat(list.get(0).getLastMsg()).isEqualToComparingFieldByField(lastUsermail_to_2);
   }
 
   @Test
-  public void removeMsg() {
-    String header = "CDTP-header";
+  public void removeMsgExcludeLast() {
     String from = "from@temail.com";
     String to = "to@temail.com";
     List<String> msgIds = new ArrayList<>();
     msgIds.add("ldfk");
     msgIds.add("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
-    for (String msgId : msgIds) {
-      usermail2NotfyMqService.sendMqAfterUpdateStatus(headerInfo, from, to, msgId, SessionEventType.EVENT_TYPE_4);
-    }
+
+    String dbLastMsgid = "dbLastMsgid";
+    Usermail lastUsermail = new Usermail(1L, dbLastMsgid, "sessionid", from, to,
+        TemailStatus.STATUS_NORMAL_0, TemailType.TYPE_NORMAL_0, from, "", 3);
+    when(usermailRepo.getLastUsermail(any(UmQueryDTO.class))).thenReturn(Arrays.asList(lastUsermail));
+    when(usermailAdapter.getLastMsgId(from, to)).thenReturn("cacheLaseMsgid");
+
     usermailService.removeMsg(headerInfo, from, to, msgIds);
 
-    ArgumentCaptor<List<String>> argumentCaptor1 = ArgumentCaptor.forClass(List.class);
-    ArgumentCaptor<String> argumentCaptor2 = ArgumentCaptor.forClass(String.class);
-    verify(usermailRepo)
-        .removeMsg(argumentCaptor1.capture(), argumentCaptor2.capture());
-    assertEquals(msgIds, argumentCaptor1.getValue());
-    assertEquals(from, argumentCaptor2.getValue());
+    verify(usermailRepo).removeMsg(msgIds, from);
+    verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
+    verify(usermail2NotfyMqService)
+        .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
+    verify(usermailSessionService).getSessionID(from, to);
+    verify(usermailRepo).getLastUsermail(any(UmQueryDTO.class));
+    verify(usermailAdapter).getLastMsgId(from, to);
+    verify(usermailAdapter).setLastMsgId(from, to, dbLastMsgid);
+  }
+
+  @Test
+  public void removeMsgIncludeLast() {
+    String from = "from@temail.com";
+    String to = "to@temail.com";
+    List<String> msgIds = new ArrayList<>();
+    msgIds.add("ldfk");
+    msgIds.add("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
+    when(usermailRepo.getLastUsermail(any(UmQueryDTO.class))).thenReturn(null);
+
+    usermailService.removeMsg(headerInfo, from, to, msgIds);
+
+    verify(usermailRepo).removeMsg(msgIds, from);
+    verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
+    verify(usermail2NotfyMqService)
+        .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
+    verify(usermailSessionService).getSessionID(from, to);
+    verify(usermailRepo).getLastUsermail(any(UmQueryDTO.class));
+    verify(usermailAdapter).deleteLastMsgId(from, to);
   }
 
   @Test

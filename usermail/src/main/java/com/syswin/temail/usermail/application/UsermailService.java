@@ -19,15 +19,15 @@ import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.core.util.SeqIdFilter;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailBox;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -239,18 +239,11 @@ public class UsermailService {
   @TemailShardingTransactional(shardingField = "#from")
   public List<MailboxDTO> mailboxes(CdtpHeaderDTO headerInfo, String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
-    List<UsermailBox> usermailBox = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
-    List<MailboxDTO> resultDto = new ArrayList<>(usermailBox.size());
+    List<UsermailBox> usermailBoxs = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
+    List<MailboxDTO> resultDto = new ArrayList<>(usermailBoxs.size());
     List<Usermail> lastUsermail;
-    for (int i = 0; i < usermailBox.size(); i++) {
-      MailboxDTO dto = new MailboxDTO();
-      UsermailBox box = usermailBox.get(i);
-      dto.setTo(box.getMail2());
-      dto.setArchiveStatus(box.getArchiveStatus());
-      String sessionid = box.getSessionid();
-      UmQueryDTO umQueryDto = new UmQueryDTO();
-      umQueryDto.setSessionid(sessionid);
-      umQueryDto.setOwner(from);
+    for (int i = 0; i < usermailBoxs.size(); i++) {
+      UsermailBox box = usermailBoxs.get(i);
       if (usermailBoxes != null && usermailBoxes.size() > 0) {
         String to = box.getMail2();
         String msgId = usermailAdapter.getLastMsgId(from, to);
@@ -259,6 +252,13 @@ public class UsermailService {
           continue;
         }
       }
+      MailboxDTO dto = new MailboxDTO();
+      dto.setTo(box.getMail2());
+      dto.setArchiveStatus(box.getArchiveStatus());
+      String sessionid = box.getSessionid();
+      UmQueryDTO umQueryDto = new UmQueryDTO();
+      umQueryDto.setSessionid(sessionid);
+      umQueryDto.setOwner(from);
       lastUsermail = convertMsgService.convertMsg(usermailRepo.getLastUsermail(umQueryDto));
       if (!CollectionUtils.isEmpty(lastUsermail)) {
         dto.setLastMsg(lastUsermail.get(0));
