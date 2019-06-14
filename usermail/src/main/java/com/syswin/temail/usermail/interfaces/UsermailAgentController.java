@@ -8,8 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailService;
-import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
@@ -161,7 +161,6 @@ public class UsermailAgentController {
       @ApiParam(value = "归档状态 0 正常 1 已归档 -1 全部（默认）") @RequestParam(value = "archiveStatus", defaultValue = "-1") int archiveStatus,
       @ApiParam(value = "拉取列表") @RequestParam(value = "localMailboxes", defaultValue = "") String usermailBoxes) {
     ResultDTO resultDto = new ResultDTO();
-    CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     Map<String, String> mailboxMap;
     Gson gson = new GsonBuilder().create();
     if (StringUtils.isEmpty(usermailBoxes)) {
@@ -169,7 +168,7 @@ public class UsermailAgentController {
     } else {
       mailboxMap = gson.fromJson(usermailBoxes, Map.class);
     }
-    List<MailboxDTO> list = usermailService.mailboxes(cdtpHeaderDto, from, archiveStatus, mailboxMap);
+    List<MailboxDTO> list = usermailService.mailboxes(from, archiveStatus, mailboxMap);
     resultDto.setData(list);
     return resultDto;
   }

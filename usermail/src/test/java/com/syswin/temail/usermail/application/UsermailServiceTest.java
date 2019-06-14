@@ -13,12 +13,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
-import com.syswin.temail.usermail.common.ParamsKey;
-import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
+import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
@@ -323,7 +323,7 @@ public class UsermailServiceTest {
         TemailStatus.STATUS_NORMAL_0, TemailType.TYPE_NORMAL_0, from, "", 3);
     when(convertMsgService.convertMsg(any())).thenReturn(Arrays.asList(lastUsermail_to_2));
 
-    List<MailboxDTO> list = usermailService.mailboxes(headerInfo, from, 0, localMailBoxes);
+    List<MailboxDTO> list = usermailService.mailboxes(from, 0, localMailBoxes);
     assertNotNull(list);
     assertThat(list.size()).isOne();
     assertThat(list.get(0).getTo()).isEqualTo(to_2);

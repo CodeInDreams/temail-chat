@@ -169,7 +169,7 @@ public class UsermailAgentControllerTest {
         new MailboxDTO(1, "alice@temail.com", "title", false, new Usermail(), 0),
         new MailboxDTO(1, "jack@temail.com", "title", false, new Usermail(), 0)
     );
-    Mockito.doReturn(mailboxDto).when(usermailService).mailboxes(headerInfo, "bob@temail.com", -1, null);
+    Mockito.doReturn(mailboxDto).when(usermailService).mailboxes("bob@temail.com", -1, null);
     ObjectMapper mapper = new ObjectMapper();
     MvcResult result = mockMvc.perform(
         get("/usermail/mailboxes")

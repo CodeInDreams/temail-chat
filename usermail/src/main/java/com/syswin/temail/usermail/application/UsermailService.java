@@ -1,16 +1,16 @@
 package com.syswin.temail.usermail.application;
 
 
-import static com.syswin.temail.usermail.common.ResultCodeEnum.ERROR_REQUEST_PARAM;
 import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET_ID_SUFFIX;
+import static com.syswin.temail.usermail.common.ResultCodeEnum.ERROR_REQUEST_PARAM;
 
 import com.google.gson.Gson;
 import com.syswin.temail.transactional.TemailShardingTransactional;
-import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.Meta;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,10 +78,11 @@ public class UsermailService {
 
   /**
    * 保存单聊会话信息
+   *
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
-   * @return  sessionId
+   * @return sessionId
    */
   public String saveUsermailBoxInfo(String from, String to, String owner) {
     String sessionId = usermailSessionService.getSessionID(from, to);
@@ -96,6 +98,7 @@ public class UsermailService {
 
   /**
    * 发送单聊消息
+   *
    * @param headerInfo 头信息
    * @param usermail
    * @param owner
@@ -150,6 +153,7 @@ public class UsermailService {
 
   /**
    * 同步单聊会话消息
+   *
    * @param headerInfo 头信息
    * @param from 发件人
    * @param to 收件人
@@ -157,7 +161,7 @@ public class UsermailService {
    * @param pageSize 分页大小
    * @param filterSeqIds 过滤断层seqId
    * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
-   * @return  单聊会话消息
+   * @return 单聊会话消息
    */
   @TemailShardingTransactional(shardingField = "#from")
   public List<Usermail> getMails(CdtpHeaderDTO headerInfo, String from, String to, long fromSeqNo,
@@ -187,6 +191,7 @@ public class UsermailService {
 
   /**
    * 撤回单聊消息
+   *
    * @param headerInfo 头信息
    * @param from 发件人
    * @param to 收件人
@@ -202,10 +207,11 @@ public class UsermailService {
 
   /**
    * 撤回单聊消息
+   *
    * @param xPacketId 包id
    * @param cdtpHeader 头信息
    * @param from 发件人
-   * @param to  收件人
+   * @param to 收件人
    * @param owner 消息所属人
    * @param msgid 消息id
    */
@@ -230,46 +236,41 @@ public class UsermailService {
 
   /**
    * 同步会话列表
-   * @param headerInfo 包id
+   *
    * @param from 发件人
    * @param archiveStatus 归档状态（ 0代表还原归档  1代表归档）
    * @param usermailBoxes 会话
    * @return 收件箱列表
    */
   @TemailShardingTransactional(shardingField = "#from")
-  public List<MailboxDTO> mailboxes(CdtpHeaderDTO headerInfo, String from, int archiveStatus,
+  public List<MailboxDTO> mailboxes(String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
-    List<UsermailBox> usermailBoxs = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
-    List<MailboxDTO> resultDto = new ArrayList<>(usermailBoxs.size());
+    Map<String, String> localMailBoxes = CollectionUtils.isEmpty(usermailBoxes) ? new HashMap<>(0) : usermailBoxes;
+    List<UsermailBox> dbBoxes = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
+    List<MailboxDTO> mailBoxes = new ArrayList<>(dbBoxes.size());
     List<Usermail> lastUsermail;
-    for (int i = 0; i < usermailBoxs.size(); i++) {
-      UsermailBox box = usermailBoxs.get(i);
-      if (usermailBoxes != null && usermailBoxes.size() > 0) {
-        String to = box.getMail2();
-        String msgId = usermailAdapter.getLastMsgId(from, to);
-        if (msgId != null && msgId.equals(usermailBoxes.get(to))) {
-          //最新的msgId相同，不做处理
-          continue;
-        }
+    for (UsermailBox dbBox : dbBoxes) {
+      String to = dbBox.getMail2();
+      if (Objects.equals(usermailAdapter.getLastMsgId(from, to), localMailBoxes.get(to))) {
+        // 最新的msgId相同，不做处理
+        continue;
       }
-      MailboxDTO dto = new MailboxDTO();
-      dto.setTo(box.getMail2());
-      dto.setArchiveStatus(box.getArchiveStatus());
-      String sessionid = box.getSessionid();
-      UmQueryDTO umQueryDto = new UmQueryDTO();
-      umQueryDto.setSessionid(sessionid);
-      umQueryDto.setOwner(from);
-      lastUsermail = convertMsgService.convertMsg(usermailRepo.getLastUsermail(umQueryDto));
+      MailboxDTO mailBox = new MailboxDTO();
+      UmQueryDTO umQuery = new UmQueryDTO(dbBox.getSessionid(), from);
+      lastUsermail = convertMsgService.convertMsg(usermailRepo.getLastUsermail(umQuery));
       if (!CollectionUtils.isEmpty(lastUsermail)) {
-        dto.setLastMsg(lastUsermail.get(0));
+        mailBox.setLastMsg(lastUsermail.get(0));
       }
-      resultDto.add(dto);
+      mailBox.setTo(dbBox.getMail2());
+      mailBox.setArchiveStatus(dbBox.getArchiveStatus());
+      mailBoxes.add(mailBox);
     }
-    return resultDto;
+    return mailBoxes;
   }
 
   /**
    * 删除单聊消息
+   *
    * @param headerInfo 头信息
    * @param from 发件人
    * @param to 收件人
@@ -303,6 +304,7 @@ public class UsermailService {
 
   /**
    * 单聊消息阅后即焚
+   *
    * @param headerInfo 头信息
    * @param from 发件人
    * @param to 收件人
@@ -318,6 +320,7 @@ public class UsermailService {
 
   /**
    * 单聊消息阅后即焚
+   *
    * @param xPacketId 包id
    * @param cdtpHeader 头信息
    * @param from 发件人
@@ -343,8 +346,7 @@ public class UsermailService {
 
   /**
    * 删除会话
-   * @param cdtpHeaderDto
-   * @param queryDto
+   *
    * @return 删除成功的标志
    */
   @TemailShardingTransactional(shardingField = "#queryDto.from")
@@ -366,6 +368,7 @@ public class UsermailService {
 
   /**
    * 删除群聊会话
+   *
    * @param groupTemail 群聊地址
    * @param owner 消息所属人
    * @return 删除成功的标志
@@ -382,6 +385,7 @@ public class UsermailService {
 
   /**
    * 批量查询单聊信息
+   *
    * @param cdtpHeaderDto 头信息
    * @param from 发件人
    * @param to 收件人
@@ -396,6 +400,7 @@ public class UsermailService {
 
   /**
    * 批量查询单聊回复消息
+   *
    * @param cdtpHeaderDto 头信息
    * @param from 发件人
    * @param to 收件人
@@ -415,6 +420,7 @@ public class UsermailService {
 
   /**
    * 移送消息到废纸篓
+   *
    * @param headerInfo 头信息
    * @param from 发件人
    * @param to 收件人
@@ -429,6 +435,7 @@ public class UsermailService {
 
   /**
    * 还原废纸篓消息
+   *
    * @param headerInfo 头信息
    * @param temail 执行操作的temail
    * @param trashMails 待还原的废纸篓消息列表
@@ -446,6 +453,7 @@ public class UsermailService {
 
   /**
    * 删除废纸篓消息
+   *
    * @param headerInfo 头信息
    * @param temail 被操作的temail
    * @param trashMails 待删除的废纸篓消息列表
@@ -460,6 +468,7 @@ public class UsermailService {
 
   /**
    * 删除废纸篓消息
+   *
    * @param temail 被操作的temail
    * @param trashMails 待删除的废纸篓消息
    */
@@ -478,6 +487,7 @@ public class UsermailService {
 
   /**
    * 清空废纸篓消息
+   *
    * @param temail 被操作的temail
    */
   @TemailShardingTransactional(shardingField = "#temail")
@@ -489,11 +499,12 @@ public class UsermailService {
 
   /**
    * 同步废纸篓消息列表
+   *
    * @param headerInfo 头信息
    * @param temail 操作的temail
    * @param timestamp 时间戳
    * @param pageSize 分页大小
-   * @param signal  向前向后拉取标识，before向前拉取，after向后拉取，默认before
+   * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
    * @return 废纸篓消息列表
    */
   @TemailShardingTransactional(shardingField = "#temail")
@@ -511,6 +522,7 @@ public class UsermailService {
 
   /**
    * 单聊会话归档
+   *
    * @param headerInfo 头信息
    * @param from 发件人
    * @param to 收件人

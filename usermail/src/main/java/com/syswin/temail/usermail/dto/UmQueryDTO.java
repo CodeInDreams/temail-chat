@@ -15,6 +15,14 @@ public class UmQueryDTO implements java.io.Serializable {
   private String owner;
   private String signal;
 
+  public UmQueryDTO() {
+  }
+
+  public UmQueryDTO(String sessionid, String owner) {
+    this.sessionid = sessionid;
+    this.owner = owner;
+  }
+
   public long getFromSeqNo() {
     return fromSeqNo;
   }
