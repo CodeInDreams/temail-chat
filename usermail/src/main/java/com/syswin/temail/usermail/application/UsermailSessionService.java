@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 public class UsermailSessionService {
 
   /**
-   * 获取sessionId
-   * @param from
-   * @param to
-   * @return sessionId
+   * 获取会话id
+   *
+   * @param from 发件人
+   * @param to 收件人
+   * @return 会话id
    */
   public String getSessionID(String from, String to) {
     if (null == from || "".equals(from)) {
@@ -19,7 +20,6 @@ public class UsermailSessionService {
     if (null == to || "".equals(to)) {
       throw new IllegalArgumentException("param [to] is illegal");
     }
-
     String value;
     if (from.compareTo(to) > 0) {
       value = from + to;

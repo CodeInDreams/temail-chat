@@ -24,10 +24,9 @@ public class UsermailMqService {
   }
 
   /**
-   * @param owner 消息所有人
+   * @param owner 消息所属人
    * @param trashMailDtoList 被操作的消息列表
    * @param type 0:删除废纸篓消息
-   * @return void
    * @description 删除废纸篓消息
    */
   public void sendMqRemoveTrash(String owner,
@@ -45,13 +44,12 @@ public class UsermailMqService {
   }
 
   /**
-   * @param xPacketId 包id
-   * @param cdtpHeader packet头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
-   * @param owner 消息所有人
+   * @param owner 消息所属人
    * @param msgId 消息id
-   * @return void
    * @description 单聊消息阅后即焚
    */
   public void sendMqDestroyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
@@ -70,13 +68,12 @@ public class UsermailMqService {
   }
 
   /**
-   * @param xPacketId 包id
-   * @param cdtpHeader packet头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
-   * @param owner 消息所有人
+   * @param owner 消息所属人
    * @param msgid 消息id
-   * @return void
    * @description 单聊消息撤回
    */
   public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
@@ -94,11 +91,11 @@ public class UsermailMqService {
   }
 
   /**
-   * @param xPacketId 包id
-   * @param cdtpHeader packet头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
-   * @param owner 消息所有人
+   * @param owner 消息所属人
    * @param parentMsgReplyId 父消息id
    * @param msgId 消息id
    * @return void
@@ -122,11 +119,11 @@ public class UsermailMqService {
   }
 
   /**
-   * @param xPacketId 包id
-   * @param cdtpHeader packet头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
-   * @param owner 消息所有人
+   * @param owner 消息所属人
    * @param msgId 消息id
    * @param parentMsgId 父消息id
    * @return void

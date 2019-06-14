@@ -60,7 +60,7 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description  发送单聊回复消息
-   * @param cdtpHeaderDto packet头信息
+   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param message 发送的消息
@@ -97,8 +97,8 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description 撤回单聊回复消息
-   * @param xPacketId 包id
-   * @param cdtpHeader 头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -132,7 +132,7 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description 撤回单聊回复消息
-   * @param cdtpHeaderDto 头信息
+   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgReplyId 父消息id
    * @param msgId 消息id
    * @param from 发件人
@@ -152,7 +152,7 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description 删除单聊回复消息
-   * @param cdtpHeaderDto 头信息
+   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgReplyId 父消息id
    * @param msgIds 消息id列表
    * @param from 发件人
@@ -188,7 +188,7 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description 拉取单聊回复消息
-   * @param cdtpHeaderDto 头信息
+   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgid 父消息id
    * @param pageSize 分页大小
    * @param seqId  回复消息序列号、上次消息拉取seqId
@@ -225,8 +225,8 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description 阅后即焚回复消息
-   * @param xPacketId 包id
-   * @param cdtpHeader 头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 收件人
    * @param to 发件人
    * @param owner 消息所属人
@@ -255,7 +255,7 @@ public class UsermailMsgReplyService {
 
   /**
    * @Description 阅后即焚回复消息
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to  收件人
    * @param msgId 消息id

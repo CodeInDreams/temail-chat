@@ -19,7 +19,6 @@ public class UmBlacklistProxy {
   /**
    * @param from 发件人
    * @param blacker 收件人
-   * @return void
    * @description 检查发件人是否在收件人黑名单中
    */
   @Transactional

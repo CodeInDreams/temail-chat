@@ -100,7 +100,7 @@ public class UsermailService {
   /**
    * 发送单聊消息
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param usermail 创建temail时消息信息
    * @param owner 消息所属人
    * @param other 收件人
@@ -154,7 +154,7 @@ public class UsermailService {
   /**
    * 同步单聊会话消息
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param fromSeqNo 消息序列号
@@ -192,7 +192,7 @@ public class UsermailService {
   /**
    * 撤回单聊消息
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgid 消息id
@@ -208,8 +208,8 @@ public class UsermailService {
   /**
    * 撤回单聊消息
    *
-   * @param xPacketId 包id
-   * @param cdtpHeader 头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -267,7 +267,7 @@ public class UsermailService {
   /**
    * 删除单聊消息
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgIds 待删除的消息id列表
@@ -301,7 +301,7 @@ public class UsermailService {
   /**
    * 单聊消息阅后即焚
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgId 消息id
@@ -317,8 +317,8 @@ public class UsermailService {
   /**
    * 单聊消息阅后即焚
    *
-   * @param xPacketId 包id
-   * @param cdtpHeader 头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -382,7 +382,7 @@ public class UsermailService {
   /**
    * 批量查询单聊信息
    *
-   * @param cdtpHeaderDto 头信息
+   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgIds 消息id列表
@@ -397,7 +397,7 @@ public class UsermailService {
   /**
    * 批量查询单聊回复消息
    *
-   * @param cdtpHeaderDto 头信息
+   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgIds 消息id列表
@@ -417,7 +417,7 @@ public class UsermailService {
   /**
    * 移送消息到废纸篓
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgIds 待移送到废纸篓的消息id列表
@@ -432,7 +432,7 @@ public class UsermailService {
   /**
    * 还原废纸篓消息
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param temail 执行操作的temail
    * @param trashMails 待还原的废纸篓消息列表
    */
@@ -450,7 +450,7 @@ public class UsermailService {
   /**
    * 删除废纸篓消息
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param temail 被操作的temail
    * @param trashMails 待删除的废纸篓消息列表
    */
@@ -496,7 +496,7 @@ public class UsermailService {
   /**
    * 同步废纸篓消息列表
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param temail 操作的temail
    * @param timestamp 时间戳
    * @param pageSize 分页大小
@@ -519,7 +519,7 @@ public class UsermailService {
   /**
    * 单聊会话归档
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param archiveStatus 归档状态（ 0代表还原归档 1代表归档）

@@ -1,8 +1,8 @@
 package com.syswin.temail.usermail.application;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.common.ParamsKey.SessionEventKey;
 import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.ParamsKey.SessionEventKey;
 import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
@@ -30,7 +30,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 发送消息时，通知MQ
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -67,7 +67,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息状态变化时，通知MQ
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgid 消息id
@@ -91,8 +91,8 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息状态变化时，通知MQ
    *
-   * @param xPacketId 包id
-   * @param cdtpHeader 头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -118,7 +118,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 删除会话
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param deleteAllMsg 是否删除所有消息的标志
@@ -142,7 +142,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 发送消息回复，通知MQ
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -176,8 +176,8 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息回复更新状态时，通知MQ
    *
-   * @param xPacketId 包id
-   * @param cdtpHeader 头信息
+   * @param xPacketId 头信息中的xPacketId
+   * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -205,7 +205,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息回复删除时，通知MQ
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
@@ -233,7 +233,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 单聊归档状态变更时，通知MQ
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param type 事件类型（归档或取消归档）
@@ -254,7 +254,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 消息移入废纸篓
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgids 消息id列表
@@ -279,7 +279,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   /**
    * 废纸篓消息还原、删除
    *
-   * @param headerInfo 头信息
+   * @param headerInfo 头信息（header和xPacketId）
    * @param owner 消息所属人
    * @param trashMailDtoList 废纸篓信息列表
    * @param type 事件类型
