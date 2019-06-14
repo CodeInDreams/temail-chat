@@ -97,9 +97,9 @@ public class UsermailService {
   /**
    * 发送单聊消息
    * @param headerInfo 头信息
-   * @param usermail
-   * @param owner
-   * @param other
+   * @param usermail 创建temail时消息信息
+   * @param owner 消息所属人
+   * @param other 收件人
    * @return
    */
   @TemailShardingTransactional(shardingField = "#owner")
