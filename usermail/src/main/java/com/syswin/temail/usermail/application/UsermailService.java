@@ -23,6 +23,7 @@ import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
@@ -103,7 +104,6 @@ public class UsermailService {
    * @param usermail 创建temail时消息信息
    * @param owner 消息所属人
    * @param other 收件人
-   * @return
    */
   @TemailShardingTransactional(shardingField = "#owner")
   public Map sendMail(CdtpHeaderDTO headerInfo, CreateUsermailDTO usermail, String owner, String other) {
@@ -216,13 +216,10 @@ public class UsermailService {
    * @param msgid 消息id
    */
   @TemailShardingTransactional(shardingField = "#owner")
-  public void revert(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
-    UmQueryDTO umQueryDto = new UmQueryDTO();
-    umQueryDto.setMsgid(msgid);
-    umQueryDto.setStatus(TemailStatus.STATUS_REVERT_1);
-    umQueryDto.setOwner(owner);
-    int count = usermailRepo.revertUsermail(umQueryDto);
-    //判断是否撤回成功，防止通知重复发送
+  public void revertMqHandler(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
+    int count = usermailRepo
+        .revertUsermail(new RevertMailDTO(owner, msgid, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
+    // 判断是否撤回成功，防止通知重复发送
     if (count > 0) {
       usermail2NotfyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
@@ -231,7 +228,6 @@ public class UsermailService {
           "Message revert failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
           xPacketId, cdtpHeader, from, to, msgid, owner);
     }
-
   }
 
   /**

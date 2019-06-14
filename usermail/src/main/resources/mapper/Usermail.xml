@@ -87,12 +87,12 @@
     </if>
   </select>
 
-  <update id="revertUsermail" parameterType="umQuery">
+  <update id="revertUsermail" parameterType="revertMail">
     update usermail
-    set `status`= #{status,jdbcType=INTEGER},
+    set `status`= #{revertStatus,jdbcType=INTEGER},
         `zip_msg` = null,
         `update_time`=CURRENT_TIMESTAMP()
-    where `status`= 0
+    where `status`= #{originalStatus}
       and `msgid` =#{msgid,jdbcType=VARCHAR}
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>

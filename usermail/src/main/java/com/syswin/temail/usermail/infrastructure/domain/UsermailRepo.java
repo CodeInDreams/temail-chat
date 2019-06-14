@@ -2,6 +2,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.List;
@@ -45,10 +46,10 @@ public interface UsermailRepo {
   /**
    * 撤回消息
    *
-   * @param umQueryDto 撤回条件
+   * @param revertMail 撤回条件
    * @return 撤回的数量
    */
-  int revertUsermail(UmQueryDTO umQueryDto);
+  int revertUsermail(RevertMailDTO revertMail);
 
   /**
    * 批量删除消息

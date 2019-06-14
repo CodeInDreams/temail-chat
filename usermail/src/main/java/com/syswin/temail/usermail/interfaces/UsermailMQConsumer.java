@@ -80,7 +80,7 @@ public class UsermailMQConsumer implements IMqConsumer {
         to = root.get(ParamsKey.SessionEventKey.TO).getAsString();
         cdtpHeader = root.get(ParamsKey.SessionEventKey.CDTP_HEADER).getAsString();
         xPacketId = root.get(ParamsKey.SessionEventKey.X_PACKET_ID).getAsString();
-        usermailService.revert(xPacketId, cdtpHeader, from, to, owner, msgId);
+        usermailService.revertMqHandler(xPacketId, cdtpHeader, from, to, owner, msgId);
         break;
       case UsermailAgentEventType.REVERT_REPLY_MSG_4:
         from = root.get(ParamsKey.SessionEventKey.FROM).getAsString();

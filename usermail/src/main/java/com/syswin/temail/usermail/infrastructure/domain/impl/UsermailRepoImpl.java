@@ -1,10 +1,11 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +68,12 @@ public class UsermailRepoImpl implements UsermailRepo {
   /**
    * 撤回消息
    *
-   * @param umQueryDto 撤回条件
+   * @param revertMail 撤回条件
    * @return 撤回的数量
    */
   @Override
-  public int revertUsermail(UmQueryDTO umQueryDto) {
-    return usermailMapper.revertUsermail(umQueryDto);
+  public int revertUsermail(RevertMailDTO revertMail) {
+    return usermailMapper.revertUsermail(revertMail);
   }
 
   /**

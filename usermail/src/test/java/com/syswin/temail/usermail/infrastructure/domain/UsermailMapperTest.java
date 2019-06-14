@@ -7,6 +7,7 @@ import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.util.ArrayList;
@@ -390,11 +391,8 @@ public class UsermailMapperTest {
     userMail.setAuthor(from);
     userMail.setFilter(null);
     usermailRepo.saveUsermail(userMail);
-    UmQueryDTO umQueryDto = new UmQueryDTO();
-    umQueryDto.setStatus(TemailStatus.STATUS_REVERT_1);
-    umQueryDto.setOwner(from);
-    umQueryDto.setMsgid("3a2s1asd1c1a5s");
-    int count = usermailRepo.revertUsermail(umQueryDto);
+    int count = usermailRepo.revertUsermail(
+        new RevertMailDTO(from, "3a2s1asd1c1a5s", TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     Assert.assertEquals(1, count);
   }
 

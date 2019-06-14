@@ -58,7 +58,7 @@ public class UsermailMQConsumerTest {
   @Test
   public void consume3Test(){
     usermailMQConsumer.consumer(getTestMessage(UsermailAgentEventType.REVERT_MSG_3));
-    Mockito.verify(usermailService).revert(xPacketId, cdtpHeader, from, to, owner, msgId);
+    Mockito.verify(usermailService).revertMqHandler(xPacketId, cdtpHeader, from, to, owner, msgId);
   }
 
   @Test

@@ -29,6 +29,7 @@ import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
+import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
@@ -279,26 +280,26 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void revertWhenConsumerHandler() {
+  public void revertMqHandler() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String from = "from@temail.com";
     String to = "to@temail.com";
     String owner = from;
     String msgid = "msgid";
-    when(usermailRepo.revertUsermail(any(UmQueryDTO.class))).thenReturn(1);
-    usermailService.revert(xPacketId, header, from, to, owner, msgid);
-    ArgumentCaptor<UmQueryDTO> queryDtoCaptor = ArgumentCaptor.forClass(UmQueryDTO.class);
-    verify(usermailRepo).revertUsermail(queryDtoCaptor.capture());
-    UmQueryDTO umQueryDto = queryDtoCaptor.getValue();
-    assertEquals(from, umQueryDto.getOwner());
-    assertEquals(msgid, umQueryDto.getMsgid());
+    when(usermailRepo.revertUsermail(any(RevertMailDTO.class))).thenReturn(1);
+    usermailService.revertMqHandler(xPacketId, header, from, to, owner, msgid);
+    ArgumentCaptor<RevertMailDTO> revertDtoCapture = ArgumentCaptor.forClass(RevertMailDTO.class);
+    verify(usermailRepo).revertUsermail(revertDtoCapture.capture());
+    RevertMailDTO revertMailDto = revertDtoCapture.getValue();
+    assertEquals(from, revertMailDto.getOwner());
+    assertEquals(msgid, revertMailDto.getMsgid());
     verify(usermail2NotfyMqService)
         .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
 
     // 验证撤回失败的情况
-    when(usermailRepo.revertUsermail(any(UmQueryDTO.class))).thenReturn(0);
-    usermailService.revert(xPacketId, header, from, to, owner, msgid);
+    when(usermailRepo.revertUsermail(any(RevertMailDTO.class))).thenReturn(0);
+    usermailService.revertMqHandler(xPacketId, header, from, to, owner, msgid);
     verify(usermail2NotfyMqService, times(1))
         .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
   }
