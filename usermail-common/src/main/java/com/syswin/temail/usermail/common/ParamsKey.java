@@ -35,16 +35,15 @@ public class ParamsKey {
   }
 
   public interface CassandraConstant {
-
-    // keyspace
+    /** keyspace */
     String KEYSPACE_USERMAILAGENT = "usermailagent";
-    // table: usermail
+    /** table: usermail */
     String TABLE_USERMAIL = "usermail";
-    // table: usermail_msg_reply
+    /** table: usermail_msg_reply */
     String TABLE_USERMAIL_MSG_REPLY = "usermail_msg_reply";
-    // 主键id
+    /** 主键id */
     String ID = "id";
-    // usermail、usermial_msg_reply表 message字段
+    /** usermail、usermial_msg_reply表 message字段 */
     String MESSAGE = "message";
   }
 }
