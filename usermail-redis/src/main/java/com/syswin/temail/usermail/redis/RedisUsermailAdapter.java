@@ -10,8 +10,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisUsermailAdapter implements IUsermailAdapter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RedisUsermailAdapter.class);
-  @Autowired
-  private RedisTemplate redisTemplate;
+  private final RedisTemplate redisTemplate;
+
+  public RedisUsermailAdapter(RedisTemplate redisTemplate) {
+    this.redisTemplate = redisTemplate;
+  }
 
   @Override
   public long getPkID() {

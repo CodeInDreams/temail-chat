@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 public class UsermailConfiguration {
@@ -50,8 +51,8 @@ public class UsermailConfiguration {
   }
 
   @Bean
-  public IUsermailAdapter usermailAdapter() {
-    return new RedisUsermailAdapter();
+  public IUsermailAdapter usermailAdapter(RedisTemplate redisTemplate) {
+    return new RedisUsermailAdapter(redisTemplate);
   }
 
 
