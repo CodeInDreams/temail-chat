@@ -23,7 +23,7 @@ public class MsgCompressor {
   public byte[] zipWithDecode(final String data) {
     byte[] zip;
     try {
-      zip = gzip.zip(Base64.getUrlDecoder().decode(data.getBytes(Charset.defaultCharset())));
+      zip = gzip.zip(Base64.getUrlDecoder().decode(data.getBytes(Charset.forName(CHARSET_ENCODE))));
     } catch (IOException e) {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_MSG_DECODE, data);
     }
