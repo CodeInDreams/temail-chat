@@ -3,10 +3,10 @@ package com.syswin.temail.usermail.interfaces;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.common.Constants.TemailType;
+import com.syswin.temail.usermail.common.ParamsKey;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
@@ -402,8 +402,8 @@ public class UsermailTest {
     MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
     headers.setContentType(type);
     headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-    headers.add(HttpHeaderKey.CDTP_HEADER, "{CDTP-header:value}");
-    headers.add(HttpHeaderKey.X_PACKET_ID, "{xPacketId:value}");
+    headers.add(ParamsKey.HttpHeaderKey.CDTP_HEADER, "{CDTP-header:value}");
+    headers.add(ParamsKey.HttpHeaderKey.X_PACKET_ID, "{xPacketId:value}");
     return headers;
   }
 

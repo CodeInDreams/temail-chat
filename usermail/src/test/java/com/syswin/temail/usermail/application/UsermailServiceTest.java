@@ -13,8 +13,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableMap;
-import com.syswin.temail.usermail.common.Constants.SessionEventKey;
-import com.syswin.temail.usermail.common.Constants.SessionEventType;
+import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
@@ -275,7 +275,7 @@ public class UsermailServiceTest {
 
     verify(usermailMqService).sendMqRevertMsg(packetId, cdtpheader, from, to, to, msgid);
     verify(usermailMqService)
-        .sendMqRevertMsg(packetId + SessionEventKey.PACKET_ID_SUFFIX, cdtpheader, from, to, from, msgid);
+        .sendMqRevertMsg(packetId + ParamsKey.SessionEventKey.PACKET_ID_SUFFIX, cdtpheader, from, to, from, msgid);
   }
 
   @Test

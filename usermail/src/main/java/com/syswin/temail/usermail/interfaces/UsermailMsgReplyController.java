@@ -1,11 +1,11 @@
 package com.syswin.temail.usermail.interfaces;
 
-import static com.syswin.temail.usermail.common.Constants.HttpHeaderKey.CDTP_HEADER;
-import static com.syswin.temail.usermail.common.Constants.HttpHeaderKey.X_PACKET_ID;
+import static com.syswin.temail.usermail.common.ParamsKey.HttpHeaderKey.CDTP_HEADER;
+import static com.syswin.temail.usermail.common.ParamsKey.HttpHeaderKey.X_PACKET_ID;
 
 import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailMsgReplyService;
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
@@ -66,7 +66,7 @@ public class UsermailMsgReplyController {
       owner = msgReplyDto.getFrom();
     } else {
       LOGGER.warn("storeType is error:{}", storeType);
-      throw new IllegalGmArgsException(RESULT_CODE.ERROR_ILLEGAL_STORE_TYPE);
+      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_STORE_TYPE);
     }
     Map data = usermailMsgReplyService
         .createMsgReply(cdtpHeaderDto, msgReplyDto.getFrom(), msgReplyDto.getTo(), msgReplyDto.getMsgData(),

@@ -1,11 +1,11 @@
 package com.syswin.temail.usermail.application;
 
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.FROM;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.MSGID;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.OWNER;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.REPLY_MSG_PARENT_ID;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.SESSION_MESSAGE_TYPE;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.TEMAIL;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.FROM;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.MSGID;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.OWNER;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.REPLY_MSG_PARENT_ID;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.TEMAIL;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 

@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailMsgReplyService;
-import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
@@ -86,8 +86,8 @@ public class UsermailMsgReplyControllerTest {
     mockMvc.perform(
         post("/usermail/msg/reply").contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(objectMapper.writeValueAsString(msgReply)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -100,7 +100,7 @@ public class UsermailMsgReplyControllerTest {
     msgIds.add("173849");
     UsermailMsgReplyDTO msgReply = new UsermailMsgReplyDTO("1234321", "from@temail", "to@temail", 0, "sdkji", "1233",
         100, msgIds, 1);
-    Mockito.doThrow(new IllegalGmArgsException(RESULT_CODE.ERROR_IN_BLACKLIST)).when(umBlacklistProxy)
+    Mockito.doThrow(new IllegalGmArgsException(ResultCodeEnum.ERROR_IN_BLACKLIST)).when(umBlacklistProxy)
         .checkInBlacklist(msgReply.getFrom(), msgReply.getTo());
     Map<String, Object> map = new HashMap<>();
     map.put("msgId", "12344321");
@@ -112,8 +112,8 @@ public class UsermailMsgReplyControllerTest {
         post("/usermail/msg/reply")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(msgReply)))
         .andExpect(status().is4xxClientError())
         .andExpect(jsonPath("$.code").value(461));
@@ -132,8 +132,8 @@ public class UsermailMsgReplyControllerTest {
         put("/usermail/msg/reply")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(msgReply)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -152,8 +152,8 @@ public class UsermailMsgReplyControllerTest {
         delete("/usermail/msg/reply")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(msgReply)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -176,8 +176,8 @@ public class UsermailMsgReplyControllerTest {
     MvcResult result = mockMvc.perform(
         get("/usermail/msg/reply")
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .param("parentMsgId", parentMsgid)
             .param("pageSize", pageSize + "")
             .param("seqId", seqId + "")
@@ -201,8 +201,8 @@ public class UsermailMsgReplyControllerTest {
         put("/usermail/msg/reply/destory")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(replyDestoryDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));

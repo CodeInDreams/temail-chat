@@ -1,14 +1,14 @@
 package com.syswin.temail.usermail.interfaces;
 
-import static com.syswin.temail.usermail.common.Constants.HttpHeaderKey.CDTP_HEADER;
-import static com.syswin.temail.usermail.common.Constants.HttpHeaderKey.X_PACKET_ID;
-import static com.syswin.temail.usermail.common.Constants.RESULT_CODE.ERROR_REQUEST_PARAM;
+import static com.syswin.temail.usermail.common.ParamsKey.HttpHeaderKey.CDTP_HEADER;
+import static com.syswin.temail.usermail.common.ParamsKey.HttpHeaderKey.X_PACKET_ID;
+import static com.syswin.temail.usermail.common.ResultCodeEnum.ERROR_REQUEST_PARAM;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailService;
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
@@ -83,7 +83,7 @@ public class UsermailAgentController {
       other = usermail.getTo();
     } else {
       LOGGER.warn("storeType is error:usermail:{},storeType={}", usermail, storeType);
-      throw new IllegalGmArgsException(RESULT_CODE.ERROR_ILLEGAL_STORE_TYPE);
+      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_STORE_TYPE);
     }
     Map result = usermailService.sendMail(cdtpHeaderDto, usermail, owner, other);
     resultDto.setData(result);

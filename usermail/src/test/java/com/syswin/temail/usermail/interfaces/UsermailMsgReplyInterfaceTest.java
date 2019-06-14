@@ -8,10 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.common.Constants.TemailType;
+import com.syswin.temail.usermail.common.ParamsKey;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import java.lang.reflect.Type;
@@ -238,8 +238,8 @@ public class UsermailMsgReplyInterfaceTest {
     MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
     headers.setContentType(type);
     headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-    headers.add(HttpHeaderKey.CDTP_HEADER, "{CDTP-header:value}");
-    headers.add(HttpHeaderKey.X_PACKET_ID, "{xPacketId:value}");
+    headers.add(ParamsKey.HttpHeaderKey.CDTP_HEADER, "{CDTP-header:value}");
+    headers.add(ParamsKey.HttpHeaderKey.X_PACKET_ID, "{xPacketId:value}");
     return headers;
   }
 

@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.core.configuration;
 
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import java.util.Enumeration;
@@ -44,8 +44,8 @@ public class RestGlobalExceptionHandler {
     LOGGER.error("500-Parameter=[{}],Header=[{}]:", bufParam.toString(), bufHeader.toString(), e);
 
     ResultDTO resultDto = new ResultDTO();
-    resultDto.setCode(RESULT_CODE.ERROR_SERVER.getCode());
-    resultDto.setMessage(RESULT_CODE.ERROR_SERVER.getMessage() + ",异常信息为:" + e.getMessage());
+    resultDto.setCode(ResultCodeEnum.ERROR_SERVER.getCode());
+    resultDto.setMessage(ResultCodeEnum.ERROR_SERVER.getMessage() + ",异常信息为:" + e.getMessage());
     return resultDto;
   }
 
@@ -78,8 +78,8 @@ public class RestGlobalExceptionHandler {
   public ResultDTO handleException(HttpServletRequest request, HttpServletResponse response, DuplicateKeyException e) {
     LOGGER.warn("Database key conflict", e);
     ResultDTO resultDto = new ResultDTO();
-    resultDto.setCode(RESULT_CODE.ERROR_DATABASE_KEY_ID.getCode());
-    resultDto.setMessage(RESULT_CODE.ERROR_DATABASE_KEY_ID.getMessage() + e.getMessage());
+    resultDto.setCode(ResultCodeEnum.ERROR_DATABASE_KEY_ID.getCode());
+    resultDto.setMessage(ResultCodeEnum.ERROR_DATABASE_KEY_ID.getMessage() + e.getMessage());
     return resultDto;
   }
 
@@ -89,8 +89,8 @@ public class RestGlobalExceptionHandler {
     LOGGER.warn("parameter binding exception", e);
 
     ResultDTO resultDto = new ResultDTO();
-    resultDto.setCode(RESULT_CODE.ERROR_REQUEST_PARAM.getCode());
-    resultDto.setMessage(RESULT_CODE.ERROR_REQUEST_PARAM.getMessage());
+    resultDto.setCode(ResultCodeEnum.ERROR_REQUEST_PARAM.getCode());
+    resultDto.setMessage(ResultCodeEnum.ERROR_REQUEST_PARAM.getMessage());
 
     FieldError fieldError = null;
     if (e instanceof BindException) {

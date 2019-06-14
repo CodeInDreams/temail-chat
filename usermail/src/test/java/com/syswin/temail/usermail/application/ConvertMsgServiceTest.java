@@ -1,10 +1,10 @@
 package com.syswin.temail.usermail.application;
 
-import static com.syswin.temail.usermail.common.Constants.CassandraConstant.ID;
-import static com.syswin.temail.usermail.common.Constants.CassandraConstant.KEYSPACE_USERMAILAGENT;
-import static com.syswin.temail.usermail.common.Constants.CassandraConstant.TABLE_USERMAIL;
-import static com.syswin.temail.usermail.common.Constants.CassandraConstant.TABLE_USERMAIL_MSG_REPLY;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.MESSAGE;
+import static com.syswin.temail.usermail.common.ParamsKey.CassandraConstant.ID;
+import static com.syswin.temail.usermail.common.ParamsKey.CassandraConstant.KEYSPACE_USERMAILAGENT;
+import static com.syswin.temail.usermail.common.ParamsKey.CassandraConstant.TABLE_USERMAIL;
+import static com.syswin.temail.usermail.common.ParamsKey.CassandraConstant.TABLE_USERMAIL_MSG_REPLY;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.MESSAGE;
 
 import com.syswin.temail.usermail.cassandra.application.INosqlMsgTemplate;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;

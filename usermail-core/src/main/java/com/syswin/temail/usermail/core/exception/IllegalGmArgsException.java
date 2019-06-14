@@ -1,17 +1,17 @@
 package com.syswin.temail.usermail.core.exception;
 
 
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 
 public class IllegalGmArgsException extends RuntimeException {
 
-  private RESULT_CODE resultCode;
+  private ResultCodeEnum resultCode;
 
   public IllegalGmArgsException() {
     super();
   }
 
-  public IllegalGmArgsException(RESULT_CODE resultCode) {
+  public IllegalGmArgsException(ResultCodeEnum resultCode) {
     super(resultCode.toString());
     this.resultCode = resultCode;
   }
@@ -20,12 +20,12 @@ public class IllegalGmArgsException extends RuntimeException {
     super(message);
   }
 
-  public IllegalGmArgsException(RESULT_CODE resultCode, String message, Throwable cause) {
+  public IllegalGmArgsException(ResultCodeEnum resultCode, String message, Throwable cause) {
     super(message, cause);
     this.resultCode = resultCode;
   }
 
-  public IllegalGmArgsException(RESULT_CODE resultCode, String message) {
+  public IllegalGmArgsException(ResultCodeEnum resultCode, String message) {
     super(message);
     this.resultCode = resultCode;
   }
@@ -42,11 +42,11 @@ public class IllegalGmArgsException extends RuntimeException {
     super(message, cause, enableSuppression, writableStackTrace);
   }
 
-  public RESULT_CODE getResultCode() {
+  public ResultCodeEnum getResultCode() {
     return resultCode;
   }
 
-  public void setResultCode(RESULT_CODE resultCode) {
+  public void setResultCode(ResultCodeEnum resultCode) {
     this.resultCode = resultCode;
   }
 }

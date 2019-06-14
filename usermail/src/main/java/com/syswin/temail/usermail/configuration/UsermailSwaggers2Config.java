@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.configuration;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
+import com.syswin.temail.usermail.common.ParamsKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +29,10 @@ public class UsermailSwaggers2Config {
     List<Parameter> headerList = new ArrayList<>();
     String header = "header";
     String defaultPacketId = "temail-usermailagent_2019-01-01_00-00-00";
-    cdtpHeader.name(HttpHeaderKey.CDTP_HEADER).description("请求头信息CDTP-header")
+    cdtpHeader.name(ParamsKey.HttpHeaderKey.CDTP_HEADER).description("请求头信息CDTP-header")
         .modelRef(new ModelRef("String"))
         .parameterType(header).required(true).defaultValue(generateExampleCdtpHeader()).build();
-    xPacketId.name(HttpHeaderKey.X_PACKET_ID).description("请求头信息X-PACKET-ID")
+    xPacketId.name(ParamsKey.HttpHeaderKey.X_PACKET_ID).description("请求头信息X-PACKET-ID")
         .modelRef(new ModelRef("String"))
         .parameterType(header).required(true).defaultValue(defaultPacketId).build();
     headerList.add(cdtpHeader.build());

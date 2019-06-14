@@ -1,12 +1,12 @@
 package com.syswin.temail.usermail.application;
 
 
-import static com.syswin.temail.usermail.common.Constants.RESULT_CODE.ERROR_REQUEST_PARAM;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.PACKET_ID_SUFFIX;
+import static com.syswin.temail.usermail.common.ResultCodeEnum.ERROR_REQUEST_PARAM;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET_ID_SUFFIX;
 
 import com.google.gson.Gson;
 import com.syswin.temail.transactional.TemailShardingTransactional;
-import com.syswin.temail.usermail.common.Constants.SessionEventType;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;

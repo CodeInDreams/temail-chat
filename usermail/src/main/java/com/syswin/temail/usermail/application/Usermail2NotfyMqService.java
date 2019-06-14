@@ -1,8 +1,9 @@
 package com.syswin.temail.usermail.application;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.common.Constants.SessionEventKey;
-import com.syswin.temail.usermail.common.Constants.SessionEventType;
+import com.syswin.temail.usermail.common.ParamsKey.SessionEventKey;
+import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
@@ -216,7 +217,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
     map.put(TIMESTAMP, System.currentTimeMillis());
     map.put(SESSION_MESSAGE_TYPE, type);
     if(trashMailDtoList != null && !trashMailDtoList.isEmpty()) {
-      map.put(SessionEventKey.TRASH_MSG_INFO, gs.toJson(trashMailDtoList));
+      map.put(ParamsKey.SessionEventKey.TRASH_MSG_INFO, gs.toJson(trashMailDtoList));
     }
     String s = gs.toJson(map);
     mqAdapter.sendMessage(usermailConfig.mqTopic, owner, s);

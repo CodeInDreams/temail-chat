@@ -7,7 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syswin.temail.usermail.application.GroupChatService;
-import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
+import com.syswin.temail.usermail.common.ParamsKey;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.dto.GroupChatEventDTO;
 import org.junit.Before;
@@ -59,8 +59,8 @@ public class GroupChatAgentControllerTest {
         post("/groupchat/event")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(groupChatEventDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -77,8 +77,8 @@ public class GroupChatAgentControllerTest {
         delete("/groupchat/event")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(groupChatEventDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));

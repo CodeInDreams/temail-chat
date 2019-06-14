@@ -1,11 +1,11 @@
 package com.syswin.temail.usermail.application;
 
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.PACKET_ID_SUFFIX;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET_ID_SUFFIX;
 
 import com.syswin.temail.transactional.TemailShardingTransactional;
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
-import com.syswin.temail.usermail.common.Constants.ReplyCountStatus;
-import com.syswin.temail.usermail.common.Constants.SessionEventType;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
+import com.syswin.temail.usermail.common.ReplyCountEnum;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
@@ -84,7 +84,7 @@ public class UsermailMsgReplyService {
 
     // 更新最新回复消息id
     String lastReplyMsgid = usermailMsgReply.getMsgid();
-    usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountStatus.INCR.value(), lastReplyMsgid);
+    usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), lastReplyMsgid);
     LOGGER.debug("new rely created, update msgId={} lastReplyMsgid={}", parentMsgId, lastReplyMsgid);
 
     usermail2NotfyMqService
@@ -163,7 +163,7 @@ public class UsermailMsgReplyService {
       String to) {
     Usermail usermail = msgReplyTypeValidate(parentMsgReplyId, from);
     if (CollectionUtils.isEmpty(msgIds)) {
-      throw new IllegalGmArgsException(RESULT_CODE.ERROR_REQUEST_PARAM);
+      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_REQUEST_PARAM);
     }
     LOGGER.info("Label-delete-usermail-reply: delete reply messages，from = {},to = {},msgIds = {}", from, to, msgIds);
     int count = usermailMsgReplyRepo.deleteBatchMsgReplyStatus(from, msgIds);
@@ -291,7 +291,7 @@ public class UsermailMsgReplyService {
     List<Usermail> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
     if (CollectionUtils.isEmpty(usermails)) {
       LOGGER.warn("parentMsgId status is error:{}", parentMsgId);
-      throw new IllegalGmArgsException(RESULT_CODE.ERROR_ILLEGAL_PARENT_MSG_ID);
+      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);
     }
     return usermails;
   }
@@ -308,7 +308,7 @@ public class UsermailMsgReplyService {
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0
         && usermailByMsgid.getStatus() != TemailStatus.STATUS_TRASH_4)) {
       LOGGER.warn("parentMsgId is {}", parentMsgId);
-      throw new IllegalGmArgsException(RESULT_CODE.ERROR_ILLEGAL_PARENT_MSG_ID);
+      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);
     }
     return usermailByMsgid;
   }
@@ -327,7 +327,7 @@ public class UsermailMsgReplyService {
       }
     }
     usermailRepo
-        .updateReplyCountAndLastReplyMsgid(parentMsgId, usermail.getOwner(), ReplyCountStatus.DECR.value(),
+        .updateReplyCountAndLastReplyMsgid(parentMsgId, usermail.getOwner(), ReplyCountEnum.DECR.value(),
             lastReplyMsgId);
   }
 

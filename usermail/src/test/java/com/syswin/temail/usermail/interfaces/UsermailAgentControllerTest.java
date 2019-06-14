@@ -12,8 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.syswin.temail.usermail.application.UmBlacklistProxy;
 import com.syswin.temail.usermail.application.UsermailService;
-import com.syswin.temail.usermail.common.Constants.HttpHeaderKey;
-import com.syswin.temail.usermail.common.Constants.RESULT_CODE;
+import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
@@ -81,7 +81,7 @@ public class UsermailAgentControllerTest {
     CreateUsermailDTO usermailDto = new CreateUsermailDTO(
         "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         "bob@temail.com", "alice@temail.com", 0, 1, "test_from_data", 100);
-    Mockito.doThrow(new IllegalGmArgsException(RESULT_CODE.ERROR_IN_BLACKLIST))
+    Mockito.doThrow(new IllegalGmArgsException(ResultCodeEnum.ERROR_IN_BLACKLIST))
         .when(mockUmBlacklistProxy).checkInBlacklist("bob@temail.com", "alice@temail.com");
     Map<String, Object> map = new HashMap<>();
     map.put("msgId", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
@@ -92,8 +92,8 @@ public class UsermailAgentControllerTest {
         post("/usermail")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(usermailDto)))
         .andExpect(status().is4xxClientError())
         .andExpect(jsonPath("$.code").value(461));
@@ -115,8 +115,8 @@ public class UsermailAgentControllerTest {
         post("/usermail")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(usermailDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -135,8 +135,8 @@ public class UsermailAgentControllerTest {
     mockMvc.perform(
         get("/usermail")
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .param("from", "bob@temail.com")
             .param("to", "alice@temail.com")
             .param("seqId", "0"))
@@ -156,8 +156,8 @@ public class UsermailAgentControllerTest {
         put("/revert")
             .contentType(MediaType.APPLICATION_JSON_UTF8)
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(usermailDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -174,8 +174,8 @@ public class UsermailAgentControllerTest {
     MvcResult result = mockMvc.perform(
         get("/usermail/mailboxes")
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .param("from", "bob@temail.com"))
         .andReturn();
     ResultDTO resultDto = new ResultDTO();
@@ -198,8 +198,8 @@ public class UsermailAgentControllerTest {
         put("/usermail/msg/remove")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(umDeleteMailDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -216,8 +216,8 @@ public class UsermailAgentControllerTest {
         put("/usermail/msg/destory")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(usermailDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -232,8 +232,8 @@ public class UsermailAgentControllerTest {
         delete("/usermail/session")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(queryDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -269,8 +269,8 @@ public class UsermailAgentControllerTest {
 
     MvcResult result = mockMvc.perform(get("/usermail/msg")
         .accept(MediaType.APPLICATION_JSON_UTF8)
-        .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-        .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+        .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+        .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
         .param("from", from)
         .param("to", to)
         .param("msgIds", msgIdStrArray)
@@ -316,8 +316,8 @@ public class UsermailAgentControllerTest {
 
     MvcResult result = mockMvc.perform(get("/usermail/replyCount")
         .accept(MediaType.APPLICATION_JSON_UTF8)
-        .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-        .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+        .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+        .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
         .param("from", from)
         .param("to", to)
         .param("msgIds", msgIdStrArray)
@@ -343,8 +343,8 @@ public class UsermailAgentControllerTest {
         post("/usermail/msg/trash")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(moveTrashMailDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -367,8 +367,8 @@ public class UsermailAgentControllerTest {
         put("/usermail/msg/trash")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(trashMailsDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -391,8 +391,8 @@ public class UsermailAgentControllerTest {
         delete("/usermail/msg/trash")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(trashMailsDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -407,8 +407,8 @@ public class UsermailAgentControllerTest {
         delete("/usermail/msg/trash/clear")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(from)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
@@ -430,8 +430,8 @@ public class UsermailAgentControllerTest {
     MvcResult result = mockMvc.perform(
         get("/usermail/msg/trash")
             .accept(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .param("from", "bob@temail.com")
             .param("pagesize", "20")
             .param("timestamp", "155048418")
@@ -456,8 +456,8 @@ public class UsermailAgentControllerTest {
         put("/usermail/msg/archive")
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .contentType(MediaType.APPLICATION_JSON_UTF8)
-            .header(HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
-            .header(HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(archiveDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));

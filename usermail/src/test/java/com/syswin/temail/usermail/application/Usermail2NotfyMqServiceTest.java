@@ -1,19 +1,19 @@
 package com.syswin.temail.usermail.application;
 
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.FROM;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.MSGID;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.OWNER;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.PARENT_MSGID;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.SEQ_NO;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.TO;
-import static com.syswin.temail.usermail.common.Constants.SessionEventKey.TO_MSG;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.FROM;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.MSGID;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.OWNER;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PARENT_MSGID;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.SEQ_NO;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.TO;
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.TO_MSG;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.syswin.temail.usermail.common.Constants.SessionEventType;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
