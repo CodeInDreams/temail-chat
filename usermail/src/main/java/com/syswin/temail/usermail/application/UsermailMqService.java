@@ -16,6 +16,7 @@ public class UsermailMqService {
 
   private final IMqAdapter mqAdapter;
   private final UsermailConfig usermailConfig;
+  private final Gson gson = new Gson();
 
 
   public UsermailMqService(IMqAdapter mqAdapter, UsermailConfig usermailConfig) {
@@ -31,16 +32,14 @@ public class UsermailMqService {
    */
   public void sendMqRemoveTrash(String owner,
       List<TrashMailDTO> trashMailDtoList, int type) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(7);
-    map.put(ParamsKey.SessionEventKey.FROM, owner);
-    map.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
-    map.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, type);
+    Map<String, Object> usermailMap = new HashMap<>(7);
+    usermailMap.put(ParamsKey.SessionEventKey.FROM, owner);
+    usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    usermailMap.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, type);
     if (trashMailDtoList != null && !trashMailDtoList.isEmpty()) {
-      map.put(ParamsKey.SessionEventKey.TRASH_MSG_INFO, gs.toJson(trashMailDtoList));
+      usermailMap.put(ParamsKey.SessionEventKey.TRASH_MSG_INFO, gson.toJson(trashMailDtoList));
     }
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, s);
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(usermailMap));
   }
 
   /**
@@ -54,17 +53,16 @@ public class UsermailMqService {
    */
   public void sendMqDestroyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
-    Map<String, Object> map = new HashMap<>(12);
-    map.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
-    map.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
-    map.put(ParamsKey.SessionEventKey.OWNER, owner);
-    map.put(ParamsKey.SessionEventKey.FROM, from);
-    map.put(ParamsKey.SessionEventKey.TO, to);
-    map.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.DESTROY_AFTER_READ_2);
-    map.put(ParamsKey.SessionEventKey.MSGID, msgId);
-    map.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
-    Gson gs = new Gson();
-    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gs.toJson(map));
+    Map<String, Object> usermailMap = new HashMap<>(12);
+    usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
+    usermailMap.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
+    usermailMap.put(ParamsKey.SessionEventKey.OWNER, owner);
+    usermailMap.put(ParamsKey.SessionEventKey.FROM, from);
+    usermailMap.put(ParamsKey.SessionEventKey.TO, to);
+    usermailMap.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.DESTROY_AFTER_READ_2);
+    usermailMap.put(ParamsKey.SessionEventKey.MSGID, msgId);
+    usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(usermailMap));
   }
 
   /**
@@ -77,17 +75,16 @@ public class UsermailMqService {
    * @description 单聊消息撤回
    */
   public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
-    Map<String, Object> map = new HashMap<>(12);
-    map.put(ParamsKey.SessionEventKey.OWNER, owner);
-    map.put(ParamsKey.SessionEventKey.FROM, from);
-    map.put(ParamsKey.SessionEventKey.TO, to);
-    map.put(ParamsKey.SessionEventKey.MSGID, msgid);
-    map.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
-    map.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
-    map.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
-    map.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REVERT_MSG_3);
-    Gson gson = new Gson();
-    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(map));
+    Map<String, Object> usermailMap = new HashMap<>(12);
+    usermailMap.put(ParamsKey.SessionEventKey.OWNER, owner);
+    usermailMap.put(ParamsKey.SessionEventKey.FROM, from);
+    usermailMap.put(ParamsKey.SessionEventKey.TO, to);
+    usermailMap.put(ParamsKey.SessionEventKey.MSGID, msgid);
+    usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
+    usermailMap.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
+    usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    usermailMap.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REVERT_MSG_3);
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(usermailMap));
   }
 
   /**
@@ -103,18 +100,17 @@ public class UsermailMqService {
    */
   public void sendMqRevertReplyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String parentMsgReplyId, String msgId) {
-    Map<String, Object> map = new HashMap<>(13);
-    map.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
-    map.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
-    map.put(ParamsKey.SessionEventKey.OWNER, owner);
-    map.put(ParamsKey.SessionEventKey.FROM, from);
-    map.put(ParamsKey.SessionEventKey.TO, to);
-    map.put(ParamsKey.SessionEventKey.MSGID, msgId);
-    map.put(ParamsKey.SessionEventKey.REPLY_MSG_PARENT_ID, parentMsgReplyId);
-    map.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
-    map.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REVERT_REPLY_MSG_4);
-    Gson gson = new Gson();
-    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(map));
+    Map<String, Object> usermailMap = new HashMap<>(13);
+    usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
+    usermailMap.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
+    usermailMap.put(ParamsKey.SessionEventKey.OWNER, owner);
+    usermailMap.put(ParamsKey.SessionEventKey.FROM, from);
+    usermailMap.put(ParamsKey.SessionEventKey.TO, to);
+    usermailMap.put(ParamsKey.SessionEventKey.MSGID, msgId);
+    usermailMap.put(ParamsKey.SessionEventKey.REPLY_MSG_PARENT_ID, parentMsgReplyId);
+    usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    usermailMap.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REVERT_REPLY_MSG_4);
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(usermailMap));
 
   }
 
@@ -132,18 +128,18 @@ public class UsermailMqService {
   public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId, String parentMsgId) {
 
-    Map<String, Object> map = new HashMap<>(13);
-    map.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
-    map.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
-    map.put(ParamsKey.SessionEventKey.FROM, from);
-    map.put(ParamsKey.SessionEventKey.TO, to);
-    map.put(ParamsKey.SessionEventKey.OWNER, owner);
-    map.put(ParamsKey.SessionEventKey.MSGID, msgId);
-    map.put(ParamsKey.SessionEventKey.REPLY_MSG_PARENT_ID, parentMsgId);
-    map.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
-    map.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.DESTROY_AFTER_READ_REPLY_MSG_5);
-    Gson gson = new Gson();
-    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(map));
+    Map<String, Object> usermailMap = new HashMap<>(13);
+    usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
+    usermailMap.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
+    usermailMap.put(ParamsKey.SessionEventKey.FROM, from);
+    usermailMap.put(ParamsKey.SessionEventKey.TO, to);
+    usermailMap.put(ParamsKey.SessionEventKey.OWNER, owner);
+    usermailMap.put(ParamsKey.SessionEventKey.MSGID, msgId);
+    usermailMap.put(ParamsKey.SessionEventKey.REPLY_MSG_PARENT_ID, parentMsgId);
+    usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    usermailMap
+        .put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.DESTROY_AFTER_READ_REPLY_MSG_5);
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, owner, gson.toJson(usermailMap));
   }
 
   /**
@@ -153,12 +149,11 @@ public class UsermailMqService {
    * @description 群聊移除群成员事件
    */
   public void sendMqRemoveGroupMemberMsg(String groupTemail, String temail) {
-    Map<String, Object> map = new HashMap<>(7);
-    map.put(ParamsKey.SessionEventKey.GROUP_TEMAIL, groupTemail);
-    map.put(ParamsKey.SessionEventKey.TEMAIL, temail);
-    map.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
-    map.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6);
-    Gson gson = new Gson();
-    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, groupTemail, gson.toJson(map));
+    Map<String, Object> usermailMap = new HashMap<>(7);
+    usermailMap.put(ParamsKey.SessionEventKey.GROUP_TEMAIL, groupTemail);
+    usermailMap.put(ParamsKey.SessionEventKey.TEMAIL, temail);
+    usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    usermailMap.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6);
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, groupTemail, gson.toJson(usermailMap));
   }
 }
