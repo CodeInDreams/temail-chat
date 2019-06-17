@@ -83,7 +83,6 @@ public class UsermailServiceTest {
 
   @Test
   public void sendMailWhenNormal() {
-    String header = "CDTP-header";
     String msgid = "msgId";
     String from = "from@temail.com";
     String to = "to@temail.com";
@@ -123,7 +122,6 @@ public class UsermailServiceTest {
 
   @Test
   public void sendMailWhenDestoryAfterRead() {
-    String header = "CDTP-header";
     String msgid = "msgId";
     String from = "from@temail.com";
     String to = "to@temail.com";
@@ -163,7 +161,6 @@ public class UsermailServiceTest {
 
   @Test
   public void sendMailWhenCrossMsg() {
-    String header = "CDTP-header";
     String msgid = "msgId";
     String from = "from@temail.com";
     String to = "to@temail.com";
@@ -203,7 +200,6 @@ public class UsermailServiceTest {
 
   @Test
   public void getMailsWhenFilterSeqIdsIsEmpty() {
-    String header = "CDTP-header";
     String from = "from@temail.com";
     String to = "to@temail.com";
     long fromSeqNo = 0L;
@@ -219,7 +215,7 @@ public class UsermailServiceTest {
     UsermailDO usermail1 = new UsermailDO();
     usermails.add(usermail1);
     when(usermailRepo.getUsermail(any())).thenReturn(usermails);
-    List<UsermailDO> list = usermailService.getMails(headerInfo, from, to, fromSeqNo, pageSize, filterSeqIds, "before");
+    List<UsermailDO> list = usermailService.getMails(from, to, fromSeqNo, pageSize, filterSeqIds, "before");
     assertNotNull(list);
   }
 
@@ -256,7 +252,7 @@ public class UsermailServiceTest {
 
     when(convertMsgService.convertMsg(any())).thenReturn(usermails);
 
-    List<UsermailDO> list = usermailService.getMails(headerInfo, from, to, fromSeqNo, pageSize, filterSeqIds, "before");
+    List<UsermailDO> list = usermailService.getMails(from, to, fromSeqNo, pageSize, filterSeqIds, "before");
 
     assertNotNull(list);
     assertThat(list.size()).isOne();

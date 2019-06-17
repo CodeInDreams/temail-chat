@@ -65,9 +65,7 @@ public class UsermailAgentController {
    */
   @ApiOperation(value = "发送消息(0x 0001)", notes = "[from]发送消息给[to]")
   @PostMapping(value = "/usermail")
-  public ResultDTO createUsermail(
-      HttpServletRequest request,
-      @Valid @RequestBody CreateUsermailDTO usermail) {
+  public ResultDTO createUsermail(HttpServletRequest request, @Valid @RequestBody CreateUsermailDTO usermail) {
     umBlacklistProxy.checkInBlacklist(usermail.getFrom(), usermail.getTo());
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
@@ -85,7 +83,7 @@ public class UsermailAgentController {
       LOGGER.warn("storeType is error:usermail:{},storeType={}", usermail, storeType);
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_STORE_TYPE);
     }
-    Map result = usermailService.sendMail(cdtpHeaderDto, usermail, owner, other);
+    Map<String, Object> result = usermailService.sendMail(cdtpHeaderDto, usermail, owner, other);
     resultDto.setData(result);
     return resultDto;
   }
@@ -115,9 +113,8 @@ public class UsermailAgentController {
           defaultValue = "before") String signal,
       @ApiParam(value = "过滤的seqId") @RequestParam(value = "filterSeqIds", required = false, defaultValue = "") String filterSeqIds) {
     ResultDTO resultDto = new ResultDTO();
-    CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     List<UsermailDO> temailList = usermailService
-        .getMails(cdtpHeaderDto, from, to, seqId, pageSize, filterSeqIds, signal);
+        .getMails(from, to, seqId, pageSize, filterSeqIds, signal);
 
     resultDto.setData(temailList);
     return resultDto;

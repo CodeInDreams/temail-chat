@@ -106,7 +106,8 @@ public class UsermailService {
    * @param other 收件人
    */
   @Transactional
-  public Map sendMail(CdtpHeaderDTO headerInfo, CreateUsermailDTO usermail, String owner, String other) {
+  public Map<String, Object> sendMail(CdtpHeaderDTO headerInfo, CreateUsermailDTO usermail, String owner,
+      String other) {
     String from = usermail.getFrom();
     String to = usermail.getTo();
     String msgid = usermail.getMsgId();
@@ -116,6 +117,7 @@ public class UsermailService {
     if (filter != null && !filter.isEmpty()) {
       filterStr = String.join(",", filter);
     }
+
     int attachmentSize = usermail.getAttachmentSize();
     long seqNo = usermailAdapter.getMsgSeqNo(from, to, owner);
     String sessionid = saveUsermailBoxInfo(from, to, owner);
@@ -145,16 +147,17 @@ public class UsermailService {
         .sendMqMsgSaveMail(headerInfo, from, to, owner, msgid, usermail.getMsgData(), seqNo, eventType, attachmentSize,
             author, filter);
     usermailAdapter.setLastMsgId(owner, other, msgid);
-    Map<String, Object> result = new HashMap<>(4);
-    result.put("msgId", msgid);
-    result.put("seqId", mail.getSeqNo());
+    Map<String, Object> result = new HashMap<>(2);
+    final String msgIdKey = "msgId";
+    final String seqIdKey = "seqId";
+    result.put(msgIdKey, msgid);
+    result.put(seqIdKey, mail.getSeqNo());
     return result;
   }
 
   /**
    * 同步单聊会话消息
    *
-   * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param fromSeqNo 消息序列号
@@ -164,8 +167,8 @@ public class UsermailService {
    * @return 单聊会话消息
    */
   @Transactional(readOnly = true)
-  public List<UsermailDO> getMails(CdtpHeaderDTO headerInfo, String from, String to, long fromSeqNo,
-      int pageSize, String filterSeqIds, String signal) {
+  public List<UsermailDO> getMails(String from, String to, long fromSeqNo, int pageSize, String filterSeqIds,
+      String signal) {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setFromSeqNo(fromSeqNo);
     umQueryDto.setSignal(signal);
@@ -173,18 +176,19 @@ public class UsermailService {
     umQueryDto.setSessionid(sessionid);
     umQueryDto.setPageSize(pageSize);
     umQueryDto.setOwner(from);
-    List<UsermailDO> result = convertMsgService.convertMsg(usermailRepo.getUsermail(umQueryDto));
+    List<UsermailDO> mails = convertMsgService.convertMsg(usermailRepo.getUsermail(umQueryDto));
     List<UsermailDO> resultFilter = new ArrayList<>();
-    if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(result)) {
-      boolean isAfter = "after".equals(signal);
-      SeqIdFilter filter = new SeqIdFilter(filterSeqIds, isAfter);
-      for (int i = 0; i < result.size(); i++) {
-        if (filter.filter(result.get(i).getSeqNo())) {
-          resultFilter.add(result.get(i));
+    if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(mails)) {
+      final String afterFetch = "after";
+      boolean isAfter = afterFetch.equals(signal);
+      SeqIdFilter seqIdFilter = new SeqIdFilter(filterSeqIds, isAfter);
+      for (UsermailDO mail : mails) {
+        if (seqIdFilter.filter(mail.getSeqNo())) {
+          resultFilter.add(mail);
         }
       }
     } else {
-      resultFilter = result;
+      resultFilter = mails;
     }
     return resultFilter;
   }

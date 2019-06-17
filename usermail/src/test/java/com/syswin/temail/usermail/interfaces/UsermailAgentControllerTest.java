@@ -131,7 +131,7 @@ public class UsermailAgentControllerTest {
             "bob@temail.com", "test message1", 10)
     );
     Mockito.doReturn(usermails).when(usermailService)
-        .getMails(headerInfo, "bob@temail.com", "alice@temail.com", 0, 20, "", "before");
+        .getMails("bob@temail.com", "alice@temail.com", 0, 20, "", "before");
     mockMvc.perform(
         get("/usermail")
             .accept(MediaType.APPLICATION_JSON_UTF8)
