@@ -1,5 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
+import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
@@ -97,7 +98,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    */
   @Override
   public int destoryAfterRead(String owner, String msgid, int status) {
-    return usermailMsgReplyMapper.destoryAfterRead(owner, msgid, status);
+    return usermailMsgReplyMapper.destoryAfterRead(owner, msgid, status, TemailStatus.STATUS_NORMAL_0);
   }
 
   /**
@@ -146,6 +147,6 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    */
   @Override
   public int revertUsermailReply(UsermailMsgReply usermailMsgReply) {
-    return usermailMsgReplyMapper.revertUsermailReply(usermailMsgReply);
+    return usermailMsgReplyMapper.revertUsermailReply(usermailMsgReply, TemailStatus.STATUS_NORMAL_0);
   }
 }

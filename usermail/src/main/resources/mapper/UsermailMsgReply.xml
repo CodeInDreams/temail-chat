@@ -45,19 +45,19 @@
             #{sessionid,jdbcType=VARCHAR}, #{zipMsg,jdbcType=BLOB})
   </insert>
 
-  <update id="revertUsermailReply" parameterType="UsermailMsgReply">
+  <update id="revertUsermailReply">
     update usermail_msg_reply
-    set `status` = #{status}, `zip_msg` = null, `update_time` = CURRENT_TIMESTAMP()
+    set `status` = #{usermailMsgReply.status}, `zip_msg` = null, `update_time` = CURRENT_TIMESTAMP()
     <where>
-      `status`= 0
-      <if test="parentMsgid != null">
-        and `parent_msgid` = #{parentMsgid,jdbcType=VARCHAR}
+      `status`= #{originalStatus}
+      <if test="usermailMsgReply.parentMsgid != null">
+        and `parent_msgid` = #{usermailMsgReply.parentMsgid,jdbcType=VARCHAR}
       </if>
-      <if test="msgid != null">
-        and `msgid` = #{msgid,jdbcType=VARCHAR}
+      <if test="usermailMsgReply.msgid != null">
+        and `msgid` = #{usermailMsgReply.msgid,jdbcType=VARCHAR}
       </if>
-      <if test="owner != null">
-        and `owner` = #{owner,jdbcType=VARCHAR}
+      <if test="usermailMsgReply.owner != null">
+        and `owner` = #{usermailMsgReply.owner,jdbcType=VARCHAR}
       </if>
     </where>
   </update>
@@ -139,7 +139,7 @@
     set `status`= #{status,jdbcType=INTEGER},
         `zip_msg` = null,
         `update_time` = CURRENT_TIMESTAMP()
-    where `status`= 0
+    where `status`= #{originalStatus}
       and `msgid` = #{msgid,jdbcType=VARCHAR}
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>

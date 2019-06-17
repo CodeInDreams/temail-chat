@@ -67,9 +67,11 @@ public interface UsermailMsgReplyMapper {
    * @param owner 拥有者
    * @param msgid 消息id
    * @param status 消息状态
+   * @param originalStatus 消息初始状态
    * @return 更新的数量
    */
-  int destoryAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status);
+  int destoryAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status,
+      @Param("originalStatus") int originalStatus);
 
   /**
    * 根据父消息批量修改消息状态
@@ -106,7 +108,9 @@ public interface UsermailMsgReplyMapper {
    * 撤回用户回复的消息
    *
    * @param usermailMsgReply 撤回的消息信息
+   * @param originalStatus 当前消息状态
    * @return 撤回的数量
    */
-  int revertUsermailReply(UsermailMsgReply usermailMsgReply);
+  int revertUsermailReply(@Param("usermailMsgReply") UsermailMsgReply usermailMsgReply,
+      @Param("originalStatus") int originalStatus);
 }
