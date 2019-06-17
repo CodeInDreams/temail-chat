@@ -73,7 +73,7 @@ public class MsgCompressorTest {
     String sourceData = "test";
     byte[] sourceDecodeData = Base64.getUrlDecoder().decode(sourceData.getBytes(Charset.forName(CHARSET_ENCODE)));
     byte[] zipBytes = "zip-test".getBytes();
-    when(gzipUtils.zip(sourceDecodeData)).thenReturn(zipBytes);
+    when(gzipUtils.zip(sourceDecodeData)).thenThrow(IOException.class);
 
     byte[] result = new byte[0];
     try {
