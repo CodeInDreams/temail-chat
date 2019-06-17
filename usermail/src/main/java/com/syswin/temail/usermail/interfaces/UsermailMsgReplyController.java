@@ -10,7 +10,7 @@ import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import io.swagger.annotations.ApiOperation;
@@ -123,7 +123,7 @@ public class UsermailMsgReplyController {
    * @param from 消息所属人
    * @param signal 向前向后拉取标识
    * @param filterSeqIds 断层的seqId范围
-   * @return 返回ResultDTO对象，结果包含回复消息列表{@link UsermailMsgReply}。
+   * @return 返回ResultDTO对象，结果包含回复消息列表{@link UsermailMsgReplyDO}。
    * @See ResultDTO
    */
   @ApiOperation(value = "拉取单聊回复消息(0x 0001 1008)", notes = "拉取单聊回复消息")
@@ -136,7 +136,7 @@ public class UsermailMsgReplyController {
       @ApiParam(value = "向前向后拉取标识", required = true) @RequestParam(value = "signal", defaultValue = "before") String signal,
       @ApiParam(value = "断层的seqId范围") @RequestParam(value = "filterSeqIds", required = false, defaultValue = "") String filterSeqIds) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
-    List<UsermailMsgReply> data = usermailMsgReplyService
+    List<UsermailMsgReplyDO> data = usermailMsgReplyService
         .getMsgReplys(cdtpHeaderDto, parentMsgid, pageSize, seqId, signal, from, filterSeqIds);
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(data);

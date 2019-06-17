@@ -10,8 +10,8 @@ import com.syswin.temail.usermail.cassandra.application.INosqlMsgTemplate;
 import com.syswin.temail.usermail.cassandra.domains.MsgRow;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
-import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailDO;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,13 +37,13 @@ public class ConvertMsgService {
    * @param usermails 消息不完整的单聊消息列表
    * @return 补全的单聊消息列表
    */
-  public List<Usermail> convertMsg(List<Usermail> usermails) {
+  public List<UsermailDO> convertMsg(List<UsermailDO> usermails) {
     if (usermails != null && !usermails.isEmpty()) {
 
       List idList = new ArrayList(usermails.size());
 
       for (int i = 0; i < usermails.size(); i++) {
-        Usermail usermail = usermails.get(i);
+        UsermailDO usermail = usermails.get(i);
         //兼容旧版本阅后即焚逻辑
         if (usermail.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
           usermail.setMessage("");
@@ -68,7 +68,7 @@ public class ConvertMsgService {
           msgRowMap.put(id, new MsgRow(id, message.array()));
         });
         for (int i = 0; i < usermails.size(); i++) {
-          Usermail usermail = usermails.get(i);
+          UsermailDO usermail = usermails.get(i);
           MsgRow msgRow = msgRowMap.get(usermail.getId());
           if (msgRow == null) {
             continue;
@@ -85,12 +85,12 @@ public class ConvertMsgService {
    * @param replyList 消息不完整的单聊回复消息列表
    * @return 补全的单聊回复消息列表
    */
-  public List<UsermailMsgReply> convertReplyMsg(List<UsermailMsgReply> replyList) {
+  public List<UsermailMsgReplyDO> convertReplyMsg(List<UsermailMsgReplyDO> replyList) {
     if (replyList != null && !replyList.isEmpty()) {
       List idList = new ArrayList(replyList.size());
 
       for (int i = 0; i < replyList.size(); i++) {
-        UsermailMsgReply reply = replyList.get(i);
+        UsermailMsgReplyDO reply = replyList.get(i);
         //兼容旧版本阅后即焚逻辑
         if (reply.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
           reply.setMsg("");
@@ -114,7 +114,7 @@ public class ConvertMsgService {
         });
 
         for (int i = 0; i < replyList.size(); i++) {
-          UsermailMsgReply msgReply = replyList.get(i);
+          UsermailMsgReplyDO msgReply = replyList.get(i);
           MsgRow msgRow = msgRowMap.get(msgReply.getId());
           if (msgRow == null) {
             continue;

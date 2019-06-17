@@ -3,7 +3,7 @@ package com.syswin.temail.usermail.application;
 import static org.mockito.Mockito.verify;
 
 import com.syswin.temail.usermail.core.IUsermailAdapter;
-import com.syswin.temail.usermail.domains.UsermailBlacklist;
+import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -19,7 +19,7 @@ public class UsermailBlacklistServiceTest {
 
   @Test
   public void saveTest() {
-    UsermailBlacklist usermailBlacklist = new UsermailBlacklist();
+    UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     Mockito.when(iUsermailAdapter.getUsermailBlacklistPkID()).thenReturn(1l);
     usermailBlacklistService.save(usermailBlacklist);
     verify(usermailBlacklistRepo).insert(usermailBlacklist);
@@ -27,7 +27,7 @@ public class UsermailBlacklistServiceTest {
 
   @Test
   public void removeTest() {
-    UsermailBlacklist usermailBlacklist = new UsermailBlacklist();
+    UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     usermailBlacklistService.remove(usermailBlacklist);
     verify(usermailBlacklistRepo).deleteByAddresses(usermailBlacklist);
   }

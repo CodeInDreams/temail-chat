@@ -14,7 +14,7 @@ import org.apache.ibatis.type.Alias;
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "temail UsermailMsgReply")
 @Alias("UserMailMsgReply")
-public class UsermailMsgReply implements java.io.Serializable {
+public class UsermailMsgReplyDO implements java.io.Serializable {
 
   @JsonIgnore
   @ApiModelProperty(value = "PKID")
@@ -51,10 +51,10 @@ public class UsermailMsgReply implements java.io.Serializable {
   private String sessionid;
   private byte[] zipMsg;
 
-  public UsermailMsgReply() {
+  public UsermailMsgReplyDO() {
   }
 
-  public UsermailMsgReply(long id, String parentMsgId, String msgid, String from, String to, long seqNo,
+  public UsermailMsgReplyDO(long id, String parentMsgId, String msgid, String from, String to, long seqNo,
       String msg, int status, int type, String owner, String sessionid) {
     this.id = id;
     this.parentMsgid = parentMsgId;
@@ -69,7 +69,7 @@ public class UsermailMsgReply implements java.io.Serializable {
     this.sessionid = sessionid;
   }
 
-  public UsermailMsgReply(long id, String parentMsgid, String msgid, String from, String to, long seqNo, String msg,
+  public UsermailMsgReplyDO(long id, String parentMsgid, String msgid, String from, String to, long seqNo, String msg,
       int status, int type, String owner, String sessionid, byte[] zipMsg) {
     this.id = id;
     this.parentMsgid = parentMsgid;

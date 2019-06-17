@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
@@ -26,7 +26,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 插入的数量
    */
   @Override
-  public int insert(UsermailMsgReply record) {
+  public int insert(UsermailMsgReplyDO record) {
     return usermailMsgReplyMapper.insert(record);
   }
 
@@ -37,7 +37,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 回复消息列表
    */
   @Override
-  public List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto) {
+  public List<UsermailMsgReplyDO> getMsgReplys(QueryMsgReplyDTO dto) {
     return usermailMsgReplyMapper.getMsgReplys(dto);
   }
 
@@ -84,7 +84,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 回复消息信息
    */
   @Override
-  public UsermailMsgReply getMsgReplyByCondition(UsermailMsgReply usermailMsgReply) {
+  public UsermailMsgReplyDO getMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply) {
     return usermailMsgReplyMapper.getMsgReplyByCondition(usermailMsgReply);
   }
 
@@ -135,7 +135,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 回复消息的信息
    */
   @Override
-  public UsermailMsgReply getLastUsermailReply(String parentMsgid, String owner, int status) {
+  public UsermailMsgReplyDO getLastUsermailReply(String parentMsgid, String owner, int status) {
     return usermailMsgReplyMapper.getLastUsermailReply(parentMsgid, owner, status);
   }
 
@@ -146,7 +146,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 撤回的数量
    */
   @Override
-  public int revertUsermailReply(UsermailMsgReply usermailMsgReply) {
+  public int revertUsermailReply(UsermailMsgReplyDO usermailMsgReply) {
     return usermailMsgReplyMapper.revertUsermailReply(usermailMsgReply, TemailStatus.STATUS_NORMAL_0);
   }
 }

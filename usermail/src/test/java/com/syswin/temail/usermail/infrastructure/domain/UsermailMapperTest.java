@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
@@ -50,7 +50,7 @@ public class UsermailMapperTest {
 
   @Test
   public void saveUsermail() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
@@ -72,7 +72,7 @@ public class UsermailMapperTest {
     umQueryDto.setFromSeqNo(lastSeqno);
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner(from);
-    List<Usermail> usermail = usermailRepo.getUsermail(umQueryDto);
+    List<UsermailDO> usermail = usermailRepo.getUsermail(umQueryDto);
     Assert.assertNotNull(usermail);
     Assert.assertTrue(usermail.size() >= 1);
   }
@@ -82,7 +82,7 @@ public class UsermailMapperTest {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("to@syswin.com");
-    List<Usermail> usermails = usermailRepo.getLastUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.getLastUsermail(umQueryDto);
     Assert.assertEquals(0, usermails.size());
   }
 
@@ -97,7 +97,7 @@ public class UsermailMapperTest {
 
   @Test
   public void getUsermailByMsgid() {
-    Usermail usermailByMsgid = usermailRepo
+    UsermailDO usermailByMsgid = usermailRepo
         .getUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermailByMsgid);
   }
@@ -106,14 +106,14 @@ public class UsermailMapperTest {
   public void destoryAfterRead() {
     usermailRepo.destoryAfterRead("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         TemailStatus.STATUS_DESTORY_AFTER_READ_2);
-    Usermail usermail = usermailRepo
+    UsermailDO usermail = usermailRepo
         .getUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermail);
   }
 
   @Test
   public void getUsermail() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
@@ -135,13 +135,13 @@ public class UsermailMapperTest {
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner("from@syswin.com");
     umQueryDto.setPageSize(10);
-    List<Usermail> usermails = usermailRepo.getUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.getUsermail(umQueryDto);
     assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
   @Test
   public void getUsermailWithSeqId() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
@@ -164,7 +164,7 @@ public class UsermailMapperTest {
     umQueryDto.setOwner(from);
     umQueryDto.setPageSize(10);
     umQueryDto.setFromSeqNo(10);
-    List<Usermail> usermails = usermailRepo.getUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.getUsermail(umQueryDto);
     assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
@@ -176,7 +176,7 @@ public class UsermailMapperTest {
 
   @Test
   public void getUsermailListByMsgid() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
     String from = id + "from@syswin.com";
@@ -197,7 +197,7 @@ public class UsermailMapperTest {
     userMail.setAuthor(from);
     userMail.setFilter(null);
     usermailRepo.saveUsermail(userMail);
-    List<Usermail> usermails = usermailRepo.getUsermailListByMsgid(msgid);
+    List<UsermailDO> usermails = usermailRepo.getUsermailListByMsgid(msgid);
 
     assertThat(usermails).isNotEmpty();
     assertThat(usermails.size()).isOne();
@@ -208,7 +208,7 @@ public class UsermailMapperTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("AA");
     msgIds.add("BB");
-    List<Usermail> mail = usermailRepo.getUsermailByFromToMsgIds("a@systoontest.com", msgIds);
+    List<UsermailDO> mail = usermailRepo.getUsermailByFromToMsgIds("a@systoontest.com", msgIds);
     Assert.assertEquals(0, mail.size());
   }
 
@@ -218,7 +218,7 @@ public class UsermailMapperTest {
     String msgId = UUID.randomUUID().toString();
     String lastReplyMsgid = UUID.randomUUID().toString();
     //新建消息
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
@@ -237,7 +237,7 @@ public class UsermailMapperTest {
     //更新消息seqNo
     usermailRepo.updateReplyCountAndLastReplyMsgid(msgId, from, 1, lastReplyMsgid);
     //验证最新回复消息id与消息回复总数（1）是否正常更新
-    Usermail usermailUpdated = usermailRepo.getUsermailByMsgid(msgId, from);
+    UsermailDO usermailUpdated = usermailRepo.getUsermailByMsgid(msgId, from);
     Assert.assertEquals(usermailUpdated.getLastReplyMsgId(), lastReplyMsgid);
     Assert.assertTrue(usermailUpdated.getReplyCount() == 1);
   }
@@ -248,7 +248,7 @@ public class UsermailMapperTest {
     String msgId = UUID.randomUUID().toString();
     String lastReplyMsgid = UUID.randomUUID().toString();
     //新建消息
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
@@ -274,7 +274,7 @@ public class UsermailMapperTest {
 
   @Test
   public void removeMsgByStatus() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
     String from = id + "from@syswin.com";
@@ -309,7 +309,7 @@ public class UsermailMapperTest {
   @Test
   public void updateStatusByTemail() {
     // 还原废纸篓消息
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
     String from = id + "from@syswin.com";
@@ -342,7 +342,7 @@ public class UsermailMapperTest {
 
   @Test
   public void getUsermailByStatus() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
     String from = id + "from@syswin.com";
@@ -369,7 +369,7 @@ public class UsermailMapperTest {
     queryTrashDTO.setStatus(status);
     queryTrashDTO.setPageSize(2);
 
-    List<Usermail> usermailByStatus = usermailRepo.getUsermailByStatus(queryTrashDTO);
+    List<UsermailDO> usermailByStatus = usermailRepo.getUsermailByStatus(queryTrashDTO);
 
     assertThat(usermailByStatus).isNotEmpty();
     assertThat(usermailByStatus.size()).isOne();
@@ -377,7 +377,7 @@ public class UsermailMapperTest {
 
   @Test
   public void shouldRevertUsermail() {
-    Usermail userMail = new Usermail();
+    UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";

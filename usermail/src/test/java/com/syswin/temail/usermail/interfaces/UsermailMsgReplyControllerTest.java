@@ -18,7 +18,7 @@ import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import java.util.ArrayList;
@@ -167,9 +167,9 @@ public class UsermailMsgReplyControllerTest {
     String owner = "from@temail";
     String signal = "before";
     String filterSeqIds = "";
-    List<UsermailMsgReply> usermailMsgReplies = Arrays.asList(
-        new UsermailMsgReply(123, parentMsgid, "123444321", "from@temail", "to@temail", seqId, "msgs", 0, 0, owner, ""),
-        new UsermailMsgReply(1234, parentMsgid, "12344432", "from@temail", "to@temail", 2, "msgs2", 0, 0, owner, ""));
+    List<UsermailMsgReplyDO> usermailMsgReplies = Arrays.asList(
+        new UsermailMsgReplyDO(123, parentMsgid, "123444321", "from@temail", "to@temail", seqId, "msgs", 0, 0, owner, ""),
+        new UsermailMsgReplyDO(1234, parentMsgid, "12344432", "from@temail", "to@temail", 2, "msgs2", 0, 0, owner, ""));
     Mockito.doReturn(usermailMsgReplies).when(usermailMsgReplyService)
         .getMsgReplys(headerInfo, parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
     ObjectMapper mapper = new ObjectMapper();

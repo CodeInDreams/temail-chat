@@ -12,7 +12,7 @@ import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.common.ParamsKey;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -72,20 +72,20 @@ public class UsermailMsgReplyInterfaceTest {
   }
 
   private void assertAfterRemove(ResponseEntity<String> deletereplyMsg, String parentMsgId) {
-    UsermailMsgReply lastMsgInfos = getLastMsgInfo(deletereplyMsg);
+    UsermailMsgReplyDO lastMsgInfos = getLastMsgInfo(deletereplyMsg);
     Assert.assertEquals(lastMsgInfos.getParentMsgid(), parentMsgId);
     //Assert.assertEquals(lastMsgInfos.getStatus(), TemailStatus.STATUS_DELETE_3);
     System.out.println("removeMsgReply success--------------------------");
   }
 
   private void assertAfterRevert(ResponseEntity<String> replyMsgs, String parentMsgId) {
-    UsermailMsgReply lastMsgInfos = getLastMsgInfo(replyMsgs);
+    UsermailMsgReplyDO lastMsgInfos = getLastMsgInfo(replyMsgs);
     Assert.assertEquals(lastMsgInfos.getParentMsgid(), parentMsgId);
     Assert.assertEquals(TemailStatus.STATUS_REVERT_1, lastMsgInfos.getStatus());
     System.out.println("revertMsgReply success--------------------------");
   }
 
-  private UsermailMsgReply getLastMsgInfo(ResponseEntity<String> responseEntity) {
+  private UsermailMsgReplyDO getLastMsgInfo(ResponseEntity<String> responseEntity) {
     GsonBuilder builder = new GsonBuilder();
 
 // Register an adapter to manage the date types as long values
@@ -99,7 +99,7 @@ public class UsermailMsgReplyInterfaceTest {
     JsonParser jsonParser = new JsonParser();
     JsonObject root = jsonParser.parse(responseEntity.getBody()).getAsJsonObject();
     JsonObject lastMsgObject = root.get("data").getAsJsonArray().get(0).getAsJsonObject();
-    UsermailMsgReply lastMsg = gson.fromJson(lastMsgObject, UsermailMsgReply.class);
+    UsermailMsgReplyDO lastMsg = gson.fromJson(lastMsgObject, UsermailMsgReplyDO.class);
     lastMsg.setParentMsgid(lastMsgObject.get("parentMsgId").getAsString());
     return lastMsg;
   }

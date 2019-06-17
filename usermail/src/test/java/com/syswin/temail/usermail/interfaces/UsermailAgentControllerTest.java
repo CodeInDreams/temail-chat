@@ -17,7 +17,7 @@ import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
@@ -124,10 +124,10 @@ public class UsermailAgentControllerTest {
 
   @Test
   public void shouldGetListWhenPullMessages() throws Exception {
-    List<Usermail> usermails = Arrays.asList(
-        new Usermail(1, "123213141", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
+    List<UsermailDO> usermails = Arrays.asList(
+        new UsermailDO(1, "123213141", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
             "bob@temail.com", "test message", 10),
-        new Usermail(2, "123213142", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
+        new UsermailDO(2, "123213142", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
             "bob@temail.com", "test message1", 10)
     );
     Mockito.doReturn(usermails).when(usermailService)
@@ -166,8 +166,8 @@ public class UsermailAgentControllerTest {
   @Test
   public void shouldGetListWhenPullMailboxes() throws Exception {
     List<MailboxDTO> mailboxDto = Arrays.asList(
-        new MailboxDTO(1, "alice@temail.com", "title", false, new Usermail(), 0),
-        new MailboxDTO(1, "jack@temail.com", "title", false, new Usermail(), 0)
+        new MailboxDTO(1, "alice@temail.com", "title", false, new UsermailDO(), 0),
+        new MailboxDTO(1, "jack@temail.com", "title", false, new UsermailDO(), 0)
     );
     Mockito.doReturn(mailboxDto).when(usermailService).mailboxes("bob@temail.com", -1, null);
     ObjectMapper mapper = new ObjectMapper();
@@ -247,11 +247,11 @@ public class UsermailAgentControllerTest {
     msgIds.add("6d19b1c4-2665-49aa-801b-eb40bc10f532");
     msgIds.add("74e3bccd-b894-42d0-b535-9cea0824147d");
     msgIds.add("7a14838f-c003-41eb-b360-814265e4fcda");
-    List<Usermail> expectMailList = new ArrayList<>();
+    List<UsermailDO> expectMailList = new ArrayList<>();
 
-    Usermail mail1 = new Usermail();
-    Usermail mail2 = new Usermail();
-    Usermail mail3 = new Usermail();
+    UsermailDO mail1 = new UsermailDO();
+    UsermailDO mail2 = new UsermailDO();
+    UsermailDO mail3 = new UsermailDO();
     mail1.setMsgid(msgIds.get(0));
     mail2.setMsgid(msgIds.get(1));
     mail3.setMsgid(msgIds.get(2));
@@ -291,11 +291,11 @@ public class UsermailAgentControllerTest {
     msgIds.add("6d19b1c4-2665-49aa-801b-eb40bc10f532");
     msgIds.add("74e3bccd-b894-42d0-b535-9cea0824147d");
     msgIds.add("7a14838f-c003-41eb-b360-814265e4fcda");
-    List<Usermail> expectMailList = new ArrayList<>();
+    List<UsermailDO> expectMailList = new ArrayList<>();
 
-    Usermail mail1 = new Usermail();
-    Usermail mail2 = new Usermail();
-    Usermail mail3 = new Usermail();
+    UsermailDO mail1 = new UsermailDO();
+    UsermailDO mail2 = new UsermailDO();
+    UsermailDO mail3 = new UsermailDO();
     mail1.setMsgid(msgIds.get(0));
     mail1.setReplyCount(1);
     mail2.setMsgid(msgIds.get(1));
@@ -420,10 +420,10 @@ public class UsermailAgentControllerTest {
     int pageSize = 20;
     long timestamp = 155048418;
     String signal = "before";
-    List<Usermail> usermails = Arrays.asList(
-        new Usermail(1, "123213141", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
+    List<UsermailDO> usermails = Arrays.asList(
+        new UsermailDO(1, "123213141", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
             "bob@temail.com", "test message", 0),
-        new Usermail(2, "123213142", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
+        new UsermailDO(2, "123213142", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
             "bob@temail.com", "test message1", 0)
     );
     Mockito.doReturn(usermails).when(usermailService).getMsgFromTrash(headerInfo, from, timestamp, pageSize, signal);

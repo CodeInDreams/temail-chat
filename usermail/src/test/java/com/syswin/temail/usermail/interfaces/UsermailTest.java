@@ -8,7 +8,7 @@ import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.common.ParamsKey;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class UsermailTest {
     //lastMsg在json转对象时有数据丢失，重设lastMsg
     //seqId --> seqNo  msgId -> msgid, 前面的是json tag，后面是对应类中的field
     JsonObject lastMsg = data.get("lastMsg").getAsJsonObject();
-    Usermail usermail = gs.fromJson(lastMsg, Usermail.class);
+    UsermailDO usermail = gs.fromJson(lastMsg, UsermailDO.class);
     usermail.setSeqNo(lastMsg.get("seqId").getAsLong());
     usermail.setMsgid(lastMsg.get("msgId").getAsString());
     mailboxDto.setLastMsg(usermail);
@@ -110,12 +110,12 @@ public class UsermailTest {
   }
 
   //从response中获取usermail 消息列表
-  private Usermail getLastMsgInfo(String response) {
+  private UsermailDO getLastMsgInfo(String response) {
     Gson gs = new Gson();
     JsonParser jsonParser = new JsonParser();
     JsonObject root = jsonParser.parse(response).getAsJsonObject();
     JsonObject lastMsgObject = root.get("data").getAsJsonArray().get(0).getAsJsonObject();
-    Usermail lastMsg = gs.fromJson(lastMsgObject, Usermail.class);
+    UsermailDO lastMsg = gs.fromJson(lastMsgObject, UsermailDO.class);
     //lastMsg在json转对象时有数据丢失，重设lastMsg
     //seqId --> seqNo  msgId -> msgid, 前面的是json tag，后面是对应类中的field
     lastMsg.setSeqNo(lastMsgObject.get("seqId").getAsLong());
@@ -126,27 +126,27 @@ public class UsermailTest {
   //验证同步单聊会话 列表 的返回值response中，会话列表不为空，最后一条消息的msgId是否是参数中的msgId
   private void assertMailboxes(String response, String msgId) {
     MailboxDTO mailboxDto = getMailboxDtoInfo(response);
-    Usermail usermail = mailboxDto.getLastMsg();
+    UsermailDO usermail = mailboxDto.getLastMsg();
     Assert.assertNotNull(mailboxDto.getLastMsg());
     Assert.assertEquals(usermail.getMsgid(), msgId);
   }
 
   //验证同步单聊会话 消息 的返回值response中，最后一条消息的msgId是否是参数中的msgId
   private void assertGetMails(String response, String msgId) {
-    Usermail usermail = getLastMsgInfo(response);
+    UsermailDO usermail = getLastMsgInfo(response);
     Assert.assertEquals(usermail.getMsgid(), msgId);
   }
 
   //删除消息后重新同步会话消息
   private void assertGetMailsAfterRemove(String response, String msgId) {
-    Usermail usermail = getLastMsgInfo(response);
+    UsermailDO usermail = getLastMsgInfo(response);
     Assert.assertEquals(usermail.getMsgid(), msgId);
     //Assert.assertEquals(usermail.getStatus(), TemailStatus.STATUS_DELETE_3);
   }
 
   //撤回消息后重新同步会话消息
   private void assertGetMailsAfterRevert(String response, String msgId) {
-    Usermail usermail = getLastMsgInfo(response);
+    UsermailDO usermail = getLastMsgInfo(response);
     Assert.assertEquals(usermail.getMsgid(), msgId);
     Assert.assertEquals(TemailStatus.STATUS_REVERT_1, usermail.getStatus());
   }
@@ -154,8 +154,8 @@ public class UsermailTest {
   //验证阅后即焚前 和 阅后即焚后的消息
   private void assertDestroyAfterRead(String responseBeforeDestroy, String responseAfterDestroy,
       String msgId) {
-    Usermail usermailBefore = getLastMsgInfo(responseBeforeDestroy);
-    Usermail usermailAfter = getLastMsgInfo(responseAfterDestroy);
+    UsermailDO usermailBefore = getLastMsgInfo(responseBeforeDestroy);
+    UsermailDO usermailAfter = getLastMsgInfo(responseAfterDestroy);
     Assert.assertTrue(
         usermailBefore.getMsgid().equals(msgId) && usermailAfter.getMsgid().equals(msgId));
     Assert.assertEquals(TemailStatus.STATUS_DESTORY_AFTER_READ_2, usermailAfter.getStatus());

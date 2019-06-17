@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -19,7 +19,7 @@ public class MailboxDTO implements java.io.Serializable {
   @ApiModelProperty(value = "是否置顶")
   private boolean onTop = false;
   @ApiModelProperty(value = "最后一条消息")
-  private Usermail lastMsg;
+  private UsermailDO lastMsg;
   @ApiModelProperty(value = "归档状态")
   private int archiveStatus;
 
@@ -55,11 +55,11 @@ public class MailboxDTO implements java.io.Serializable {
     this.onTop = onTop;
   }
 
-  public Usermail getLastMsg() {
+  public UsermailDO getLastMsg() {
     return lastMsg;
   }
 
-  public void setLastMsg(Usermail lastMsg) {
+  public void setLastMsg(UsermailDO lastMsg) {
     this.lastMsg = lastMsg;
   }
 
@@ -74,7 +74,7 @@ public class MailboxDTO implements java.io.Serializable {
   public MailboxDTO() {
   }
 
-  public MailboxDTO(int sessionType, String to, String title, boolean onTop, Usermail lastMsg, Integer archiveStatus) {
+  public MailboxDTO(int sessionType, String to, String title, boolean onTop, UsermailDO lastMsg, Integer archiveStatus) {
     this.sessionType = sessionType;
     this.to = to;
     this.title = title;

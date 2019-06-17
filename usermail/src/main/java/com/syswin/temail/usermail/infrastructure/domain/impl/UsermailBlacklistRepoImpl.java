@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
-import com.syswin.temail.usermail.domains.UsermailBlacklist;
+import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklistMapper;
 import java.util.List;
@@ -24,7 +24,7 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 插入的数量
    */
   @Override
-  public int insert(UsermailBlacklist usermailBlacklist) {
+  public int insert(UsermailBlacklistDO usermailBlacklist) {
     return usermailBlacklistMapper.insert(usermailBlacklist);
   }
 
@@ -35,7 +35,7 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteByAddresses(UsermailBlacklist usermailBlacklist) {
+  public int deleteByAddresses(UsermailBlacklistDO usermailBlacklist) {
     return usermailBlacklistMapper.deleteByAddresses(usermailBlacklist);
   }
 
@@ -47,7 +47,7 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 黑名单信息
    */
   @Override
-  public UsermailBlacklist selectByAddresses(String temailAddress, String blackedAddress) {
+  public UsermailBlacklistDO selectByAddresses(String temailAddress, String blackedAddress) {
     return usermailBlacklistMapper.selectByAddresses(temailAddress, blackedAddress);
   }
 
@@ -58,7 +58,7 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 黑名单列表
    */
   @Override
-  public List<UsermailBlacklist> selectByTemailAddress(String temailAddress) {
+  public List<UsermailBlacklistDO> selectByTemailAddress(String temailAddress) {
     return usermailBlacklistMapper.selectByTemailAddress(temailAddress);
   }
 

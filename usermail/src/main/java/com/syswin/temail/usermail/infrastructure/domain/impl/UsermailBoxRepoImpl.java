@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
-import com.syswin.temail.usermail.domains.UsermailBox;
+import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper;
 import java.util.List;
@@ -23,7 +23,7 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @param usermailBox 会话信息
    */
   @Override
-  public void saveUsermailBox(UsermailBox usermailBox) {
+  public void saveUsermailBox(UsermailBoxDO usermailBox) {
     usermailBoxMapper.saveUsermailBox(usermailBox);
   }
 
@@ -35,7 +35,7 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话列表
    */
   @Override
-  public List<UsermailBox> getUsermailBoxByOwner(String mail, int archiveStatus) {
+  public List<UsermailBoxDO> getUsermailBoxByOwner(String mail, int archiveStatus) {
     return usermailBoxMapper.getUsermailBoxByOwner(mail, archiveStatus);
   }
 
@@ -59,7 +59,7 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话列表
    */
   @Override
-  public List<UsermailBox> selectByOwnerAndTo(String from, String to) {
+  public List<UsermailBoxDO> selectByOwnerAndTo(String from, String to) {
     return usermailBoxMapper.selectByOwnerAndTo(from, to);
   }
 
@@ -84,7 +84,7 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话信息
    */
   @Override
-  public UsermailBox selectUsermailBox(String owner, String to) {
+  public UsermailBoxDO selectUsermailBox(String owner, String to) {
     return usermailBoxMapper.selectUsermailBox(owner, to);
   }
 

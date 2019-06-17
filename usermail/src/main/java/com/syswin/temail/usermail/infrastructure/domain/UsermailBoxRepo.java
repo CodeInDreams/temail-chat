@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain;
 
-import com.syswin.temail.usermail.domains.UsermailBox;
+import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import java.util.List;
 
 public interface UsermailBoxRepo {
@@ -10,7 +10,7 @@ public interface UsermailBoxRepo {
    *
    * @param usermailBox 会话信息
    */
-  void saveUsermailBox(UsermailBox usermailBox);
+  void saveUsermailBox(UsermailBoxDO usermailBox);
 
   /**
    * 查找当前用户的会话列表
@@ -19,7 +19,7 @@ public interface UsermailBoxRepo {
    * @param archiveStatus 归档状态
    * @return 会话列表
    */
-  List<UsermailBox> getUsermailBoxByOwner(String mail, int archiveStatus);
+  List<UsermailBoxDO> getUsermailBoxByOwner(String mail, int archiveStatus);
 
   /**
    * 删除指定会话
@@ -37,7 +37,7 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 会话列表
    */
-  List<UsermailBox> selectByOwnerAndTo(String from, String to);
+  List<UsermailBoxDO> selectByOwnerAndTo(String from, String to);
 
   /**
    * 更新会话归档状态
@@ -56,6 +56,6 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 会话信息
    */
-  UsermailBox selectUsermailBox(String owner, String to);
+  UsermailBoxDO selectUsermailBox(String owner, String to);
 
 }

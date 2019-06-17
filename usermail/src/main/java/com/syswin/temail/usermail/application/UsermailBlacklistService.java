@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.core.IUsermailAdapter;
-import com.syswin.temail.usermail.domains.UsermailBlacklist;
+import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class UsermailBlacklistService {
    * @description 保存单聊黑名单
    */
   @Transactional
-  public int save(UsermailBlacklist usermailBlacklist) {
+  public int save(UsermailBlacklistDO usermailBlacklist) {
     usermailBlacklist.setId(iUsermailAdapter.getUsermailBlacklistPkID());
     return usermailBlacklistRepo.insert(usermailBlacklist);
   }
@@ -38,7 +38,7 @@ public class UsermailBlacklistService {
    * @description 移除单聊黑名单
    */
   @Transactional
-  public int remove(UsermailBlacklist usermailBlacklist) {
+  public int remove(UsermailBlacklistDO usermailBlacklist) {
     return usermailBlacklistRepo.deleteByAddresses(usermailBlacklist);
   }
 
@@ -49,7 +49,7 @@ public class UsermailBlacklistService {
    * @description 查询单条黑名单数据
    */
   @Transactional(readOnly = true)
-  public UsermailBlacklist findByAddresses(String temailAddress, String blackedAddress) {
+  public UsermailBlacklistDO findByAddresses(String temailAddress, String blackedAddress) {
     return usermailBlacklistRepo.selectByAddresses(temailAddress, blackedAddress);
   }
 
@@ -59,7 +59,7 @@ public class UsermailBlacklistService {
    * @description 查询黑名单列表
    */
   @Transactional(readOnly = true)
-  public List<UsermailBlacklist> findByTemailAddress(String temailAddress) {
+  public List<UsermailBlacklistDO> findByTemailAddress(String temailAddress) {
     return usermailBlacklistRepo.selectByTemailAddress(temailAddress);
   }
 

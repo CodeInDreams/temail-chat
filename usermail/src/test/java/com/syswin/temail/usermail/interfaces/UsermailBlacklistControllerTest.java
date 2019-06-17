@@ -12,7 +12,7 @@ import com.syswin.temail.usermail.application.UsermailBlacklistService;
 import com.syswin.temail.usermail.common.ParamsKey;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
-import com.syswin.temail.usermail.domains.UsermailBlacklist;
+import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.dto.BlacklistDTO;
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +57,7 @@ public class UsermailBlacklistControllerTest {
   @Test
   public void shouldAddBlacklist() throws Exception {
     BlacklistDTO blacklistDto = new BlacklistDTO("temail", "blacklist");
-    UsermailBlacklist blacklist = new UsermailBlacklist(blacklistDto.getTemailAddress(),
+    UsermailBlacklistDO blacklist = new UsermailBlacklistDO(blacklistDto.getTemailAddress(),
         blacklistDto.getBlackedAddress());
     Mockito.doReturn(1).when(usermailBlacklistService).save(blacklist);
     ObjectMapper mapper = new ObjectMapper();
@@ -75,7 +75,7 @@ public class UsermailBlacklistControllerTest {
   @Test
   public void shouldRemoveBlacklist() throws Exception {
     BlacklistDTO blacklistDto = new BlacklistDTO("temail", "blacklist");
-    UsermailBlacklist blacklist = new UsermailBlacklist(blacklistDto.getTemailAddress(),
+    UsermailBlacklistDO blacklist = new UsermailBlacklistDO(blacklistDto.getTemailAddress(),
         blacklistDto.getBlackedAddress());
     Mockito.doReturn(1).when(usermailBlacklistService).remove(blacklist);
     ObjectMapper mapper = new ObjectMapper();
@@ -93,13 +93,13 @@ public class UsermailBlacklistControllerTest {
   @Test
   public void findBlacklists() throws Exception {
     String teamilAddress = "to@msgseal.com";
-    List<UsermailBlacklist> usermailBlacklists = Arrays.asList(
-        new UsermailBlacklist(teamilAddress, "a@msgseal.com"),
-        new UsermailBlacklist(teamilAddress, "b@msgseal.com")
+    List<UsermailBlacklistDO> usermailBlacklists = Arrays.asList(
+        new UsermailBlacklistDO(teamilAddress, "a@msgseal.com"),
+        new UsermailBlacklistDO(teamilAddress, "b@msgseal.com")
     );
     Mockito.doReturn(usermailBlacklists).when(usermailBlacklistService).findByTemailAddress(teamilAddress);
     List<String> blackedAddresses = usermailBlacklists.stream()
-        .map(UsermailBlacklist::getBlackedAddress).collect(Collectors.toList());
+        .map(UsermailBlacklistDO::getBlackedAddress).collect(Collectors.toList());
     ObjectMapper mapper = new ObjectMapper();
     MvcResult result = mockMvc.perform(
         get("/blacklist")

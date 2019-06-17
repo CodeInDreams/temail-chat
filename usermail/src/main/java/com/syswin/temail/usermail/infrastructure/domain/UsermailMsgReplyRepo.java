@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.infrastructure.domain;
 
 
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.List;
 
@@ -13,7 +13,7 @@ public interface UsermailMsgReplyRepo {
    * @param record 回复消息信息
    * @return 插入的数量
    */
-  int insert(UsermailMsgReply record);
+  int insert(UsermailMsgReplyDO record);
 
   /**
    * 查询指定消息的回复消息列表
@@ -21,7 +21,7 @@ public interface UsermailMsgReplyRepo {
    * @param dto 查询消息条件
    * @return 回复消息列表
    */
-  List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto);
+  List<UsermailMsgReplyDO> getMsgReplys(QueryMsgReplyDTO dto);
 
   /**
    * 根据msgId批量删除回复消息
@@ -56,7 +56,7 @@ public interface UsermailMsgReplyRepo {
    * @param usermailMsgReply 查询回复消息列表条件
    * @return 回复消息信息
    */
-  UsermailMsgReply getMsgReplyByCondition(UsermailMsgReply usermailMsgReply);
+  UsermailMsgReplyDO getMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply);
 
   /**
    * 回复消息阅后即焚
@@ -95,7 +95,7 @@ public interface UsermailMsgReplyRepo {
    * @param status 消息状态
    * @return 回复消息的信息
    */
-  UsermailMsgReply getLastUsermailReply(String parentMsgid, String owner, int status);
+  UsermailMsgReplyDO getLastUsermailReply(String parentMsgid, String owner, int status);
 
   /**
    * 撤回用户回复的消息
@@ -103,5 +103,5 @@ public interface UsermailMsgReplyRepo {
    * @param usermailMsgReply 撤回的消息信息
    * @return 撤回的数量
    */
-  int revertUsermailReply(UsermailMsgReply usermailMsgReply);
+  int revertUsermailReply(UsermailMsgReplyDO usermailMsgReply);
 }

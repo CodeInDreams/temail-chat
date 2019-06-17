@@ -12,8 +12,8 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.core.util.SeqIdFilter;
-import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailDO;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
@@ -77,7 +77,7 @@ public class UsermailMsgReplyService {
     msgReplyTypeValidate(parentMsgId, owner);
     Map result = new HashMap(2);
     long msgReplySeqNo = usermailAdapter.getMsgReplySeqNo(parentMsgId, owner);
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply(usermailAdapter.getMsgReplyPkID(), parentMsgId, msgId,
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO(usermailAdapter.getMsgReplyPkID(), parentMsgId, msgId,
         from, to, msgReplySeqNo, "", TemailStatus.STATUS_NORMAL_0, type, owner, sessionid,
         msgCompressor.zipWithDecode(message));
     usermailMsgReplyRepo.insert(usermailMsgReply);
@@ -108,7 +108,7 @@ public class UsermailMsgReplyService {
   @Transactional
   public void revertMsgReply(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String replyMsgParentId, String msgId) {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setMsgid(msgId);
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
     usermailMsgReply.setOwner(owner);
@@ -119,7 +119,7 @@ public class UsermailMsgReplyService {
           xPacketId, cdtpHeader, from, to, msgId, replyMsgParentId, owner);
       return;
     }
-    Usermail usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
+    UsermailDO usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotfyMqService
@@ -161,7 +161,7 @@ public class UsermailMsgReplyService {
   @Transactional
   public void removeMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
       String to) {
-    Usermail usermail = msgReplyTypeValidate(parentMsgReplyId, from);
+    UsermailDO usermail = msgReplyTypeValidate(parentMsgReplyId, from);
     if (CollectionUtils.isEmpty(msgIds)) {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_REQUEST_PARAM);
     }
@@ -170,7 +170,7 @@ public class UsermailMsgReplyService {
     String lastReplyMsgId = usermail.getLastReplyMsgId();
     //如果删除的消息中包含最新的回复消息，这需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgIds.contains(lastReplyMsgId)) {
-      UsermailMsgReply lastUsermailMsgReply = usermailMsgReplyRepo
+      UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
           .getLastUsermailReply(parentMsgReplyId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
@@ -198,7 +198,7 @@ public class UsermailMsgReplyService {
    * @Description 拉取单聊回复消息
    */
   @Transactional
-  public List<UsermailMsgReply> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
+  public List<UsermailMsgReplyDO> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
       String signal, String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
     QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
@@ -207,8 +207,8 @@ public class UsermailMsgReplyService {
     dto.setParentMsgid(parentMsgid);
     dto.setSignal(signal);
     dto.setOwner(owner);
-    List<UsermailMsgReply> data = this.convertMsgService.convertReplyMsg(usermailMsgReplyRepo.getMsgReplys(dto));
-    List<UsermailMsgReply> dataFilter = new ArrayList<>();
+    List<UsermailMsgReplyDO> data = this.convertMsgService.convertReplyMsg(usermailMsgReplyRepo.getMsgReplys(dto));
+    List<UsermailMsgReplyDO> dataFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(data)) {
       boolean isAfter = "after".equals(signal);
       SeqIdFilter filter = new SeqIdFilter(filterSeqIds, isAfter);
@@ -243,7 +243,7 @@ public class UsermailMsgReplyService {
           xPacketId, cdtpHeader, from, to, msgId, owner);
       return;
     }
-    Usermail usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
+    UsermailDO usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotfyMqService
@@ -262,10 +262,10 @@ public class UsermailMsgReplyService {
    */
   @Transactional
   public void destoryAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setOwner(from);
     usermailMsgReply.setMsgid(msgId);
-    UsermailMsgReply msgReply = usermailMsgReplyRepo.getMsgReplyByCondition(usermailMsgReply);
+    UsermailMsgReplyDO msgReply = usermailMsgReplyRepo.getMsgReplyByCondition(usermailMsgReply);
     if (msgReply != null && msgReply.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1) {
       String parentMsgId = msgReply.getParentMsgid();
       usermailMqService
@@ -287,8 +287,8 @@ public class UsermailMsgReplyService {
    * @return 单聊对象列表
    * @Description 校验源消息类型是否为合法
    */
-  private List<Usermail> msgReplyTypeValidate(String parentMsgId) {
-    List<Usermail> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
+  private List<UsermailDO> msgReplyTypeValidate(String parentMsgId) {
+    List<UsermailDO> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
     if (CollectionUtils.isEmpty(usermails)) {
       LOGGER.warn("parentMsgId status is error:{}", parentMsgId);
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);
@@ -302,9 +302,9 @@ public class UsermailMsgReplyService {
    * @return 单聊对象信息
    * @Description 校验源消息类型是否为合法
    */
-  public Usermail msgReplyTypeValidate(String parentMsgId, String owner) {
+  public UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
 
-    Usermail usermailByMsgid = usermailRepo.getUsermailByMsgid(parentMsgId, owner);
+    UsermailDO usermailByMsgid = usermailRepo.getUsermailByMsgid(parentMsgId, owner);
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0
         && usermailByMsgid.getStatus() != TemailStatus.STATUS_TRASH_4)) {
       LOGGER.warn("parentMsgId is {}", parentMsgId);
@@ -313,11 +313,11 @@ public class UsermailMsgReplyService {
     return usermailByMsgid;
   }
 
-  private void updateUsermailLastReplyId(Usermail usermail, String parentMsgId, String msgId) {
+  private void updateUsermailLastReplyId(UsermailDO usermail, String parentMsgId, String msgId) {
     String lastReplyMsgId = usermail.getLastReplyMsgId();
     //如果撤回或者阅后即焚的消息是最新的回复消息需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgId.equals(lastReplyMsgId)) {
-      UsermailMsgReply lastUsermailMsgReply = usermailMsgReplyRepo
+      UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
           .getLastUsermailReply(parentMsgId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();

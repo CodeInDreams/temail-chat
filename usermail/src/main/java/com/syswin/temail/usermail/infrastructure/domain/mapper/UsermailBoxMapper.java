@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain.mapper;
 
-import com.syswin.temail.usermail.domains.UsermailBox;
+import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -13,7 +13,7 @@ public interface UsermailBoxMapper {
    *
    * @param usermailBox 会话信息
    */
-  void saveUsermailBox(UsermailBox usermailBox);
+  void saveUsermailBox(UsermailBoxDO usermailBox);
 
   /**
    * 查找当前用户的会话列表
@@ -22,7 +22,7 @@ public interface UsermailBoxMapper {
    * @param archiveStatus 归档状态
    * @return 会话列表
    */
-  List<UsermailBox> getUsermailBoxByOwner(@Param("owner") String mail, @Param("archiveStatus") int archiveStatus);
+  List<UsermailBoxDO> getUsermailBoxByOwner(@Param("owner") String mail, @Param("archiveStatus") int archiveStatus);
 
   /**
    * 删除指定会话
@@ -40,7 +40,7 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 会话列表
    */
-  List<UsermailBox> selectByOwnerAndTo(@Param("owner") String from, @Param("mail2") String to);
+  List<UsermailBoxDO> selectByOwnerAndTo(@Param("owner") String from, @Param("mail2") String to);
 
   /**
    * 更新会话归档状态
@@ -59,5 +59,5 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 会话信息
    */
-  UsermailBox selectUsermailBox(@Param("owner") String owner, @Param("mail2") String to);
+  UsermailBoxDO selectUsermailBox(@Param("owner") String owner, @Param("mail2") String to);
 }

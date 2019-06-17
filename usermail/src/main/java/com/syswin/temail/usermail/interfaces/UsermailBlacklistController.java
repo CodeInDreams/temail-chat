@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.interfaces;
 
 import com.syswin.temail.usermail.application.UsermailBlacklistService;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
-import com.syswin.temail.usermail.domains.UsermailBlacklist;
+import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.dto.BlacklistDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -41,7 +41,7 @@ public class UsermailBlacklistController {
   public ResultDTO createBlacklist(HttpServletRequest request,
       @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDTO blacklistDto) {
     usermailBlacklistService
-        .save(new UsermailBlacklist(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
+        .save(new UsermailBlacklistDO(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
     return new ResultDTO();
   }
 
@@ -58,7 +58,7 @@ public class UsermailBlacklistController {
   public ResultDTO removeBlacklist(HttpServletRequest request,
       @ApiParam(value = "黑名单关系双方的temail地址", required = true) @RequestBody @Valid BlacklistDTO blacklistDto) {
     usermailBlacklistService
-        .remove(new UsermailBlacklist(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
+        .remove(new UsermailBlacklistDO(blacklistDto.getTemailAddress(), blacklistDto.getBlackedAddress()));
     return new ResultDTO();
   }
 
@@ -73,9 +73,9 @@ public class UsermailBlacklistController {
   @GetMapping(value = "/blacklist")
   public ResultDTO findBlacklists(
       @ApiParam(value = "发起者temail地址", required = true) @RequestParam(value = "temailAddress", defaultValue = "") String temailAddress) {
-    List<UsermailBlacklist> usermailBlacklists = usermailBlacklistService.findByTemailAddress(temailAddress);
+    List<UsermailBlacklistDO> usermailBlacklists = usermailBlacklistService.findByTemailAddress(temailAddress);
     List<String> blackedAddresses = usermailBlacklists.stream()
-        .map(UsermailBlacklist::getBlackedAddress).collect(Collectors.toList());
+        .map(UsermailBlacklistDO::getBlackedAddress).collect(Collectors.toList());
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(blackedAddresses);
     return resultDto;

@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.infrastructure.domain.mapper;
 
 
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
@@ -16,7 +16,7 @@ public interface UsermailMsgReplyMapper {
    * @param record 回复消息信息
    * @return 插入的数量
    */
-  int insert(UsermailMsgReply record);
+  int insert(UsermailMsgReplyDO record);
 
   /**
    * 查询指定消息的回复消息列表
@@ -24,7 +24,7 @@ public interface UsermailMsgReplyMapper {
    * @param dto 查询消息条件
    * @return 回复消息列表
    */
-  List<UsermailMsgReply> getMsgReplys(QueryMsgReplyDTO dto);
+  List<UsermailMsgReplyDO> getMsgReplys(QueryMsgReplyDTO dto);
 
   /**
    * 根据msgId批量删除回复消息
@@ -59,7 +59,7 @@ public interface UsermailMsgReplyMapper {
    * @param usermailMsgReply 查询回复消息列表条件
    * @return 回复消息信息
    */
-  UsermailMsgReply getMsgReplyByCondition(UsermailMsgReply usermailMsgReply);
+  UsermailMsgReplyDO getMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply);
 
   /**
    * 回复消息阅后即焚
@@ -101,7 +101,7 @@ public interface UsermailMsgReplyMapper {
    * @param status 消息状态
    * @return 回复消息的信息
    */
-  UsermailMsgReply getLastUsermailReply(@Param("parentMsgid") String parentMsgid, @Param("owner") String owner,
+  UsermailMsgReplyDO getLastUsermailReply(@Param("parentMsgid") String parentMsgid, @Param("owner") String owner,
       @Param("status") int status);
 
   /**
@@ -111,6 +111,6 @@ public interface UsermailMsgReplyMapper {
    * @param originalStatus 当前消息状态
    * @return 撤回的数量
    */
-  int revertUsermailReply(@Param("usermailMsgReply") UsermailMsgReply usermailMsgReply,
+  int revertUsermailReply(@Param("usermailMsgReply") UsermailMsgReplyDO usermailMsgReply,
       @Param("originalStatus") int originalStatus);
 }

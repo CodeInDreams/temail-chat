@@ -10,8 +10,8 @@ import com.syswin.temail.usermail.cassandra.application.INosqlMsgTemplate;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
-import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailDO;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,9 +34,9 @@ public class ConvertMsgServiceTest {
   public void convertMsgTest() {
     List<Map<String, Object>> nosqlColumnList = new ArrayList<>();
     List<Long> idList = new ArrayList<>();
-    List<Usermail> usermails = new ArrayList<>();
+    List<UsermailDO> usermails = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      Usermail userMail = new Usermail();
+      UsermailDO userMail = new UsermailDO();
       userMail.setSessionid("sessionId");
       String from = "from@syswin.com";
       String to = "to@syswin.com";
@@ -66,7 +66,7 @@ public class ConvertMsgServiceTest {
 
     Mockito.when(nosqlMsgTemplate.listMsg(KEYSPACE_USERMAILAGENT, TABLE_USERMAIL, idList.toArray(), ID, MESSAGE))
         .thenReturn(nosqlColumnList);
-    List<Usermail> convertMsg = convertMsgService.convertMsg(usermails);
+    List<UsermailDO> convertMsg = convertMsgService.convertMsg(usermails);
 
     convertMsg.forEach(usermail -> {
       if (usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
@@ -83,9 +83,9 @@ public class ConvertMsgServiceTest {
 
     List<Map<String, Object>> nosqlColumnList = new ArrayList<>();
     List<Long> idList = new ArrayList<>();
-    List<UsermailMsgReply> msgReplys = new ArrayList<>();
+    List<UsermailMsgReplyDO> msgReplys = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
-      UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+      UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
       usermailMsgReply.setSessionid("sessionId");
       String from = "from@syswin.com";
       String to = "to@syswin.com";
@@ -114,7 +114,7 @@ public class ConvertMsgServiceTest {
     Mockito
         .when(nosqlMsgTemplate.listMsg(KEYSPACE_USERMAILAGENT, TABLE_USERMAIL_MSG_REPLY, idList.toArray(), ID, MESSAGE))
         .thenReturn(nosqlColumnList);
-    List<UsermailMsgReply> usermailMsgReplies = convertMsgService.convertReplyMsg(msgReplys);
+    List<UsermailMsgReplyDO> usermailMsgReplies = convertMsgService.convertReplyMsg(msgReplys);
 
     usermailMsgReplies.forEach(usermailMsgReply -> {
       if (usermailMsgReply.getStatus() == TemailStatus.STATUS_NORMAL_0) {

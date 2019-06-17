@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain;
 
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
@@ -16,7 +16,7 @@ public interface UsermailRepo {
    *
    * @param usermail 单聊消息
    */
-  void saveUsermail(Usermail usermail);
+  void saveUsermail(UsermailDO usermail);
 
   /**
    * 根据用户会话id查询消息列表
@@ -24,7 +24,7 @@ public interface UsermailRepo {
    * @param umQueryDto 消息列表查询条件
    * @return 消息列表
    */
-  List<Usermail> getUsermail(UmQueryDTO umQueryDto);
+  List<UsermailDO> getUsermail(UmQueryDTO umQueryDto);
 
   /**
    * 根据msgId获取消息
@@ -33,7 +33,7 @@ public interface UsermailRepo {
    * @param owner 消息拥有者
    * @return 消息信息
    */
-  Usermail getUsermailByMsgid(String msgid, String owner);
+  UsermailDO getUsermailByMsgid(String msgid, String owner);
 
   /**
    * 获取用户最新一条消息
@@ -41,7 +41,7 @@ public interface UsermailRepo {
    * @param umQueryDto 查询条件
    * @return 消息列表
    */
-  List<Usermail> getLastUsermail(UmQueryDTO umQueryDto);
+  List<UsermailDO> getLastUsermail(UmQueryDTO umQueryDto);
 
   /**
    * 撤回消息
@@ -84,7 +84,7 @@ public interface UsermailRepo {
    * @param msgid 消息id
    * @return 消息列表
    */
-  List<Usermail> getUsermailListByMsgid(String msgid);
+  List<UsermailDO> getUsermailListByMsgid(String msgid);
 
   /**
    * 根据msgIds获取消息列表
@@ -93,7 +93,7 @@ public interface UsermailRepo {
    * @param msgIds 消息列表
    * @return 消息列表
    */
-  List<Usermail> getUsermailByFromToMsgIds(String from, List<String> msgIds);
+  List<UsermailDO> getUsermailByFromToMsgIds(String from, List<String> msgIds);
 
   /**
    * 更新消息的回复数
@@ -141,6 +141,6 @@ public interface UsermailRepo {
    * @param queryDto 查询条件
    * @return 消息列表
    */
-  List<Usermail> getUsermailByStatus(QueryTrashDTO queryDto);
+  List<UsermailDO> getUsermailByStatus(QueryTrashDTO queryDto);
 
 }

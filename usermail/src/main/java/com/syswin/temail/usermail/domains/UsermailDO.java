@@ -15,7 +15,7 @@ import org.apache.ibatis.type.Alias;
 @JsonInclude(Include.NON_NULL)
 @ApiModel(value = "temail Usermail")
 @Alias("UserMail")
-public class Usermail implements Serializable {
+public class UsermailDO implements Serializable {
 
   @JsonIgnore
   @ApiModelProperty(value = "PKID")
@@ -223,10 +223,10 @@ public class Usermail implements Serializable {
     this.filter = filter;
   }
 
-  public Usermail() {
+  public UsermailDO() {
   }
 
-  public Usermail(long id, String msgid, String sessionid, String from, String to, int status, int type, String owner,
+  public UsermailDO(long id, String msgid, String sessionid, String from, String to, int status, int type, String owner,
       String message, long seqNo) {
     this.id = id;
     this.msgid = msgid;
@@ -240,7 +240,7 @@ public class Usermail implements Serializable {
     this.seqNo = seqNo;
   }
 
-  public Usermail(long id, String msgid, String sessionid, String from, String to, int status, int type, String owner,
+  public UsermailDO(long id, String msgid, String sessionid, String from, String to, int status, int type, String owner,
       String message, long seqNo, byte[] zipMsg, String author, String filter) {
     this.id = id;
     this.msgid = msgid;
@@ -259,7 +259,7 @@ public class Usermail implements Serializable {
 
   @Override
   public String toString() {
-    return "Usermail{" +
+    return "UsermailDO{" +
         "id=" + id +
         ", msgid='" + msgid + '\'' +
         ", sessionid='" + sessionid + '\'' +

@@ -11,7 +11,7 @@ import org.apache.ibatis.type.Alias;
 @ApiModel(value = "黑名单")
 @JsonInclude(Include.NON_NULL)
 @Alias("UsermailBlacklist")
-public class UsermailBlacklist implements java.io.Serializable {
+public class UsermailBlacklistDO implements java.io.Serializable {
 
   @JsonIgnore
   private long id;
@@ -24,21 +24,21 @@ public class UsermailBlacklist implements java.io.Serializable {
   @JsonIgnore
   private Timestamp createTime;
 
-  public UsermailBlacklist() {
+  public UsermailBlacklistDO() {
   }
 
-  public UsermailBlacklist(long id, String temailAddress, String blackedAddress) {
+  public UsermailBlacklistDO(long id, String temailAddress, String blackedAddress) {
     this.id = id;
     this.temailAddress = temailAddress;
     this.blackedAddress = blackedAddress;
   }
 
-  public UsermailBlacklist(String temailAddress, String blackedAddress) {
+  public UsermailBlacklistDO(String temailAddress, String blackedAddress) {
     this.temailAddress = temailAddress;
     this.blackedAddress = blackedAddress;
   }
 
-  public UsermailBlacklist(long id, String temailAddress, String blackedAddress, int status, Timestamp createTime) {
+  public UsermailBlacklistDO(long id, String temailAddress, String blackedAddress, int status, Timestamp createTime) {
     this.id = id;
     this.temailAddress = temailAddress;
     this.blackedAddress = blackedAddress;
@@ -88,7 +88,7 @@ public class UsermailBlacklist implements java.io.Serializable {
 
   @Override
   public String toString() {
-    return "UsermailBlacklist{" +
+    return "UsermailBlacklistDO{" +
         "id=" + id +
         ", temailAddress='" + temailAddress + '\'' +
         ", blackedAddress='" + blackedAddress + '\'' +

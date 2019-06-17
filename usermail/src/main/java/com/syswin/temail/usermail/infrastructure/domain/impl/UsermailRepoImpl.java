@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
@@ -28,7 +28,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param usermail 单聊消息
    */
   @Override
-  public void saveUsermail(Usermail usermail) {
+  public void saveUsermail(UsermailDO usermail) {
     usermailMapper.saveUsermail(usermail);
   }
 
@@ -39,7 +39,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<Usermail> getUsermail(UmQueryDTO umQueryDto) {
+  public List<UsermailDO> getUsermail(UmQueryDTO umQueryDto) {
     return usermailMapper.getUsermail(umQueryDto);
   }
 
@@ -51,7 +51,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息信息
    */
   @Override
-  public Usermail getUsermailByMsgid(String msgid, String owner) {
+  public UsermailDO getUsermailByMsgid(String msgid, String owner) {
     return usermailMapper.getUsermailByMsgid(msgid, owner);
   }
 
@@ -62,7 +62,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<Usermail> getLastUsermail(UmQueryDTO umQueryDto) {
+  public List<UsermailDO> getLastUsermail(UmQueryDTO umQueryDto) {
     return usermailMapper.getLastUsermail(umQueryDto);
   }
 
@@ -120,7 +120,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<Usermail> getUsermailListByMsgid(String msgid) {
+  public List<UsermailDO> getUsermailListByMsgid(String msgid) {
     return usermailMapper.getUsermailListByMsgid(msgid);
   }
 
@@ -132,7 +132,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<Usermail> getUsermailByFromToMsgIds(String from, List<String> msgIds) {
+  public List<UsermailDO> getUsermailByFromToMsgIds(String from, List<String> msgIds) {
     return usermailMapper.getUsermailByFromToMsgIds(from, msgIds);
   }
 
@@ -195,7 +195,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<Usermail> getUsermailByStatus(QueryTrashDTO queryDto) {
+  public List<UsermailDO> getUsermailByStatus(QueryTrashDTO queryDto) {
     return usermailMapper.getUsermailByStatus(queryDto);
   }
 

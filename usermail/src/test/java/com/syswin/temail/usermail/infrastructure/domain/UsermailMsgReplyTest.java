@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
-import com.syswin.temail.usermail.domains.UsermailMsgReply;
+import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +31,7 @@ public class UsermailMsgReplyTest {
 
   @Test
   public void saveMsgReply() {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
@@ -44,13 +44,13 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("jkasjkaslkjaskl");
     usermailMsgReplyRepo.insert(usermailMsgReply);
-    UsermailMsgReply msgBean = getMsgBean();
+    UsermailMsgReplyDO msgBean = getMsgBean();
     Assert.assertNotNull(msgBean);
   }
 
   @Test
   public void getMsgReply() {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
@@ -81,8 +81,8 @@ public class UsermailMsgReplyTest {
     Assert.assertTrue(true);
   }
 
-  private UsermailMsgReply getMsgBean() {
-    UsermailMsgReply queryParam = new UsermailMsgReply();
+  private UsermailMsgReplyDO getMsgBean() {
+    UsermailMsgReplyDO queryParam = new UsermailMsgReplyDO();
     queryParam.setParentMsgid("syswin-1543456947958");
     queryParam.setMsgid("syswin-1543572005953");
     queryParam.setFrom("A2018");
@@ -93,7 +93,7 @@ public class UsermailMsgReplyTest {
 
   @Test
   public void deleteMsgByParentIdAndOwner() {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
@@ -120,7 +120,7 @@ public class UsermailMsgReplyTest {
 
   @Test
   public void destoryAfterRead() {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
@@ -142,7 +142,7 @@ public class UsermailMsgReplyTest {
   public void batchUpdateByParentMsgIdsTest() {
     String owner = "A2019";
 
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     String parentMsgid = "syswin-1543456947959";
     usermailMsgReply.setParentMsgid(parentMsgid);
     usermailMsgReply.setFrom("A2019");
@@ -168,7 +168,7 @@ public class UsermailMsgReplyTest {
     String owner = "A2018";
     int status = TemailStatus.STATUS_NORMAL_0;
 
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(status);
@@ -195,7 +195,7 @@ public class UsermailMsgReplyTest {
     int seqNo_first = 0;
     int seqNo_second = 1;
 
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid(parentMsgid);
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(status);
@@ -213,7 +213,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setSeqNo(seqNo_second);
     usermailMsgReplyRepo.insert(usermailMsgReply);
 
-    UsermailMsgReply lastUsermailReply = usermailMsgReplyRepo.getLastUsermailReply(parentMsgid, owner, status);
+    UsermailMsgReplyDO lastUsermailReply = usermailMsgReplyRepo.getLastUsermailReply(parentMsgid, owner, status);
 
     assertThat(lastUsermailReply).isNotNull();
     assertThat(lastUsermailReply.getSeqNo()).isEqualTo(seqNo_second);
@@ -222,7 +222,7 @@ public class UsermailMsgReplyTest {
 
   @Test
   public void revertTest() {
-    UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);

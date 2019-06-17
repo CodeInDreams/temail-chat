@@ -13,7 +13,7 @@ import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
-import com.syswin.temail.usermail.domains.Usermail;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
@@ -116,7 +116,7 @@ public class UsermailAgentController {
       @ApiParam(value = "过滤的seqId") @RequestParam(value = "filterSeqIds", required = false, defaultValue = "") String filterSeqIds) {
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
-    List<Usermail> temailList = usermailService
+    List<UsermailDO> temailList = usermailService
         .getMails(cdtpHeaderDto, from, to, seqId, pageSize, filterSeqIds, signal);
 
     resultDto.setData(temailList);
@@ -235,7 +235,7 @@ public class UsermailAgentController {
    * @param from 发送者。
    * @param to 接收者。
    * @param msgIds 批量的消息id。
-   * @return 返回ResultDTO对象，返回内容包含批量消息内容{@link Usermail}。
+   * @return 返回ResultDTO对象，返回内容包含批量消息内容{@link UsermailDO}。
    * @See ResultDTO
    */
   @ApiOperation(value = "批量查询消息(0x 1009)")
@@ -248,7 +248,7 @@ public class UsermailAgentController {
       LOGGER.warn("batchQueryMsgs msgIds is empty & from ={} & to={}", from, to);
       return new ResultDTO();
     }
-    List<Usermail> usermailList = usermailService.batchQueryMsgs(getHeaderInfoFromRequest(request), from, to, msgIds);
+    List<UsermailDO> usermailList = usermailService.batchQueryMsgs(getHeaderInfoFromRequest(request), from, to, msgIds);
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(usermailList);
     return resultDto;
@@ -261,7 +261,7 @@ public class UsermailAgentController {
    * @param from 发送者。
    * @param to 接收者。
    * @param msgIds 批量的消息id。
-   * @return 返回ResultDTO对象，返回内容包含批量消息内容{@link Usermail}。
+   * @return 返回ResultDTO对象，返回内容包含批量消息内容{@link UsermailDO}。
    * @See ResultDTO
    */
   @ApiOperation(value = "批量查询消息回复总数(0x 100A)")
@@ -274,7 +274,7 @@ public class UsermailAgentController {
       LOGGER.warn("batchQueryMsgs msgIds is empty & from ={} & to={}", from, to);
       return new ResultDTO();
     }
-    List<Usermail> usermailList = usermailService
+    List<UsermailDO> usermailList = usermailService
         .batchQueryMsgsReplyCount(getHeaderInfoFromRequest(request), from, to, msgIds);
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(usermailList);
@@ -370,7 +370,7 @@ public class UsermailAgentController {
    * @param pageSize 每次拉取数量
    * @param timestamp 上次消息拉取timestamp
    * @param signal 向前向后拉取标识，值为before或者after,默认before。
-   * @return 返回ResultDTO对象，包含废纸篓消息列表，具体字段见{@Link Usermail}。
+   * @return 返回ResultDTO对象，包含废纸篓消息列表，具体字段见{@Link UsermailDO}。
    * @See ResultDTO
    */
   @ApiOperation(value = "同步废纸篓消息(0x 2004)", notes = "还拉取废纸篓消息")
@@ -386,7 +386,7 @@ public class UsermailAgentController {
     if (timestamp == 0) {
       timestamp = System.currentTimeMillis();
     }
-    List<Usermail> temailList = usermailService.getMsgFromTrash(cdtpHeaderDto, from, timestamp, pageSize, signal);
+    List<UsermailDO> temailList = usermailService.getMsgFromTrash(cdtpHeaderDto, from, timestamp, pageSize, signal);
     resultDto.setData(temailList);
     return resultDto;
   }

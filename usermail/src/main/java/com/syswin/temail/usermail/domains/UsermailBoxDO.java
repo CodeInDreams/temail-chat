@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import org.apache.ibatis.type.Alias;
 
 @Alias("UsermailBox")
-public class UsermailBox implements java.io.Serializable {
+public class UsermailBoxDO implements java.io.Serializable {
 
   @ApiModelProperty(value = "PKID")
   private long id;
@@ -69,10 +69,10 @@ public class UsermailBox implements java.io.Serializable {
     this.archiveStatus = archiveStatus;
   }
 
-  public UsermailBox() {
+  public UsermailBoxDO() {
   }
 
-  public UsermailBox(long id, String sessionid, String mail2, String owner) {
+  public UsermailBoxDO(long id, String sessionid, String mail2, String owner) {
     this.id = id;
     this.sessionid = sessionid;
     this.mail2 = mail2;
@@ -81,7 +81,7 @@ public class UsermailBox implements java.io.Serializable {
 
   @Override
   public String toString() {
-    final StringBuilder sb = new StringBuilder("UsermailBox{");
+    final StringBuilder sb = new StringBuilder("UsermailBoxDO{");
     sb.append("id=").append(id);
     sb.append(", sessionid='").append(sessionid).append('\'');
     sb.append(", mail2='").append(mail2).append('\'');

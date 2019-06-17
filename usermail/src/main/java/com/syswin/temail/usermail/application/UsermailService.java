@@ -16,8 +16,8 @@ import com.syswin.temail.usermail.core.dto.Meta;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.core.util.SeqIdFilter;
-import com.syswin.temail.usermail.domains.Usermail;
-import com.syswin.temail.usermail.domains.UsermailBox;
+import com.syswin.temail.usermail.domains.UsermailBoxDO;
+import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.CreateUsermailDTO;
 import com.syswin.temail.usermail.dto.DeleteMailBoxQueryDTO;
 import com.syswin.temail.usermail.dto.MailboxDTO;
@@ -89,9 +89,9 @@ public class UsermailService {
     String sessionId = usermailSessionService.getSessionID(from, to);
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
-    UsermailBox usermailBox = usermailBoxRepo.selectUsermailBox(owner, target);
+    UsermailBoxDO usermailBox = usermailBoxRepo.selectUsermailBox(owner, target);
     if (usermailBox == null) {
-      UsermailBox box = new UsermailBox(usermailAdapter.getPkID(), sessionId, target, owner);
+      UsermailBoxDO box = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner);
       usermailBoxRepo.saveUsermailBox(box);
     }
     return sessionId;
@@ -120,7 +120,7 @@ public class UsermailService {
     long seqNo = usermailAdapter.getMsgSeqNo(from, to, owner);
     String sessionid = saveUsermailBoxInfo(from, to, owner);
     long pkid = usermailAdapter.getPkID();
-    Usermail mail = new Usermail(pkid, usermail.getMsgId(), sessionid,
+    UsermailDO mail = new UsermailDO(pkid, usermail.getMsgId(), sessionid,
         from, to, TemailStatus.STATUS_NORMAL_0, usermail.getType(), owner, "",
         seqNo, msgCompressor.zipWithDecode(usermail.getMsgData()), author, filterStr);
     Meta meta = usermail.getMeta();
@@ -164,7 +164,7 @@ public class UsermailService {
    * @return 单聊会话消息
    */
   @Transactional(readOnly = true)
-  public List<Usermail> getMails(CdtpHeaderDTO headerInfo, String from, String to, long fromSeqNo,
+  public List<UsermailDO> getMails(CdtpHeaderDTO headerInfo, String from, String to, long fromSeqNo,
       int pageSize, String filterSeqIds, String signal) {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setFromSeqNo(fromSeqNo);
@@ -173,8 +173,8 @@ public class UsermailService {
     umQueryDto.setSessionid(sessionid);
     umQueryDto.setPageSize(pageSize);
     umQueryDto.setOwner(from);
-    List<Usermail> result = convertMsgService.convertMsg(usermailRepo.getUsermail(umQueryDto));
-    List<Usermail> resultFilter = new ArrayList<>();
+    List<UsermailDO> result = convertMsgService.convertMsg(usermailRepo.getUsermail(umQueryDto));
+    List<UsermailDO> resultFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(result)) {
       boolean isAfter = "after".equals(signal);
       SeqIdFilter filter = new SeqIdFilter(filterSeqIds, isAfter);
@@ -242,10 +242,10 @@ public class UsermailService {
   public List<MailboxDTO> mailboxes(String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
     Map<String, String> localMailBoxes = CollectionUtils.isEmpty(usermailBoxes) ? new HashMap<>(0) : usermailBoxes;
-    List<UsermailBox> dbBoxes = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
+    List<UsermailBoxDO> dbBoxes = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
     List<MailboxDTO> mailBoxes = new ArrayList<>(dbBoxes.size());
-    List<Usermail> lastUsermail;
-    for (UsermailBox dbBox : dbBoxes) {
+    List<UsermailDO> lastUsermail;
+    for (UsermailBoxDO dbBox : dbBoxes) {
       String to = dbBox.getMail2();
       if (Objects.equals(usermailAdapter.getLastMsgId(from, to), localMailBoxes.get(to))) {
         // 最新的msgId相同，不做处理
@@ -286,7 +286,7 @@ public class UsermailService {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setOwner(from);
     umQueryDto.setSessionid(usermailSessionService.getSessionID(from, to));
-    List<Usermail> usermails = usermailRepo.getLastUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.getLastUsermail(umQueryDto);
     if (CollectionUtils.isEmpty(usermails)) {
       usermailAdapter.deleteLastMsgId(from, to);
     } else {
@@ -327,7 +327,7 @@ public class UsermailService {
   @Transactional
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
-    Usermail usermail = usermailRepo.getUsermailByMsgid(msgId, owner);
+    UsermailDO usermail = usermailRepo.getUsermailByMsgid(msgId, owner);
     //添加消息状态判断，防止通知重发
     if (usermail != null && usermail.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
@@ -389,8 +389,8 @@ public class UsermailService {
    * @return 单聊对象列表
    */
   @Transactional(readOnly = true)
-  public List<Usermail> batchQueryMsgs(CdtpHeaderDTO cdtpHeaderDto, String from, String to, List<String> msgIds) {
-    List<Usermail> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
+  public List<UsermailDO> batchQueryMsgs(CdtpHeaderDTO cdtpHeaderDto, String from, String to, List<String> msgIds) {
+    List<UsermailDO> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
   }
 
@@ -404,9 +404,9 @@ public class UsermailService {
    * @return 单聊回复消息列表
    */
   @Transactional(readOnly = true)
-  public List<Usermail> batchQueryMsgsReplyCount(CdtpHeaderDTO cdtpHeaderDto, String from, String to,
+  public List<UsermailDO> batchQueryMsgsReplyCount(CdtpHeaderDTO cdtpHeaderDto, String from, String to,
       List<String> msgIds) {
-    List<Usermail> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
+    List<UsermailDO> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     for (int i = 0; i < usermailList.size(); i++) {
       usermailList.get(i).setMessage(null);
       usermailList.get(i).setZipMsg(null);
@@ -504,7 +504,7 @@ public class UsermailService {
    * @return 废纸篓消息列表
    */
   @Transactional(readOnly = true)
-  public List<Usermail> getMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, long timestamp, int pageSize,
+  public List<UsermailDO> getMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, long timestamp, int pageSize,
       String signal) {
     QueryTrashDTO queryDto = new QueryTrashDTO();
     queryDto.setOwner(temail);
@@ -512,7 +512,7 @@ public class UsermailService {
     queryDto.setPageSize(pageSize);
     queryDto.setUpdateTime(new Timestamp(timestamp));
     queryDto.setStatus(TemailStatus.STATUS_TRASH_4);
-    List<Usermail> result = usermailRepo.getUsermailByStatus(queryDto);
+    List<UsermailDO> result = usermailRepo.getUsermailByStatus(queryDto);
     return convertMsgService.convertMsg(result);
   }
 
