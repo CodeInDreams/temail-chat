@@ -437,12 +437,12 @@ public class UsermailService {
    * @param trashMails 待还原的废纸篓消息列表
    */
   @TemailShardingTransactional(shardingField = "#temail")
-  public void revertMsgToTrash(CdtpHeaderDTO headerInfo, String temail, List<TrashMailDTO> trashMails) {
+  public void revertMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, List<TrashMailDTO> trashMails) {
     List<String> msgIds = new ArrayList<>(trashMails.size());
     for (TrashMailDTO dto : trashMails) {
       msgIds.add(dto.getMsgId());
     }
-    usermailRepo.updateStatusByTemail(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
+    usermailRepo.revertMsgFromTrash(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
     usermailMsgReplyRepo.batchUpdateByParentMsgIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
     usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }

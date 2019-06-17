@@ -138,7 +138,7 @@ public interface UsermailMapper {
    * @param originalStatus 当前消息状态
    * @return 更新的数量
    */
-  int updateStatusByTemail(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
+  int revertMsgFromTrash(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
       @Param("status") int status, @Param("originalStatus") int originalStatus);
 
   /**

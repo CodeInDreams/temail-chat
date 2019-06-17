@@ -361,7 +361,7 @@ public class UsermailAgentControllerTest {
     );
     TrashMailsDTO trashMailsDto = new TrashMailsDTO(from, mailDtoList);
     Mockito.doNothing().when(usermailService)
-        .revertMsgToTrash(headerInfo, "bob@temail.com", mailDtoList);
+        .revertMsgFromTrash(headerInfo, "bob@temail.com", mailDtoList);
     ObjectMapper mapper = new ObjectMapper();
     mockMvc.perform(
         put("/usermail/msg/trash")

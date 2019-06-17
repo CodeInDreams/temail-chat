@@ -335,7 +335,7 @@ public class UsermailMapperTest {
     trashMails.setTo(to);
     trashMails.setMsgId(msgid);
 
-    int count = usermailRepo.updateStatusByTemail(Arrays.asList(trashMails), owner, TemailStatus.STATUS_NORMAL_0);
+    int count = usermailRepo.revertMsgFromTrash(Arrays.asList(trashMails), owner, TemailStatus.STATUS_NORMAL_0);
 
     assertThat(count).isOne();
   }

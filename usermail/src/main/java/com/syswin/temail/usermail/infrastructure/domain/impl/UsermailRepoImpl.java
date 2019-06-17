@@ -176,16 +176,16 @@ public class UsermailRepoImpl implements UsermailRepo {
   }
 
   /**
-   * 根据msgIds批量移入废纸篓
+   * 还原废纸篓消息
    *
-   * @param trashMails 要删除的消息列表
+   * @param trashMails 废纸篓消息
    * @param owner 消息拥有着
    * @param status 消息状态
    * @return 更新的数量
    */
   @Override
-  public int updateStatusByTemail(List<TrashMailDTO> trashMails, String owner, int status) {
-    return usermailMapper.updateStatusByTemail(trashMails, owner, status, TemailStatus.STATUS_TRASH_4);
+  public int revertMsgFromTrash(List<TrashMailDTO> trashMails, String owner, int status) {
+    return usermailMapper.revertMsgFromTrash(trashMails, owner, status, TemailStatus.STATUS_TRASH_4);
   }
 
   /**

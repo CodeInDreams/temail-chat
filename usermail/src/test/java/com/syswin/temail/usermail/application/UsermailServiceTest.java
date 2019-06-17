@@ -552,14 +552,14 @@ public class UsermailServiceTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add(trashMailDtos.get(0).getMsgId());
     msgIds.add(trashMailDtos.get(1).getMsgId());
-    usermailService.revertMsgToTrash(headerInfo, temail, trashMailDtos);
+    usermailService.revertMsgFromTrash(headerInfo, temail, trashMailDtos);
     verify(usermail2NotfyMqService)
         .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_36);
     ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
-        .updateStatusByTemail(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
+        .revertMsgFromTrash(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(trashMailDtos, listArgumentCaptor.getValue());
     assertEquals(temail, temailCaptor.getValue());

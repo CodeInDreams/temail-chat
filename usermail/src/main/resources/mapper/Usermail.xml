@@ -173,7 +173,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <update id="updateStatusByTemail">
+  <update id="revertMsgFromTrash">
     update `usermail`
     set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
     where `status`= #{originalStatus}

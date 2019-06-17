@@ -133,7 +133,7 @@ public interface UsermailRepo {
    * @param status 消息状态
    * @return 更新的数量
    */
-  int updateStatusByTemail(List<TrashMailDTO> trashMails, String owner, int status);
+  int revertMsgFromTrash(List<TrashMailDTO> trashMails, String owner, int status);
 
   /**
    * 查询指定状态的消息列表

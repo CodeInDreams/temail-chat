@@ -311,12 +311,12 @@ public class UsermailAgentController {
    */
   @ApiOperation(value = "还原废纸篓消息(0x 2001)", notes = "还原废纸篓消息")
   @PutMapping(value = "/usermail/msg/trash")
-  public ResultDTO revertMsgToTrash(HttpServletRequest request,
+  public ResultDTO revertMsgFromTrash(HttpServletRequest request,
       @RequestBody @Valid TrashMailsDTO revertTrashMailDto) {
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService
-        .revertMsgToTrash(cdtpHeaderDto, revertTrashMailDto.getFrom(), revertTrashMailDto.getTrashMails());
+        .revertMsgFromTrash(cdtpHeaderDto, revertTrashMailDto.getFrom(), revertTrashMailDto.getTrashMails());
     return resultDto;
   }
 
