@@ -176,7 +176,7 @@
   <update id="updateStatusByTemail">
     update `usermail`
     set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
-    where `status`= 4
+    where `status`= #{originalStatus}
     <if test="trashMails != null">
       and `msgid` in
       <foreach item="trashMail" collection="trashMails"

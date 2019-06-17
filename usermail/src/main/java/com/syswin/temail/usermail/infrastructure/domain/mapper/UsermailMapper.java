@@ -130,15 +130,16 @@ public interface UsermailMapper {
       @Param("status") int status);
 
   /**
-   * 根据msgIds批量移入废纸篓
+   * 还原废纸篓消息
    *
    * @param trashMails 要删除的消息列表
    * @param owner 消息拥有着
    * @param status 消息状态
+   * @param originalStatus 当前消息状态
    * @return 更新的数量
    */
   int updateStatusByTemail(@Param("trashMails") List<TrashMailDTO> trashMails, @Param("owner") String owner,
-      @Param("status") int status);
+      @Param("status") int status, @Param("originalStatus") int originalStatus);
 
   /**
    * 查询指定状态的消息列表

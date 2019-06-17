@@ -1,5 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
+import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
@@ -184,7 +185,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    */
   @Override
   public int updateStatusByTemail(List<TrashMailDTO> trashMails, String owner, int status) {
-    return usermailMapper.updateStatusByTemail(trashMails, owner, status);
+    return usermailMapper.updateStatusByTemail(trashMails, owner, status, TemailStatus.STATUS_TRASH_4);
   }
 
   /**
