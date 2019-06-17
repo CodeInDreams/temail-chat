@@ -106,6 +106,9 @@ public class UsermailMapperTest {
   public void destoryAfterRead() {
     usermailRepo.destoryAfterRead("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+    Usermail usermail = usermailRepo
+        .getUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
+    Assert.assertNull(usermail);
   }
 
   @Test
