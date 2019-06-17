@@ -18,12 +18,12 @@ public class UmBlacklistProxy {
 
   /**
    * @param from 发件人
-   * @param blacker 收件人
+   * @param to 收件人
    * @description 检查发件人是否在收件人黑名单中
    */
   @Transactional
-  public void checkInBlacklist(String from, String blacker) {
-    int count = usermailBlacklistService.isInBlacklist(from, blacker);
+  public void checkInBlacklist(String from, String to) {
+    int count = usermailBlacklistService.isInBlacklist(from, to);
     if (count != 0) {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_IN_BLACKLIST);
     }
