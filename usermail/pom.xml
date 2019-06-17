@@ -245,10 +245,6 @@
                   <groupId>com.syswin.temail</groupId>
                   <artifactId>usermail-cassandra</artifactId>
                 </include>
-                <include>
-                  <groupId>com.syswin.temail</groupId>
-                  <artifactId>temail-sharding</artifactId>
-                </include>
               </includes>
             </configuration>
             <executions>
