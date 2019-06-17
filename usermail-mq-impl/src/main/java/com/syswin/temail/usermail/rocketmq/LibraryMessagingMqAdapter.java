@@ -40,9 +40,11 @@ public class LibraryMessagingMqAdapter implements IMqAdapter {
     }
     try {
       mqProducer.send(message, topic, tag, null);
-    } catch (UnsupportedEncodingException | InterruptedException | MessagingException e) {
+    } catch (UnsupportedEncodingException | MessagingException e) {
       LOGGER.error("send message error", e);
       throw new UserMailException(e);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     }
     return true;
   }
