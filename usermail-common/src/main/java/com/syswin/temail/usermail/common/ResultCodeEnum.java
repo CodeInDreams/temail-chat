@@ -39,7 +39,7 @@ public enum ResultCodeEnum {
     return code;
   }
 
-  public void setCode(int code) {
+  void setCode(int code) {
     this.code = code;
   }
 
@@ -47,7 +47,7 @@ public enum ResultCodeEnum {
     return message;
   }
 
-  public void setMessage(String message) {
+  void setMessage(String message) {
     this.message = message;
   }
 
