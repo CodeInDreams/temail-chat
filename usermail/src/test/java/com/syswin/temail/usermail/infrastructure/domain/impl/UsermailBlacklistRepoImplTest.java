@@ -31,14 +31,16 @@ public class UsermailBlacklistRepoImplTest {
   public void insert() {
     UsermailBlacklist usermailBlacklist = new UsermailBlacklist(1, "from@msg.com", "blacklist@msgseal.com");
     Mockito.when(usermailBlacklistMapper.insert(usermailBlacklist)).thenReturn(1);
-    usermailBlacklistRepoImpl.insert(usermailBlacklist);
+    int row = usermailBlacklistRepoImpl.insert(usermailBlacklist);
+    Assert.assertEquals(1,row);
   }
 
   @Test
   public void deleteByAddress() {
     UsermailBlacklist usermailBlacklist = new UsermailBlacklist(2, "from2@msgseal.com", "blacklist2@msgseal.com");
     Mockito.when(usermailBlacklistMapper.deleteByAddresses(usermailBlacklist)).thenReturn(1);
-    usermailBlacklistRepoImpl.deleteByAddresses(usermailBlacklist);
+    int row = usermailBlacklistRepoImpl.deleteByAddresses(usermailBlacklist);
+    Assert.assertEquals(1,row);
   }
 
   @Test
