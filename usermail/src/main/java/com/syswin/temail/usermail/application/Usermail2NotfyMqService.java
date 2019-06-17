@@ -11,7 +11,6 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -248,10 +247,10 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
     eventMap.put(X_PACKET_ID, headerInfo.getxPacketId());
     eventMap.put(TIMESTAMP, System.currentTimeMillis());
     eventMap.put(SESSION_MESSAGE_TYPE, eventType);
-    if (StringUtils.isNoneEmpty(from)) {
+    if (null == from) {
       eventMap.put(FROM, from);
     }
-    if (StringUtils.isNoneEmpty(to)) {
+    if (null == to) {
       eventMap.put(TO, to);
     }
   }
