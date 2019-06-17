@@ -247,10 +247,10 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
     eventMap.put(X_PACKET_ID, headerInfo.getxPacketId());
     eventMap.put(TIMESTAMP, System.currentTimeMillis());
     eventMap.put(SESSION_MESSAGE_TYPE, eventType);
-    if (null == from) {
+    if (null != from) {
       eventMap.put(FROM, from);
     }
-    if (null == to) {
+    if (null != to) {
       eventMap.put(TO, to);
     }
   }
