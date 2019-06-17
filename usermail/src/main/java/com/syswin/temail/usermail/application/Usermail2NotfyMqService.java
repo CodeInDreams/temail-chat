@@ -20,6 +20,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
 
   private final IMqAdapter mqAdapter;
   private final UsermailConfig usermailConfig;
+  private final Gson gs = new Gson();
 
   @Autowired
   public Usermail2NotfyMqService(IMqAdapter mqAdapter, UsermailConfig usermailConfig) {
@@ -44,24 +45,17 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    */
   public void sendMqMsgSaveMail(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgid,
       String toMsg, long seqNo, int eventType, int attachmentSize, String author, List<String> filter) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(18);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(OWNER, owner);
-    map.put(MSGID, msgid);
+    Map<String, Object> eventMap = new HashMap<>(18);
+    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    eventMap.put(OWNER, owner);
+    eventMap.put(MSGID, msgid);
     // 会话消息已接收 (未读+1)
-    map.put(SESSION_MESSAGE_TYPE, eventType);
-    map.put(TO_MSG, toMsg);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SEQ_NO, seqNo);
-    map.put(ATTACHMENT_SIZE, attachmentSize);
-    map.put(AUTHOR, author);
-    map.put(FILTER, filter);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+    eventMap.put(TO_MSG, toMsg);
+    eventMap.put(SEQ_NO, seqNo);
+    eventMap.put(ATTACHMENT_SIZE, attachmentSize);
+    eventMap.put(AUTHOR, author);
+    eventMap.put(FILTER, filter);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -71,21 +65,14 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param from 发件人
    * @param to 收件人
    * @param msgid 消息id
-   * @param type 事件类型
+   * @param eventType 事件类型
    */
   public void sendMqAfterUpdateStatus(CdtpHeaderDTO headerInfo, String from, String to,
-      String msgid, int type) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(10);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    map.put(MSGID, msgid);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+      String msgid, int eventType) {
+    Map<String, Object> eventMap = new HashMap<>(10);
+    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    eventMap.put(MSGID, msgid);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -97,22 +84,15 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param to 收件人
    * @param owner 消息所属人
    * @param msgid 消息id
-   * @param type 事件类型
+   * @param eventType 事件类型
    */
   public void sendMqUpdateMsg(String xPacketId, String cdtpHeader, String from, String to,
-      String owner, String msgid, int type) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(12);
-    map.put(CDTP_HEADER, cdtpHeader);
-    map.put(X_PACKET_ID, xPacketId);
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(OWNER, owner);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    map.put(MSGID, msgid);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+      String owner, String msgid, int eventType) {
+    Map<String, Object> eventMap = new HashMap<>(12);
+    comboNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
+    eventMap.put(OWNER, owner);
+    eventMap.put(MSGID, msgid);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -126,17 +106,10 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    */
   public void sendMqAfterDeleteSession(CdtpHeaderDTO headerInfo, String from, String to, boolean deleteAllMsg,
       int eventType) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(11);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(SESSION_MESSAGE_TYPE, eventType);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(DELETE_ALL_MSG, deleteAllMsg);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+    Map<String, Object> eventMap = new HashMap<>(11);
+    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    eventMap.put(DELETE_ALL_MSG, deleteAllMsg);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -154,23 +127,16 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    */
   public void sendMqSaveMsgReply(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgId,
       String toMsg, long seqNo, int attachmentSize, String parentMsgId) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(17);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(OWNER, owner);
-    map.put(PARENT_MSGID, parentMsgId);
-    map.put(MSGID, msgId);
+    Map<String, Object> eventMap = new HashMap<>(17);
+    comboNormalParam(headerInfo, EVENT_TYPE_18, from, to, eventMap);
+    eventMap.put(OWNER, owner);
+    eventMap.put(PARENT_MSGID, parentMsgId);
+    eventMap.put(MSGID, msgId);
     // 会话消息已接收 (未读+1)
-    map.put(SESSION_MESSAGE_TYPE, EVENT_TYPE_18);
-    map.put(TO_MSG, toMsg);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SEQ_NO, seqNo);
-    map.put(ATTACHMENT_SIZE, attachmentSize);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+    eventMap.put(TO_MSG, toMsg);
+    eventMap.put(SEQ_NO, seqNo);
+    eventMap.put(ATTACHMENT_SIZE, attachmentSize);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -182,24 +148,17 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param to 收件人
    * @param owner 消息所属人
    * @param msgId 消息id
-   * @param type 事件类型
+   * @param eventType 事件类型
    * @param parentMsgId 父消息id
    */
   public void sendMqAfterUpdateMsgReply(String xPacketId, String cdtpHeader, String from, String to,
-      String owner, String msgId, int type, String parentMsgId) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(13);
-    map.put(CDTP_HEADER, cdtpHeader);
-    map.put(X_PACKET_ID, xPacketId);
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(OWNER, owner);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    map.put(MSGID, msgId);
-    map.put(PARENT_MSGID, parentMsgId);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+      String owner, String msgId, int eventType, String parentMsgId) {
+    Map<String, Object> eventMap = new HashMap<>(13);
+    comboNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
+    eventMap.put(OWNER, owner);
+    eventMap.put(MSGID, msgId);
+    eventMap.put(PARENT_MSGID, parentMsgId);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -210,24 +169,17 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param to 收件人
    * @param owner 消息所属人
    * @param msgIds 消息id列表
-   * @param type 事件类型
+   * @param eventType 事件类型
    * @param parentMsgId 父消息id
    */
   public void sendMqAfterRemoveMsgReply(CdtpHeaderDTO headerInfo, String from, String to, String owner,
-      List<String> msgIds, int type, String parentMsgId) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(13);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(OWNER, owner);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    map.put(MSGID, gs.toJson(msgIds));
-    map.put(PARENT_MSGID, parentMsgId);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+      List<String> msgIds, int eventType, String parentMsgId) {
+    Map<String, Object> eventMap = new HashMap<>(13);
+    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    eventMap.put(OWNER, owner);
+    eventMap.put(MSGID, gs.toJson(msgIds));
+    eventMap.put(PARENT_MSGID, parentMsgId);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -236,19 +188,12 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
-   * @param type 事件类型（归档或取消归档）
+   * @param eventType 事件类型（归档或取消归档）
    */
-  public void sendMqAfterUpdateArchiveStatus(CdtpHeaderDTO headerInfo, String from, String to, int type) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(9);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+  public void sendMqAfterUpdateArchiveStatus(CdtpHeaderDTO headerInfo, String from, String to, int eventType) {
+    Map<String, Object> eventMap = new HashMap<>(9);
+    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -258,22 +203,15 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param from 发件人
    * @param to 收件人
    * @param msgids 消息id列表
-   * @param type 事件类型
+   * @param eventType 事件类型
    */
   public void sendMqMoveTrashNotify(CdtpHeaderDTO headerInfo, String from, String to,
-      List<String> msgids, int type) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(12);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(FROM, from);
-    map.put(TO, to);
-    map.put(OWNER, from);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
-    map.put(MSGID, gs.toJson(msgids));
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, from, s);
+      List<String> msgids, int eventType) {
+    Map<String, Object> eventMap = new HashMap<>(12);
+    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    eventMap.put(OWNER, from);
+    eventMap.put(MSGID, gs.toJson(msgids));
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
   /**
@@ -282,22 +220,38 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param headerInfo 头信息（header和xPacketId）
    * @param owner 消息所属人
    * @param trashMailDtoList 废纸篓信息列表
-   * @param type 事件类型
+   * @param eventType 事件类型
    */
   public void sendMqTrashMsgOpratorNotify(CdtpHeaderDTO headerInfo, String owner,
-      List<TrashMailDTO> trashMailDtoList, int type) {
-    Gson gs = new Gson();
-    Map<String, Object> map = new HashMap<>(9);
-    map.put(CDTP_HEADER, headerInfo.getCdtpHeader());
-    map.put(X_PACKET_ID, headerInfo.getxPacketId());
-    map.put(OWNER, owner);
-    map.put(TIMESTAMP, System.currentTimeMillis());
-    map.put(SESSION_MESSAGE_TYPE, type);
+      List<TrashMailDTO> trashMailDtoList, int eventType) {
+    Map<String, Object> eventMap = new HashMap<>(9);
+    comboNormalParam(headerInfo, eventType, null, null, eventMap);
+    eventMap.put(OWNER, owner);
     if (trashMailDtoList != null && !trashMailDtoList.isEmpty()) {
-      map.put(ParamsKey.SessionEventKey.TRASH_MSG_INFO, gs.toJson(trashMailDtoList));
+      eventMap.put(ParamsKey.SessionEventKey.TRASH_MSG_INFO, gs.toJson(trashMailDtoList));
     }
-    String s = gs.toJson(map);
-    mqAdapter.sendMessage(usermailConfig.mqTopic, owner, s);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, owner, gs.toJson(eventMap));
   }
 
+  /**
+   * @param headerInfo 头信息（header和xPacketId）
+   * @param eventType 事件类型
+   * @param from 发件人
+   * @param to 收件人
+   * @param eventMap 参数集合
+   * @description 组装公共参数
+   */
+  private void comboNormalParam(CdtpHeaderDTO headerInfo, int eventType, String from, String to,
+      Map<String, Object> eventMap) {
+    eventMap.put(CDTP_HEADER, headerInfo.getCdtpHeader());
+    eventMap.put(X_PACKET_ID, headerInfo.getxPacketId());
+    eventMap.put(TIMESTAMP, System.currentTimeMillis());
+    eventMap.put(SESSION_MESSAGE_TYPE, eventType);
+    if (null != from) {
+      eventMap.put(FROM, from);
+    }
+    if (null != to) {
+      eventMap.put(TO, to);
+    }
+  }
 }

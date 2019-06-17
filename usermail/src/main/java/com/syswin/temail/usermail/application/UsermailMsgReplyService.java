@@ -2,12 +2,11 @@ package com.syswin.temail.usermail.application;
 
 import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET_ID_SUFFIX;
 
-import com.syswin.temail.transactional.TemailShardingTransactional;
-import com.syswin.temail.usermail.common.ResultCodeEnum;
-import com.syswin.temail.usermail.common.ReplyCountEnum;
-import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
+import com.syswin.temail.usermail.common.ReplyCountEnum;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
@@ -16,8 +15,8 @@ import com.syswin.temail.usermail.core.util.SeqIdFilter;
 import com.syswin.temail.usermail.domains.Usermail;
 import com.syswin.temail.usermail.domains.UsermailMsgReply;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 @Service
@@ -59,7 +59,6 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description  发送单聊回复消息
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
@@ -69,8 +68,9 @@ public class UsermailMsgReplyService {
    * @param type 消息类型
    * @param attachmentSize 附件大小
    * @param owner 消息所属人
+   * @Description 发送单聊回复消息
    */
-  @TemailShardingTransactional(shardingField = "#owner")
+  @Transactional
   public Map createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message, String msgId,
       String parentMsgId, int type, int attachmentSize, String owner) {
     String sessionid = usermailSessionService.getSessionID(from, to);
@@ -96,7 +96,6 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description 撤回单聊回复消息
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 发件人
@@ -104,8 +103,9 @@ public class UsermailMsgReplyService {
    * @param owner 消息所属人
    * @param replyMsgParentId 父消息id
    * @param msgId 消息id
+   * @Description 撤回单聊回复消息
    */
-  @TemailShardingTransactional(shardingField = "#owner")
+  @Transactional
   public void revertMsgReply(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String replyMsgParentId, String msgId) {
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
@@ -131,14 +131,14 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description 撤回单聊回复消息
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgReplyId 父消息id
    * @param msgId 消息id
    * @param from 发件人
    * @param to 收件人
+   * @Description 撤回单聊回复消息
    */
-  @TemailShardingTransactional(shardingField = "#from")
+  @Transactional
   public void revertMsgReply(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, String msgId, String from,
       String to) {
     msgReplyTypeValidate(parentMsgReplyId);
@@ -151,14 +151,14 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description 删除单聊回复消息
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgReplyId 父消息id
    * @param msgIds 消息id列表
    * @param from 发件人
    * @param to 收件人
+   * @Description 删除单聊回复消息
    */
-  @TemailShardingTransactional(shardingField = "#from")
+  @Transactional
   public void removeMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
       String to) {
     Usermail usermail = msgReplyTypeValidate(parentMsgReplyId, from);
@@ -187,17 +187,17 @@ public class UsermailMsgReplyService {
 
 
   /**
-   * @Description 拉取单聊回复消息
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgid 父消息id
    * @param pageSize 分页大小
-   * @param seqId  回复消息序列号、上次消息拉取seqId
+   * @param seqId 回复消息序列号、上次消息拉取seqId
    * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
    * @param owner 消息所属人
    * @param filterSeqIds 过滤断层seqId
-   * @return  拉取到的单聊回复消息列表
+   * @return 拉取到的单聊回复消息列表
+   * @Description 拉取单聊回复消息
    */
-  @TemailShardingTransactional(shardingField = "#owner")
+  @Transactional
   public List<UsermailMsgReply> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
       String signal, String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
@@ -224,7 +224,6 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description 阅后即焚回复消息
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 收件人
@@ -232,8 +231,9 @@ public class UsermailMsgReplyService {
    * @param owner 消息所属人
    * @param msgId 消息id
    * @param replyMsgParentId 父消息id
+   * @Description 阅后即焚回复消息
    */
-  @TemailShardingTransactional(shardingField = "#owner")
+  @Transactional
   public void destoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
       String replyMsgParentId) {
     int count = usermailMsgReplyRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
@@ -254,13 +254,13 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description 阅后即焚回复消息
    * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
-   * @param to  收件人
+   * @param to 收件人
    * @param msgId 消息id
+   * @Description 阅后即焚回复消息
    */
-  @TemailShardingTransactional(shardingField = "#from")
+  @Transactional
   public void destoryAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
     UsermailMsgReply usermailMsgReply = new UsermailMsgReply();
     usermailMsgReply.setOwner(from);
@@ -283,9 +283,9 @@ public class UsermailMsgReplyService {
 
 
   /**
-   * @Description 校验源消息类型是否为合法
    * @param parentMsgId 父消息id
    * @return 单聊对象列表
+   * @Description 校验源消息类型是否为合法
    */
   private List<Usermail> msgReplyTypeValidate(String parentMsgId) {
     List<Usermail> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
@@ -297,10 +297,10 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * @Description 校验源消息类型是否为合法
    * @param parentMsgId 父消息id
    * @param owner 消息所属人
    * @return 单聊对象信息
+   * @Description 校验源消息类型是否为合法
    */
   public Usermail msgReplyTypeValidate(String parentMsgId, String owner) {
 
