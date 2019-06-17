@@ -45,6 +45,8 @@ public class LibraryMessagingMqAdapter implements IMqAdapter {
       throw new UserMailException(e);
     } catch (InterruptedException e) {
       Thread.currentThread().interrupt();
+      LOGGER.error("thread interrupted error", e);
+      throw new UserMailException(e);
     }
     return true;
   }
