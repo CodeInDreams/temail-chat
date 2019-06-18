@@ -20,7 +20,7 @@ public class UsermailBlacklistServiceTest {
   @Test
   public void saveTest() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
-    Mockito.when(iUsermailAdapter.getUsermailBlacklistPkID()).thenReturn(1l);
+    Mockito.when(iUsermailAdapter.getUsermailBlacklistPkID()).thenReturn(1L);
     usermailBlacklistService.save(usermailBlacklist);
     verify(usermailBlacklistRepo).insert(usermailBlacklist);
   }
