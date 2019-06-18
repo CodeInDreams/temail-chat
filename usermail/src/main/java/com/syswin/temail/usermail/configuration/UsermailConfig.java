@@ -6,9 +6,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsermailConfig {
 
+  /**
+   * 发送给通知服务的topic
+   */
   @Value("${spring.rocketmq.topic.notify}")
   public String mqTopic = "temail-usermail";
 
+  /**
+   * 自消费的topic
+   */
   @Value("${spring.rocketmq.topic.usermail}")
   public String mqUserMailAgentTopic = "temail-usermailagent";
 
