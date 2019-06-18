@@ -433,7 +433,7 @@ public class UsermailServiceTest {
 
     Mockito.when(usermailRepo.getUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
     Mockito.when(convertMsgService.convertMsg(expectMailList)).thenReturn(expectMailList);
-    actualMailList = usermailService.batchQueryMsgs(headerInfo, from, to, msgIds);
+    actualMailList = usermailService.batchQueryMsgs(from, msgIds);
     Assert.assertEquals(actualMailList, expectMailList);
   }
 
@@ -463,7 +463,7 @@ public class UsermailServiceTest {
 
     Mockito.when(usermailRepo.getUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
 
-    actualMailList = usermailService.batchQueryMsgsReplyCount(headerInfo, from, to, msgIds);
+    actualMailList = usermailService.batchQueryMsgsReplyCount(from, msgIds);
     Assert.assertEquals(actualMailList, expectMailList);
   }
 
@@ -656,11 +656,12 @@ public class UsermailServiceTest {
     QueryTrashDTO queryTrashDto = new QueryTrashDTO(new Timestamp(timestamp), pageSize, TemailStatus.STATUS_TRASH_4,
         signal, temail);
     List<UsermailDO> result = Arrays.asList(
-        new UsermailDO(22, "111", "", temail, "", 0, TemailType.TYPE_NORMAL_0, temail, "", 0, "".getBytes(), temail, null)
+        new UsermailDO(22, "111", "", temail, "", 0, TemailType.TYPE_NORMAL_0, temail, "", 0, "".getBytes(), temail,
+            null)
     );
     when(usermailRepo.getUsermailByStatus((queryTrashDto))).thenReturn(result);
     when(convertMsgService.convertMsg(result)).thenReturn(result);
-    List<UsermailDO> msgFromTrash = usermailService.getMsgFromTrash(headerInfo, temail, timestamp, pageSize, signal);
+    List<UsermailDO> msgFromTrash = usermailService.getMsgFromTrash(temail, timestamp, pageSize, signal);
     ArgumentCaptor<QueryTrashDTO> trashCaptor = ArgumentCaptor.forClass(QueryTrashDTO.class);
     verify(usermailRepo).getUsermailByStatus(trashCaptor.capture());
     QueryTrashDTO dtos = trashCaptor.getValue();

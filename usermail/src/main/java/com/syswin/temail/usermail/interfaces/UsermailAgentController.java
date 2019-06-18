@@ -228,7 +228,6 @@ public class UsermailAgentController {
   /**
    * 批量查询发送者与接收者会话消息。
    *
-   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
    * @param from 发送者。
    * @param to 接收者。
    * @param msgIds 批量的消息id。
@@ -237,7 +236,7 @@ public class UsermailAgentController {
    */
   @ApiOperation(value = "批量查询消息(0x 1009)")
   @GetMapping(value = "/usermail/msg")
-  public ResultDTO batchQueryMsgs(HttpServletRequest request,
+  public ResultDTO batchQueryMsgs(
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "接收者", required = true) @RequestParam(value = "to", defaultValue = "") String to,
       @ApiParam(value = "msgId列表", required = true) @RequestParam(value = "msgIds", defaultValue = "") List<String> msgIds) {
@@ -245,7 +244,7 @@ public class UsermailAgentController {
       LOGGER.warn("batchQueryMsgs msgIds is empty & from ={} & to={}", from, to);
       return new ResultDTO();
     }
-    List<UsermailDO> usermailList = usermailService.batchQueryMsgs(getHeaderInfoFromRequest(request), from, to, msgIds);
+    List<UsermailDO> usermailList = usermailService.batchQueryMsgs(from, msgIds);
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(usermailList);
     return resultDto;
@@ -254,7 +253,6 @@ public class UsermailAgentController {
   /**
    * 批量查询发送者与接收者会话消息的回复消息总数。
    *
-   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
    * @param from 发送者。
    * @param to 接收者。
    * @param msgIds 批量的消息id。
@@ -263,16 +261,15 @@ public class UsermailAgentController {
    */
   @ApiOperation(value = "批量查询消息回复总数(0x 100A)")
   @GetMapping(value = "/usermail/replyCount")
-  public ResultDTO batchQueryMsgsReplyCount(HttpServletRequest request,
+  public ResultDTO batchQueryMsgsReplyCount(
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "接收者", required = true) @RequestParam(value = "to", defaultValue = "") String to,
       @ApiParam(value = "msgId列表", required = true) @RequestParam(value = "msgIds", defaultValue = "") List<String> msgIds) {
     if (CollectionUtils.isEmpty(msgIds)) {
-      LOGGER.warn("batchQueryMsgs msgIds is empty & from ={} & to={}", from, to);
+      LOGGER.warn("batchQueryReplyMsgs msgIds is empty & from ={} & to={}", from, to);
       return new ResultDTO();
     }
-    List<UsermailDO> usermailList = usermailService
-        .batchQueryMsgsReplyCount(getHeaderInfoFromRequest(request), from, to, msgIds);
+    List<UsermailDO> usermailList = usermailService.batchQueryMsgsReplyCount(from, msgIds);
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(usermailList);
     return resultDto;
@@ -362,7 +359,6 @@ public class UsermailAgentController {
   /**
    * 拉取发送者废纸篓消息列表
    *
-   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
    * @param from 发送者
    * @param pageSize 每次拉取数量
    * @param timestamp 上次消息拉取timestamp
@@ -373,17 +369,15 @@ public class UsermailAgentController {
   @ApiOperation(value = "同步废纸篓消息(0x 2004)", notes = "还拉取废纸篓消息")
   @GetMapping(value = "/usermail/msg/trash")
   public ResultDTO getMsgFromTrash(
-      HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "分页大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
       @ApiParam(value = "上次消息拉取timestamp", required = true) @RequestParam(value = "timestamp", defaultValue = "0") long timestamp,
       @ApiParam(value = "向前向后拉取标识", required = true) @RequestParam(value = "signal", defaultValue = "before") String signal) {
     ResultDTO resultDto = new ResultDTO();
-    CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     if (timestamp == 0) {
       timestamp = System.currentTimeMillis();
     }
-    List<UsermailDO> temailList = usermailService.getMsgFromTrash(cdtpHeaderDto, from, timestamp, pageSize, signal);
+    List<UsermailDO> temailList = usermailService.getMsgFromTrash(from, timestamp, pageSize, signal);
     resultDto.setData(temailList);
     return resultDto;
   }

@@ -258,7 +258,7 @@ public class UsermailAgentControllerTest {
     expectMailList.add(mail1);
     expectMailList.add(mail2);
     expectMailList.add(mail3);
-    Mockito.doReturn(expectMailList).when(usermailService).batchQueryMsgs(headerInfo, from, to, msgIds);
+    Mockito.doReturn(expectMailList).when(usermailService).batchQueryMsgs(from, msgIds);
 
     JsonArray msgIdsArray = new JsonArray();
     msgIdsArray.add(msgIds.get(0));
@@ -305,7 +305,7 @@ public class UsermailAgentControllerTest {
     expectMailList.add(mail1);
     expectMailList.add(mail2);
     expectMailList.add(mail3);
-    Mockito.doReturn(expectMailList).when(usermailService).batchQueryMsgsReplyCount(headerInfo, from, to, msgIds);
+    Mockito.doReturn(expectMailList).when(usermailService).batchQueryMsgsReplyCount(from, msgIds);
 
     JsonArray msgIdsArray = new JsonArray();
     msgIdsArray.add(msgIds.get(0));
@@ -426,7 +426,7 @@ public class UsermailAgentControllerTest {
         new UsermailDO(2, "123213142", "4324234", "bob@temail.com", "alice@temail.com", 0, 0,
             "bob@temail.com", "test message1", 0)
     );
-    Mockito.doReturn(usermails).when(usermailService).getMsgFromTrash(headerInfo, from, timestamp, pageSize, signal);
+    Mockito.doReturn(usermails).when(usermailService).getMsgFromTrash(from, timestamp, pageSize, signal);
     MvcResult result = mockMvc.perform(
         get("/usermail/msg/trash")
             .accept(MediaType.APPLICATION_JSON_UTF8)
@@ -444,6 +444,7 @@ public class UsermailAgentControllerTest {
     String actual = result.getResponse().getContentAsString();
     Assert.assertEquals(expect, actual);
   }
+
   @Test
   public void shouldUpdateUsermailBoxArchiveStatus() throws Exception {
     UpdateArchiveDTO archiveDto =

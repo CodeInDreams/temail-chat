@@ -110,7 +110,7 @@ public class UsermailService {
       String other) {
     String from = usermail.getFrom();
     String to = usermail.getTo();
-    String msgid = usermail.getMsgId();
+    String msgId = usermail.getMsgId();
     String author = usermail.getAuthor();
     List<String> filter = usermail.getFilter();
     String filterStr = null;
@@ -144,13 +144,13 @@ public class UsermailService {
         break;
     }
     usermail2NotfyMqService
-        .sendMqMsgSaveMail(headerInfo, from, to, owner, msgid, usermail.getMsgData(), seqNo, eventType, attachmentSize,
+        .sendMqMsgSaveMail(headerInfo, from, to, owner, msgId, usermail.getMsgData(), seqNo, eventType, attachmentSize,
             author, filter);
-    usermailAdapter.setLastMsgId(owner, other, msgid);
+    usermailAdapter.setLastMsgId(owner, other, msgId);
     Map<String, Object> result = new HashMap<>(2);
     final String msgIdKey = "msgId";
     final String seqIdKey = "seqId";
-    result.put(msgIdKey, msgid);
+    result.put(msgIdKey, msgId);
     result.put(seqIdKey, mail.getSeqNo());
     return result;
   }
@@ -172,8 +172,8 @@ public class UsermailService {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setFromSeqNo(fromSeqNo);
     umQueryDto.setSignal(signal);
-    String sessionid = usermailSessionService.getSessionID(from, to);
-    umQueryDto.setSessionid(sessionid);
+    String sessionId = usermailSessionService.getSessionID(from, to);
+    umQueryDto.setSessionid(sessionId);
     umQueryDto.setPageSize(pageSize);
     umQueryDto.setOwner(from);
     List<UsermailDO> mails = convertMsgService.convertMsg(usermailRepo.getUsermail(umQueryDto));
@@ -199,14 +199,14 @@ public class UsermailService {
    * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
-   * @param msgid 消息id
+   * @param msgId 消息id
    */
   @Transactional
-  public void revert(CdtpHeaderDTO headerInfo, String from, String to, String msgid) {
-    usermailMqService.sendMqRevertMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgid);
+  public void revert(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
+    usermailMqService.sendMqRevertMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId);
     usermailMqService
         .sendMqRevertMsg(headerInfo.getxPacketId() + PACKET_ID_SUFFIX, headerInfo.getCdtpHeader(), from, to, from,
-            msgid);
+            msgId);
   }
 
   /**
@@ -217,20 +217,20 @@ public class UsermailService {
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
-   * @param msgid 消息id
+   * @param msgId 消息id
    */
   @Transactional
-  public void revertMqHandler(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
+  public void revertMqHandler(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId) {
     int count = usermailRepo
-        .revertUsermail(new RevertMailDTO(owner, msgid, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
+        .revertUsermail(new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     // 判断是否撤回成功，防止通知重复发送
     if (count > 0) {
       usermail2NotfyMqService
-          .sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
+          .sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgId, SessionEventType.EVENT_TYPE_2);
     } else {
       LOGGER.warn(
           "Message revert failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
-          xPacketId, cdtpHeader, from, to, msgid, owner);
+          xPacketId, cdtpHeader, from, to, msgId, owner);
     }
   }
 
@@ -386,14 +386,12 @@ public class UsermailService {
   /**
    * 批量查询单聊信息
    *
-   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
-   * @param to 收件人
    * @param msgIds 消息id列表
    * @return 单聊对象列表
    */
   @Transactional(readOnly = true)
-  public List<UsermailDO> batchQueryMsgs(CdtpHeaderDTO cdtpHeaderDto, String from, String to, List<String> msgIds) {
+  public List<UsermailDO> batchQueryMsgs(String from, List<String> msgIds) {
     List<UsermailDO> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
   }
@@ -401,15 +399,12 @@ public class UsermailService {
   /**
    * 批量查询单聊回复消息
    *
-   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
-   * @param to 收件人
    * @param msgIds 消息id列表
    * @return 单聊回复消息列表
    */
   @Transactional(readOnly = true)
-  public List<UsermailDO> batchQueryMsgsReplyCount(CdtpHeaderDTO cdtpHeaderDto, String from, String to,
-      List<String> msgIds) {
+  public List<UsermailDO> batchQueryMsgsReplyCount(String from, List<String> msgIds) {
     List<UsermailDO> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     for (int i = 0; i < usermailList.size(); i++) {
       usermailList.get(i).setMessage(null);
@@ -500,7 +495,6 @@ public class UsermailService {
   /**
    * 同步废纸篓消息列表
    *
-   * @param headerInfo 头信息（header和xPacketId）
    * @param temail 操作的temail
    * @param timestamp 时间戳
    * @param pageSize 分页大小
@@ -508,8 +502,7 @@ public class UsermailService {
    * @return 废纸篓消息列表
    */
   @Transactional(readOnly = true)
-  public List<UsermailDO> getMsgFromTrash(CdtpHeaderDTO headerInfo, String temail, long timestamp, int pageSize,
-      String signal) {
+  public List<UsermailDO> getMsgFromTrash(String temail, long timestamp, int pageSize, String signal) {
     QueryTrashDTO queryDto = new QueryTrashDTO();
     queryDto.setOwner(temail);
     queryDto.setSignal(signal);
