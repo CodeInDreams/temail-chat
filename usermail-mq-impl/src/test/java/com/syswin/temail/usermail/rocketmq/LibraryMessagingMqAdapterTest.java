@@ -1,11 +1,15 @@
 package com.syswin.temail.usermail.rocketmq;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.syswin.library.messaging.MessagingException;
 import com.syswin.library.messaging.MqProducer;
 import com.syswin.library.messaging.rocketmq.RocketMqProducer;
+import com.syswin.temail.usermail.core.exception.UserMailException;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,11 +62,9 @@ public class LibraryMessagingMqAdapterTest {
   }
 
   /**
-   * Before Mockito can be used for mocking final classes and methods, it needs to be configured.
-   * We need to add a text file to the project’s src/test/resources/mockito-extensions directory
-   * named org.mockito.plugins.MockMaker and add a single line of text:
-   * mock-maker-inline
-   * @throws Exception
+   * Before Mockito can be used for mocking final classes and methods, it needs to be configured. We need to add a text
+   * file to the project’s src/test/resources/mockito-extensions directory named org.mockito.plugins.MockMaker and add a
+   * single line of text: mock-maker-inline
    */
   @Test
   public void sendMessageSuccess() throws Exception {
@@ -85,5 +87,32 @@ public class LibraryMessagingMqAdapterTest {
     assertThat(keysCaptor.getValue()).isEqualTo(null);
     assertThat(result).isTrue();
   }
+
+  @Test(expected = UserMailException.class)
+  public void sendMessageFailThrowUnsupportedEncodingException()
+      throws InterruptedException, UnsupportedEncodingException, MessagingException {
+    String topic = "topic";
+    String tag = "tag";
+    String message = "message";
+    when(rocketMQProperties.getProducerGroup()).thenReturn(producerGroup);
+    RocketMqProducer rocketMqProducer = Mockito.mock(RocketMqProducer.class);
+    when(mqProducerMap.get(producerGroup)).thenReturn(rocketMqProducer);
+    doThrow(UnsupportedEncodingException.class).when(rocketMqProducer).send(message, topic, tag, null);
+    libraryMessagingMqAdapter.sendMessage(topic, tag, message);
+  }
+
+  @Test(expected = UserMailException.class)
+  public void sendMessageFailThrowInterruptedException()
+      throws InterruptedException, UnsupportedEncodingException, MessagingException {
+    String topic = "topic";
+    String tag = "tag";
+    String message = "message";
+    when(rocketMQProperties.getProducerGroup()).thenReturn(producerGroup);
+    RocketMqProducer rocketMqProducer = Mockito.mock(RocketMqProducer.class);
+    when(mqProducerMap.get(producerGroup)).thenReturn(rocketMqProducer);
+    doThrow(InterruptedException.class).when(rocketMqProducer).send(message, topic, tag, null);
+    libraryMessagingMqAdapter.sendMessage(topic, tag, message);
+  }
+
 
 }
