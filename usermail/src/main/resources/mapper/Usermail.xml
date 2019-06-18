@@ -25,46 +25,11 @@
     <result column="filter" jdbcType="VARCHAR" property="filter"/>
   </resultMap>
 
-  <!--<sql id="selectColumn">-->
-    <!--`id`-->
-    <!--,-->
-    <!--`msgid`,-->
-    <!--`sessionid`,-->
-    <!--`from`,-->
-    <!--`to`,-->
-    <!--`type`,-->
-    <!--`status`,-->
-    <!--`seq_no`,-->
-    <!--`create_time`,-->
-    <!--`at`,-->
-    <!--`topic`,-->
-    <!--`last_reply_msgid`,-->
-    <!--`reply_count`,-->
-    <!--`update_time`,-->
-    <!--`owner`,-->
-    <!--`zip_msg`-->
-  <!--</sql>-->
-
   <insert id="saveUsermail" parameterType="UserMail" keyProperty="id">
     insert into usermail (`id`, `msgid`, `sessionid`, `from`, `to`, `type`, `status`, `seq_no`, `owner`,
                           `at`, `topic`, `zip_msg`, `author`,`filter`)
     values (#{id}, #{msgid}, #{sessionid}, #{from}, #{to}, #{type}, #{status}, #{seqNo}, #{owner}, #{at}, #{topic}, #{zipMsg}, #{author}, #{filter})
   </insert>
-
-  <!--<update id="updateUsermailFromMsg" >-->
-  <!--update usermail-->
-  <!--set `from_msg`= #{fromMsg,jdbcType=VARCHAR}-->
-  <!--where-->
-  <!--`msgid` =#{msgid,jdbcType=VARCHAR}-->
-  <!--</update>-->
-
-  <!--<update id="updateUsermailToMsg" >-->
-  <!--update usermail-->
-  <!--set `to_msg`= #{toMsg,jdbcType=VARCHAR}-->
-  <!--where-->
-  <!--`msgid` =#{msgid,jdbcType=VARCHAR}-->
-  <!--</update>-->
-
 
   <select id="getUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
     select *

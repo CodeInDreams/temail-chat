@@ -27,19 +27,11 @@
    and `mail2` = #{mail2,jdbcType=VARCHAR}
   </delete>
 
-
   <select id="selectByOwnerAndTo" parameterType="String" resultType="UsermailBox">
     select * from usermail_box
     where `owner` = #{owner,jdbcType=VARCHAR}
     and `mail2` = #{mail2,jdbcType=VARCHAR}
   </select>
-
-  <!--<select id="getBySessionid" parameterType="String" resultMap="UsermailBoxResultMap">-->
-    <!--select-->
-    <!--<include refid="selectColumn"/>-->
-    <!--from usermail_box-->
-    <!--where `sessionid` = #{sessionid,jdbcType=VARCHAR}-->
-  <!--</select>-->
 
   <select id="selectUsermailBox" resultMap="UsermailBoxResultMap">
     select
