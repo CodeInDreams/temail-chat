@@ -1,6 +1,8 @@
 package com.syswin.temail.usermail.application;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -9,12 +11,13 @@ import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
@@ -89,7 +92,7 @@ public class UsermailMsgReplyServiceTest {
   }
 
   @Test
-  public void revertMsgReply() {
+  public void testMqRevertMsgReply() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String to = "to@temail.com";
@@ -117,6 +120,37 @@ public class UsermailMsgReplyServiceTest {
   }
 
   @Test
+  public void testRevertMsgReplyParentMsgNull() {
+    String xPacketId = UUID.randomUUID().toString();
+    String header = "CDTP-header";
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    String msgid = "msgid";
+    String parentMsgid = "string201810241832";
+    List<UsermailDO> usermails = new ArrayList<>(1);
+    usermails.add(new UsermailDO());
+    when(usermailRepo.getUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
+    when(usermailMsgReplyRepo.revertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    when(usermailRepo.getUsermailByMsgid(anyString(), anyString())).thenReturn(null);
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
+  }
+
+  @Test
+  public void testRevertMsgReplyFail() {
+    String xPacketId = UUID.randomUUID().toString();
+    String header = "CDTP-header";
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    String msgid = "msgid";
+    String parentMsgid = "string201810241832";
+    List<UsermailDO> usermails = new ArrayList<>(1);
+    usermails.add(new UsermailDO());
+    when(usermailRepo.getUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
+    when(usermailMsgReplyRepo.revertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(0);
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
+  }
+
+  @Test
   public void revertMsgReplyTest() {
     String to = "to@temail.com";
     String from = "from@temail.com";
@@ -126,25 +160,6 @@ public class UsermailMsgReplyServiceTest {
     usermailMsgReplyService.revertMsgReply(headerInfo, parentMsgid, msgid, from, to);
     verify(usermailMqService)
         .sendMqRevertReplyMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, parentMsgid, msgid);
-   /* verify(usermailMqService)
-        .sendMqRevertReplyMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, from, parentMsgid,
-            msgid);
-    ArgumentCaptor<String> xPacketIdCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> headerCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> parentIdCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<Integer> typeCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermail2NotifyMqService)
-        .sendMqAfterUpdateMsgReply(xPacketIdCaptor.capture(),headerCaptor.capture(), fromCaptor.capture(), toCaptor.capture(),
-            ownerCaptor.capture(), msgIdCaptor.capture(), typeCaptor.capture(), parentIdCaptor.capture());
-    assertEquals(from, fromCaptor.getValue());
-    assertEquals(msgid, msgIdCaptor.getValue());
-    assertEquals(parentMsgid, parentIdCaptor.getValue());
-    int type = typeCaptor.getValue();
-    assertEquals(SessionEventType.EVENT_TYPE_19, type);*/
   }
 
   @Test
@@ -169,6 +184,60 @@ public class UsermailMsgReplyServiceTest {
     Assert.assertEquals(msgIds, msgIds2);
   }
 
+  @Test(expected = IllegalGmArgsException.class)
+  public void testRemoveMsgReplyEmptyMsgids() {
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    List<String> msgIds = new ArrayList<>(1);
+    String parentMsgid = "string201810241832";
+    List<UsermailDO> usermails = new ArrayList<>(1);
+    usermails.add(new UsermailDO());
+    usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
+  }
+
+  @Test(expected = IllegalGmArgsException.class)
+  public void testRemoveMsgReplyEmptyParentMsg() {
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    List<String> msgIds = new ArrayList<>(1);
+    String parentMsgid = "string201810241832";
+    List<UsermailDO> usermails = new ArrayList<>(1);
+    usermails.add(new UsermailDO());
+    when(usermailRepo.getUsermailByMsgid(any(), any())).thenReturn(null);
+    usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
+  }
+
+  @Test
+  public void testRemoveMsgReplyRevertLastMsgid() {
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    List<String> msgIds = new ArrayList<>(1);
+    msgIds.add("msgids");
+    msgIds.add("lastReplyMsgid");
+    String parentMsgid = "string201810241832";
+    List<UsermailDO> usermails = new ArrayList<>(1);
+    usermails.add(new UsermailDO());
+    UsermailMsgReplyDO lastUsermailMsgReply = new UsermailMsgReplyDO();
+    lastUsermailMsgReply.setMsgid("updatelastMsgid");
+    when(usermailMsgReplyRepo.getLastUsermailReply(any(), any(), anyInt())).thenReturn(lastUsermailMsgReply);
+    when(usermailMsgReplyRepo.deleteBatchMsgReplyStatus(any(), any())).thenReturn(1);
+    UsermailDO usermailByMsgid = new UsermailDO();
+    usermailByMsgid.setLastReplyMsgId("lastReplyMsgid");
+    usermailByMsgid.setOwner(from);
+    when(usermailRepo.getUsermailByMsgid(any(), any())).thenReturn(usermailByMsgid);
+    usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
+    ArgumentCaptor<String> parentCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> lastMsgIdCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<Integer> countCaptor = ArgumentCaptor.forClass(Integer.class);
+    verify(usermailRepo)
+        .updateReplyCountAndLastReplyMsgid(parentCaptor.capture(), ownerCaptor.capture(), countCaptor.capture(), lastMsgIdCaptor.capture());
+    verify(usermail2NotifyMqService).sendMqAfterRemoveMsgReply(any(), any(), any(), any(), any(), anyInt(), any());
+    assertEquals(parentCaptor.getValue(), parentMsgid);
+    assertEquals(ownerCaptor.getValue(), from);
+    assertEquals(lastMsgIdCaptor.getValue(), lastUsermailMsgReply.getMsgid());
+  }
+
   @Test
   public void getMsgReply() {
     int pageSize = 20;
@@ -179,28 +248,23 @@ public class UsermailMsgReplyServiceTest {
     String owner = "from@temail.com";
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    String filterSeqIds = "";
-    List<UsermailDO> usermails = new ArrayList<>(1);
-    UsermailDO usermail = new UsermailDO();
-    usermail.setZipMsg(msgCompressor.zipWithDecode(Base64.getEncoder().encodeToString("demo msg".getBytes())));
-    usermails.add(usermail);
-
+    String filterSeqIds = "5_3,3_1";
     List<UsermailMsgReplyDO> usermailMsgReplyList = new ArrayList<>(1);
-    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
-    usermailMsgReply.setParentMsgid(parentMsgid);
-    usermailMsgReply.setOwner(owner);
-    usermailMsgReply.setStatus(1);
-    usermailMsgReply.setMsgid(msgid);
-    usermailMsgReply.setTo(to);
-    usermailMsgReply.setFrom(from);
-    usermailMsgReply.setSeqNo(seqId);
-    usermailMsgReply.setZipMsg(msgCompressor.zipWithDecode(Base64.getEncoder().encodeToString("demo msg".getBytes())));
-    usermailMsgReplyList.add(usermailMsgReply);
-    when(usermailRepo.getUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
+    for (int i = 1; i < 11; i++) {
+      UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
+      usermailMsgReply.setParentMsgid(parentMsgid);
+      usermailMsgReply.setOwner(owner);
+      usermailMsgReply.setStatus(1);
+      usermailMsgReply.setMsgid(msgid);
+      usermailMsgReply.setTo(to);
+      usermailMsgReply.setFrom(from);
+      usermailMsgReply.setSeqNo(i);
+      usermailMsgReply.setZipMsg(msgCompressor.zipWithDecode(Base64.getEncoder().encodeToString("demo msg".getBytes())));
+      usermailMsgReplyList.add(usermailMsgReply);
+    }
+    UsermailDO usermail = new UsermailDO();
     when(usermailRepo.getUsermailByMsgid(parentMsgid, owner)).thenReturn(usermail);
-    when(usermailMsgReplyRepo.getMsgReplys(Mockito.any(QueryMsgReplyDTO.class)))
-        .thenReturn(usermailMsgReplyList);
-    when(convertMsgService.convertReplyMsg(usermailMsgReplyList)).thenReturn(usermailMsgReplyList);
+    when(convertMsgService.convertReplyMsg(any())).thenReturn(usermailMsgReplyList);
     List<UsermailMsgReplyDO> result = usermailMsgReplyService
         .getMsgReplys(parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
     ArgumentCaptor<QueryMsgReplyDTO> argumentCaptor = ArgumentCaptor.forClass(QueryMsgReplyDTO.class);
@@ -210,7 +274,7 @@ public class UsermailMsgReplyServiceTest {
     Assert.assertEquals(seqId, queryMsgReplyDto.getFromSeqNo());
     Assert.assertEquals(signal, queryMsgReplyDto.getSignal());
     Assert.assertEquals(parentMsgid, queryMsgReplyDto.getParentMsgid());
-    Assert.assertEquals(result, usermailMsgReplyList);
+    Assert.assertEquals(2, result.size());
   }
 
   @Test
@@ -228,6 +292,9 @@ public class UsermailMsgReplyServiceTest {
     when(usermailRepo.getUsermailListByMsgid(reply.getParentMsgid())).thenReturn(usermails);
     usermailMsgReplyService.destroyAfterRead(headerInfo, from, to, msgId);
     //verify(usermailMqService).sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),from,to,from, msgId, reply.getParentMsgid());
+    usermailMsgReplyService.destoryAfterRead(headerInfo, from, to, msgId);
+    //verify(usermailMqService).sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),
+    // from,to,from, msgId, reply.getParentMsgid());
     verify(usermailMqService)
         .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
             reply.getParentMsgid());
