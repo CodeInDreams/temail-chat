@@ -116,7 +116,6 @@ public class UsermailMsgReplyController {
   /**
    * 拉取单聊回复消息列表。
    *
-   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
    * @param parentMsgid 单聊消息id
    * @param pageSize 分页大小
    * @param seqId 上次消息拉取seqId
@@ -128,16 +127,15 @@ public class UsermailMsgReplyController {
    */
   @ApiOperation(value = "拉取单聊回复消息(0x 0001 1008)", notes = "拉取单聊回复消息")
   @GetMapping(value = "/usermail/msg/reply")
-  public ResultDTO getMailMsgReplys(HttpServletRequest request,
+  public ResultDTO getMailMsgReplys(
       @ApiParam(value = "源消息msgid", required = true) @RequestParam(value = "parentMsgId", defaultValue = "") String parentMsgid,
       @ApiParam(value = "分页大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,
       @ApiParam(value = "上次消息拉取seqID", required = true) @RequestParam(value = "seqId", defaultValue = "0") long seqId,
       @ApiParam(value = "消息所属人", required = true) @RequestParam(value = "from") String from,
       @ApiParam(value = "向前向后拉取标识", required = true) @RequestParam(value = "signal", defaultValue = "before") String signal,
       @ApiParam(value = "断层的seqId范围") @RequestParam(value = "filterSeqIds", required = false, defaultValue = "") String filterSeqIds) {
-    CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     List<UsermailMsgReplyDO> data = usermailMsgReplyService
-        .getMsgReplys(cdtpHeaderDto, parentMsgid, pageSize, seqId, signal, from, filterSeqIds);
+        .getMsgReplys(parentMsgid, pageSize, seqId, signal, from, filterSeqIds);
     ResultDTO resultDto = new ResultDTO();
     resultDto.setData(data);
     return resultDto;

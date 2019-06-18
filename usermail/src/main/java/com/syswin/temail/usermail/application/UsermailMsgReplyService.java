@@ -192,7 +192,6 @@ public class UsermailMsgReplyService {
   /**
    * 拉取单聊回复消息
    *
-   * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgid 父消息id
    * @param pageSize 分页大小
    * @param seqId 回复消息序列号、上次消息拉取seqId
@@ -201,9 +200,9 @@ public class UsermailMsgReplyService {
    * @param filterSeqIds 过滤断层seqId
    * @return 拉取到的单聊回复消息列表
    */
-  @Transactional
-  public List<UsermailMsgReplyDO> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize,
-      long seqId, String signal, String owner, String filterSeqIds) {
+
+  public List<UsermailMsgReplyDO> getMsgReplys(String parentMsgid, int pageSize, long seqId, String signal,
+      String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
     QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
     dto.setFromSeqNo(seqId);

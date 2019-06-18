@@ -202,7 +202,7 @@ public class UsermailMsgReplyServiceTest {
         .thenReturn(usermailMsgReplyList);
     when(convertMsgService.convertReplyMsg(usermailMsgReplyList)).thenReturn(usermailMsgReplyList);
     List<UsermailMsgReplyDO> result = usermailMsgReplyService
-        .getMsgReplys(headerInfo, parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
+        .getMsgReplys(parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
     ArgumentCaptor<QueryMsgReplyDTO> argumentCaptor = ArgumentCaptor.forClass(QueryMsgReplyDTO.class);
     verify(usermailMsgReplyRepo).getMsgReplys(argumentCaptor.capture());
     QueryMsgReplyDTO queryMsgReplyDto = argumentCaptor.getValue();
