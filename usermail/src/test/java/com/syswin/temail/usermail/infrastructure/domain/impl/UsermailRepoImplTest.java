@@ -95,7 +95,7 @@ public class UsermailRepoImplTest {
   public void destroyAfterRead() {
     String owner = "owner";
     String msgid = "msgid";
-    int status = TemailStatus.STATUS_DESTORY_AFTER_READ_2;
+    int status = TemailStatus.STATUS_DESTROY_AFTER_READ_2;
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCap = ArgumentCaptor.forClass(Integer.class);

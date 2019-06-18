@@ -105,7 +105,7 @@ public class UsermailMapperTest {
   @Test
   public void destroyAfterRead() {
     usermailRepo.destroyAfterRead("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
-        TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+        TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     UsermailDO usermail = usermailRepo
         .getUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermail);

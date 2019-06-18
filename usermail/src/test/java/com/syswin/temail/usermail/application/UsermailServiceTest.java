@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.application;
 
-import static com.syswin.temail.usermail.common.Constants.TemailType.TYPE_DESTORY_AFTER_READ_1;
+import static com.syswin.temail.usermail.common.Constants.TemailType.TYPE_DESTROY_AFTER_READ_1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -121,12 +121,12 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void sendMailWhenDestoryAfterRead() {
+  public void sendMailWhenDestroyAfterRead() {
     String msgid = "msgId";
     String from = "from@temail.com";
     String to = "to@temail.com";
     String owner = "from@temail.com";
-    int type = TemailType.TYPE_DESTORY_AFTER_READ_1;
+    int type = TemailType.TYPE_DESTROY_AFTER_READ_1;
     int storeType = 2;
     String msgData = "msgData";
     int attachmentSize = 100;
@@ -383,7 +383,7 @@ public class UsermailServiceTest {
     String to = "to@temail.com";
     String msgId = "msgid";
     UsermailDO usermail = new UsermailDO();
-    usermail.setType(TYPE_DESTORY_AFTER_READ_1);
+    usermail.setType(TYPE_DESTROY_AFTER_READ_1);
     usermail2NotifyMqService.sendMqAfterUpdateStatus(headerInfo, to, from, msgId, SessionEventType.EVENT_TYPE_3);
     usermailService.destroyAfterRead(headerInfo, from, to, msgId);
     //调用"阅后即焚已读"接口，已变更为只发MQ消息，不对数据库中的数据进行变更。此处不需要做任何验证
@@ -391,14 +391,14 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void shouldDestoryAfterRead() {
+  public void shouldDestroyAfterRead() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String msgId = "12345";
     String from = "from@msgseal.com";
     String to = "to@t.email";
     String author = "from@msgseal.com";
-    UsermailDO usermail = new UsermailDO(22, msgId, "", from, "", 0, TemailType.TYPE_DESTORY_AFTER_READ_1, from, "", 1,
+    UsermailDO usermail = new UsermailDO(22, msgId, "", from, "", 0, TemailType.TYPE_DESTROY_AFTER_READ_1, from, "", 1,
         "".getBytes(), author, null);
     when(usermailRepo.getUsermailByMsgid(msgId, from)).thenReturn(usermail);
     usermailService.destroyAfterRead(xPacketId, header, from, to, from, msgId);
@@ -410,7 +410,7 @@ public class UsermailServiceTest {
     int status = statusCaptor.getValue();
     assertEquals(from, fromCaptor.getValue());
     assertEquals(msgId, msgIdCaptor.getValue());
-    assertEquals(TemailStatus.STATUS_DESTORY_AFTER_READ_2, status);
+    assertEquals(TemailStatus.STATUS_DESTROY_AFTER_READ_2, status);
   }
 
   @Test

@@ -48,7 +48,7 @@ public final class Constants {
     /**
      * 阅后即焚
      */
-    int STATUS_DESTORY_AFTER_READ_2 = 2;
+    int STATUS_DESTROY_AFTER_READ_2 = 2;
     /**
      * 删除状态
      */
@@ -92,7 +92,7 @@ public final class Constants {
     /**
      * 阅后即焚
      */
-    int TYPE_DESTORY_AFTER_READ_1 = 1;
+    int TYPE_DESTROY_AFTER_READ_1 = 1;
     /**
      * 跨域消息
      */

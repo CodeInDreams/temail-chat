@@ -133,7 +133,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
     usermailMsgReplyRepo.insert(usermailMsgReply);
-    int count  = usermailMsgReplyRepo.destroyAfterRead("A@systoontest.com","test111111", TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+    int count  = usermailMsgReplyRepo.destroyAfterRead("A@systoontest.com","test111111", TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     Assert.assertEquals(1,count);
     Assert.assertTrue(true);
   }

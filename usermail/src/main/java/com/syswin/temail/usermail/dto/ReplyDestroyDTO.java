@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
 
 @ApiModel(value = "temail回复信息阅后即焚")
-public class ReplyDestoryDTO implements java.io.Serializable {
+public class ReplyDestroyDTO implements java.io.Serializable {
 
   @ApiModelProperty(value = "消息ID")
   @NotEmpty
@@ -17,13 +17,13 @@ public class ReplyDestoryDTO implements java.io.Serializable {
   @NotEmpty
   private String to;
 
-  public ReplyDestoryDTO(String msgId, String from, String to) {
+  public ReplyDestroyDTO(String msgId, String from, String to) {
     this.msgId = msgId;
     this.from = from;
     this.to = to;
   }
 
-  public ReplyDestoryDTO() {
+  public ReplyDestroyDTO() {
   }
 
   public String getMsgId() {
@@ -52,7 +52,7 @@ public class ReplyDestoryDTO implements java.io.Serializable {
 
   @Override
   public String toString() {
-    return "ReplyDestoryDTO{" +
+    return "ReplyDestroyDTO{" +
         "msgId='" + msgId + '\'' +
         ", from='" + from + '\'' +
         ", to='" + to + '\'' +

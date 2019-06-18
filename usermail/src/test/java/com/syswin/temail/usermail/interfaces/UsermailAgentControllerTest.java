@@ -206,7 +206,7 @@ public class UsermailAgentControllerTest {
   }
 
   @Test
-  public void shouldDestoryMessage() throws Exception {
+  public void shouldDestroyMessage() throws Exception {
     UsermailDTO usermailDto = new UsermailDTO("123213123123", "bob@temail.com", "alice@temail.com",
         0, "test message", 0);
     Mockito.doNothing().when(usermailService)

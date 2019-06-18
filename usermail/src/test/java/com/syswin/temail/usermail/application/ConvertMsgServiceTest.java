@@ -57,7 +57,7 @@ public class ConvertMsgServiceTest {
       userMail.setSeqNo(11);
       userMail.setType(TemailType.TYPE_NORMAL_0);
       userMail.setStatus(
-          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTORY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
+          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTROY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
       userMail.setMessage("");
       userMail.setAuthor(from);
       userMail.setFilter(null);
@@ -71,7 +71,7 @@ public class ConvertMsgServiceTest {
     convertMsg.forEach(usermail -> {
       if (usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
         Assertions.assertThat(usermail.getMessage()).isNotEmpty();
-      } else if (usermail.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
+      } else if (usermail.getStatus() == TemailStatus.STATUS_DESTROY_AFTER_READ_2) {
         Assertions.assertThat(usermail.getMessage()).isEmpty();
       }
     });
@@ -106,7 +106,7 @@ public class ConvertMsgServiceTest {
       usermailMsgReply.setSeqNo(11);
       usermailMsgReply.setType(TemailType.TYPE_NORMAL_0);
       usermailMsgReply.setStatus(
-          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTORY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
+          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTROY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
       usermailMsgReply.setMsg("");
       usermailMsgReply.setParentMsgid(UUID.randomUUID().toString());
       msgReplys.add(usermailMsgReply);
@@ -119,7 +119,7 @@ public class ConvertMsgServiceTest {
     usermailMsgReplies.forEach(usermailMsgReply -> {
       if (usermailMsgReply.getStatus() == TemailStatus.STATUS_NORMAL_0) {
         Assertions.assertThat(usermailMsgReply.getMsg()).isNotEmpty();
-      } else if (usermailMsgReply.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
+      } else if (usermailMsgReply.getStatus() == TemailStatus.STATUS_DESTROY_AFTER_READ_2) {
         Assertions.assertThat(usermailMsgReply.getMsg()).isEmpty();
       }
     });

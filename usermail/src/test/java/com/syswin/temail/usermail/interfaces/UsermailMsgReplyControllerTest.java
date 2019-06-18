@@ -19,7 +19,7 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
-import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
+import com.syswin.temail.usermail.dto.ReplyDestroyDTO;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -189,11 +189,11 @@ public class UsermailMsgReplyControllerTest {
   }
 
   @Test
-  public void shouldDestoryAfterRead() throws Exception {
+  public void shouldDestroyAfterRead() throws Exception {
     String from = "XXXX@qq.com";
     String to = "YYYY@qq.com";
     String msgId = "09876";
-    ReplyDestoryDTO replyDestoryDto = new ReplyDestoryDTO(from, to, msgId);
+    ReplyDestroyDTO replyDestroyDto = new ReplyDestroyDTO(from, to, msgId);
     Mockito.doNothing().when(usermailMsgReplyService)
         .destroyAfterRead(headerInfo, from, to, msgId);
     ObjectMapper mapper = new ObjectMapper();
@@ -203,7 +203,7 @@ public class UsermailMsgReplyControllerTest {
             .accept(MediaType.APPLICATION_JSON_UTF8)
             .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
             .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
-            .content(mapper.writeValueAsString(replyDestoryDto)))
+            .content(mapper.writeValueAsString(replyDestroyDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
   }

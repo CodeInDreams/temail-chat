@@ -69,7 +69,7 @@ public class UsermailTest {
     CreateUsermailDTO DARMsg = createMsg(TemailStoreType.STORE_TYPE_TO_1, TemailType.TYPE_NORMAL_0);
     //发送一条阅后即焚消息
     createUsermail(DARMsg.getFrom(), DARMsg.getTo(), DARMsg.getMsgData(), TemailStoreType.STORE_TYPE_TO_1, DARMsg.getMsgId(),
-        TemailType.TYPE_DESTORY_AFTER_READ_1);
+        TemailType.TYPE_DESTROY_AFTER_READ_1);
     String responseBeforeDestroy = getMails(DARMsg.getTo(), DARMsg.getFrom(), pageSize, seqId);
     destroyAfterRead(DARMsg.getTo(), DARMsg.getFrom(), DARMsg.getMsgId());
     String responseAfterDestroy = getMails(DARMsg.getTo(), DARMsg.getFrom(), pageSize, seqId);
@@ -163,7 +163,7 @@ public class UsermailTest {
     UsermailDO usermailAfter = getLastMsgInfo(responseAfterDestroy);
     Assert.assertTrue(
         usermailBefore.getMsgid().equals(msgId) && usermailAfter.getMsgid().equals(msgId));
-    Assert.assertEquals(TemailStatus.STATUS_DESTORY_AFTER_READ_2, usermailAfter.getStatus());
+    Assert.assertEquals(TemailStatus.STATUS_DESTROY_AFTER_READ_2, usermailAfter.getStatus());
     Assert.assertNotEquals(usermailBefore.getMessage(), usermailAfter.getMessage());
     Assert.assertEquals("", usermailAfter.getMessage());
   }
@@ -221,7 +221,7 @@ public class UsermailTest {
 
   //验证单个流程，阅后即焚消息已焚(0x 0006)
   @Test
-  public void testDestoryAfterRead() {
+  public void testDestroyAfterRead() {
     String from = "from20181013_1527";
     String to = "to20181013_1527";
     String msgId = "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1539415620000";
@@ -346,7 +346,7 @@ public class UsermailTest {
     map.put("msgId", msgId);
     map.put("message", "empty");
     map.put("seqNo", 0);
-    map.put("type", TemailType.TYPE_DESTORY_AFTER_READ_1);
+    map.put("type", TemailType.TYPE_DESTROY_AFTER_READ_1);
     String s = gs.toJson(map);
     HttpEntity<String> formEntity = new HttpEntity<>(s, headers);
     ResponseEntity<String> result = restTemplate
@@ -356,7 +356,7 @@ public class UsermailTest {
     Assert.assertEquals(200, root.get("code").getAsInt());
     Assert.assertEquals("success", root.get("message").getAsString());
     System.out.println("Response correct, assert success!");
-    System.out.println("testDestoryAfterRead result = " + result);
+    System.out.println("testDestroyAfterRead result = " + result);
   }
 
   //todo fix 批量查询集成测试

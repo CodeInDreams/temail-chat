@@ -120,7 +120,7 @@ public class UsermailUsermail2NotifyMqServiceTest {
   }
 
   @Test
-  public void sendMqReplyMsgDestoryAfterRead() {
+  public void sendMqReplyMsgDestroyAfterRead() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String owner = "owner@msgseal.com";
@@ -128,7 +128,7 @@ public class UsermailUsermail2NotifyMqServiceTest {
     String msgId = "23456";
     String parentMsgReplyId = "1235";
 
-    usermailMqService.sendMqReplyMsgDestoryAfterRead(xPacketId, header, owner, to, owner, msgId, parentMsgReplyId);
+    usermailMqService.sendMqReplyMsgDestroyAfterRead(xPacketId, header, owner, to, owner, msgId, parentMsgReplyId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);

@@ -131,7 +131,7 @@ public class UsermailMqService {
    * @param parentMsgId 父消息id
    * @return void
    */
-  public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader, String from, String to,
+  public void sendMqReplyMsgDestroyAfterRead(String xPacketId, String cdtpHeader, String from, String to,
       String owner, String msgId, String parentMsgId) {
     Map<String, Object> usermailMap = new HashMap<>(13);
     usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);

@@ -221,15 +221,15 @@ public class UsermailMsgReplyServiceTest {
     UsermailMsgReplyDO reply = new UsermailMsgReplyDO();
     reply.setOwner(from);
     reply.setMsgid(msgId);
-    reply.setType(TemailType.TYPE_DESTORY_AFTER_READ_1);
+    reply.setType(TemailType.TYPE_DESTROY_AFTER_READ_1);
     Mockito.when(usermailMsgReplyRepo.getMsgReplyByCondition(Mockito.any())).thenReturn(reply);
     List<UsermailDO> usermails = new ArrayList<>();
     usermails.add(new UsermailDO());
     when(usermailRepo.getUsermailListByMsgid(reply.getParentMsgid())).thenReturn(usermails);
     usermailMsgReplyService.destroyAfterRead(headerInfo, from, to, msgId);
-    //verify(usermailMqService).sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),from,to,from, msgId, reply.getParentMsgid());
+    //verify(usermailMqService).sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),from,to,from, msgId, reply.getParentMsgid());
     verify(usermailMqService)
-        .sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
+        .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
             reply.getParentMsgid());
    /* ArgumentCaptor<CdtpHeaderDTO> headerDtoArgumentCaptor = ArgumentCaptor.forClass(CdtpHeaderDTO.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
@@ -253,7 +253,7 @@ public class UsermailMsgReplyServiceTest {
     String replyMsgParentId = "13311";
     UsermailDO usermail = new UsermailDO(1, msgId, "", owner, "", 1, 1, owner, "", 0);
     when(usermailRepo.getUsermailByMsgid(replyMsgParentId, owner)).thenReturn(usermail);
-    when(usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2)).thenReturn(1);
+    when(usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2)).thenReturn(1);
     usermailMsgReplyService
         .destroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, owner, msgId,
             replyMsgParentId);
@@ -263,6 +263,6 @@ public class UsermailMsgReplyServiceTest {
     verify(usermailMsgReplyRepo)
         .destroyAfterRead(ownerCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
-    assertEquals(TemailStatus.STATUS_DESTORY_AFTER_READ_2, status);
+    assertEquals(TemailStatus.STATUS_DESTROY_AFTER_READ_2, status);
   }
 }

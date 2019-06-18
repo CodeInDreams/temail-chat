@@ -11,7 +11,7 @@ import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.dto.ResultDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
-import com.syswin.temail.usermail.dto.ReplyDestoryDTO;
+import com.syswin.temail.usermail.dto.ReplyDestroyDTO;
 import com.syswin.temail.usermail.dto.UsermailMsgReplyDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -147,19 +147,19 @@ public class UsermailMsgReplyController {
    * 更新类型为阅后即焚的回复消息的状态为阅后已焚
    *
    * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
-   * @param replyDestoryDto 请求参数{@link ReplyDestoryDTO}
+   * @param replyDestroyDto 请求参数{@link ReplyDestroyDTO}
    * @return 返回ResultDTO对象
    * @See ResultDTO
    */
   @ApiOperation(value = "阅后即焚回复消息已焚(0x 100B)", notes = "回复消息阅后即焚")
   @PutMapping(value = "/usermail/msg/reply/destory")
   public ResultDTO destroyAfterRead(HttpServletRequest request,
-      @RequestBody @Valid ReplyDestoryDTO replyDestoryDto) {
+      @RequestBody @Valid ReplyDestroyDTO replyDestroyDto) {
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailMsgReplyService
-        .destroyAfterRead(cdtpHeaderDto, replyDestoryDto.getFrom(), replyDestoryDto.getTo(),
-            replyDestoryDto.getMsgId());
+        .destroyAfterRead(cdtpHeaderDto, replyDestroyDto.getFrom(), replyDestroyDto.getTo(),
+            replyDestroyDto.getMsgId());
     return resultDto;
   }
 

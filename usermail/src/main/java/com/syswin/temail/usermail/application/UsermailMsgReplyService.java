@@ -242,7 +242,7 @@ public class UsermailMsgReplyService {
   @Transactional
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
       String replyMsgParentId) {
-    int count = usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+    int count = usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     if (count <= 0) {
       LOGGER.warn(
           "Message destroyAfterRead failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
@@ -273,13 +273,13 @@ public class UsermailMsgReplyService {
     usermailMsgReply.setOwner(from);
     usermailMsgReply.setMsgid(msgId);
     UsermailMsgReplyDO msgReply = usermailMsgReplyRepo.getMsgReplyByCondition(usermailMsgReply);
-    if (msgReply != null && msgReply.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1) {
+    if (msgReply != null && msgReply.getType() == TemailType.TYPE_DESTROY_AFTER_READ_1) {
       String parentMsgId = msgReply.getParentMsgid();
       usermailMqService
-          .sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
+          .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
               parentMsgId);
       usermailMqService
-          .sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader() + PACKET_ID_SUFFIX,
+          .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader() + PACKET_ID_SUFFIX,
               from, to, from, msgId,
               parentMsgId);
     } else {

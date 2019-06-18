@@ -136,7 +136,7 @@ public class UsermailService {
       case TemailType.TYPE_NORMAL_0:
         eventType = SessionEventType.EVENT_TYPE_0;
         break;
-      case TemailType.TYPE_DESTORY_AFTER_READ_1:
+      case TemailType.TYPE_DESTROY_AFTER_READ_1:
         eventType = SessionEventType.EVENT_TYPE_17;
         break;
       default:
@@ -333,9 +333,9 @@ public class UsermailService {
       String msgId) {
     UsermailDO usermail = usermailRepo.getUsermailByMsgid(msgId, owner);
     // 添加消息状态判断，防止通知重发
-    if (usermail != null && usermail.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1
+    if (usermail != null && usermail.getType() == TemailType.TYPE_DESTROY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
-      usermailRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+      usermailRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
       usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_3);
     } else {
