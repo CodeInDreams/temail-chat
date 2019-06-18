@@ -291,23 +291,9 @@ public class UsermailMsgReplyServiceTest {
     usermails.add(new UsermailDO());
     when(usermailRepo.getUsermailListByMsgid(reply.getParentMsgid())).thenReturn(usermails);
     usermailMsgReplyService.destroyAfterRead(headerInfo, from, to, msgId);
-    //verify(usermailMqService).sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),from,to,from, msgId, reply.getParentMsgid());
-    usermailMsgReplyService.destoryAfterRead(headerInfo, from, to, msgId);
-    //verify(usermailMqService).sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),
-    // from,to,from, msgId, reply.getParentMsgid());
     verify(usermailMqService)
         .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
             reply.getParentMsgid());
-   /* ArgumentCaptor<CdtpHeaderDTO> headerDtoArgumentCaptor = ArgumentCaptor.forClass(CdtpHeaderDTO.class);
-    ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<Integer> typeCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermail2NotifyMqService).sendMqAfterUpdateStatus(headerDtoArgumentCaptor.capture(),
-        toCaptor.capture(), fromCaptor.capture(), msgIdCaptor.capture(), typeCaptor.capture());
-    assertEquals(from, fromCaptor.getValue());
-    assertEquals(msgId, msgIdCaptor.getValue());
-    assertEquals(SessionEventType.EVENT_TYPE_26, typeCaptor.getValue().intValue());*/
 
   }
 
