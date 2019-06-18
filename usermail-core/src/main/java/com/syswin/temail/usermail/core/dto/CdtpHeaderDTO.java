@@ -48,8 +48,8 @@ public class CdtpHeaderDTO implements Serializable {
       return false;
     }
     CdtpHeaderDTO that = (CdtpHeaderDTO) o;
-    return Objects.equals(xPacketId, that.xPacketId) &&
-        Objects.equals(cdtpHeader, that.cdtpHeader);
+    return Objects.equals(xPacketId, that.xPacketId)
+        && Objects.equals(cdtpHeader, that.cdtpHeader);
   }
 
   @Override

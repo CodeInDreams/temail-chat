@@ -16,12 +16,12 @@ public class RocketMqAdapter implements IMqAdapter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RocketMqAdapter.class);
 
-  /** 生产者的组名 */
+  // 生产者的组名
   private DefaultMQProducer producer;
 
   RocketMqAdapter(String productGroup, String namesrvAddr) {
     producer = new DefaultMQProducer(productGroup);
-    /* 指定NameServer地址，多个地址以 ; 隔开 */
+    // 指定NameServer地址，多个地址以 ; 隔开
     producer.setNamesrvAddr(namesrvAddr);
     producer.setInstanceName(UUID.randomUUID().toString());
   }
@@ -50,7 +50,7 @@ public class RocketMqAdapter implements IMqAdapter {
   @Override
   public boolean sendMessage(String topic, String tag, String message) {
     LOGGER.info("RocketMqAdapter send message topic=[{}], tag=[{}], message=[{}]", topic, tag, message);
-    /* 创建一个消息实例，包含 topic、tag 和 消息体,如下：topic 为 "TopicTest"，tag 为 "push" */
+    // 创建一个消息实例，包含 topic、tag 和 消息体,如下：topic 为 "TopicTest"，tag 为 "push"
     Message mqMessage = new Message(topic, tag, (message).getBytes());
     StopWatch stop = new StopWatch();
     try {

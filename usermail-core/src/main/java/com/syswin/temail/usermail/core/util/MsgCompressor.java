@@ -1,6 +1,5 @@
 package com.syswin.temail.usermail.core.util;
 
-
 import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import java.io.IOException;
@@ -18,6 +17,16 @@ public class MsgCompressor {
     } catch (IOException e) {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_MSG_ZIP);
     }
+  }
+
+  public byte[] zip(final String data) {
+    byte[] zip;
+    try {
+      zip = gzip.zip(data.getBytes(CHARSET_ENCODE));
+    } catch (IOException e) {
+      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_MSG_DECODE, data);
+    }
+    return zip;
   }
 
   public byte[] zipWithDecode(final String data) {
@@ -38,16 +47,6 @@ public class MsgCompressor {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_MSG_ENCODE);
     }
     return s;
-  }
-
-  public byte[] zip(final String data) {
-    byte[] zip;
-    try {
-      zip = gzip.zip(data.getBytes(CHARSET_ENCODE));
-    } catch (IOException e) {
-      throw new IllegalGmArgsException(ResultCodeEnum.ERROR_MSG_DECODE, data);
-    }
-    return zip;
   }
 
   public String unzip(final byte[] data) {

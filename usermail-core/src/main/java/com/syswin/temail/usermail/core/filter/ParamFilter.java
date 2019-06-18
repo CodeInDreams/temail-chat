@@ -1,6 +1,5 @@
 package com.syswin.temail.usermail.core.filter;
 
-
 import java.io.IOException;
 import java.util.Enumeration;
 import javax.servlet.Filter;
