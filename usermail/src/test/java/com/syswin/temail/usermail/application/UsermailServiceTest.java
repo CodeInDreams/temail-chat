@@ -234,6 +234,9 @@ public class UsermailServiceTest {
     umQueryDto.setSessionid(sessionid);
     umQueryDto.setPageSize(pageSize);
     umQueryDto.setOwner(from);
+    umQueryDto.setSignal("signal");
+    umQueryDto.setStatus(0);
+    umQueryDto.setMsgid("msgId");
     List<UsermailDO> usermails = new ArrayList<>();
     UsermailDO usermail_1 = new UsermailDO();
     usermail_1.setId(1L);

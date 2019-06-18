@@ -58,5 +58,38 @@ public class UsermailMsgReplyImplTest {
     assertThat(msgIdsCap.getValue()).isEqualTo(msgIds);
   }
 
+  @Test
+  public void batchDeleteBySessionId() {
+    String ower = "ower";
+    String sessionId = "sessionId";
+    usermailMsgReplyRepoImpl.batchDeleteBySessionId(sessionId,ower);
+    ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> sessionIdCap = ArgumentCaptor.forClass(String.class);
+    Mockito.verify(usermailMsgReplyMapper).batchDeleteBySessionId(sessionIdCap.capture(),owerCap.capture());
+    assertThat(owerCap.getValue()).isEqualTo(ower);
+    assertThat(sessionIdCap.getValue()).isEqualTo(sessionId);
+  }
+
+  @Test
+  public void deleteMsgByParentIdAndOwner() {
+    String ower = "ower";
+    List<String> parentMsgIds = new ArrayList<String>();
+    usermailMsgReplyRepoImpl.deleteMsgByParentIdAndOwner(ower,parentMsgIds);
+    ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<List<String>> parentMsgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
+    Mockito.verify(usermailMsgReplyMapper).deleteMsgByParentIdAndOwner(owerCap.capture(),parentMsgIdsCap.capture());
+    assertThat(owerCap.getValue()).isEqualTo(ower);
+    assertThat(parentMsgIdsCap.getValue()).isEqualTo(parentMsgIds);
+  }
+
+  @Test
+  public void getMsgReplyByCondition() {
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
+    usermailMsgReplyRepoImpl.getMsgReplyByCondition(usermailMsgReply);
+    ArgumentCaptor<UsermailMsgReplyDO> usermailMsgReplyCap = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
+    Mockito.verify(usermailMsgReplyMapper).getMsgReplyByCondition(usermailMsgReplyCap.capture());
+    assertThat(usermailMsgReplyCap.getValue()).isEqualTo(usermailMsgReply);
+  }
+
 
 }

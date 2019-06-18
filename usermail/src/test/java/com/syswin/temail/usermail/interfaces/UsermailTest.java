@@ -3,6 +3,7 @@ package com.syswin.temail.usermail.interfaces;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStoreType;
 import com.syswin.temail.usermail.common.Constants.TemailType;
@@ -106,6 +107,10 @@ public class UsermailTest {
     usermail.setSeqNo(lastMsg.get("seqId").getAsLong());
     usermail.setMsgid(lastMsg.get("msgId").getAsString());
     mailboxDto.setLastMsg(usermail);
+    mailboxDto.setTitle("mailBox");
+    mailboxDto.setOnTop(true);
+    mailboxDto.setArchiveStatus(TemailArchiveStatus.STATUS_NORMAL_0);
+    mailboxDto.setTo("to");
     return mailboxDto;
   }
 
