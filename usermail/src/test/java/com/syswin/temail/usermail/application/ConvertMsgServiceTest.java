@@ -57,7 +57,7 @@ public class ConvertMsgServiceTest {
       userMail.setSeqNo(11);
       userMail.setType(TemailType.TYPE_NORMAL_0);
       userMail.setStatus(
-          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTROY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
+          (i % 4 == 0) ? TemailStatus.STATUS_DESTROY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
       userMail.setMessage("");
       userMail.setAuthor(from);
       userMail.setFilter(null);
@@ -106,7 +106,7 @@ public class ConvertMsgServiceTest {
       usermailMsgReply.setSeqNo(11);
       usermailMsgReply.setType(TemailType.TYPE_NORMAL_0);
       usermailMsgReply.setStatus(
-          (i % 2 == 0 && i % 4 == 0) ? TemailStatus.STATUS_DESTROY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
+          (i % 4 == 0) ? TemailStatus.STATUS_DESTROY_AFTER_READ_2 : TemailStatus.STATUS_NORMAL_0);
       usermailMsgReply.setMsg("");
       usermailMsgReply.setParentMsgid(UUID.randomUUID().toString());
       msgReplys.add(usermailMsgReply);
