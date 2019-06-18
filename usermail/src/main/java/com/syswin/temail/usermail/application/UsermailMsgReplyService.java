@@ -149,8 +149,7 @@ public class UsermailMsgReplyService {
         parentMsgReplyId, msgId);
     usermailMqService
         .sendMqRevertReplyMsg(cdtpHeaderDto.getxPacketId() + PACKET_ID_SUFFIX, cdtpHeaderDto.getCdtpHeader(), from, to,
-            from,
-            parentMsgReplyId, msgId);
+            from, parentMsgReplyId, msgId);
   }
 
   /**

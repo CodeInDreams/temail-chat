@@ -130,7 +130,7 @@ public class UsermailService {
       BeanUtils.copyProperties(meta, mail);
     }
     usermailRepo.saveUsermail(mail);
-    int eventType = 0;
+    int eventType;
 
     switch (usermail.getType()) {
       case TemailType.TYPE_NORMAL_0:
@@ -531,7 +531,7 @@ public class UsermailService {
     usermailBoxRepo.updateArchiveStatus(from, to, archiveStatus);
     if (archiveStatus == TemailArchiveStatus.STATUS_NORMAL_0) {
       usermail2NotifyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_34);
-    } else if (archiveStatus == TemailArchiveStatus.STATUS_ARCHIVE_1) {
+    } else {
       usermail2NotifyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_33);
     }
   }
