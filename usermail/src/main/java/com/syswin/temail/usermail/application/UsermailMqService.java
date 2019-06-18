@@ -75,15 +75,15 @@ public class UsermailMqService {
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
-   * @param msgid 消息id
+   * @param msgId 消息id
    */
   public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to,
-      String owner, String msgid) {
+      String owner, String msgId) {
     Map<String, Object> usermailMap = new HashMap<>(12);
     usermailMap.put(ParamsKey.SessionEventKey.OWNER, owner);
     usermailMap.put(ParamsKey.SessionEventKey.FROM, from);
     usermailMap.put(ParamsKey.SessionEventKey.TO, to);
-    usermailMap.put(ParamsKey.SessionEventKey.MSGID, msgid);
+    usermailMap.put(ParamsKey.SessionEventKey.MSGID, msgId);
     usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
     usermailMap.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);
     usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());

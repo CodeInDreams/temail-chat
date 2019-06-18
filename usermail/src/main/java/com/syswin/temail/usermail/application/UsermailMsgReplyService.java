@@ -36,7 +36,7 @@ public class UsermailMsgReplyService {
   private final UsermailRepo usermailRepo;
   private final IUsermailAdapter usermailAdapter;
   private final UsermailMsgReplyRepo usermailMsgReplyRepo;
-  private final Usermail2NotfyMqService usermail2NotfyMqService;
+  private final Usermail2NotifyMqService usermail2NotifyMqService;
   private final UsermailSessionService usermailSessionService;
   private final MsgCompressor msgCompressor;
   private final UsermailMqService usermailMqService;
@@ -44,14 +44,14 @@ public class UsermailMsgReplyService {
 
   @Autowired
   public UsermailMsgReplyService(UsermailRepo usermailRepo, IUsermailAdapter usermailAdapter,
-      UsermailMsgReplyRepo usermailMsgReplyRepo, Usermail2NotfyMqService usermail2NotfyMqService,
+      UsermailMsgReplyRepo usermailMsgReplyRepo, Usermail2NotifyMqService usermail2NotifyMqService,
       UsermailSessionService usermailSessionService,
       MsgCompressor msgCompressor, UsermailMqService usermailMqService,
       ConvertMsgService convertMsgService) {
     this.usermailRepo = usermailRepo;
     this.usermailAdapter = usermailAdapter;
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
-    this.usermail2NotfyMqService = usermail2NotfyMqService;
+    this.usermail2NotifyMqService = usermail2NotifyMqService;
     this.usermailSessionService = usermailSessionService;
     this.msgCompressor = msgCompressor;
     this.usermailMqService = usermailMqService;
@@ -88,7 +88,7 @@ public class UsermailMsgReplyService {
     usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), lastReplyMsgid);
     LOGGER.debug("new rely created, update msgId={} lastReplyMsgid={}", parentMsgId, lastReplyMsgid);
 
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqSaveMsgReply(cdtpHeaderDto, from, to, owner, msgId, message, msgReplySeqNo, attachmentSize,
             parentMsgId);
     result.put("msgId", msgId);
@@ -124,7 +124,7 @@ public class UsermailMsgReplyService {
     UsermailDO usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
-      usermail2NotfyMqService
+      usermail2NotifyMqService
           .sendMqAfterUpdateMsgReply(xPacketId, cdtpHeader, from, to, owner, msgId, SessionEventType.EVENT_TYPE_19,
               replyMsgParentId);
     } else {
@@ -184,7 +184,7 @@ public class UsermailMsgReplyService {
       }
     }
     usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgReplyId, usermail.getOwner(), -count, lastReplyMsgId);
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqAfterRemoveMsgReply(cdtpHeaderDto, from, to, from, msgIds, SessionEventType.EVENT_TYPE_20,
             parentMsgReplyId);
   }
@@ -252,7 +252,7 @@ public class UsermailMsgReplyService {
     UsermailDO usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
-      usermail2NotfyMqService
+      usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_26);
     } else {
       LOGGER.warn("label-mq-destory-after-read: parentMsgId={},not-exist", replyMsgParentId);
@@ -283,7 +283,7 @@ public class UsermailMsgReplyService {
               from, to, from, msgId,
               parentMsgId);
     } else {
-      LOGGER.warn("msgReply-destoryAfterRead-illegal-msgid={}", msgId);
+      LOGGER.warn("msgReply-destoryAfterRead-illegal-msgId={}", msgId);
     }
 
   }

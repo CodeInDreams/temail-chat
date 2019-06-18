@@ -31,14 +31,14 @@ public class UsermailMsgReplyServiceTest {
   private final UsermailMsgReplyRepo usermailMsgReplyRepo = Mockito.mock(UsermailMsgReplyRepo.class);
   private final IUsermailAdapter usermailAdapter = Mockito.mock(IUsermailAdapter.class);
   private final UsermailSessionService usermailSessionService = Mockito.mock(UsermailSessionService.class);
-  private final Usermail2NotfyMqService usermail2NotfyMqService = Mockito.mock(Usermail2NotfyMqService.class);
+  private final Usermail2NotifyMqService usermail2NotifyMqService = Mockito.mock(Usermail2NotifyMqService.class);
   private final UsermailMqService usermailMqService = Mockito.mock(UsermailMqService.class);
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
   private MsgCompressor msgCompressor = new MsgCompressor();
   private final ConvertMsgService convertMsgService = Mockito.mock(ConvertMsgService.class);
   private final UsermailMsgReplyService usermailMsgReplyService = new UsermailMsgReplyService(usermailRepo,
-      usermailAdapter, usermailMsgReplyRepo, usermail2NotfyMqService, usermailSessionService, msgCompressor,
+      usermailAdapter, usermailMsgReplyRepo, usermail2NotifyMqService, usermailSessionService, msgCompressor,
       usermailMqService, convertMsgService);
 
   @Test
@@ -64,7 +64,7 @@ public class UsermailMsgReplyServiceTest {
 
     usermailMsgReplyService
         .createMsgReply(headerInfo, from, to, message, msgid, parentMsgid, type, attachmentSize, to);
-    usermail2NotfyMqService.sendMqSaveMsgReply(headerInfo, from, to, owner, msgid, message,
+    usermail2NotifyMqService.sendMqSaveMsgReply(headerInfo, from, to, owner, msgid, message,
         usermailAdapter.getMsgReplySeqNo(parentMsgid, ""), attachmentSize, parentMsgid);
     ArgumentCaptor<UsermailMsgReplyDO> argumentCaptor2 = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
     verify(usermailMsgReplyRepo).insert(argumentCaptor2.capture());
@@ -104,7 +104,7 @@ public class UsermailMsgReplyServiceTest {
     when(usermailMsgReplyRepo.revertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     when(usermailRepo.getUsermailByMsgid(anyString(), anyString())).thenReturn(new UsermailDO());
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
-    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid, type, parentMsgid);
+    usermail2NotifyMqService.sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid, type, parentMsgid);
     ArgumentCaptor<UsermailMsgReplyDO> msgReplyCaptor = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> parentMsgIdCaptor = ArgumentCaptor.forClass(String.class);
@@ -137,7 +137,7 @@ public class UsermailMsgReplyServiceTest {
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> parentIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> typeCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqAfterUpdateMsgReply(xPacketIdCaptor.capture(),headerCaptor.capture(), fromCaptor.capture(), toCaptor.capture(),
             ownerCaptor.capture(), msgIdCaptor.capture(), typeCaptor.capture(), parentIdCaptor.capture());
     assertEquals(from, fromCaptor.getValue());
@@ -160,7 +160,7 @@ public class UsermailMsgReplyServiceTest {
     UsermailDO usermail = new UsermailDO();
     when(usermailRepo.getUsermailByMsgid(parentMsgid, from)).thenReturn(usermail);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
-    usermail2NotfyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, from, msgIds, type, parentMsgid);
+    usermail2NotifyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, from, msgIds, type, parentMsgid);
     ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List> argumentCaptor2 = ArgumentCaptor.forClass(List.class);
     verify(usermailMsgReplyRepo)
@@ -236,7 +236,7 @@ public class UsermailMsgReplyServiceTest {
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> typeCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermail2NotfyMqService).sendMqAfterUpdateStatus(headerDtoArgumentCaptor.capture(),
+    verify(usermail2NotifyMqService).sendMqAfterUpdateStatus(headerDtoArgumentCaptor.capture(),
         toCaptor.capture(), fromCaptor.capture(), msgIdCaptor.capture(), typeCaptor.capture());
     assertEquals(from, fromCaptor.getValue());
     assertEquals(msgId, msgIdCaptor.getValue());

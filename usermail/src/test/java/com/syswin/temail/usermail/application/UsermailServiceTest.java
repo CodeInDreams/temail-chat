@@ -53,13 +53,13 @@ public class UsermailServiceTest {
   private final UsermailMsgReplyRepo usermailMsgReplyRepo = Mockito.mock(UsermailMsgReplyRepo.class);
   private final IUsermailAdapter usermailAdapter = Mockito.mock(IUsermailAdapter.class);
   private final UsermailSessionService usermailSessionService = Mockito.mock(UsermailSessionService.class);
-  private final Usermail2NotfyMqService usermail2NotfyMqService = Mockito
-      .mock(Usermail2NotfyMqService.class, RETURNS_SMART_NULLS);
+  private final Usermail2NotifyMqService usermail2NotifyMqService = Mockito
+      .mock(Usermail2NotifyMqService.class, RETURNS_SMART_NULLS);
   private final UsermailMqService usermailMqService = Mockito.mock(UsermailMqService.class, RETURNS_SMART_NULLS);
   private final ConvertMsgService convertMsgService = Mockito.mock(ConvertMsgService.class);
   private final UsermailService usermailService = new UsermailService(
       usermailRepo, usermailBoxRepo, usermailMsgReplyRepo, usermailAdapter, usermailSessionService,
-      usermail2NotfyMqService,
+      usermail2NotifyMqService,
       usermailMqService, new MsgCompressor(), convertMsgService
   );
 
@@ -99,7 +99,7 @@ public class UsermailServiceTest {
     when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
     when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
 
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
@@ -138,7 +138,7 @@ public class UsermailServiceTest {
     when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
     when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
 
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
@@ -177,7 +177,7 @@ public class UsermailServiceTest {
     when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
     when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
 
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
@@ -293,13 +293,13 @@ public class UsermailServiceTest {
     RevertMailDTO revertMailDto = revertDtoCapture.getValue();
     assertEquals(from, revertMailDto.getOwner());
     assertEquals(msgid, revertMailDto.getMsgid());
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
 
     // 验证撤回失败的情况
     when(usermailRepo.revertUsermail(any(RevertMailDTO.class))).thenReturn(0);
     usermailService.revertMqHandler(xPacketId, header, from, to, owner, msgid);
-    verify(usermail2NotfyMqService, times(1))
+    verify(usermail2NotifyMqService, times(1))
         .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
   }
 
@@ -348,7 +348,7 @@ public class UsermailServiceTest {
 
     verify(usermailRepo).removeMsg(msgIds, from);
     verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
     verify(usermailSessionService).getSessionID(from, to);
     verify(usermailRepo).getLastUsermail(any(UmQueryDTO.class));
@@ -369,7 +369,7 @@ public class UsermailServiceTest {
 
     verify(usermailRepo).removeMsg(msgIds, from);
     verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
     verify(usermailSessionService).getSessionID(from, to);
     verify(usermailRepo).getLastUsermail(any(UmQueryDTO.class));
@@ -384,7 +384,7 @@ public class UsermailServiceTest {
     String msgId = "msgid";
     UsermailDO usermail = new UsermailDO();
     usermail.setType(TYPE_DESTORY_AFTER_READ_1);
-    usermail2NotfyMqService.sendMqAfterUpdateStatus(headerInfo, to, from, msgId, SessionEventType.EVENT_TYPE_3);
+    usermail2NotifyMqService.sendMqAfterUpdateStatus(headerInfo, to, from, msgId, SessionEventType.EVENT_TYPE_3);
     usermailService.destroyAfterRead(headerInfo, from, to, msgId);
     //调用"阅后即焚已读"接口，已变更为只发MQ消息，不对数据库中的数据进行变更。此处不需要做任何验证
     Assert.assertTrue(true);
@@ -478,7 +478,7 @@ public class UsermailServiceTest {
     when(usermailSessionService.getSessionID(to, from)).thenReturn(sessionID);
     DeleteMailBoxQueryDTO queryDto = new DeleteMailBoxQueryDTO(from, to, true);
     usermailService.deleteSession(headerInfo, queryDto);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqAfterDeleteSession(headerInfo, from, to, queryDto.isDeleteAllMsg(), SessionEventType.EVENT_TYPE_4);
 
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
@@ -519,7 +519,7 @@ public class UsermailServiceTest {
     msgIds.add("aa");
     msgIds.add("bb");
     usermailService.moveMsgToTrash(headerInfo, from, to, msgIds);
-    verify(usermail2NotfyMqService).sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
+    verify(usermail2NotifyMqService).sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
     ArgumentCaptor<List<String>> msgIdCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
@@ -552,7 +552,7 @@ public class UsermailServiceTest {
     msgIds.add(trashMailDtos.get(0).getMsgId());
     msgIds.add(trashMailDtos.get(1).getMsgId());
     usermailService.revertMsgFromTrash(headerInfo, temail, trashMailDtos);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_36);
     ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
@@ -614,7 +614,7 @@ public class UsermailServiceTest {
         new TrashMailDTO(temail, to, "122")
     );
     usermailService.removeMsgFromTrash(headerInfo, temail, trashMailDtos);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_37);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
@@ -679,7 +679,7 @@ public class UsermailServiceTest {
     String to = "to@msgseal.com";
     int archiveStatus = TemailArchiveStatus.STATUS_ARCHIVE_1;
     usermailService.updateUsermailBoxArchiveStatus(headerInfo, from, to, archiveStatus);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_33);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
@@ -697,7 +697,7 @@ public class UsermailServiceTest {
     String to = "to@msgseal.com";
     int archiveStatus = TemailArchiveStatus.STATUS_NORMAL_0;
     usermailService.updateUsermailBoxArchiveStatus(headerInfo, from, to, archiveStatus);
-    verify(usermail2NotfyMqService)
+    verify(usermail2NotifyMqService)
         .sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_34);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);

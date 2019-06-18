@@ -30,11 +30,11 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class Usermail2NotfyMqServiceTest {
+public class Usermail2NotifyMqServiceTest {
 
   private final IMqAdapter mqAdapter = Mockito.mock(IMqAdapter.class);
   private final UsermailConfig usermailConfig = new UsermailConfig();
-  private final Usermail2NotfyMqService usermail2NotfyMqService = new Usermail2NotfyMqService(mqAdapter,
+  private final Usermail2NotifyMqService usermail2NotifyMqService = new Usermail2NotifyMqService(mqAdapter,
       usermailConfig);
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
@@ -49,7 +49,7 @@ public class Usermail2NotfyMqServiceTest {
     int attachmentSize = 100;
     long seqNo = 1L;
     int eventType = SessionEventType.EVENT_TYPE_0;
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, toMsg, seqNo, eventType, attachmentSize, from, null);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
@@ -73,7 +73,7 @@ public class Usermail2NotfyMqServiceTest {
     String header = "CDTP-header";
     String msgid = "msgid";
     int type = SessionEventType.EVENT_TYPE_0;
-    usermail2NotfyMqService.sendMqAfterUpdateStatus(headerInfo, from, to, msgid, type);
+    usermail2NotifyMqService.sendMqAfterUpdateStatus(headerInfo, from, to, msgid, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -97,7 +97,7 @@ public class Usermail2NotfyMqServiceTest {
     String owner = from;
     String msgid = "835u389";
     int type = SessionEventType.EVENT_TYPE_2;
-    usermail2NotfyMqService.sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgid, type);
+    usermail2NotifyMqService.sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgid, type);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> mapCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic), fromCaptor.capture(), mapCaptor.capture());
@@ -140,7 +140,7 @@ public class Usermail2NotfyMqServiceTest {
     String to = "to@from@temail";
     boolean deleteAllMsg = true;
     int eventType = SessionEventType.EVENT_TYPE_4;
-    usermail2NotfyMqService.sendMqAfterDeleteSession(headerInfo, from, to, deleteAllMsg, eventType);
+    usermail2NotifyMqService.sendMqAfterDeleteSession(headerInfo, from, to, deleteAllMsg, eventType);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -164,7 +164,7 @@ public class Usermail2NotfyMqServiceTest {
     int attachmentSize = 100;
     String parentMsgId = "1938";
 
-    usermail2NotfyMqService
+    usermail2NotifyMqService
         .sendMqSaveMsgReply(headerInfo, from, to, owner, msgId, toMsg, seqNo, attachmentSize, parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
@@ -191,7 +191,7 @@ public class Usermail2NotfyMqServiceTest {
     int type = 0;
     String parentMsgId = "1938";
 
-    usermail2NotfyMqService.sendMqAfterUpdateMsgReply(xPacketId, cdtpHeader, from, to, owner, msgId, type, parentMsgId);
+    usermail2NotifyMqService.sendMqAfterUpdateMsgReply(xPacketId, cdtpHeader, from, to, owner, msgId, type, parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -215,7 +215,7 @@ public class Usermail2NotfyMqServiceTest {
     msgIds.add(msgId);
     int type = 0;
     String parentMsgId = "1938";
-    usermail2NotfyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, owner, msgIds, type, parentMsgId);
+    usermail2NotifyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, owner, msgIds, type, parentMsgId);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
@@ -235,7 +235,7 @@ public class Usermail2NotfyMqServiceTest {
     String to = "b@msgseal.com";
     int type = SessionEventType.EVENT_TYPE_33;
 
-    usermail2NotfyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, type);
+    usermail2NotifyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
@@ -256,7 +256,7 @@ public class Usermail2NotfyMqServiceTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add(msgId);
     int type = SessionEventType.EVENT_TYPE_35;
-    usermail2NotfyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, type);
+    usermail2NotifyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
@@ -277,7 +277,7 @@ public class Usermail2NotfyMqServiceTest {
     String msgId = "1132";
     List<TrashMailDTO> trashMailDtos = Arrays.asList(new TrashMailDTO(owner, to, msgId));
     int type = SessionEventType.EVENT_TYPE_36;
-    usermail2NotfyMqService.sendMqTrashMsgOpratorNotify(headerInfo, owner, trashMailDtos, type);
+    usermail2NotifyMqService.sendMqTrashMsgOpratorNotify(headerInfo, owner, trashMailDtos, type);
     ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);

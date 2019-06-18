@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Usermail2NotfyMqService implements SessionEventType, SessionEventKey {
+public class Usermail2NotifyMqService implements SessionEventType, SessionEventKey {
 
 
   private final IMqAdapter mqAdapter;
@@ -23,7 +23,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   private final Gson gs = new Gson();
 
   @Autowired
-  public Usermail2NotfyMqService(IMqAdapter mqAdapter, UsermailConfig usermailConfig) {
+  public Usermail2NotifyMqService(IMqAdapter mqAdapter, UsermailConfig usermailConfig) {
     this.mqAdapter = mqAdapter;
     this.usermailConfig = usermailConfig;
   }
@@ -35,7 +35,7 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
-   * @param msgid 消息id
+   * @param msgId 消息id
    * @param toMsg 发送的消息内容
    * @param seqNo 会话序号
    * @param eventType 事件类型
@@ -43,12 +43,12 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param author 消息作者
    * @param filter 能接收到此条消息的人（群聊消息的前提下，字段为空即发送给群聊中的所有成员）
    */
-  public void sendMqMsgSaveMail(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgid,
+  public void sendMqMsgSaveMail(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgId,
       String toMsg, long seqNo, int eventType, int attachmentSize, String author, List<String> filter) {
     Map<String, Object> eventMap = new HashMap<>(18);
     comboNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
-    eventMap.put(MSGID, msgid);
+    eventMap.put(MSGID, msgId);
     // 会话消息已接收 (未读+1)
     eventMap.put(TO_MSG, toMsg);
     eventMap.put(SEQ_NO, seqNo);
@@ -64,14 +64,14 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
-   * @param msgid 消息id
+   * @param msgId 消息id
    * @param eventType 事件类型
    */
   public void sendMqAfterUpdateStatus(CdtpHeaderDTO headerInfo, String from, String to,
-      String msgid, int eventType) {
+      String msgId, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(10);
     comboNormalParam(headerInfo, eventType, from, to, eventMap);
-    eventMap.put(MSGID, msgid);
+    eventMap.put(MSGID, msgId);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
@@ -83,15 +83,15 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
-   * @param msgid 消息id
+   * @param msgId 消息id
    * @param eventType 事件类型
    */
   public void sendMqUpdateMsg(String xPacketId, String cdtpHeader, String from, String to,
-      String owner, String msgid, int eventType) {
+      String owner, String msgId, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(12);
     comboNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
-    eventMap.put(MSGID, msgid);
+    eventMap.put(MSGID, msgId);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
@@ -202,15 +202,15 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
    * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
-   * @param msgids 消息id列表
+   * @param msgIds 消息id列表
    * @param eventType 事件类型
    */
   public void sendMqMoveTrashNotify(CdtpHeaderDTO headerInfo, String from, String to,
-      List<String> msgids, int eventType) {
+      List<String> msgIds, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(12);
     comboNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(OWNER, from);
-    eventMap.put(MSGID, gs.toJson(msgids));
+    eventMap.put(MSGID, gs.toJson(msgIds));
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 

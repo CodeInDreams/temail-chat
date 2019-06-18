@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-public class UsermailUsermail2NotfyMqServiceTest {
+public class UsermailUsermail2NotifyMqServiceTest {
 
   private final IMqAdapter mqAdapter = Mockito.mock(IMqAdapter.class);
   private final UsermailConfig usermailConfig = new UsermailConfig();
