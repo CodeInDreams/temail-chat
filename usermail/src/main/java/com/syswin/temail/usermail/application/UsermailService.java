@@ -166,7 +166,6 @@ public class UsermailService {
    * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
    * @return 单聊会话消息
    */
-  @Transactional(readOnly = true)
   public List<UsermailDO> getMails(String from, String to, long fromSeqNo, int pageSize, String filterSeqIds,
       String signal) {
     UmQueryDTO umQueryDto = new UmQueryDTO();
@@ -242,7 +241,6 @@ public class UsermailService {
    * @param usermailBoxes 会话
    * @return 收件箱列表
    */
-  @Transactional(readOnly = true)
   public List<MailboxDTO> mailboxes(String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
     Map<String, String> localMailBoxes = CollectionUtils.isEmpty(usermailBoxes) ? new HashMap<>(0) : usermailBoxes;
@@ -390,7 +388,6 @@ public class UsermailService {
    * @param msgIds 消息id列表
    * @return 单聊对象列表
    */
-  @Transactional(readOnly = true)
   public List<UsermailDO> batchQueryMsgs(String from, List<String> msgIds) {
     List<UsermailDO> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
@@ -403,7 +400,6 @@ public class UsermailService {
    * @param msgIds 消息id列表
    * @return 单聊回复消息列表
    */
-  @Transactional(readOnly = true)
   public List<UsermailDO> batchQueryMsgsReplyCount(String from, List<String> msgIds) {
     List<UsermailDO> usermailList = usermailRepo.getUsermailByFromToMsgIds(from, msgIds);
     for (int i = 0; i < usermailList.size(); i++) {
@@ -443,7 +439,8 @@ public class UsermailService {
     }
     usermailRepo.revertMsgFromTrash(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
     usermailMsgReplyRepo.batchUpdateByParentMsgIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
-    usermail2NotifyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
+    usermail2NotifyMqService
+        .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }
 
   /**
@@ -458,7 +455,8 @@ public class UsermailService {
     usermailMqService.sendMqRemoveTrash(temail, trashMails, UsermailAgentEventType.TRASH_REMOVE_0);
     LOGGER
         .info("Label-delete-usermail-trash: Remove msg from trash, params is temail:{},msginfo:{}", temail, trashMails);
-    usermail2NotifyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
+    usermail2NotifyMqService
+        .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
   }
 
   /**
@@ -501,7 +499,6 @@ public class UsermailService {
    * @param signal 向前向后拉取标识，before向前拉取，after向后拉取，默认before
    * @return 废纸篓消息列表
    */
-  @Transactional(readOnly = true)
   public List<UsermailDO> getMsgFromTrash(String temail, long timestamp, int pageSize, String signal) {
     QueryTrashDTO queryDto = new QueryTrashDTO();
     queryDto.setOwner(temail);
