@@ -2,6 +2,7 @@ package com.syswin.temail.usermail.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import java.io.Serializable;
 import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @ApiModel(value = "temail回复信息阅后即焚")
-public class ReplyDestoryDTO implements java.io.Serializable {
+public class ReplyDestroyDTO implements Serializable {
 
   @ApiModelProperty(value = "消息ID")
   @NotEmpty
@@ -25,7 +26,7 @@ public class ReplyDestoryDTO implements java.io.Serializable {
   @NotEmpty
   private String to;
 
-  public ReplyDestoryDTO(String msgId, String from, String to) {
+  public ReplyDestroyDTO(String msgId, String from, String to) {
     this.msgId = msgId;
     this.from = from;
     this.to = to;
