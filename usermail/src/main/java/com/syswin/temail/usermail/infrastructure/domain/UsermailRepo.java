@@ -67,7 +67,7 @@ public interface UsermailRepo {
    * @param msgid 消息id
    * @param status 消息状态
    */
-  void destoryAfterRead(String owner, String msgid, int status);
+  void destroyAfterRead(String owner, String msgid, int status);
 
   /**
    * 根据会话id批量删除消息

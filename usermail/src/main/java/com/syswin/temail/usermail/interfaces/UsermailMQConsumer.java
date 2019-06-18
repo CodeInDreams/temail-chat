@@ -100,7 +100,7 @@ public class UsermailMQConsumer implements IMqConsumer {
         owner = root.get(ParamsKey.SessionEventKey.OWNER).getAsString();
         msgId = root.get(ParamsKey.SessionEventKey.MSGID).getAsString();
         String replyDestroyParentId = root.get(ParamsKey.SessionEventKey.REPLY_MSG_PARENT_ID).getAsString();
-        usermailMsgReplyService.destoryAfterRead(xPacketId, cdtpHeader, from, to, owner, msgId, replyDestroyParentId);
+        usermailMsgReplyService.destroyAfterRead(xPacketId, cdtpHeader, from, to, owner, msgId, replyDestroyParentId);
         break;
       case UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6:
         String groupTemail = root.get(ParamsKey.SessionEventKey.GROUP_TEMAIL).getAsString();

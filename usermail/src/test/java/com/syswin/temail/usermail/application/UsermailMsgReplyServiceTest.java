@@ -214,7 +214,7 @@ public class UsermailMsgReplyServiceTest {
   }
 
   @Test
-  public void destoryAfterRead() {
+  public void destroyAfterRead() {
     String from = "XXXX@qq.com";
     String to = "YYYY@qq.com";
     String msgId = "1234565432345432343";
@@ -226,7 +226,7 @@ public class UsermailMsgReplyServiceTest {
     List<UsermailDO> usermails = new ArrayList<>();
     usermails.add(new UsermailDO());
     when(usermailRepo.getUsermailListByMsgid(reply.getParentMsgid())).thenReturn(usermails);
-    usermailMsgReplyService.destoryAfterRead(headerInfo, from, to, msgId);
+    usermailMsgReplyService.destroyAfterRead(headerInfo, from, to, msgId);
     //verify(usermailMqService).sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(),headerInfo.getCdtpHeader(),from,to,from, msgId, reply.getParentMsgid());
     verify(usermailMqService)
         .sendMqReplyMsgDestoryAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
@@ -245,7 +245,7 @@ public class UsermailMsgReplyServiceTest {
   }
 
   @Test
-  public void destoryAfterReadTest() {
+  public void destroyAfterReadTest() {
     String from = "owner@msgseal.com";
     String to = "to@msgseal.com";
     String owner = "owner@msgseal.com";
@@ -253,15 +253,15 @@ public class UsermailMsgReplyServiceTest {
     String replyMsgParentId = "13311";
     UsermailDO usermail = new UsermailDO(1, msgId, "", owner, "", 1, 1, owner, "", 0);
     when(usermailRepo.getUsermailByMsgid(replyMsgParentId, owner)).thenReturn(usermail);
-    when(usermailMsgReplyRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2)).thenReturn(1);
+    when(usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2)).thenReturn(1);
     usermailMsgReplyService
-        .destoryAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, owner, msgId,
+        .destroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, owner, msgId,
             replyMsgParentId);
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailMsgReplyRepo)
-        .destoryAfterRead(ownerCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
+        .destroyAfterRead(ownerCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(TemailStatus.STATUS_DESTORY_AFTER_READ_2, status);
   }

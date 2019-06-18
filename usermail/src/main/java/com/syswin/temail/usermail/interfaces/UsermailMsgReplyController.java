@@ -153,12 +153,12 @@ public class UsermailMsgReplyController {
    */
   @ApiOperation(value = "阅后即焚回复消息已焚(0x 100B)", notes = "回复消息阅后即焚")
   @PutMapping(value = "/usermail/msg/reply/destory")
-  public ResultDTO destoryAfterRead(HttpServletRequest request,
+  public ResultDTO destroyAfterRead(HttpServletRequest request,
       @RequestBody @Valid ReplyDestoryDTO replyDestoryDto) {
     ResultDTO resultDto = new ResultDTO();
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailMsgReplyService
-        .destoryAfterRead(cdtpHeaderDto, replyDestoryDto.getFrom(), replyDestoryDto.getTo(),
+        .destroyAfterRead(cdtpHeaderDto, replyDestoryDto.getFrom(), replyDestoryDto.getTo(),
             replyDestoryDto.getMsgId());
     return resultDto;
   }

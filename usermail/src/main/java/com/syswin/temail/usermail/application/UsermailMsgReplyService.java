@@ -240,12 +240,12 @@ public class UsermailMsgReplyService {
    * @param replyMsgParentId 父消息id
    */
   @Transactional
-  public void destoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
+  public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
       String replyMsgParentId) {
-    int count = usermailMsgReplyRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+    int count = usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
     if (count <= 0) {
       LOGGER.warn(
-          "Message destoryAfterRead failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
+          "Message destroyAfterRead failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
           xPacketId, cdtpHeader, from, to, msgId, owner);
       return;
     }
@@ -255,7 +255,7 @@ public class UsermailMsgReplyService {
       usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_26);
     } else {
-      LOGGER.warn("label-mq-destory-after-read: parentMsgId={},not-exist", replyMsgParentId);
+      LOGGER.warn("label-mq-destroy-after-read: parentMsgId={},not-exist", replyMsgParentId);
     }
   }
 
@@ -268,7 +268,7 @@ public class UsermailMsgReplyService {
    * @param msgId 消息id
    */
   @Transactional
-  public void destoryAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
+  public void destroyAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setOwner(from);
     usermailMsgReply.setMsgid(msgId);
@@ -283,7 +283,7 @@ public class UsermailMsgReplyService {
               from, to, from, msgId,
               parentMsgId);
     } else {
-      LOGGER.warn("msgReply-destoryAfterRead-illegal-msgId={}", msgId);
+      LOGGER.warn("msgReply-destroyAfterRead-illegal-msgId={}", msgId);
     }
 
   }

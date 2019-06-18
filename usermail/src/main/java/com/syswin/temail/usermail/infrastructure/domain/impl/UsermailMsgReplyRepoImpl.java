@@ -97,8 +97,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 更新的数量
    */
   @Override
-  public int destoryAfterRead(String owner, String msgid, int status) {
-    return usermailMsgReplyMapper.destoryAfterRead(owner, msgid, status, TemailStatus.STATUS_NORMAL_0);
+  public int destroyAfterRead(String owner, String msgid, int status) {
+    return usermailMsgReplyMapper.destroyAfterRead(owner, msgid, status, TemailStatus.STATUS_NORMAL_0);
   }
 
   /**

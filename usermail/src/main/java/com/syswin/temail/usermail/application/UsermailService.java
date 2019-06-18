@@ -335,7 +335,7 @@ public class UsermailService {
     // 添加消息状态判断，防止通知重发
     if (usermail != null && usermail.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
-      usermailRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+      usermailRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
       usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_3);
     } else {

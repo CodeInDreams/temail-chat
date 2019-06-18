@@ -134,7 +134,7 @@
     <include refid="WhereSql"/>
   </select>
 
-  <update id="destoryAfterRead">
+  <update id="destroyAfterRead">
     update `usermail_msg_reply`
     set `status`= #{status,jdbcType=INTEGER},
         `zip_msg` = null,

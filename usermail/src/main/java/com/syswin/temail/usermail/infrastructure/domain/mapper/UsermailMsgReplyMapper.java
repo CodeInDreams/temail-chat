@@ -70,7 +70,7 @@ public interface UsermailMsgReplyMapper {
    * @param originalStatus 消息初始状态
    * @return 更新的数量
    */
-  int destoryAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status,
+  int destroyAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status,
       @Param("originalStatus") int originalStatus);
 
   /**

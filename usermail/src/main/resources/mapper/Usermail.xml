@@ -89,7 +89,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </select>
 
-  <update id="destoryAfterRead" parameterType="umQuery">
+  <update id="destroyAfterRead" parameterType="umQuery">
     update `usermail`
     set `status`= #{status,jdbcType=INTEGER},
         `zip_msg` = null,

@@ -97,8 +97,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param status 消息状态
    */
   @Override
-  public void destoryAfterRead(String owner, String msgid, int status) {
-    usermailMapper.destoryAfterRead(owner, msgid, status);
+  public void destroyAfterRead(String owner, String msgid, int status) {
+    usermailMapper.destroyAfterRead(owner, msgid, status);
   }
 
   /**

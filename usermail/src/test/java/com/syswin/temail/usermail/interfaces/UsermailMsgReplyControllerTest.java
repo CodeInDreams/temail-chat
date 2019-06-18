@@ -195,7 +195,7 @@ public class UsermailMsgReplyControllerTest {
     String msgId = "09876";
     ReplyDestoryDTO replyDestoryDto = new ReplyDestoryDTO(from, to, msgId);
     Mockito.doNothing().when(usermailMsgReplyService)
-        .destoryAfterRead(headerInfo, from, to, msgId);
+        .destroyAfterRead(headerInfo, from, to, msgId);
     ObjectMapper mapper = new ObjectMapper();
     mockMvc.perform(
         put("/usermail/msg/reply/destory")

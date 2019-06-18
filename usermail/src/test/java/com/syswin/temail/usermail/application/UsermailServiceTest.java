@@ -377,7 +377,7 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void destoryAfterRead() {
+  public void destroyAfterRead() {
     String header = "CDTP-header";
     String from = "from@temail.com";
     String to = "to@temail.com";
@@ -406,7 +406,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailRepo).destoryAfterRead(fromCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
+    verify(usermailRepo).destroyAfterRead(fromCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(from, fromCaptor.getValue());
     assertEquals(msgId, msgIdCaptor.getValue());

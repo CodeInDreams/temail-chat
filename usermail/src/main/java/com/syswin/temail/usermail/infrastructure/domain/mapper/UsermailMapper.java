@@ -68,7 +68,7 @@ public interface UsermailMapper {
    * @param msgid 消息id
    * @param status 消息状态
    */
-  void destoryAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status);
+  void destroyAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status);
 
   /**
    * 根据会话id批量删除消息

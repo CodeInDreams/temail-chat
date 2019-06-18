@@ -70,7 +70,7 @@ public class UsermailMQConsumerTest {
   @Test
   public void consume5Test(){
     usermailMQConsumer.consumer(getTestMessage(UsermailAgentEventType.DESTROY_AFTER_READ_REPLY_MSG_5));
-    Mockito.verify(usermailMsgReplyService).destoryAfterRead(xPacketId, cdtpHeader, from, to, owner, msgId, parentMsgId);
+    Mockito.verify(usermailMsgReplyService).destroyAfterRead(xPacketId, cdtpHeader, from, to, owner, msgId, parentMsgId);
   }
 
   @Test

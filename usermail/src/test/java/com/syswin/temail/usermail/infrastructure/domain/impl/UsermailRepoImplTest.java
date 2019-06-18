@@ -4,14 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailDO;
-import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
-import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
-import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
-import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -96,15 +92,15 @@ public class UsermailRepoImplTest {
   }
 
   @Test
-  public void destoryAfterRead() {
+  public void destroyAfterRead() {
     String owner = "owner";
     String msgid = "msgid";
     int status = TemailStatus.STATUS_DESTORY_AFTER_READ_2;
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCap = ArgumentCaptor.forClass(Integer.class);
-    usermailRepoImpl.destoryAfterRead(owner, msgid, status);
-    Mockito.verify(usermailMapper).destoryAfterRead(ownerCap.capture(),msgIdCap.capture(),statusCap.capture());
+    usermailRepoImpl.destroyAfterRead(owner, msgid, status);
+    Mockito.verify(usermailMapper).destroyAfterRead(ownerCap.capture(),msgIdCap.capture(),statusCap.capture());
     assertThat(ownerCap.getValue()).isEqualTo(owner);
     assertThat(msgIdCap.getValue()).isEqualTo(msgid);
     assertThat(statusCap.getValue()).isEqualTo(status);

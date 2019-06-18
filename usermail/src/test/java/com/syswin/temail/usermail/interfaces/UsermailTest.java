@@ -71,7 +71,7 @@ public class UsermailTest {
     createUsermail(DARMsg.getFrom(), DARMsg.getTo(), DARMsg.getMsgData(), TemailStoreType.STORE_TYPE_TO_1, DARMsg.getMsgId(),
         TemailType.TYPE_DESTORY_AFTER_READ_1);
     String responseBeforeDestroy = getMails(DARMsg.getTo(), DARMsg.getFrom(), pageSize, seqId);
-    destoryAfterRead(DARMsg.getTo(), DARMsg.getFrom(), DARMsg.getMsgId());
+    destroyAfterRead(DARMsg.getTo(), DARMsg.getFrom(), DARMsg.getMsgId());
     String responseAfterDestroy = getMails(DARMsg.getTo(), DARMsg.getFrom(), pageSize, seqId);
     assertDestroyAfterRead(responseBeforeDestroy, responseAfterDestroy, DARMsg.getMsgId());
   }
@@ -226,7 +226,7 @@ public class UsermailTest {
     String to = "to20181013_1527";
     String msgId = "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1539415620000";
 
-    destoryAfterRead(from, to, msgId);
+    destroyAfterRead(from, to, msgId);
   }
 
   //发送消息(0x 0001)
@@ -337,7 +337,7 @@ public class UsermailTest {
   }
 
   //阅后即焚消息已焚(0x 0006)
-  private void destoryAfterRead(String from, String to, String msgId) {
+  private void destroyAfterRead(String from, String to, String msgId) {
     HttpHeaders headers = getHttpHeaders();
     Gson gs = new Gson();
     Map<String, Object> map = new HashMap<>();

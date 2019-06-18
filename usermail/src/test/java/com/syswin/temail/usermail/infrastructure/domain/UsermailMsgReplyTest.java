@@ -119,7 +119,7 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void destoryAfterRead() {
+  public void destroyAfterRead() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
@@ -133,7 +133,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
     usermailMsgReplyRepo.insert(usermailMsgReply);
-    int count  = usermailMsgReplyRepo.destoryAfterRead("A@systoontest.com","test111111", TemailStatus.STATUS_DESTORY_AFTER_READ_2);
+    int count  = usermailMsgReplyRepo.destroyAfterRead("A@systoontest.com","test111111", TemailStatus.STATUS_DESTORY_AFTER_READ_2);
     Assert.assertEquals(1,count);
     Assert.assertTrue(true);
   }

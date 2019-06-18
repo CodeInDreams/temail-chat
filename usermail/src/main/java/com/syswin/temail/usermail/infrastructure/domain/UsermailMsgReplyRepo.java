@@ -66,7 +66,7 @@ public interface UsermailMsgReplyRepo {
    * @param status 消息状态
    * @return 更新的数量
    */
-  int destoryAfterRead(String owner, String msgid, int status);
+  int destroyAfterRead(String owner, String msgid, int status);
 
   /**
    * 根据父消息批量修改消息状态
