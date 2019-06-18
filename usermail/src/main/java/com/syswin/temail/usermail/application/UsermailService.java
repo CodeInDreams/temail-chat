@@ -52,7 +52,7 @@ public class UsermailService {
   private final UsermailMsgReplyRepo usermailMsgReplyRepo;
   private final IUsermailAdapter usermailAdapter;
   private final UsermailSessionService usermailSessionService;
-  private final Usermail2NotifyMqService usermail2NotfiyMqService;
+  private final Usermail2NotifyMqService usermail2NotifyMqService;
   private final UsermailMqService usermailMqService;
   private final MsgCompressor msgCompressor;
   private final ConvertMsgService convertMsgService;
@@ -62,7 +62,7 @@ public class UsermailService {
   public UsermailService(UsermailRepo usermailRepo, UsermailBoxRepo usermailBoxRepo,
       UsermailMsgReplyRepo usermailMsgReplyRepo,
       IUsermailAdapter usermailAdapter,
-      UsermailSessionService usermailSessionService, Usermail2NotifyMqService usermail2NotfiyMqService,
+      UsermailSessionService usermailSessionService, Usermail2NotifyMqService usermail2NotifyMqService,
       UsermailMqService usermailMqService,
       MsgCompressor msgCompressor,
       ConvertMsgService convertMsgService) {
@@ -71,7 +71,7 @@ public class UsermailService {
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
     this.usermailAdapter = usermailAdapter;
     this.usermailSessionService = usermailSessionService;
-    this.usermail2NotfiyMqService = usermail2NotfiyMqService;
+    this.usermail2NotifyMqService = usermail2NotifyMqService;
     this.usermailMqService = usermailMqService;
     this.msgCompressor = msgCompressor;
     this.convertMsgService = convertMsgService;
@@ -143,7 +143,7 @@ public class UsermailService {
         eventType = SessionEventType.EVENT_TYPE_51;
         break;
     }
-    usermail2NotfiyMqService
+    usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, owner, msgId, usermail.getMsgData(), seqNo, eventType, attachmentSize,
             author, filter);
     usermailAdapter.setLastMsgId(owner, other, msgId);
@@ -225,7 +225,7 @@ public class UsermailService {
         .revertUsermail(new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     // 判断是否撤回成功，防止通知重复发送
     if (count > 0) {
-      usermail2NotfiyMqService
+      usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, from, to, owner, msgId, SessionEventType.EVENT_TYPE_2);
     } else {
       LOGGER.warn(
@@ -284,7 +284,7 @@ public class UsermailService {
     LOGGER.info("Label-delete-usermail-msg: delete reply msg by parentMsgId, owner is {}, parentMsgId is {}", from,
         msgIds);
     usermailMsgReplyRepo.deleteMsgByParentIdAndOwner(from, msgIds);
-    usermail2NotfiyMqService
+    usermail2NotifyMqService
         .sendMqAfterUpdateStatus(headerInfo, from, to, new Gson().toJson(msgIds), SessionEventType.EVENT_TYPE_4);
 
     UmQueryDTO umQueryDto = new UmQueryDTO();
@@ -336,7 +336,7 @@ public class UsermailService {
     if (usermail != null && usermail.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
       usermailRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);
-      usermail2NotfiyMqService
+      usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_3);
     } else {
       LOGGER.warn("destroyAfterRead method illegal param, from is {}, msgId is {}, usermail is {}", from, msgId,
@@ -359,7 +359,7 @@ public class UsermailService {
           .batchDeleteBySessionId(sessionId, queryDto.getFrom());
       usermailMsgReplyRepo.batchDeleteBySessionId(sessionId, queryDto.getFrom());
     }
-    usermail2NotfiyMqService
+    usermail2NotifyMqService
         .sendMqAfterDeleteSession(cdtpHeaderDto, queryDto.getFrom(), queryDto.getTo(), queryDto.isDeleteAllMsg(),
             SessionEventType.EVENT_TYPE_4);
     usermailAdapter.deleteLastMsgId(queryDto.getFrom(), queryDto.getTo());
@@ -425,7 +425,7 @@ public class UsermailService {
   public void moveMsgToTrash(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     usermailRepo.updateStatusByMsgIds(msgIds, from, TemailStatus.STATUS_TRASH_4);
     usermailMsgReplyRepo.batchUpdateByParentMsgIds(from, msgIds, TemailStatus.STATUS_TRASH_4);
-    usermail2NotfiyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
+    usermail2NotifyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
   }
 
   /**
@@ -443,7 +443,7 @@ public class UsermailService {
     }
     usermailRepo.revertMsgFromTrash(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
     usermailMsgReplyRepo.batchUpdateByParentMsgIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
-    usermail2NotfiyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
+    usermail2NotifyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }
 
   /**
@@ -458,7 +458,7 @@ public class UsermailService {
     usermailMqService.sendMqRemoveTrash(temail, trashMails, UsermailAgentEventType.TRASH_REMOVE_0);
     LOGGER
         .info("Label-delete-usermail-trash: Remove msg from trash, params is temail:{},msginfo:{}", temail, trashMails);
-    usermail2NotfiyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
+    usermail2NotifyMqService.sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
   }
 
   /**
@@ -530,9 +530,9 @@ public class UsermailService {
     }
     usermailBoxRepo.updateArchiveStatus(from, to, archiveStatus);
     if (archiveStatus == TemailArchiveStatus.STATUS_NORMAL_0) {
-      usermail2NotfiyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_34);
+      usermail2NotifyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_34);
     } else if (archiveStatus == TemailArchiveStatus.STATUS_ARCHIVE_1) {
-      usermail2NotfiyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_33);
+      usermail2NotifyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_33);
     }
   }
 
