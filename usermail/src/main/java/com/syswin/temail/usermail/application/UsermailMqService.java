@@ -25,10 +25,11 @@ public class UsermailMqService {
   }
 
   /**
+   * 删除废纸篓消息
+   *
    * @param owner 消息所属人
    * @param trashMailDtoList 被操作的消息列表
    * @param type 0:删除废纸篓消息
-   * @description 删除废纸篓消息
    */
   public void sendMqRemoveTrash(String owner,
       List<TrashMailDTO> trashMailDtoList, int type) {
@@ -43,13 +44,14 @@ public class UsermailMqService {
   }
 
   /**
+   * 单聊消息阅后即焚
+   *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
    * @param msgId 消息id
-   * @description 单聊消息阅后即焚
    */
   public void sendMqDestroyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
@@ -66,13 +68,14 @@ public class UsermailMqService {
   }
 
   /**
+   * 单聊消息撤回
+   *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
    * @param msgid 消息id
-   * @description 单聊消息撤回
    */
   public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to,
       String owner, String msgid) {
@@ -89,6 +92,8 @@ public class UsermailMqService {
   }
 
   /**
+   * 单聊回复消息撤回
+   *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 发件人
@@ -97,7 +102,6 @@ public class UsermailMqService {
    * @param parentMsgReplyId 父消息id
    * @param msgId 消息id
    * @return void
-   * @description 单聊回复消息撤回
    */
   public void sendMqRevertReplyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String parentMsgReplyId, String msgId) {
@@ -116,6 +120,8 @@ public class UsermailMqService {
   }
 
   /**
+   * 单聊回复消息阅后即焚
+   *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 发件人
@@ -124,7 +130,6 @@ public class UsermailMqService {
    * @param msgId 消息id
    * @param parentMsgId 父消息id
    * @return void
-   * @description 单聊回复消息阅后即焚
    */
   public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader, String from, String to,
       String owner, String msgId, String parentMsgId) {
@@ -143,10 +148,11 @@ public class UsermailMqService {
   }
 
   /**
+   * 群聊移除群成员事件
+   *
    * @param groupTemail 群聊地址
    * @param temail 被移除人地址
    * @return void
-   * @description 群聊移除群成员事件
    */
   public void sendMqRemoveGroupMemberMsg(String groupTemail, String temail) {
     Map<String, Object> usermailMap = new HashMap<>(7);

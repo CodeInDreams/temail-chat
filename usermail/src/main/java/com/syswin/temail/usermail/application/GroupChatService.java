@@ -18,8 +18,9 @@ public class GroupChatService {
 
 
   /**
+   * 群聊入群事件，新建会话
+   *
    * @param dto 入群事件参数(from:群 to:群成员)
-   * @description 群聊入群事件，新建会话
    */
   @Transactional
   public void syncGroupChatMemberEvent(GroupChatEventDTO dto) {
@@ -30,8 +31,9 @@ public class GroupChatService {
 
 
   /**
+   * 群聊出群事件，删除会话
+   *
    * @param dto 出群事件参数(from:群 to:群成员)
-   * @description 群聊出群事件，删除会话
    */
   @Transactional
   public void removeGroupChatMemeberEvent(GroupChatEventDTO dto) {

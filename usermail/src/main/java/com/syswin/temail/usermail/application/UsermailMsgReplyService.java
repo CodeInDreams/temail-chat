@@ -59,6 +59,8 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 发送单聊回复消息
+   *
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
@@ -68,7 +70,6 @@ public class UsermailMsgReplyService {
    * @param type 消息类型
    * @param attachmentSize 附件大小
    * @param owner 消息所属人
-   * @Description 发送单聊回复消息
    */
   @Transactional
   public Map createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message, String msgId,
@@ -96,6 +97,8 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 撤回单聊回复消息
+   *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 发件人
@@ -103,7 +106,6 @@ public class UsermailMsgReplyService {
    * @param owner 消息所属人
    * @param replyMsgParentId 父消息id
    * @param msgId 消息id
-   * @Description 撤回单聊回复消息
    */
   @Transactional
   public void revertMsgReply(String xPacketId, String cdtpHeader, String from, String to, String owner,
@@ -131,12 +133,13 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 撤回单聊回复消息
+   *
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgReplyId 父消息id
    * @param msgId 消息id
    * @param from 发件人
    * @param to 收件人
-   * @Description 撤回单聊回复消息
    */
   @Transactional
   public void revertMsgReply(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, String msgId, String from,
@@ -151,12 +154,13 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 删除单聊回复消息
+   *
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgReplyId 父消息id
    * @param msgIds 消息id列表
    * @param from 发件人
    * @param to 收件人
-   * @Description 删除单聊回复消息
    */
   @Transactional
   public void removeMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
@@ -187,6 +191,8 @@ public class UsermailMsgReplyService {
 
 
   /**
+   * 拉取单聊回复消息
+   *
    * @param cdtpHeaderDto 头信息（header和xPacketId）
    * @param parentMsgid 父消息id
    * @param pageSize 分页大小
@@ -195,7 +201,6 @@ public class UsermailMsgReplyService {
    * @param owner 消息所属人
    * @param filterSeqIds 过滤断层seqId
    * @return 拉取到的单聊回复消息列表
-   * @Description 拉取单聊回复消息
    */
   @Transactional
   public List<UsermailMsgReplyDO> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize,
@@ -224,6 +229,8 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 阅后即焚回复消息
+   *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
    * @param from 收件人
@@ -231,7 +238,6 @@ public class UsermailMsgReplyService {
    * @param owner 消息所属人
    * @param msgId 消息id
    * @param replyMsgParentId 父消息id
-   * @Description 阅后即焚回复消息
    */
   @Transactional
   public void destoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
@@ -254,11 +260,12 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 阅后即焚回复消息
+   *
    * @param headerInfo 头信息（header和xPacketId）
    * @param from 发件人
    * @param to 收件人
    * @param msgId 消息id
-   * @Description 阅后即焚回复消息
    */
   @Transactional
   public void destoryAfterRead(CdtpHeaderDTO headerInfo, String from, String to, String msgId) {
@@ -283,9 +290,10 @@ public class UsermailMsgReplyService {
 
 
   /**
+   * 校验源消息类型是否为合法
+   *
    * @param parentMsgId 父消息id
    * @return 单聊对象列表
-   * @Description 校验源消息类型是否为合法
    */
   private List<UsermailDO> msgReplyTypeValidate(String parentMsgId) {
     List<UsermailDO> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
@@ -297,10 +305,11 @@ public class UsermailMsgReplyService {
   }
 
   /**
+   * 校验源消息类型是否为合法
+   *
    * @param parentMsgId 父消息id
    * @param owner 消息所属人
    * @return 单聊对象信息
-   * @Description 校验源消息类型是否为合法
    */
   public UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
 

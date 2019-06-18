@@ -16,9 +16,10 @@ public class UmBlacklistProxy {
   }
 
   /**
+   * 检查发件人是否在收件人黑名单中
+   *
    * @param from 发件人
    * @param to 收件人
-   * @description 检查发件人是否在收件人黑名单中
    */
   public void checkInBlacklist(String from, String to) {
     int count = usermailBlacklistService.isInBlacklist(from, to);

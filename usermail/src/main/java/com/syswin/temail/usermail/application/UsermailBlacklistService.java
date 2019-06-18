@@ -22,9 +22,10 @@ public class UsermailBlacklistService {
   }
 
   /**
+   * 保存单聊黑名单
+   *
    * @param usermailBlacklist 黑名单参数（temailAddress:发起人 blackedAddress:被拉黑人）
    * @return 新增行数
-   * @description 保存单聊黑名单
    */
   @Transactional
   public int save(UsermailBlacklistDO usermailBlacklist) {
@@ -33,9 +34,10 @@ public class UsermailBlacklistService {
   }
 
   /**
+   * 移除单聊黑名单
+   *
    * @param usermailBlacklist 移除黑名单参数（temailAddress:发起人 blackedAddress:被移除人）
    * @return 删除行数
-   * @description 移除单聊黑名单
    */
   @Transactional
   public int remove(UsermailBlacklistDO usermailBlacklist) {
@@ -43,10 +45,11 @@ public class UsermailBlacklistService {
   }
 
   /**
+   * 查询单条黑名单数据
+   *
    * @param temailAddress 发起人
    * @param blackedAddress 被拉黑人
    * @return 黑名单数据（temailAddress:发起人 blackedAddress:被拉黑人）
-   * @description 查询单条黑名单数据
    */
   @Transactional(readOnly = true)
   public UsermailBlacklistDO findByAddresses(String temailAddress, String blackedAddress) {
@@ -54,9 +57,10 @@ public class UsermailBlacklistService {
   }
 
   /**
+   * 查询黑名单列表
+   *
    * @param temailAddress 发送人
    * @return 发送人黑名单列表（temailAddress:发起人 blackedAddress:被拉黑人）
-   * @description 查询黑名单列表
    */
   @Transactional(readOnly = true)
   public List<UsermailBlacklistDO> findByTemailAddress(String temailAddress) {
@@ -64,10 +68,11 @@ public class UsermailBlacklistService {
   }
 
   /**
+   * 检查发件人是否在收件人的黑名单中
+   *
    * @param from 发件人
    * @param to 收件人
    * @return int  是否在黑名单中（1:在，0:不在）
-   * @description 检查发件人是否在收件人的黑名单中
    */
   @Transactional(readOnly = true)
   public int isInBlacklist(String from, String to) {

@@ -234,12 +234,13 @@ public class Usermail2NotfyMqService implements SessionEventType, SessionEventKe
   }
 
   /**
+   * 组装公共参数
+   *
    * @param headerInfo 头信息（header和xPacketId）
    * @param eventType 事件类型
    * @param from 发件人
    * @param to 收件人
    * @param eventMap 参数集合
-   * @description 组装公共参数
    */
   private void comboNormalParam(CdtpHeaderDTO headerInfo, int eventType, String from, String to,
       Map<String, Object> eventMap) {
