@@ -19,7 +19,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class UsermailConfiguration {
 
   @Bean
-  @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "ROCKETMQ", matchIfMissing = true)
+  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
   MqClient mqclient(UsermailConfig config, UsermailMQConsumer usermailMQConsumer) {
     return new MqClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer,
         config.namesrvAddr, usermailMQConsumer, MqClient.RocketMQModel.CLUSTERING);
@@ -32,7 +32,7 @@ public class UsermailConfiguration {
 
 
   @Bean
-  @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")
+  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "libraryMessage")
   MqConsumerConfig usermailConsumerConfig(UsermailConfig config, UsermailMQConsumer consumer) {
     Consumer<String> listener = consumer::consumer;
     return MqConsumerConfig.create()
