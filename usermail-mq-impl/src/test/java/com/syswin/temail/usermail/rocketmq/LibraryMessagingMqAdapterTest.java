@@ -1,15 +1,16 @@
 package com.syswin.temail.usermail.rocketmq;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.syswin.library.messaging.MqProducer;
 import com.syswin.library.messaging.rocketmq.RocketMqProducer;
 import java.util.Map;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -56,7 +57,13 @@ public class LibraryMessagingMqAdapterTest {
     assertThat(result).isFalse();
   }
 
-  @Ignore
+  /**
+   * Before Mockito can be used for mocking final classes and methods, it needs to be configured.
+   * We need to add a text file to the project’s src/test/resources/mockito-extensions directory
+   * named org.mockito.plugins.MockMaker and add a single line of text:
+   * mock-maker-inline
+   * @throws Exception
+   */
   @Test
   public void sendMessageSuccess() throws Exception {
     String topic = "topic";
@@ -65,11 +72,17 @@ public class LibraryMessagingMqAdapterTest {
     when(rocketMQProperties.getProducerGroup()).thenReturn(producerGroup);
     RocketMqProducer rocketMqProducer = Mockito.mock(RocketMqProducer.class);
     when(mqProducerMap.get(producerGroup)).thenReturn(rocketMqProducer);
-
-    Mockito.doNothing().when(rocketMqProducer).send(topic, tag, message, null);
-
     boolean result = libraryMessagingMqAdapter.sendMessage(topic, tag, message);
-
+    ArgumentCaptor<String> topicCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> tagCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<String> keysCaptor = ArgumentCaptor.forClass(String.class);
+    verify(rocketMqProducer)
+        .send(messageCaptor.capture(), topicCaptor.capture(), tagCaptor.capture(), keysCaptor.capture());
+    assertThat(topicCaptor.getValue()).isEqualTo(topic);
+    assertThat(tagCaptor.getValue()).isEqualTo(tag);
+    assertThat(messageCaptor.getValue()).isEqualTo(message);
+    assertThat(keysCaptor.getValue()).isEqualTo(null);
     assertThat(result).isTrue();
   }
 
