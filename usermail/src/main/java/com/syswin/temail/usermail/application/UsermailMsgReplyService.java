@@ -73,11 +73,12 @@ public class UsermailMsgReplyService {
    * @return map(key包括 : msgId 、 seqId)
    */
   @Transactional
-  public Map createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message, String msgId,
+  public Map<String, Object> createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message,
+      String msgId,
       String parentMsgId, int type, int attachmentSize, String owner) {
     String sessionid = usermailSessionService.getSessionID(from, to);
     msgReplyTypeValidate(parentMsgId, owner);
-    Map result = new HashMap(2);
+    Map<String, Object> result = new HashMap<>(4);
     long msgReplySeqNo = usermailAdapter.getMsgReplySeqNo(parentMsgId, owner);
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO(usermailAdapter.getMsgReplyPkID(), parentMsgId, msgId,
         from, to, msgReplySeqNo, "", TemailStatus.STATUS_NORMAL_0, type, owner, sessionid,
@@ -88,12 +89,13 @@ public class UsermailMsgReplyService {
     String lastReplyMsgid = usermailMsgReply.getMsgid();
     usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), lastReplyMsgid);
     LOGGER.debug("new rely created, update msgId={} lastReplyMsgid={}", parentMsgId, lastReplyMsgid);
-
     usermail2NotifyMqService
         .sendMqSaveMsgReply(cdtpHeaderDto, from, to, owner, msgId, message, msgReplySeqNo, attachmentSize,
             parentMsgId);
-    result.put("msgId", msgId);
-    result.put("seqId", msgReplySeqNo);
+    final String msgIdKey = "msgId";
+    final String seqIdKey = "seqId";
+    result.put(msgIdKey, msgId);
+    result.put(seqIdKey, msgReplySeqNo);
     return result;
   }
 

@@ -231,7 +231,8 @@ public class UsermailMsgReplyServiceTest {
     ArgumentCaptor<String> lastMsgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> countCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
-        .updateReplyCountAndLastReplyMsgid(parentCaptor.capture(), ownerCaptor.capture(), countCaptor.capture(), lastMsgIdCaptor.capture());
+        .updateReplyCountAndLastReplyMsgid(parentCaptor.capture(), ownerCaptor.capture(), countCaptor.capture(),
+            lastMsgIdCaptor.capture());
     verify(usermail2NotifyMqService).sendMqAfterRemoveMsgReply(any(), any(), any(), any(), any(), anyInt(), any());
     assertEquals(parentCaptor.getValue(), parentMsgid);
     assertEquals(ownerCaptor.getValue(), from);
@@ -259,7 +260,8 @@ public class UsermailMsgReplyServiceTest {
       usermailMsgReply.setTo(to);
       usermailMsgReply.setFrom(from);
       usermailMsgReply.setSeqNo(i);
-      usermailMsgReply.setZipMsg(msgCompressor.zipWithDecode(Base64.getEncoder().encodeToString("demo msg".getBytes())));
+      usermailMsgReply
+          .setZipMsg(msgCompressor.zipWithDecode(Base64.getEncoder().encodeToString("demo msg".getBytes())));
       usermailMsgReplyList.add(usermailMsgReply);
     }
     UsermailDO usermail = new UsermailDO();
