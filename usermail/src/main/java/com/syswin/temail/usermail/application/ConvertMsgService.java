@@ -44,7 +44,7 @@ public class ConvertMsgService {
 
       for (int i = 0; i < usermails.size(); i++) {
         UsermailDO usermail = usermails.get(i);
-        //兼容旧版本阅后即焚逻辑
+        // 兼容旧版本阅后即焚逻辑
         if (usermail.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
           usermail.setMessage("");
           continue;
@@ -91,7 +91,7 @@ public class ConvertMsgService {
 
       for (int i = 0; i < replyList.size(); i++) {
         UsermailMsgReplyDO reply = replyList.get(i);
-        //兼容旧版本阅后即焚逻辑
+        // 兼容旧版本阅后即焚逻辑
         if (reply.getStatus() == TemailStatus.STATUS_DESTORY_AFTER_READ_2) {
           reply.setMsg("");
           continue;
