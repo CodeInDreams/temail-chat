@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.common;
 
-public class Constants {
+public final class Constants {
 
   public interface UsermailAgentEventType {
 
