@@ -5,7 +5,15 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Setter
+@Getter
+@ToString
+@NoArgsConstructor
 @ApiModel(value = "废纸篓信息")
 public class TrashMailDTO implements Serializable {
 
@@ -25,43 +33,6 @@ public class TrashMailDTO implements Serializable {
     this.from = from;
     this.to = to;
     this.msgId = msgId;
-  }
-
-  public TrashMailDTO() {
-  }
-
-
-  public String getFrom() {
-    return from;
-  }
-
-  public void setFrom(String from) {
-    this.from = from;
-  }
-
-  public String getTo() {
-    return to;
-  }
-
-  public void setTo(String to) {
-    this.to = to;
-  }
-
-  public String getMsgId() {
-    return msgId;
-  }
-
-  public void setMsgId(String msgId) {
-    this.msgId = msgId;
-  }
-
-  @Override
-  public String toString() {
-    return "TrashMailDTO{" +
-        "from='" + from + '\'' +
-        ", to='" + to + '\'' +
-        ", msgId='" + msgId + '\'' +
-        '}';
   }
 
   @Override

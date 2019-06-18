@@ -4,7 +4,15 @@ import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 import java.util.List;
 import javax.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 public class UsermailMsgReplyDTO implements Serializable {
 
   @ApiModelProperty(value = "发送者")
@@ -31,7 +39,7 @@ public class UsermailMsgReplyDTO implements Serializable {
   private int storeType;
 
   public UsermailMsgReplyDTO(String msgId, String from, String to, int type, String mssage,
-      String parentMsgId, int attachmentSize,List<String> msgIds,int storeType) {
+      String parentMsgId, int attachmentSize, List<String> msgIds, int storeType) {
     this.msgId = msgId;
     this.from = from;
     this.to = to;
@@ -41,96 +49,5 @@ public class UsermailMsgReplyDTO implements Serializable {
     this.attachmentSize = attachmentSize;
     this.msgIds = msgIds;
     this.storeType = storeType;
-  }
-
-  public UsermailMsgReplyDTO() {
-  }
-
-
-  public String getFrom() {
-    return from;
-  }
-
-  public void setFrom(String from) {
-    this.from = from;
-  }
-
-  public String getTo() {
-    return to;
-  }
-
-  public void setTo(String to) {
-    this.to = to;
-  }
-
-  public String getMsgData() {
-    return msgData;
-  }
-
-  public void setMsgData(String msgData) {
-    this.msgData = msgData;
-  }
-
-  public String getParentMsgId() {
-    return parentMsgId;
-  }
-
-  public void setParentMsgId(String parentMsgId) {
-    this.parentMsgId = parentMsgId;
-  }
-
-  public String getMsgId() {
-    return msgId;
-  }
-
-  public void setMsgId(String msgId) {
-    this.msgId = msgId;
-  }
-
-  public int getType() {
-    return type;
-  }
-
-  public void setType(int type) {
-    this.type = type;
-  }
-
-  public int getAttachmentSize() {
-    return attachmentSize;
-  }
-
-  public void setAttachmentSize(int attachmentSize) {
-    this.attachmentSize = attachmentSize;
-  }
-
-  public List<String> getMsgIds() {
-    return msgIds;
-  }
-
-  public void setMsgIds(List<String> msgIds) {
-    this.msgIds = msgIds;
-  }
-
-  public int getStoreType() {
-    return storeType;
-  }
-
-  public void setStoreType(int storeType) {
-    this.storeType = storeType;
-  }
-
-  @Override
-  public String toString() {
-    return "UsermailMsgReplyDTO{" +
-        "from='" + from + '\'' +
-        ", to='" + to + '\'' +
-        ", msgData='" + msgData + '\'' +
-        ", parentMsgId='" + parentMsgId + '\'' +
-        ", msgId='" + msgId + '\'' +
-        ", type=" + type +
-        ", attachmentSize=" + attachmentSize +
-        ", storeType=" + storeType +
-        ", msgIds=" + msgIds +
-        '}';
   }
 }

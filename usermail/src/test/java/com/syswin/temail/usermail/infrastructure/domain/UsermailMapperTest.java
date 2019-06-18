@@ -408,8 +408,4 @@ public class UsermailMapperTest {
     } while (!isUnique);
     return id;
   }
-
-  private void insertRecord() {
-
-  }
 }

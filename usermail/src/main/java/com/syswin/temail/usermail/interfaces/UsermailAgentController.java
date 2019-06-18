@@ -91,7 +91,6 @@ public class UsermailAgentController {
   /**
    * 发送者拉取指定单聊会话消息，该消息存储在发送者收件箱。
    *
-   * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
    * @param from 发送者
    * @param to 接收者
    * @param pageSize 会话消息列表每页最大数量。
@@ -104,7 +103,6 @@ public class UsermailAgentController {
   @ApiOperation(value = "同步单聊会话消息(0x 0003)", notes = "接收者拉取邮件及附件相关信息")
   @GetMapping(value = "/usermail")
   public ResultDTO getMails(
-      HttpServletRequest request,
       @ApiParam(value = "发送者", required = true) @RequestParam(value = "from", defaultValue = "") String from,
       @ApiParam(value = "接收者", required = true) @RequestParam(value = "to", defaultValue = "") String to,
       @ApiParam(value = "分页`大小", required = true) @RequestParam(value = "pageSize", defaultValue = "20") int pageSize,

@@ -3,9 +3,17 @@ package com.syswin.temail.usermail.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotEmpty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @ApiModel(value = "temail回复信息阅后即焚")
-public class ReplyDestroyDTO implements java.io.Serializable {
+public class ReplyDestoryDTO implements java.io.Serializable {
 
   @ApiModelProperty(value = "消息ID")
   @NotEmpty
@@ -17,45 +25,9 @@ public class ReplyDestroyDTO implements java.io.Serializable {
   @NotEmpty
   private String to;
 
-  public ReplyDestroyDTO(String msgId, String from, String to) {
+  public ReplyDestoryDTO(String msgId, String from, String to) {
     this.msgId = msgId;
     this.from = from;
     this.to = to;
-  }
-
-  public ReplyDestroyDTO() {
-  }
-
-  public String getMsgId() {
-    return msgId;
-  }
-
-  public void setMsgId(String msgId) {
-    this.msgId = msgId;
-  }
-
-  public String getFrom() {
-    return from;
-  }
-
-  public void setFrom(String from) {
-    this.from = from;
-  }
-
-  public String getTo() {
-    return to;
-  }
-
-  public void setTo(String to) {
-    this.to = to;
-  }
-
-  @Override
-  public String toString() {
-    return "ReplyDestroyDTO{" +
-        "msgId='" + msgId + '\'' +
-        ", from='" + from + '\'' +
-        ", to='" + to + '\'' +
-        '}';
   }
 }

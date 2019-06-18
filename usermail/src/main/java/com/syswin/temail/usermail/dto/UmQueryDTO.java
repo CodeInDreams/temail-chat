@@ -1,8 +1,16 @@
 package com.syswin.temail.usermail.dto;
 
 import java.util.Objects;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.ibatis.type.Alias;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @Alias("umQuery")
 public class UmQueryDTO implements java.io.Serializable {
 
@@ -15,82 +23,9 @@ public class UmQueryDTO implements java.io.Serializable {
   private String owner;
   private String signal;
 
-  public UmQueryDTO() {
-  }
-
   public UmQueryDTO(String sessionid, String owner) {
     this.sessionid = sessionid;
     this.owner = owner;
-  }
-
-  public long getFromSeqNo() {
-    return fromSeqNo;
-  }
-
-  public void setFromSeqNo(long fromSeqNo) {
-    this.fromSeqNo = fromSeqNo;
-  }
-
-  public int getPageSize() {
-    return pageSize;
-  }
-
-  public void setPageSize(int pageSize) {
-    this.pageSize = pageSize;
-  }
-
-  public String getMsgid() {
-    return msgid;
-  }
-
-  public void setMsgid(String msgid) {
-    this.msgid = msgid;
-  }
-
-  public int getStatus() {
-    return status;
-  }
-
-  public void setStatus(int status) {
-    this.status = status;
-  }
-
-  public String getSessionid() {
-    return sessionid;
-  }
-
-  public void setSessionid(String sessionid) {
-    this.sessionid = sessionid;
-  }
-
-  public String getOwner() {
-    return owner;
-  }
-
-  public void setOwner(String owner) {
-    this.owner = owner;
-  }
-
-  public String getSignal() {
-    return signal;
-  }
-
-  public void setSignal(String signal) {
-    this.signal = signal;
-  }
-
-  @Override
-  public String toString() {
-    final StringBuilder sb = new StringBuilder("UmQueryDTO{");
-    sb.append("fromSeqNo=").append(fromSeqNo);
-    sb.append(", pageSize=").append(pageSize);
-    sb.append(", msgid='").append(msgid).append('\'');
-    sb.append(", status=").append(status);
-    sb.append(", sessionid='").append(sessionid).append('\'');
-    sb.append(", owner='").append(owner).append('\'');
-    sb.append(", signal='").append(signal).append('\'');
-    sb.append('}');
-    return sb.toString();
   }
 
   @Override
