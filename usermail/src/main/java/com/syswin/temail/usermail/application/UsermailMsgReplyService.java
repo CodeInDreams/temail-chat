@@ -70,6 +70,7 @@ public class UsermailMsgReplyService {
    * @param type 消息类型
    * @param attachmentSize 附件大小
    * @param owner 消息所属人
+   * @return map(key包括 : msgId 、 seqId)
    */
   @Transactional
   public Map createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message, String msgId,

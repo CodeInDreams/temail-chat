@@ -104,6 +104,7 @@ public class UsermailService {
    * @param usermail 创建temail时消息信息
    * @param owner 消息所属人
    * @param other 收件人
+   * @return map(key包括 : msgId 、 seqId)
    */
   @Transactional
   public Map<String, Object> sendMail(CdtpHeaderDTO headerInfo, CreateUsermailDTO usermail, String owner,
