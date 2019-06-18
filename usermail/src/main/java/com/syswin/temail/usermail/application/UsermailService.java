@@ -480,8 +480,8 @@ public class UsermailService {
     }
     usermailRepo.removeMsgByStatus(trashMails, temail, TemailStatus.STATUS_TRASH_4);
     LOGGER
-        .info("Label-delete-usermail-trash: Mq consumer remove msg from trash, params is temail:{},msginfo:{}", temail,
-            trashMails);
+        .info("Label-delete-usermail-trash: Mq consumer remove msg from trash, params is temail:{},msginfo:{}",
+            temail, trashMails);
     usermailMsgReplyRepo.deleteMsgByParentIdAndOwner(temail, msgIds);
   }
 

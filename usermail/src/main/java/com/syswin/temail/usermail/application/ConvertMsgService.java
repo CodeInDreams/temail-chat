@@ -34,6 +34,7 @@ public class ConvertMsgService {
 
   /**
    * 将在mysql中查询到的zipmsg解压后set到单聊消息记录，为null的话去Cassandra查询 并将其解压后的消息set到单聊消息记录
+   *
    * @param usermails 消息不完整的单聊消息列表
    * @return 补全的单聊消息列表
    */
@@ -82,6 +83,7 @@ public class ConvertMsgService {
 
   /**
    * 将在mysql中查询到的zipmsg解压后set到单聊回复消息记录，为null的话去Cassandra查询 并将其解压后set到单聊回复消息记录
+   *
    * @param replyList 消息不完整的单聊回复消息列表
    * @return 补全的单聊回复消息列表
    */

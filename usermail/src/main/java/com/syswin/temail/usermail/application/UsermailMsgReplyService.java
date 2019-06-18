@@ -198,8 +198,8 @@ public class UsermailMsgReplyService {
    * @Description 拉取单聊回复消息
    */
   @Transactional
-  public List<UsermailMsgReplyDO> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize, long seqId,
-      String signal, String owner, String filterSeqIds) {
+  public List<UsermailMsgReplyDO> getMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgid, int pageSize,
+      long seqId, String signal, String owner, String filterSeqIds) {
     msgReplyTypeValidate(parentMsgid, owner);
     QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
     dto.setFromSeqNo(seqId);

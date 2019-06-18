@@ -74,7 +74,8 @@ public class UsermailMqService {
    * @param msgid 消息id
    * @description 单聊消息撤回
    */
-  public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgid) {
+  public void sendMqRevertMsg(String xPacketId, String cdtpHeader, String from, String to,
+      String owner, String msgid) {
     Map<String, Object> usermailMap = new HashMap<>(12);
     usermailMap.put(ParamsKey.SessionEventKey.OWNER, owner);
     usermailMap.put(ParamsKey.SessionEventKey.FROM, from);
@@ -125,9 +126,8 @@ public class UsermailMqService {
    * @return void
    * @description 单聊回复消息阅后即焚
    */
-  public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
-      String msgId, String parentMsgId) {
-
+  public void sendMqReplyMsgDestoryAfterRead(String xPacketId, String cdtpHeader, String from, String to,
+      String owner, String msgId, String parentMsgId) {
     Map<String, Object> usermailMap = new HashMap<>(13);
     usermailMap.put(ParamsKey.SessionEventKey.X_PACKET_ID, xPacketId);
     usermailMap.put(ParamsKey.SessionEventKey.CDTP_HEADER, cdtpHeader);

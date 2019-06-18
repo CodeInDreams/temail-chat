@@ -87,8 +87,7 @@ public class UsermailMsgReplyInterfaceTest {
 
   private UsermailMsgReplyDO getLastMsgInfo(ResponseEntity<String> responseEntity) {
     GsonBuilder builder = new GsonBuilder();
-
-// Register an adapter to manage the date types as long values
+    // Register an adapter to manage the date types as long values
     builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
       public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         return new Date(json.getAsJsonPrimitive().getAsLong());
@@ -105,8 +104,7 @@ public class UsermailMsgReplyInterfaceTest {
   }
 
   private String createMsyReply(String from, String to, String msgId, int type, List<String> msgIds, int storeType,
-      String parentMsgId, String message,
-      int attachmentSize) {
+      String parentMsgId, String message, int attachmentSize) {
     HttpHeaders httpHeaders = getHttpHeaders();
     Map<String, Object> map = new HashMap<>();
 
