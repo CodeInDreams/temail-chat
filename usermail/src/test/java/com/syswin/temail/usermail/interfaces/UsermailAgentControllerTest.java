@@ -104,12 +104,19 @@ public class UsermailAgentControllerTest {
     CreateUsermailDTO usermailDto = new CreateUsermailDTO(
         "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         "bob@temail.com", "alice@temail.com", 0, 1, "test_from_data", 100);
+    CreateUsermailDTO usermailDto1 = new CreateUsermailDTO(
+        "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
+        "bob@temail.com", "alice@temail.com", 0, 2, "test_from_data", 100);
+    CreateUsermailDTO usermailDto2 = new CreateUsermailDTO(
+        "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
+        "bob@temail.com", "alice@temail.com", 0, 0, "test_from_data", 100);
     Mockito.doNothing().when(mockUmBlacklistProxy)
         .checkInBlacklist("bob@temail.com", "alice@temail.com");
     Map<String, Object> map = new HashMap<>();
     map.put("msgId", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
     map.put("seqNo", new Random().nextInt());
     Mockito.doReturn(map).when(usermailService).sendMail(headerInfo, usermailDto, "bob@temail.com", "alice@temail.com");
+    Mockito.doReturn(map).when(usermailService).sendMail(headerInfo, usermailDto1, "bob@temail.com", "alice@temail.com");
     ObjectMapper mapper = new ObjectMapper();
     mockMvc.perform(
         post("/usermail")
@@ -120,6 +127,23 @@ public class UsermailAgentControllerTest {
             .content(mapper.writeValueAsString(usermailDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
+    mockMvc.perform(
+        post("/usermail")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .accept(MediaType.APPLICATION_JSON_UTF8)
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .content(mapper.writeValueAsString(usermailDto1)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200));
+    mockMvc.perform(
+        post("/usermail")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .accept(MediaType.APPLICATION_JSON_UTF8)
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .content(mapper.writeValueAsString(usermailDto2)))
+        .andExpect(jsonPath("$.code").value(459));
   }
 
   @Test
