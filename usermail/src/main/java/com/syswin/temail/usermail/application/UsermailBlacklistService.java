@@ -27,7 +27,6 @@ public class UsermailBlacklistService {
    * @param usermailBlacklist 黑名单参数（temailAddress:发起人 blackedAddress:被拉黑人）
    * @return 新增行数
    */
-  @Transactional
   public int save(UsermailBlacklistDO usermailBlacklist) {
     usermailBlacklist.setId(iUsermailAdapter.getUsermailBlacklistPkID());
     return usermailBlacklistRepo.insert(usermailBlacklist);
@@ -51,7 +50,6 @@ public class UsermailBlacklistService {
    * @param blackedAddress 被拉黑人
    * @return 黑名单数据（temailAddress:发起人 blackedAddress:被拉黑人）
    */
-  @Transactional(readOnly = true)
   public UsermailBlacklistDO findByAddresses(String temailAddress, String blackedAddress) {
     return usermailBlacklistRepo.selectByAddresses(temailAddress, blackedAddress);
   }
@@ -62,7 +60,6 @@ public class UsermailBlacklistService {
    * @param temailAddress 发送人
    * @return 发送人黑名单列表（temailAddress:发起人 blackedAddress:被拉黑人）
    */
-  @Transactional(readOnly = true)
   public List<UsermailBlacklistDO> findByTemailAddress(String temailAddress) {
     return usermailBlacklistRepo.selectByTemailAddress(temailAddress);
   }
@@ -74,7 +71,6 @@ public class UsermailBlacklistService {
    * @param to 收件人
    * @return int  是否在黑名单中（1:在，0:不在）
    */
-  @Transactional(readOnly = true)
   public int isInBlacklist(String from, String to) {
     // from to 对应黑名单要反过来查询，确认自己是否被[to]加入黑名单
     return usermailBlacklistRepo.countByAddresses(to, from);
