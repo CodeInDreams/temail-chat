@@ -4,7 +4,6 @@ import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UmBlacklistProxy {
@@ -21,7 +20,6 @@ public class UmBlacklistProxy {
    * @param to 收件人
    * @description 检查发件人是否在收件人黑名单中
    */
-  @Transactional
   public void checkInBlacklist(String from, String to) {
     int count = usermailBlacklistService.isInBlacklist(from, to);
     if (count != 0) {
