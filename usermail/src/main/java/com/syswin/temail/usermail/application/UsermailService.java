@@ -332,7 +332,7 @@ public class UsermailService {
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
     UsermailDO usermail = usermailRepo.getUsermailByMsgid(msgId, owner);
-    //添加消息状态判断，防止通知重发
+    // 添加消息状态判断，防止通知重发
     if (usermail != null && usermail.getType() == TemailType.TYPE_DESTORY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
       usermailRepo.destoryAfterRead(owner, msgId, TemailStatus.STATUS_DESTORY_AFTER_READ_2);

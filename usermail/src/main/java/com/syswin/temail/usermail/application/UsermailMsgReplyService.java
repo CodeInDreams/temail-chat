@@ -168,14 +168,14 @@ public class UsermailMsgReplyService {
     LOGGER.info("Label-delete-usermail-reply: delete reply messages，from = {},to = {},msgIds = {}", from, to, msgIds);
     int count = usermailMsgReplyRepo.deleteBatchMsgReplyStatus(from, msgIds);
     String lastReplyMsgId = usermail.getLastReplyMsgId();
-    //如果删除的消息中包含最新的回复消息，这需要将最新回复消息回滚到上一条
+    // 如果删除的消息中包含最新的回复消息，这需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgIds.contains(lastReplyMsgId)) {
       UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
           .getLastUsermailReply(parentMsgReplyId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
       } else {
-        //删除了所有消息的场景
+        // 删除了所有消息的场景
         lastReplyMsgId = "";
       }
     }
@@ -315,14 +315,14 @@ public class UsermailMsgReplyService {
 
   private void updateUsermailLastReplyId(UsermailDO usermail, String parentMsgId, String msgId) {
     String lastReplyMsgId = usermail.getLastReplyMsgId();
-    //如果撤回或者阅后即焚的消息是最新的回复消息需要将最新回复消息回滚到上一条
+    // 如果撤回或者阅后即焚的消息是最新的回复消息需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgId.equals(lastReplyMsgId)) {
       UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
           .getLastUsermailReply(parentMsgId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
       } else {
-        //删除了所有消息的场景
+        // 删除了所有消息的场景
         lastReplyMsgId = "";
       }
     }
