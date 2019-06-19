@@ -46,7 +46,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqMsgSaveMail(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgId,
       String toMsg, long seqNo, int eventType, int attachmentSize, String author, List<String> filter) {
     Map<String, Object> eventMap = new HashMap<>(18);
-    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    combineNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
     eventMap.put(MSGID, msgId);
     // 会话消息已接收 (未读+1)
@@ -70,7 +70,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqAfterUpdateStatus(CdtpHeaderDTO headerInfo, String from, String to,
       String msgId, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(10);
-    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    combineNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(MSGID, msgId);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
@@ -89,7 +89,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqUpdateMsg(String xPacketId, String cdtpHeader, String from, String to,
       String owner, String msgId, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(12);
-    comboNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
+    combineNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
     eventMap.put(MSGID, msgId);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
@@ -107,7 +107,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqAfterDeleteSession(CdtpHeaderDTO headerInfo, String from, String to, boolean deleteAllMsg,
       int eventType) {
     Map<String, Object> eventMap = new HashMap<>(11);
-    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    combineNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(DELETE_ALL_MSG, deleteAllMsg);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
@@ -128,7 +128,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqSaveMsgReply(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgId,
       String toMsg, long seqNo, int attachmentSize, String parentMsgId) {
     Map<String, Object> eventMap = new HashMap<>(17);
-    comboNormalParam(headerInfo, EVENT_TYPE_18, from, to, eventMap);
+    combineNormalParam(headerInfo, EVENT_TYPE_18, from, to, eventMap);
     eventMap.put(OWNER, owner);
     eventMap.put(PARENT_MSGID, parentMsgId);
     eventMap.put(MSGID, msgId);
@@ -154,7 +154,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqAfterUpdateMsgReply(String xPacketId, String cdtpHeader, String from, String to,
       String owner, String msgId, int eventType, String parentMsgId) {
     Map<String, Object> eventMap = new HashMap<>(13);
-    comboNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
+    combineNormalParam(new CdtpHeaderDTO(cdtpHeader, xPacketId), eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
     eventMap.put(MSGID, msgId);
     eventMap.put(PARENT_MSGID, parentMsgId);
@@ -175,7 +175,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqAfterRemoveMsgReply(CdtpHeaderDTO headerInfo, String from, String to, String owner,
       List<String> msgIds, int eventType, String parentMsgId) {
     Map<String, Object> eventMap = new HashMap<>(13);
-    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    combineNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
     eventMap.put(MSGID, gs.toJson(msgIds));
     eventMap.put(PARENT_MSGID, parentMsgId);
@@ -192,7 +192,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
    */
   public void sendMqAfterUpdateArchiveStatus(CdtpHeaderDTO headerInfo, String from, String to, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(9);
-    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    combineNormalParam(headerInfo, eventType, from, to, eventMap);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 
@@ -208,7 +208,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqMoveTrashNotify(CdtpHeaderDTO headerInfo, String from, String to,
       List<String> msgIds, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(12);
-    comboNormalParam(headerInfo, eventType, from, to, eventMap);
+    combineNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(OWNER, from);
     eventMap.put(MSGID, gs.toJson(msgIds));
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
@@ -225,7 +225,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   public void sendMqTrashMsgOpratorNotify(CdtpHeaderDTO headerInfo, String owner,
       List<TrashMailDTO> trashMailDtoList, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(9);
-    comboNormalParam(headerInfo, eventType, null, null, eventMap);
+    combineNormalParam(headerInfo, eventType, null, null, eventMap);
     eventMap.put(OWNER, owner);
     if (trashMailDtoList != null && !trashMailDtoList.isEmpty()) {
       eventMap.put(ParamsKey.SessionEventKey.TRASH_MSG_INFO, gs.toJson(trashMailDtoList));
@@ -242,17 +242,13 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
    * @param to 收件人
    * @param eventMap 参数集合
    */
-  private void comboNormalParam(CdtpHeaderDTO headerInfo, int eventType, String from, String to,
+  private void combineNormalParam(CdtpHeaderDTO headerInfo, int eventType, String from, String to,
       Map<String, Object> eventMap) {
     eventMap.put(CDTP_HEADER, headerInfo.getCdtpHeader());
     eventMap.put(X_PACKET_ID, headerInfo.getxPacketId());
     eventMap.put(TIMESTAMP, System.currentTimeMillis());
     eventMap.put(SESSION_MESSAGE_TYPE, eventType);
-    if (null != from) {
-      eventMap.put(FROM, from);
-    }
-    if (null != to) {
-      eventMap.put(TO, to);
-    }
+    eventMap.put(FROM, from);
+    eventMap.put(TO, to);
   }
 }
