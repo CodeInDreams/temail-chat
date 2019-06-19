@@ -316,7 +316,7 @@ public class UsermailAgentController {
    * 将发送者与接收者单聊会话消息批量从废纸篓中删除
    *
    * @param request 从HttpServletRequest中获取业务header：CDTP-header,X-PACKET-ID。
-   * @param revertTrashMailDto 发送者{@link TrashMailsDTO#getFrom()},需要从废纸篓还原的消息{@link TrashMailsDTO#getTrashMails()}。
+   * @param revertTrashMailDto 发送者{@link TrashMailsDTO#getFrom()},需要从废纸篓删除的消息{@link TrashMailsDTO#getTrashMails()}。
    * @return 返回ResultDTO对象。
    * @See ResultDTO
    */
