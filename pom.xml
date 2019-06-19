@@ -25,35 +25,34 @@
     <disruptor.version>3.3.6</disruptor.version>
     <maven.javadoc.skip>true</maven.javadoc.skip>
     <pact.version>3.5.20</pact.version>
-    <temail-usermail.version>1.2.0-SNAPSHOT</temail-usermail.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>com.syswin.temail</groupId>
-        <artifactId>temail-usermailagent</artifactId>
-        <version>${temail-usermail.version}</version>
+        <artifactId>temail-chat</artifactId>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-common</artifactId>
-        <version>${temail-usermail.version}</version>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-core</artifactId>
-        <version>${temail-usermail.version}</version>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-redis</artifactId>
-        <version>${temail-usermail.version}</version>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-mq-impl</artifactId>
-        <version>${temail-usermail.version}</version>
+        <version>1.2.1-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
