@@ -101,7 +101,6 @@ public class UsermailMqService {
    * @param owner 消息所属人
    * @param parentMsgReplyId 父消息id
    * @param msgId 消息id
-   * @return void
    */
   public void sendMqRevertReplyMsg(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String parentMsgReplyId, String msgId) {
@@ -129,7 +128,6 @@ public class UsermailMqService {
    * @param owner 消息所属人
    * @param msgId 消息id
    * @param parentMsgId 父消息id
-   * @return void
    */
   public void sendMqReplyMsgDestroyAfterRead(String xPacketId, String cdtpHeader, String from, String to,
       String owner, String msgId, String parentMsgId) {
@@ -152,7 +150,6 @@ public class UsermailMqService {
    *
    * @param groupTemail 群聊地址
    * @param temail 被移除人地址
-   * @return void
    */
   public void sendMqRemoveGroupMemberMsg(String groupTemail, String temail) {
     Map<String, Object> usermailMap = new HashMap<>(7);
