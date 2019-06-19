@@ -7,7 +7,7 @@
   <groupId>com.syswin.temail</groupId>
   <artifactId>temail-usermail</artifactId>
   <packaging>pom</packaging>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>1.2.1-SNAPSHOT</version>
   <modules>
     <module>usermail</module>
     <module>usermail-common</module>
