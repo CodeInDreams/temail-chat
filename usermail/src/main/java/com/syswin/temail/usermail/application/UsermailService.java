@@ -441,7 +441,7 @@ public class UsermailService {
     usermailRepo.revertMsgFromTrash(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
     usermailMsgReplyRepo.batchUpdateByParentMsgIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
     usermail2NotifyMqService
-        .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
+        .sendMqTrashMsgNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }
 
   /**
@@ -457,7 +457,7 @@ public class UsermailService {
     LOGGER
         .info("Label-delete-usermail-trash: Remove msg from trash, params is temail:{},msginfo:{}", temail, trashMails);
     usermail2NotifyMqService
-        .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
+        .sendMqTrashMsgNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_37);
   }
 
   /**

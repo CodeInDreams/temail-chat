@@ -553,7 +553,7 @@ public class UsermailServiceTest {
     msgIds.add(trashMailDtos.get(1).getMsgId());
     usermailService.revertMsgFromTrash(headerInfo, temail, trashMailDtos);
     verify(usermail2NotifyMqService)
-        .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_36);
+        .sendMqTrashMsgNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_36);
     ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
@@ -615,7 +615,7 @@ public class UsermailServiceTest {
     );
     usermailService.removeMsgFromTrash(headerInfo, temail, trashMailDtos);
     verify(usermail2NotifyMqService)
-        .sendMqTrashMsgOpratorNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_37);
+        .sendMqTrashMsgNotify(headerInfo, temail, trashMailDtos, SessionEventType.EVENT_TYPE_37);
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<TrashMailDTO>> listArgumentCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<Integer> typeCaptor = ArgumentCaptor.forClass(Integer.class);

@@ -309,7 +309,7 @@ public class Usermail2NotifyMqServiceTest {
     List<TrashMailDTO> trashMailDtos = Arrays.asList(new TrashMailDTO(owner, to, msgId));
     int eventType = SessionEventType.EVENT_TYPE_36;
 
-    usermail2NotifyMqService.sendMqTrashMsgOpratorNotify(headerInfo, owner, trashMailDtos, eventType);
+    usermail2NotifyMqService.sendMqTrashMsgNotify(headerInfo, owner, trashMailDtos, eventType);
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic), eq(owner), messageCaptor.capture());

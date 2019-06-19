@@ -222,7 +222,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
    * @param trashMailDtoList 废纸篓信息列表
    * @param eventType 事件类型
    */
-  public void sendMqTrashMsgOpratorNotify(CdtpHeaderDTO headerInfo, String owner,
+  public void sendMqTrashMsgNotify(CdtpHeaderDTO headerInfo, String owner,
       List<TrashMailDTO> trashMailDtoList, int eventType) {
     Map<String, Object> eventMap = new HashMap<>(9);
     combineNormalParam(headerInfo, eventType, null, null, eventMap);
