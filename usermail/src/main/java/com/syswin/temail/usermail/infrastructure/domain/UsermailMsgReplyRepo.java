@@ -21,7 +21,7 @@ public interface UsermailMsgReplyRepo {
    * @param dto 查询消息条件
    * @return 回复消息列表
    */
-  List<UsermailMsgReplyDO> getMsgReplys(QueryMsgReplyDTO dto);
+  List<UsermailMsgReplyDO> listMsgReplys(QueryMsgReplyDTO dto);
 
   /**
    * 根据msgId批量删除回复消息
@@ -30,7 +30,7 @@ public interface UsermailMsgReplyRepo {
    * @param msgIds 消息id列表
    * @return 删除的数量
    */
-  int deleteBatchMsgReplyStatus(String owner, List<String> msgIds);
+  int deleteMsgReplysByMsgIds(String owner, List<String> msgIds);
 
   /**
    * 根据sessionId批量删除回复消息
@@ -39,7 +39,7 @@ public interface UsermailMsgReplyRepo {
    * @param owner 拥有者
    * @return 删除的数量
    */
-  int batchDeleteBySessionId(String sessionId, String owner);
+  int deleteMsgReplysBySessionId(String sessionId, String owner);
 
   /**
    * 根据父消息删除回复消息
@@ -48,7 +48,7 @@ public interface UsermailMsgReplyRepo {
    * @param parentMsgIds 父消息id列表
    * @return 删除的数量
    */
-  int deleteMsgByParentIdAndOwner(String owner, List<String> parentMsgIds);
+  int deleteMsgReplysByParentIds(String owner, List<String> parentMsgIds);
 
   /**
    * 根据条件查询回复消息列表
@@ -56,7 +56,7 @@ public interface UsermailMsgReplyRepo {
    * @param usermailMsgReply 查询回复消息列表条件
    * @return 回复消息信息
    */
-  UsermailMsgReplyDO getMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply);
+  UsermailMsgReplyDO selectMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply);
 
   /**
    * 回复消息阅后即焚
@@ -66,7 +66,7 @@ public interface UsermailMsgReplyRepo {
    * @param status 消息状态
    * @return 更新的数量
    */
-  int destroyAfterRead(String owner, String msgid, int status);
+  int updateDestroyAfterRead(String owner, String msgid, int status);
 
   /**
    * 根据父消息批量修改消息状态
@@ -76,7 +76,7 @@ public interface UsermailMsgReplyRepo {
    * @param status 消息状态
    * @return 更新的数量
    */
-  int batchUpdateByParentMsgIds(String owner, List<String> parentMsgIds, int status);
+  int updateMsgReplysByParentIds(String owner, List<String> parentMsgIds, int status);
 
   /**
    * 根据用户和消息状态批量删除消息
@@ -85,7 +85,7 @@ public interface UsermailMsgReplyRepo {
    * @param status 消息状态
    * @return 删除的数量
    */
-  int batchDeleteByStatus(String owner, int status);
+  int deleteMsgReplysByStatus(String owner, int status);
 
   /**
    * 获取最近一条回复消息
@@ -95,7 +95,7 @@ public interface UsermailMsgReplyRepo {
    * @param status 消息状态
    * @return 回复消息的信息
    */
-  UsermailMsgReplyDO getLastUsermailReply(String parentMsgid, String owner, int status);
+  UsermailMsgReplyDO selectLastUsermailReply(String parentMsgid, String owner, int status);
 
   /**
    * 撤回用户回复的消息
@@ -103,5 +103,5 @@ public interface UsermailMsgReplyRepo {
    * @param usermailMsgReply 撤回的消息信息
    * @return 撤回的数量
    */
-  int revertUsermailReply(UsermailMsgReplyDO usermailMsgReply);
+  int updateRevertUsermailReply(UsermailMsgReplyDO usermailMsgReply);
 }

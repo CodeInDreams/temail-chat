@@ -347,7 +347,7 @@ public class UsermailServiceTest {
     usermailService.removeMsg(headerInfo, from, to, msgIds);
 
     verify(usermailRepo).deleteMsg(msgIds, from);
-    verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
+    verify(usermailMsgReplyRepo).deleteMsgReplysByParentIds(from, msgIds);
     verify(usermail2NotifyMqService)
         .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
     verify(usermailSessionService).getSessionID(from, to);
@@ -368,7 +368,7 @@ public class UsermailServiceTest {
     usermailService.removeMsg(headerInfo, from, to, msgIds);
 
     verify(usermailRepo).deleteMsg(msgIds, from);
-    verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
+    verify(usermailMsgReplyRepo).deleteMsgReplysByParentIds(from, msgIds);
     verify(usermail2NotifyMqService)
         .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
     verify(usermailSessionService).getSessionID(from, to);
@@ -406,7 +406,8 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailRepo).updateDestroyAfterReadStatus(fromCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
+    verify(usermailRepo)
+        .updateDestroyAfterReadStatus(fromCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(from, fromCaptor.getValue());
     assertEquals(msgId, msgIdCaptor.getValue());
@@ -497,7 +498,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> sessIdCaptor2 = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> fromCaptor2 = ArgumentCaptor.forClass(String.class);
-    verify(usermailMsgReplyRepo).batchDeleteBySessionId(sessIdCaptor2.capture(), fromCaptor2.capture());
+    verify(usermailMsgReplyRepo).deleteMsgReplysBySessionId(sessIdCaptor2.capture(), fromCaptor2.capture());
     String from2 = fromCaptor2.getValue();
     String sessionid2 = sessIdCaptor2.getValue();
     assertEquals(from, from2);
@@ -519,7 +520,8 @@ public class UsermailServiceTest {
     msgIds.add("aa");
     msgIds.add("bb");
     usermailService.moveMsgToTrash(headerInfo, from, to, msgIds);
-    verify(usermail2NotifyMqService).sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
+    verify(usermail2NotifyMqService)
+        .sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
     ArgumentCaptor<List<String>> msgIdCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
@@ -533,7 +535,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<List<String>> msgIdCaptor2 = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<Integer> statusCaptor2 = ArgumentCaptor.forClass(Integer.class);
     verify(usermailMsgReplyRepo)
-        .batchUpdateByParentMsgIds(fromCaptor2.capture(), msgIdCaptor2.capture(), statusCaptor2.capture());
+        .updateMsgReplysByParentIds(fromCaptor2.capture(), msgIdCaptor2.capture(), statusCaptor2.capture());
     int status2 = statusCaptor2.getValue();
     assertEquals(msgIds, msgIdCaptor2.getValue());
     assertEquals(from, fromCaptor2.getValue());
@@ -568,7 +570,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<List<String>> msgIdCaptor = ArgumentCaptor.forClass(List.class);
     ArgumentCaptor<Integer> statusCaptor2 = ArgumentCaptor.forClass(Integer.class);
     verify(usermailMsgReplyRepo)
-        .batchUpdateByParentMsgIds(temailCaptor2.capture(), msgIdCaptor.capture(), statusCaptor2.capture());
+        .updateMsgReplysByParentIds(temailCaptor2.capture(), msgIdCaptor.capture(), statusCaptor2.capture());
     int status2 = statusCaptor2.getValue();
     assertEquals(temail, temailCaptor2.getValue());
     assertEquals(msgIds, msgIdCaptor.getValue());
@@ -600,7 +602,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> temailCaptor2 = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<String>> msgIdCaptor = ArgumentCaptor.forClass(List.class);
-    verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(temailCaptor2.capture(), msgIdCaptor.capture());
+    verify(usermailMsgReplyRepo).deleteMsgReplysByParentIds(temailCaptor2.capture(), msgIdCaptor.capture());
     assertEquals(temail, temailCaptor2.getValue());
     assertEquals(msgIds, msgIdCaptor.getValue());
   }
@@ -644,7 +646,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> temailCaptor2 = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor2 = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailMsgReplyRepo).batchDeleteByStatus(temailCaptor2.capture(), statusCaptor2.capture());
+    verify(usermailMsgReplyRepo).deleteMsgReplysByStatus(temailCaptor2.capture(), statusCaptor2.capture());
     int status2 = statusCaptor2.getValue();
     assertEquals(temail, temailCaptor2.getValue());
     assertEquals(TemailStatus.STATUS_TRASH_4, status2);

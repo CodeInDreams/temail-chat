@@ -117,7 +117,7 @@ public class UsermailMsgReplyService {
     usermailMsgReply.setMsgid(msgId);
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
     usermailMsgReply.setOwner(owner);
-    int count = usermailMsgReplyRepo.revertUsermailReply(usermailMsgReply);
+    int count = usermailMsgReplyRepo.updateRevertUsermailReply(usermailMsgReply);
     if (count <= 0) {
       LOGGER.warn(
           "Message Reply revert failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, parentMsgId is {}, owner is {}",
@@ -172,12 +172,12 @@ public class UsermailMsgReplyService {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_REQUEST_PARAM);
     }
     LOGGER.info("Label-delete-usermail-reply: delete reply messages，from = {},to = {},msgIds = {}", from, to, msgIds);
-    int count = usermailMsgReplyRepo.deleteBatchMsgReplyStatus(from, msgIds);
+    int count = usermailMsgReplyRepo.deleteMsgReplysByMsgIds(from, msgIds);
     String lastReplyMsgId = usermail.getLastReplyMsgId();
     // 如果删除的消息中包含最新的回复消息，这需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgIds.contains(lastReplyMsgId)) {
       UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
-          .getLastUsermailReply(parentMsgReplyId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
+          .selectLastUsermailReply(parentMsgReplyId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
       } else {
@@ -213,7 +213,7 @@ public class UsermailMsgReplyService {
     dto.setParentMsgid(parentMsgid);
     dto.setSignal(signal);
     dto.setOwner(owner);
-    List<UsermailMsgReplyDO> data = this.convertMsgService.convertReplyMsg(usermailMsgReplyRepo.getMsgReplys(dto));
+    List<UsermailMsgReplyDO> data = this.convertMsgService.convertReplyMsg(usermailMsgReplyRepo.listMsgReplys(dto));
     List<UsermailMsgReplyDO> dataFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(data)) {
       boolean isAfter = "after".equals(signal);
@@ -243,10 +243,10 @@ public class UsermailMsgReplyService {
   @Transactional
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
       String replyMsgParentId) {
-    int count = usermailMsgReplyRepo.destroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
+    int count = usermailMsgReplyRepo.updateDestroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     if (count <= 0) {
       LOGGER.warn(
-          "Message destroyAfterRead failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
+          "Message updateDestroyAfterRead failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
           xPacketId, cdtpHeader, from, to, msgId, owner);
       return;
     }
@@ -273,7 +273,7 @@ public class UsermailMsgReplyService {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setOwner(from);
     usermailMsgReply.setMsgid(msgId);
-    UsermailMsgReplyDO msgReply = usermailMsgReplyRepo.getMsgReplyByCondition(usermailMsgReply);
+    UsermailMsgReplyDO msgReply = usermailMsgReplyRepo.selectMsgReplyByCondition(usermailMsgReply);
     if (msgReply != null && msgReply.getType() == TemailType.TYPE_DESTROY_AFTER_READ_1) {
       String parentMsgId = msgReply.getParentMsgid();
       usermailMqService
@@ -284,7 +284,7 @@ public class UsermailMsgReplyService {
               from, to, from, msgId,
               parentMsgId);
     } else {
-      LOGGER.warn("msgReply-destroyAfterRead-illegal-msgId={}", msgId);
+      LOGGER.warn("msgReply-updateDestroyAfterRead-illegal-msgId={}", msgId);
     }
 
   }
@@ -328,7 +328,7 @@ public class UsermailMsgReplyService {
     // 如果撤回或者阅后即焚的消息是最新的回复消息需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgId.equals(lastReplyMsgId)) {
       UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
-          .getLastUsermailReply(parentMsgId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
+          .selectLastUsermailReply(parentMsgId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
       } else {

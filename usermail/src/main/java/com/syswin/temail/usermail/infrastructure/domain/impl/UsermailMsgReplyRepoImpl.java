@@ -37,8 +37,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 回复消息列表
    */
   @Override
-  public List<UsermailMsgReplyDO> getMsgReplys(QueryMsgReplyDTO dto) {
-    return usermailMsgReplyMapper.getMsgReplys(dto);
+  public List<UsermailMsgReplyDO> listMsgReplys(QueryMsgReplyDTO dto) {
+    return usermailMsgReplyMapper.listMsgReplys(dto);
   }
 
   /**
@@ -49,8 +49,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteBatchMsgReplyStatus(String owner, List<String> msgIds) {
-    return usermailMsgReplyMapper.deleteBatchMsgReplyStatus(owner, msgIds);
+  public int deleteMsgReplysByMsgIds(String owner, List<String> msgIds) {
+    return usermailMsgReplyMapper.deleteMsgReplysByMsgIds(owner, msgIds);
   }
 
   /**
@@ -61,8 +61,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 删除的数量
    */
   @Override
-  public int batchDeleteBySessionId(String sessionId, String owner) {
-    return usermailMsgReplyMapper.batchDeleteBySessionId(sessionId, owner);
+  public int deleteMsgReplysBySessionId(String sessionId, String owner) {
+    return usermailMsgReplyMapper.deleteMsgReplysBySessionId(sessionId, owner);
   }
 
   /**
@@ -73,8 +73,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteMsgByParentIdAndOwner(String owner, List<String> parentMsgIds) {
-    return usermailMsgReplyMapper.deleteMsgByParentIdAndOwner(owner, parentMsgIds);
+  public int deleteMsgReplysByParentIds(String owner, List<String> parentMsgIds) {
+    return usermailMsgReplyMapper.deleteMsgReplysByParentIds(owner, parentMsgIds);
   }
 
   /**
@@ -84,8 +84,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 回复消息信息
    */
   @Override
-  public UsermailMsgReplyDO getMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply) {
-    return usermailMsgReplyMapper.getMsgReplyByCondition(usermailMsgReply);
+  public UsermailMsgReplyDO selectMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply) {
+    return usermailMsgReplyMapper.selectMsgReplyByCondition(usermailMsgReply);
   }
 
   /**
@@ -97,8 +97,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 更新的数量
    */
   @Override
-  public int destroyAfterRead(String owner, String msgid, int status) {
-    return usermailMsgReplyMapper.destroyAfterRead(owner, msgid, status, TemailStatus.STATUS_NORMAL_0);
+  public int updateDestroyAfterRead(String owner, String msgid, int status) {
+    return usermailMsgReplyMapper.updateDestroyAfterRead(owner, msgid, status, TemailStatus.STATUS_NORMAL_0);
   }
 
   /**
@@ -110,8 +110,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 更新的数量
    */
   @Override
-  public int batchUpdateByParentMsgIds(String owner, List<String> parentMsgIds, int status) {
-    return usermailMsgReplyMapper.batchUpdateByParentMsgIds(owner, parentMsgIds, status);
+  public int updateMsgReplysByParentIds(String owner, List<String> parentMsgIds, int status) {
+    return usermailMsgReplyMapper.updateMsgReplysByParentIds(owner, parentMsgIds, status);
   }
 
   /**
@@ -122,8 +122,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 删除的数量
    */
   @Override
-  public int batchDeleteByStatus(String owner, int status) {
-    return usermailMsgReplyMapper.batchDeleteByStatus(owner, status);
+  public int deleteMsgReplysByStatus(String owner, int status) {
+    return usermailMsgReplyMapper.deleteMsgReplysByStatus(owner, status);
   }
 
   /**
@@ -135,8 +135,8 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 回复消息的信息
    */
   @Override
-  public UsermailMsgReplyDO getLastUsermailReply(String parentMsgid, String owner, int status) {
-    return usermailMsgReplyMapper.getLastUsermailReply(parentMsgid, owner, status);
+  public UsermailMsgReplyDO selectLastUsermailReply(String parentMsgid, String owner, int status) {
+    return usermailMsgReplyMapper.selectLastUsermailReply(parentMsgid, owner, status);
   }
 
   /**
@@ -146,7 +146,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 撤回的数量
    */
   @Override
-  public int revertUsermailReply(UsermailMsgReplyDO usermailMsgReply) {
-    return usermailMsgReplyMapper.revertUsermailReply(usermailMsgReply, TemailStatus.STATUS_NORMAL_0);
+  public int updateRevertUsermailReply(UsermailMsgReplyDO usermailMsgReply) {
+    return usermailMsgReplyMapper.updateRevertUsermailReply(usermailMsgReply, TemailStatus.STATUS_NORMAL_0);
   }
 }

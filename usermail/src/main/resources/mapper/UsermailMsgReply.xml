@@ -45,7 +45,7 @@
             #{sessionid,jdbcType=VARCHAR}, #{zipMsg,jdbcType=BLOB})
   </insert>
 
-  <update id="revertUsermailReply">
+  <update id="updateRevertUsermailReply">
     update usermail_msg_reply
     set `status` = #{usermailMsgReply.status}, `zip_msg` = null, `update_time` = CURRENT_TIMESTAMP()
     <where>
@@ -62,7 +62,7 @@
     </where>
   </update>
 
-  <select id="getMsgReplys" parameterType="QueryMsgReplyDto" resultMap="BaseResultMap">
+  <select id="listMsgReplys" parameterType="QueryMsgReplyDto" resultMap="BaseResultMap">
     select *
     from `usermail_msg_reply`
     where `parent_msgid` = #{parentMsgid,jdbcType=VARCHAR}
@@ -102,7 +102,7 @@
     </where>
   </sql>
 
-  <delete id="deleteBatchMsgReplyStatus">
+  <delete id="deleteMsgReplysByMsgIds">
     delete from usermail_msg_reply
     where `owner`=#{owner}
     and `msgid` in
@@ -111,7 +111,7 @@
     </foreach>
   </delete>
 
-  <delete id="deleteMsgByParentIdAndOwner">
+  <delete id="deleteMsgReplysByParentIds">
     delete from `usermail_msg_reply`
     WHERE
     `owner` = #{owner}
@@ -121,20 +121,20 @@
     </foreach>
   </delete>
 
-  <delete id="batchDeleteBySessionId">
+  <delete id="deleteMsgReplysBySessionId">
     delete
     from `usermail_msg_reply`
     where `sessionid` = #{sessionid,jdbcType=VARCHAR}
       and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
 
-  <select id="getMsgReplyByCondition" parameterType="UsermailMsgReply" resultMap="BaseResultMap">
+  <select id="selectMsgReplyByCondition" parameterType="UsermailMsgReply" resultMap="BaseResultMap">
     select *
     from `usermail_msg_reply`
     <include refid="WhereSql"/>
   </select>
 
-  <update id="destroyAfterRead">
+  <update id="updateDestroyAfterRead">
     update `usermail_msg_reply`
     set `status`= #{status,jdbcType=INTEGER},
         `zip_msg` = null,
@@ -144,7 +144,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <update id="batchUpdateByParentMsgIds">
+  <update id="updateMsgReplysByParentIds">
     update usermail_msg_reply
     set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
     <where>
@@ -157,14 +157,14 @@
     </where>
   </update>
 
-  <delete id="batchDeleteByStatus">
+  <delete id="deleteMsgReplysByStatus">
     delete
     from `usermail_msg_reply`
     where `status` = #{status,jdbcType=INTEGER}
       and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
 
-  <select id="getLastUsermailReply" resultMap="BaseResultMap">
+  <select id="selectLastUsermailReply" resultMap="BaseResultMap">
     select *
     from `usermail_msg_reply`
     where

@@ -24,7 +24,7 @@ public interface UsermailMsgReplyMapper {
    * @param dto 查询消息条件
    * @return 回复消息列表
    */
-  List<UsermailMsgReplyDO> getMsgReplys(QueryMsgReplyDTO dto);
+  List<UsermailMsgReplyDO> listMsgReplys(QueryMsgReplyDTO dto);
 
   /**
    * 根据msgId批量删除回复消息
@@ -33,7 +33,7 @@ public interface UsermailMsgReplyMapper {
    * @param msgIds 消息id列表
    * @return 删除的数量
    */
-  int deleteBatchMsgReplyStatus(@Param("owner") String owner, @Param("msgIds") List<String> msgIds);
+  int deleteMsgReplysByMsgIds(@Param("owner") String owner, @Param("msgIds") List<String> msgIds);
 
   /**
    * 根据sessionId批量删除回复消息
@@ -42,7 +42,7 @@ public interface UsermailMsgReplyMapper {
    * @param owner 拥有者
    * @return 删除的数量
    */
-  int batchDeleteBySessionId(@Param("sessionid") String sessionId, @Param("owner") String owner);
+  int deleteMsgReplysBySessionId(@Param("sessionid") String sessionId, @Param("owner") String owner);
 
   /**
    * 根据父消息删除回复消息
@@ -51,7 +51,7 @@ public interface UsermailMsgReplyMapper {
    * @param parentMsgIds 父消息id列表
    * @return 删除的数量
    */
-  int deleteMsgByParentIdAndOwner(@Param("owner") String owner, @Param("parentMsgIds") List<String> parentMsgIds);
+  int deleteMsgReplysByParentIds(@Param("owner") String owner, @Param("parentMsgIds") List<String> parentMsgIds);
 
   /**
    * 根据条件查询回复消息列表
@@ -59,7 +59,7 @@ public interface UsermailMsgReplyMapper {
    * @param usermailMsgReply 查询回复消息列表条件
    * @return 回复消息信息
    */
-  UsermailMsgReplyDO getMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply);
+  UsermailMsgReplyDO selectMsgReplyByCondition(UsermailMsgReplyDO usermailMsgReply);
 
   /**
    * 回复消息阅后即焚
@@ -70,7 +70,7 @@ public interface UsermailMsgReplyMapper {
    * @param originalStatus 消息初始状态
    * @return 更新的数量
    */
-  int destroyAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status,
+  int updateDestroyAfterRead(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status,
       @Param("originalStatus") int originalStatus);
 
   /**
@@ -81,7 +81,7 @@ public interface UsermailMsgReplyMapper {
    * @param status 消息状态
    * @return 更新的数量
    */
-  int batchUpdateByParentMsgIds(@Param("owner") String owner, @Param("parentMsgIds") List<String> parentMsgIds,
+  int updateMsgReplysByParentIds(@Param("owner") String owner, @Param("parentMsgIds") List<String> parentMsgIds,
       @Param("status") int status);
 
   /**
@@ -91,7 +91,7 @@ public interface UsermailMsgReplyMapper {
    * @param status 消息状态
    * @return 删除的数量
    */
-  int batchDeleteByStatus(@Param("owner") String owner, @Param("status") int status);
+  int deleteMsgReplysByStatus(@Param("owner") String owner, @Param("status") int status);
 
   /**
    * 获取最近一条回复消息
@@ -101,7 +101,7 @@ public interface UsermailMsgReplyMapper {
    * @param status 消息状态
    * @return 回复消息的信息
    */
-  UsermailMsgReplyDO getLastUsermailReply(@Param("parentMsgid") String parentMsgid, @Param("owner") String owner,
+  UsermailMsgReplyDO selectLastUsermailReply(@Param("parentMsgid") String parentMsgid, @Param("owner") String owner,
       @Param("status") int status);
 
   /**
@@ -111,6 +111,6 @@ public interface UsermailMsgReplyMapper {
    * @param originalStatus 当前消息状态
    * @return 撤回的数量
    */
-  int revertUsermailReply(@Param("usermailMsgReply") UsermailMsgReplyDO usermailMsgReply,
+  int updateRevertUsermailReply(@Param("usermailMsgReply") UsermailMsgReplyDO usermailMsgReply,
       @Param("originalStatus") int originalStatus);
 }

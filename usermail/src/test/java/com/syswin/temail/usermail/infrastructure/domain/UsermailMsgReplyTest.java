@@ -57,7 +57,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsgid("syswin-1543572005953");
     usermailMsgReply.setOwner("A2018");
     usermailMsgReply.setTo("B2018");
-    usermailMsgReplyRepo.getMsgReplyByCondition(usermailMsgReply);
+    usermailMsgReplyRepo.selectMsgReplyByCondition(usermailMsgReply);
     Assert.assertTrue(true);
   }
 
@@ -69,7 +69,7 @@ public class UsermailMsgReplyTest {
     dto.setFromSeqNo(0);
     dto.setPageSize(1);
     dto.setSignal("before");
-    usermailMsgReplyRepo.getMsgReplys(dto);
+    usermailMsgReplyRepo.listMsgReplys(dto);
     Assert.assertTrue(true);
   }
 
@@ -77,7 +77,7 @@ public class UsermailMsgReplyTest {
   public void updateBatchMsgReplys() {
     List<String> msgIds = new ArrayList<>(1);
     msgIds.add("syswin-1543572005953");
-    usermailMsgReplyRepo.deleteBatchMsgReplyStatus("A2018", msgIds);
+    usermailMsgReplyRepo.deleteMsgReplysByMsgIds("A2018", msgIds);
     Assert.assertTrue(true);
   }
 
@@ -88,7 +88,7 @@ public class UsermailMsgReplyTest {
     queryParam.setFrom("A2018");
     queryParam.setTo("B2018");
     queryParam.setOwner("A2018");
-    return usermailMsgReplyRepo.getMsgReplyByCondition(queryParam);
+    return usermailMsgReplyRepo.selectMsgReplyByCondition(queryParam);
   }
 
   @Test
@@ -108,13 +108,13 @@ public class UsermailMsgReplyTest {
     usermailMsgReplyRepo.insert(usermailMsgReply);
     List<String> parentMsgIds = new ArrayList<>();
     parentMsgIds.add(usermailMsgReply.getParentMsgid());
-    int delete = usermailMsgReplyRepo.deleteMsgByParentIdAndOwner(usermailMsgReply.getOwner(), parentMsgIds);
+    int delete = usermailMsgReplyRepo.deleteMsgReplysByParentIds(usermailMsgReply.getOwner(), parentMsgIds);
     Assert.assertTrue(delete > 0);
   }
 
   @Test
   public void batchDeleteBySessionId() throws Exception {
-    int count = usermailMsgReplyRepo.batchDeleteBySessionId("", "test@temail.com");
+    int count = usermailMsgReplyRepo.deleteMsgReplysBySessionId("", "test@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
@@ -133,8 +133,9 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
     usermailMsgReplyRepo.insert(usermailMsgReply);
-    int count  = usermailMsgReplyRepo.destroyAfterRead("A@systoontest.com","test111111", TemailStatus.STATUS_DESTROY_AFTER_READ_2);
-    Assert.assertEquals(1,count);
+    int count = usermailMsgReplyRepo
+        .updateDestroyAfterRead("A@systoontest.com", "test111111", TemailStatus.STATUS_DESTROY_AFTER_READ_2);
+    Assert.assertEquals(1, count);
     Assert.assertTrue(true);
   }
 
@@ -158,7 +159,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReplyRepo.insert(usermailMsgReply);
     List<String> parentMsgids = Arrays.asList(parentMsgid);
     int status = TemailStatus.STATUS_TRASH_4;
-    int count = usermailMsgReplyRepo.batchUpdateByParentMsgIds(owner, parentMsgids, status);
+    int count = usermailMsgReplyRepo.updateMsgReplysByParentIds(owner, parentMsgids, status);
 
     assertThat(count).isOne();
   }
@@ -182,7 +183,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
     usermailMsgReplyRepo.insert(usermailMsgReply);
 
-    int count = usermailMsgReplyRepo.batchDeleteByStatus(owner, status);
+    int count = usermailMsgReplyRepo.deleteMsgReplysByStatus(owner, status);
 
     assertThat(count).isOne();
   }
@@ -213,7 +214,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setSeqNo(seqNo_second);
     usermailMsgReplyRepo.insert(usermailMsgReply);
 
-    UsermailMsgReplyDO lastUsermailReply = usermailMsgReplyRepo.getLastUsermailReply(parentMsgid, owner, status);
+    UsermailMsgReplyDO lastUsermailReply = usermailMsgReplyRepo.selectLastUsermailReply(parentMsgid, owner, status);
 
     assertThat(lastUsermailReply).isNotNull();
     assertThat(lastUsermailReply.getSeqNo()).isEqualTo(seqNo_second);
@@ -236,8 +237,8 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
     usermailMsgReplyRepo.insert(usermailMsgReply);
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
-    int count  = usermailMsgReplyRepo.revertUsermailReply(usermailMsgReply);
-    Assert.assertEquals(1,count);
+    int count = usermailMsgReplyRepo.updateRevertUsermailReply(usermailMsgReply);
+    Assert.assertEquals(1, count);
     Assert.assertTrue(true);
   }
 }

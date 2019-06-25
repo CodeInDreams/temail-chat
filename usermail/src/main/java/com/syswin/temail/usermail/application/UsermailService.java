@@ -282,7 +282,7 @@ public class UsermailService {
     usermailRepo.deleteMsg(msgIds, from);
     LOGGER.info("Label-delete-usermail-msg: delete reply msg by parentMsgId, owner is {}, parentMsgId is {}", from,
         msgIds);
-    usermailMsgReplyRepo.deleteMsgByParentIdAndOwner(from, msgIds);
+    usermailMsgReplyRepo.deleteMsgReplysByParentIds(from, msgIds);
     usermail2NotifyMqService
         .sendMqAfterUpdateStatus(headerInfo, from, to, new Gson().toJson(msgIds), SessionEventType.EVENT_TYPE_4);
 
@@ -356,7 +356,7 @@ public class UsermailService {
       String sessionId = usermailSessionService.getSessionID(queryDto.getTo(), queryDto.getFrom());
       usermailRepo
           .deleteBatchBySessionId(sessionId, queryDto.getFrom());
-      usermailMsgReplyRepo.batchDeleteBySessionId(sessionId, queryDto.getFrom());
+      usermailMsgReplyRepo.deleteMsgReplysBySessionId(sessionId, queryDto.getFrom());
     }
     usermail2NotifyMqService
         .sendMqAfterDeleteSession(cdtpHeaderDto, queryDto.getFrom(), queryDto.getTo(), queryDto.isDeleteAllMsg(),
@@ -421,7 +421,7 @@ public class UsermailService {
   @Transactional
   public void moveMsgToTrash(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     usermailRepo.updateStatusByMsgIds(msgIds, from, TemailStatus.STATUS_TRASH_4);
-    usermailMsgReplyRepo.batchUpdateByParentMsgIds(from, msgIds, TemailStatus.STATUS_TRASH_4);
+    usermailMsgReplyRepo.updateMsgReplysByParentIds(from, msgIds, TemailStatus.STATUS_TRASH_4);
     usermail2NotifyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
   }
 
@@ -439,7 +439,7 @@ public class UsermailService {
       msgIds.add(dto.getMsgId());
     }
     usermailRepo.updateRevertMsgFromTrashStatus(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
-    usermailMsgReplyRepo.batchUpdateByParentMsgIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
+    usermailMsgReplyRepo.updateMsgReplysByParentIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
     usermail2NotifyMqService
         .sendMqTrashMsgNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }
@@ -476,7 +476,7 @@ public class UsermailService {
     LOGGER
         .info("Label-delete-usermail-trash: Mq consumer remove msg from trash, params is temail:{},msginfo:{}",
             temail, trashMails);
-    usermailMsgReplyRepo.deleteMsgByParentIdAndOwner(temail, msgIds);
+    usermailMsgReplyRepo.deleteMsgReplysByParentIds(temail, msgIds);
   }
 
   /**
@@ -488,7 +488,7 @@ public class UsermailService {
   public void clearMsgFromTrash(String temail) {
     usermailRepo.deleteMsgByStatus(null, temail, TemailStatus.STATUS_TRASH_4);
     LOGGER.info("Label-delete-usermail-trash: Mq consumer clear trash, params is temail:{}", temail);
-    usermailMsgReplyRepo.batchDeleteByStatus(temail, TemailStatus.STATUS_TRASH_4);
+    usermailMsgReplyRepo.deleteMsgReplysByStatus(temail, TemailStatus.STATUS_TRASH_4);
   }
 
   /**
