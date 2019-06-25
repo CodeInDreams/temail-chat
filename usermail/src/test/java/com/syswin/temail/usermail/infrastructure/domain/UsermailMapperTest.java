@@ -49,7 +49,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void saveUsermail() {
+  public void insertUsermail() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
@@ -78,7 +78,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void getLastUsermail() {
+  public void listLastUsermails() {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("to@syswin.com");
@@ -87,7 +87,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void removeMsg() {
+  public void deleteMsg() {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("ldfk");
     msgIds.add("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
@@ -96,14 +96,14 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void getUsermailByMsgid() {
+  public void selectUsermailByMsgid() {
     UsermailDO usermailByMsgid = usermailRepo
         .selectUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermailByMsgid);
   }
 
   @Test
-  public void destroyAfterRead() {
+  public void updateDestroyAfterReadStatus() {
     usermailRepo.updateDestroyAfterReadStatus("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     UsermailDO usermail = usermailRepo
@@ -112,7 +112,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void getUsermail() {
+  public void listUsermails() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
@@ -140,7 +140,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void getUsermailWithSeqId() {
+  public void listUsermailsWithSeqId() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
@@ -169,13 +169,13 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void batchDeleteBySessionId() {
+  public void deleteBatchBySessionId() {
     int count = usermailRepo.deleteBatchBySessionId("", "alice@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
   @Test
-  public void getUsermailListByMsgid() {
+  public void listUsermailsByMsgid() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
@@ -204,7 +204,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void getUsermailByFromToMsgIds() {
+  public void listUsermailsByFromToMsgIds() {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("AA");
     msgIds.add("BB");
@@ -273,7 +273,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void removeMsgByStatus() {
+  public void deleteMsgByStatus() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
@@ -341,7 +341,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void getUsermailByStatus() {
+  public void listUsermailsByStatus() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     long id = this.generatePKid();
@@ -376,7 +376,7 @@ public class UsermailMapperTest {
   }
 
   @Test
-  public void shouldRevertUsermail() {
+  public void countRevertUsermail() {
     UsermailDO userMail = new UsermailDO();
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
