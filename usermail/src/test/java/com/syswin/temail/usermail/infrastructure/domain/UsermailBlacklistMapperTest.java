@@ -24,14 +24,14 @@ public class UsermailBlacklistMapperTest {
   private UsermailBlacklistRepo usermailBlacklistRepo;
 
   @Test
-  public void insert() {
+  public void testInsertUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(1, "from@msg.com", "blacklist@msgseal.com");
     int result = usermailBlacklistRepo.insertUsermailBlacklist(usermailBlacklist);
     assertThat(result).isEqualTo(1);
   }
 
   @Test
-  public void deleteByAddress() {
+  public void testDeleteUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(2, "from2@msgseal.com", "blacklist2@msgseal.com");
     usermailBlacklistRepo.insertUsermailBlacklist(usermailBlacklist);
     int result = usermailBlacklistRepo.deleteUsermailBlacklist(usermailBlacklist);
@@ -39,7 +39,7 @@ public class UsermailBlacklistMapperTest {
   }
 
   @Test
-  public void selectByAddress() {
+  public void testGetUsermailBlacklist() {
     String temailAddress = "temail@msgseal.com";
     String blackAddress = "blacklist@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(3, temailAddress, blackAddress);
@@ -49,7 +49,7 @@ public class UsermailBlacklistMapperTest {
   }
 
   @Test
-  public void selectByTemailAddress() {
+  public void testListUsermailBlacklists() {
     String temailAddress = "temail2@msgseal.com";
     String blackAddress = "blacklist2@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(4, temailAddress, blackAddress);
@@ -59,7 +59,7 @@ public class UsermailBlacklistMapperTest {
   }
 
   @Test
-  public void countByAddress() {
+  public void testCountByAddress() {
     String temailAddress = "temail3@msgseal.com";
     String blackAddress = "blacklist3@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(5, temailAddress, blackAddress);

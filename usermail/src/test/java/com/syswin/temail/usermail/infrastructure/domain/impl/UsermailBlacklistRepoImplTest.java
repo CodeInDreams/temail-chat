@@ -28,7 +28,7 @@ public class UsermailBlacklistRepoImplTest {
   }
 
   @Test
-  public void insert() {
+  public void testInsertUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(1, "from@msg.com", "blacklist@msgseal.com");
     Mockito.when(usermailBlacklistMapper.insertUsermailBlacklist(usermailBlacklist)).thenReturn(1);
     int row = usermailBlacklistRepoImpl.insertUsermailBlacklist(usermailBlacklist);
@@ -36,7 +36,7 @@ public class UsermailBlacklistRepoImplTest {
   }
 
   @Test
-  public void deleteByAddress() {
+  public void testDeleteUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(2, "from2@msgseal.com", "blacklist2@msgseal.com");
     Mockito.when(usermailBlacklistMapper.deleteUsermailBlacklist(usermailBlacklist)).thenReturn(1);
     int row = usermailBlacklistRepoImpl.deleteUsermailBlacklist(usermailBlacklist);
@@ -44,7 +44,7 @@ public class UsermailBlacklistRepoImplTest {
   }
 
   @Test
-  public void selectByAddress() {
+  public void testGetUsermailBlacklist() {
     String temailAddress = "temail@msgseal.com";
     String blackAddress = "blacklist@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(3, temailAddress, blackAddress);
@@ -54,7 +54,7 @@ public class UsermailBlacklistRepoImplTest {
   }
 
   @Test
-  public void selectByTemailAddress() {
+  public void testListUsermailBlacklists() {
     String temailAddress = "temail2@msgseal.com";
     String blackAddress = "blacklist2@msgseal.com";
     List<UsermailBlacklistDO> usermailBlacklists = new ArrayList<UsermailBlacklistDO>();
@@ -64,7 +64,7 @@ public class UsermailBlacklistRepoImplTest {
   }
 
   @Test
-  public void countByAddress() {
+  public void testCountByAddress() {
     String temailAddress = "temail3@msgseal.com";
     String blackAddress = "blacklist3@msgseal.com";
     int a = 2;

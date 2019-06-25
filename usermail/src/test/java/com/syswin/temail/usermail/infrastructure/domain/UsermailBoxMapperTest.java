@@ -35,17 +35,8 @@ public class UsermailBoxMapperTest {
     Assert.assertTrue(true);
   }
 
-
   @Test
-  public void getBySessionid() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(1234L, "test-session-owner1", "mailB@temail.com", "mailA@temail.com");
-    usermailBoxRepo.saveUsermailBox(box);
-    UsermailBoxDO resutbox = usermailBoxRepo.getUsermailBox("mailA@temail.com", "mailB@temail.com");
-    assertThat(resutbox.getSessionid()).isEqualTo("test-session-owner1");
-  }
-
-  @Test
-  public void getUsermailBoxByOwner() throws Exception {
+  public void testListUsermailBoxsByOwner() throws Exception {
     UsermailBoxDO box = new UsermailBoxDO(12345L, "test-session-owner2", "mailsend@temail.com", "mailsend@temail.com");
     usermailBoxRepo.saveUsermailBox(box);
     List<UsermailBoxDO> boxes = usermailBoxRepo.listUsermailBoxsByOwner("mailsend@temail.com", 0);
@@ -53,15 +44,15 @@ public class UsermailBoxMapperTest {
   }
 
   @Test
-  public void deleteByOwnerAndTo() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(123L, "test-session-owner3", "mailreceive1@temail.com", "mailsend1@temail.com");
+  public void testDeleteUsermailBox() throws Exception {
+    UsermailBoxDO box = new UsermailBoxDO(124L, "test-session-owner3", "mailreceive12@temail.com", "mailsend12@temail.com");
     usermailBoxRepo.saveUsermailBox(box);
-    int result = usermailBoxRepo.deleteUsermailBox("mailsend1@temail.com", "mailreceive1@temail.com");
+    int result = usermailBoxRepo.deleteUsermailBox("mailsend12@temail.com", "mailreceive12@temail.com");
     assertThat(result).isEqualTo(1);
   }
 
   @Test
-  public void selectByOwnerAndTo() {
+  public void testListUsermailBoxsByOwnerAndTo() {
     String owner = "mailsend1@temail.com";
     String mail2 = "mailreceive1@temail.com";
     UsermailBoxDO box = new UsermailBoxDO(123L, "test-session-owner3", mail2, owner);
@@ -72,7 +63,7 @@ public class UsermailBoxMapperTest {
   }
 
   @Test
-  public void updateArchiveStatus() {
+  public void testUpdateArchiveStatus() {
     UsermailBoxDO box = new UsermailBoxDO(24355, "test-session-owner3", "mailreceive1@msgseal.com",
         "mailsend1@msgseal.com");
     usermailBoxRepo.saveUsermailBox(box);
@@ -81,7 +72,7 @@ public class UsermailBoxMapperTest {
   }
 
   @Test
-  public void selectUsermailBox() {
+  public void testGetUsermailBox() {
     UsermailBoxDO box = new UsermailBoxDO(243545, "test-session-owner4", "mailreceive2@msgseal.com",
         "mailsend2@msgseal.com");
     usermailBoxRepo.saveUsermailBox(box);
