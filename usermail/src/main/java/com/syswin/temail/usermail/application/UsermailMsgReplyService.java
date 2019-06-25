@@ -297,7 +297,7 @@ public class UsermailMsgReplyService {
    * @return 单聊对象列表
    */
   private List<UsermailDO> msgReplyTypeValidate(String parentMsgId) {
-    List<UsermailDO> usermails = usermailRepo.selectUsermailListByMsgid(parentMsgId);
+    List<UsermailDO> usermails = usermailRepo.listUsermailsByMsgid(parentMsgId);
     if (CollectionUtils.isEmpty(usermails)) {
       LOGGER.warn("parentMsgId status is error:{}", parentMsgId);
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);

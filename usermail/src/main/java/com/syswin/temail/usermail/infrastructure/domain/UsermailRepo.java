@@ -24,7 +24,7 @@ public interface UsermailRepo {
    * @param umQueryDto 消息列表查询条件
    * @return 消息列表
    */
-  List<UsermailDO> selectUsermail(UmQueryDTO umQueryDto);
+  List<UsermailDO> listUsermails(UmQueryDTO umQueryDto);
 
   /**
    * 根据msgId获取消息
@@ -41,7 +41,7 @@ public interface UsermailRepo {
    * @param umQueryDto 查询条件
    * @return 消息列表
    */
-  List<UsermailDO> selectLastUsermail(UmQueryDTO umQueryDto);
+  List<UsermailDO> listLastUsermails(UmQueryDTO umQueryDto);
 
   /**
    * 撤回消息
@@ -83,7 +83,7 @@ public interface UsermailRepo {
    * @param msgid 消息id
    * @return 消息列表
    */
-  List<UsermailDO> selectUsermailListByMsgid(String msgid);
+  List<UsermailDO> listUsermailsByMsgid(String msgid);
 
   /**
    * 根据msgIds获取消息列表
@@ -92,7 +92,7 @@ public interface UsermailRepo {
    * @param msgIds 消息列表
    * @return 消息列表
    */
-  List<UsermailDO> selectUsermailByFromToMsgIds(String from, List<String> msgIds);
+  List<UsermailDO> listUsermailsByFromToMsgIds(String from, List<String> msgIds);
 
   /**
    * 更新消息的回复数
@@ -140,6 +140,6 @@ public interface UsermailRepo {
    * @param queryDto 查询条件
    * @return 消息列表
    */
-  List<UsermailDO> selectUsermailByStatus(QueryTrashDTO queryDto);
+  List<UsermailDO> listUsermailsByStatus(QueryTrashDTO queryDto);
 
 }

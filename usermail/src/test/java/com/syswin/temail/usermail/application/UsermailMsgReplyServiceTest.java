@@ -103,7 +103,7 @@ public class UsermailMsgReplyServiceTest {
     int type = 1;
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(usermailRepo.selectUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
+    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     when(usermailRepo.selectUsermailByMsgid(anyString(), anyString())).thenReturn(new UsermailDO());
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
@@ -129,7 +129,7 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(usermailRepo.selectUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
+    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     when(usermailRepo.selectUsermailByMsgid(anyString(), anyString())).thenReturn(null);
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
@@ -145,7 +145,7 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(usermailRepo.selectUsermailListByMsgid(parentMsgid)).thenReturn(usermails);
+    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(0);
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
   }
@@ -156,7 +156,7 @@ public class UsermailMsgReplyServiceTest {
     String from = "from@temail.com";
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    when(usermailRepo.selectUsermailListByMsgid(parentMsgid)).thenReturn(Arrays.asList(new UsermailDO()));
+    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(Arrays.asList(new UsermailDO()));
     usermailMsgReplyService.revertMsgReply(headerInfo, parentMsgid, msgid, from, to);
     verify(usermailMqService)
         .sendMqRevertReplyMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, parentMsgid, msgid);
@@ -291,7 +291,7 @@ public class UsermailMsgReplyServiceTest {
     Mockito.when(usermailMsgReplyRepo.selectMsgReplyByCondition(Mockito.any())).thenReturn(reply);
     List<UsermailDO> usermails = new ArrayList<>();
     usermails.add(new UsermailDO());
-    when(usermailRepo.selectUsermailListByMsgid(reply.getParentMsgid())).thenReturn(usermails);
+    when(usermailRepo.listUsermailsByMsgid(reply.getParentMsgid())).thenReturn(usermails);
     usermailMsgReplyService.destroyAfterRead(headerInfo, from, to, msgId);
     verify(usermailMqService)
         .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,

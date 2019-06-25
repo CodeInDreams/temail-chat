@@ -176,7 +176,7 @@ public class UsermailService {
     umQueryDto.setSessionid(sessionId);
     umQueryDto.setPageSize(pageSize);
     umQueryDto.setOwner(from);
-    List<UsermailDO> mails = convertMsgService.convertMsg(usermailRepo.selectUsermail(umQueryDto));
+    List<UsermailDO> mails = convertMsgService.convertMsg(usermailRepo.listUsermails(umQueryDto));
     List<UsermailDO> resultFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(mails)) {
       final String afterFetch = "after";
@@ -256,7 +256,7 @@ public class UsermailService {
       }
       MailboxDTO mailBox = new MailboxDTO();
       UmQueryDTO umQuery = new UmQueryDTO(dbBox.getSessionid(), from);
-      lastUsermail = convertMsgService.convertMsg(usermailRepo.selectLastUsermail(umQuery));
+      lastUsermail = convertMsgService.convertMsg(usermailRepo.listLastUsermails(umQuery));
       if (!CollectionUtils.isEmpty(lastUsermail)) {
         mailBox.setLastMsg(lastUsermail.get(0));
       }
@@ -289,7 +289,7 @@ public class UsermailService {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setOwner(from);
     umQueryDto.setSessionid(usermailSessionService.getSessionID(from, to));
-    List<UsermailDO> usermails = usermailRepo.selectLastUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.listLastUsermails(umQueryDto);
     if (CollectionUtils.isEmpty(usermails)) {
       usermailAdapter.deleteLastMsgId(from, to);
     } else {
@@ -390,7 +390,7 @@ public class UsermailService {
    * @return 单聊对象列表
    */
   public List<UsermailDO> batchQueryMsgs(String from, List<String> msgIds) {
-    List<UsermailDO> usermailList = usermailRepo.selectUsermailByFromToMsgIds(from, msgIds);
+    List<UsermailDO> usermailList = usermailRepo.listUsermailsByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
   }
 
@@ -402,7 +402,7 @@ public class UsermailService {
    * @return 单聊回复消息列表
    */
   public List<UsermailDO> batchQueryMsgsReplyCount(String from, List<String> msgIds) {
-    List<UsermailDO> usermailList = usermailRepo.selectUsermailByFromToMsgIds(from, msgIds);
+    List<UsermailDO> usermailList = usermailRepo.listUsermailsByFromToMsgIds(from, msgIds);
     for (int i = 0; i < usermailList.size(); i++) {
       usermailList.get(i).setMessage(null);
       usermailList.get(i).setZipMsg(null);
@@ -507,7 +507,7 @@ public class UsermailService {
     queryDto.setPageSize(pageSize);
     queryDto.setUpdateTime(new Timestamp(timestamp));
     queryDto.setStatus(TemailStatus.STATUS_TRASH_4);
-    List<UsermailDO> result = usermailRepo.selectUsermailByStatus(queryDto);
+    List<UsermailDO> result = usermailRepo.listUsermailsByStatus(queryDto);
     return convertMsgService.convertMsg(result);
   }
 

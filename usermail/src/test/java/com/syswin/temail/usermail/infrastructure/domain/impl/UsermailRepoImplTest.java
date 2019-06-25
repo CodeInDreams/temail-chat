@@ -44,8 +44,8 @@ public class UsermailRepoImplTest {
   public void getUsermail() {
     UmQueryDTO umQueryDTO = new UmQueryDTO();
     ArgumentCaptor<UmQueryDTO> usermailDOCap = ArgumentCaptor.forClass(UmQueryDTO.class);
-    usermailRepoImpl.selectUsermail(umQueryDTO);
-    Mockito.verify(usermailMapper).selectUsermail(usermailDOCap.capture());
+    usermailRepoImpl.listUsermails(umQueryDTO);
+    Mockito.verify(usermailMapper).listUsermails(usermailDOCap.capture());
     assertThat(usermailDOCap.getValue()).isEqualTo(umQueryDTO);
   }
 
@@ -65,8 +65,8 @@ public class UsermailRepoImplTest {
   public void getLastUsermail() {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     ArgumentCaptor<UmQueryDTO> umQueryDtoCap = ArgumentCaptor.forClass(UmQueryDTO.class);
-    usermailRepoImpl.selectLastUsermail(umQueryDto);
-    Mockito.verify(usermailMapper).selectLastUsermail(umQueryDtoCap.capture());
+    usermailRepoImpl.listLastUsermails(umQueryDto);
+    Mockito.verify(usermailMapper).listLastUsermails(umQueryDtoCap.capture());
     assertThat(umQueryDtoCap.getValue()).isEqualTo(umQueryDto);
   }
 
@@ -122,8 +122,8 @@ public class UsermailRepoImplTest {
   public void getUsermailListByMsgid() {
     String msgid = "msgid";
     ArgumentCaptor<String> msgidCap = ArgumentCaptor.forClass(String.class);
-    usermailRepoImpl.selectUsermailListByMsgid(msgid);
-    Mockito.verify(usermailMapper).selectUsermailListByMsgid(msgidCap.capture());
+    usermailRepoImpl.listUsermailsByMsgid(msgid);
+    Mockito.verify(usermailMapper).listUsermailsByMsgid(msgidCap.capture());
     assertThat(msgidCap.getValue()).isEqualTo(msgid);
   }
 
@@ -134,8 +134,8 @@ public class UsermailRepoImplTest {
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List> msgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
 
-    usermailRepoImpl.selectUsermailByFromToMsgIds(from,msgIds);
-    Mockito.verify(usermailMapper).selectUsermailByFromToMsgIds(fromCap.capture(),msgIdsCap.capture());
+    usermailRepoImpl.listUsermailsByFromToMsgIds(from,msgIds);
+    Mockito.verify(usermailMapper).listUsermailsByFromToMsgIds(fromCap.capture(),msgIdsCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(from);
     assertThat(msgIdsCap.getValue()).isEqualTo(msgIds);
   }

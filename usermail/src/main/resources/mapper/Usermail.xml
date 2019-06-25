@@ -31,7 +31,7 @@
     values (#{id}, #{msgid}, #{sessionid}, #{from}, #{to}, #{type}, #{status}, #{seqNo}, #{owner}, #{at}, #{topic}, #{zipMsg}, #{author}, #{filter})
   </insert>
 
-  <select id="selectUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
+  <select id="listUsermails" parameterType="umQuery" resultMap="UserMailResultMap">
     select *
     from usermail
     where
@@ -62,7 +62,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <select id="selectLastUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
+  <select id="listLastUsermails" parameterType="umQuery" resultMap="UserMailResultMap">
     select *
     from usermail
     where
@@ -106,13 +106,13 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
 
-  <select id="selectUsermailListByMsgid" resultMap="UserMailResultMap">
+  <select id="listUsermailsByMsgid" resultMap="UserMailResultMap">
     select *
     from `usermail`
     where `msgid` = #{msgid,jdbcType=VARCHAR}
   </select>
 
-  <select id="selectUsermailByFromToMsgIds" resultMap="UserMailResultMap">
+  <select id="listUsermailsByFromToMsgIds" resultMap="UserMailResultMap">
     select *
     from `usermail`
     where `msgid` in
@@ -164,7 +164,8 @@
     </if>
       and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
-  <select id="selectUsermailByStatus" parameterType="QueryTrashDto" resultMap="UserMailResultMap">
+
+  <select id="listUsermailsByStatus" parameterType="QueryTrashDto" resultMap="UserMailResultMap">
     select *
     from `usermail`
     where

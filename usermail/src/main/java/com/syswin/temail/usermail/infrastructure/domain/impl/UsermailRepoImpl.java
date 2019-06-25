@@ -39,8 +39,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> selectUsermail(UmQueryDTO umQueryDto) {
-    return usermailMapper.selectUsermail(umQueryDto);
+  public List<UsermailDO> listUsermails(UmQueryDTO umQueryDto) {
+    return usermailMapper.listUsermails(umQueryDto);
   }
 
   /**
@@ -62,8 +62,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> selectLastUsermail(UmQueryDTO umQueryDto) {
-    return usermailMapper.selectLastUsermail(umQueryDto);
+  public List<UsermailDO> listLastUsermails(UmQueryDTO umQueryDto) {
+    return usermailMapper.listLastUsermails(umQueryDto);
   }
 
   /**
@@ -119,8 +119,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> selectUsermailListByMsgid(String msgid) {
-    return usermailMapper.selectUsermailListByMsgid(msgid);
+  public List<UsermailDO> listUsermailsByMsgid(String msgid) {
+    return usermailMapper.listUsermailsByMsgid(msgid);
   }
 
   /**
@@ -131,8 +131,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> selectUsermailByFromToMsgIds(String from, List<String> msgIds) {
-    return usermailMapper.selectUsermailByFromToMsgIds(from, msgIds);
+  public List<UsermailDO> listUsermailsByFromToMsgIds(String from, List<String> msgIds) {
+    return usermailMapper.listUsermailsByFromToMsgIds(from, msgIds);
   }
 
   /**
@@ -194,8 +194,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> selectUsermailByStatus(QueryTrashDTO queryDto) {
-    return usermailMapper.selectUsermailByStatus(queryDto);
+  public List<UsermailDO> listUsermailsByStatus(QueryTrashDTO queryDto) {
+    return usermailMapper.listUsermailsByStatus(queryDto);
   }
 
 }

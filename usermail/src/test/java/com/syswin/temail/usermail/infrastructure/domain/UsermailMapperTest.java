@@ -72,7 +72,7 @@ public class UsermailMapperTest {
     umQueryDto.setFromSeqNo(lastSeqno);
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner(from);
-    List<UsermailDO> usermail = usermailRepo.selectUsermail(umQueryDto);
+    List<UsermailDO> usermail = usermailRepo.listUsermails(umQueryDto);
     Assert.assertNotNull(usermail);
     Assert.assertTrue(usermail.size() >= 1);
   }
@@ -82,7 +82,7 @@ public class UsermailMapperTest {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("to@syswin.com");
-    List<UsermailDO> usermails = usermailRepo.selectLastUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.listLastUsermails(umQueryDto);
     Assert.assertEquals(0, usermails.size());
   }
 
@@ -135,7 +135,7 @@ public class UsermailMapperTest {
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner("from@syswin.com");
     umQueryDto.setPageSize(10);
-    List<UsermailDO> usermails = usermailRepo.selectUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.listUsermails(umQueryDto);
     assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
@@ -164,7 +164,7 @@ public class UsermailMapperTest {
     umQueryDto.setOwner(from);
     umQueryDto.setPageSize(10);
     umQueryDto.setFromSeqNo(10);
-    List<UsermailDO> usermails = usermailRepo.selectUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.listUsermails(umQueryDto);
     assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
@@ -197,7 +197,7 @@ public class UsermailMapperTest {
     userMail.setAuthor(from);
     userMail.setFilter(null);
     usermailRepo.insertUsermail(userMail);
-    List<UsermailDO> usermails = usermailRepo.selectUsermailListByMsgid(msgid);
+    List<UsermailDO> usermails = usermailRepo.listUsermailsByMsgid(msgid);
 
     assertThat(usermails).isNotEmpty();
     assertThat(usermails.size()).isOne();
@@ -208,7 +208,7 @@ public class UsermailMapperTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("AA");
     msgIds.add("BB");
-    List<UsermailDO> mail = usermailRepo.selectUsermailByFromToMsgIds("a@systoontest.com", msgIds);
+    List<UsermailDO> mail = usermailRepo.listUsermailsByFromToMsgIds("a@systoontest.com", msgIds);
     Assert.assertEquals(0, mail.size());
   }
 
@@ -369,7 +369,7 @@ public class UsermailMapperTest {
     queryTrashDTO.setStatus(status);
     queryTrashDTO.setPageSize(2);
 
-    List<UsermailDO> usermailByStatus = usermailRepo.selectUsermailByStatus(queryTrashDTO);
+    List<UsermailDO> usermailByStatus = usermailRepo.listUsermailsByStatus(queryTrashDTO);
 
     assertThat(usermailByStatus).isNotEmpty();
     assertThat(usermailByStatus.size()).isOne();
