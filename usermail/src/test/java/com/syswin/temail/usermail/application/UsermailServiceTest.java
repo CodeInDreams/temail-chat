@@ -316,7 +316,7 @@ public class UsermailServiceTest {
     Map<String, String> localMailBoxes = ImmutableMap.of(to_1, localMsgid_1, to_2, localMsgid_2);
     UsermailBoxDO box_1 = new UsermailBoxDO(1L, sessionid_1, to_1, from);
     UsermailBoxDO box_2 = new UsermailBoxDO(2L, sessionod_2, to_2, from);
-    when(usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus)).thenReturn(Arrays.asList(box_1, box_2));
+    when(usermailBoxRepo.listUsermailBoxsByOwner(from, archiveStatus)).thenReturn(Arrays.asList(box_1, box_2));
     when(usermailAdapter.getLastMsgId(from, to_1)).thenReturn(localMsgid_1);
     when(usermailAdapter.getLastMsgId(from, to_2)).thenReturn("msgid_other");
     UsermailDO lastUsermail_to_2 = new UsermailDO(1L, "msgid_2_actualLast", sessionod_2, from, to_2,
@@ -483,7 +483,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
-    verify(usermailBoxRepo).deleteByOwnerAndTo(fromCaptor.capture(), toCaptor.capture());
+    verify(usermailBoxRepo).deleteUsermailBox(fromCaptor.capture(), toCaptor.capture());
     assertEquals(from, fromCaptor.getValue());
     assertEquals(to, toCaptor.getValue());
 

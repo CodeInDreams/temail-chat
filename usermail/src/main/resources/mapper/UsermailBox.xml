@@ -21,19 +21,19 @@
 		values (#{id}, #{sessionid}, #{mail2}, #{owner} )
 	</insert>
 
-  <delete id="deleteByOwnerAndTo" parameterType="String">
+  <delete id="deleteUsermailBox" parameterType="String">
    delete from usermail_box
    where `owner` = #{owner,jdbcType=VARCHAR}
    and `mail2` = #{mail2,jdbcType=VARCHAR}
   </delete>
 
-  <select id="selectByOwnerAndTo" parameterType="String" resultType="UsermailBox">
+  <select id="listUsermailBoxsByOwnerAndTo" parameterType="String" resultType="UsermailBox">
     select * from usermail_box
     where `owner` = #{owner,jdbcType=VARCHAR}
     and `mail2` = #{mail2,jdbcType=VARCHAR}
   </select>
 
-  <select id="selectUsermailBox" resultMap="UsermailBoxResultMap">
+  <select id="getUsermailBox" resultMap="UsermailBoxResultMap">
     select
     <include refid="selectColumn"/>
     from `usermail_box`
@@ -41,7 +41,7 @@
     and  `mail2` = #{mail2,jdbcType=VARCHAR}
   </select>
 
-  <select id="getUsermailBoxByOwner" resultMap="UsermailBoxResultMap">
+  <select id="listUsermailBoxsByOwner" resultMap="UsermailBoxResultMap">
     select
     <include refid="selectColumn"/>
     from `usermail_box`

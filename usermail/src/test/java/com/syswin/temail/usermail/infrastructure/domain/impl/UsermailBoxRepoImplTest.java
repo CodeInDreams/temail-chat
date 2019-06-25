@@ -46,8 +46,8 @@ public class UsermailBoxRepoImplTest {
     ArgumentCaptor<String> mailCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> archiveStatusCap = ArgumentCaptor.forClass(Integer.class);
     List<UsermailBoxDO> usermailBoxList = new ArrayList<UsermailBoxDO>();
-    usermailBoxRepoImpl.getUsermailBoxByOwner(mail1,archiveStatus);
-    Mockito.verify(usermailBoxMapper).getUsermailBoxByOwner(mailCap.capture(),archiveStatusCap.capture());
+    usermailBoxRepoImpl.listUsermailBoxsByOwner(mail1,archiveStatus);
+    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwner(mailCap.capture(),archiveStatusCap.capture());
     assertThat(mailCap.getValue()).isEqualTo(mail1);
     assertThat(archiveStatusCap.getValue()).isEqualTo(archiveStatus);
   }
@@ -58,8 +58,8 @@ public class UsermailBoxRepoImplTest {
     String to = "to";
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.deleteByOwnerAndTo(from,to);
-    Mockito.verify(usermailBoxMapper).deleteByOwnerAndTo(fromCap.capture(),toCap.capture());
+    usermailBoxRepoImpl.deleteUsermailBox(from,to);
+    Mockito.verify(usermailBoxMapper).deleteUsermailBox(fromCap.capture(),toCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(from);
     assertThat(toCap.getValue()).isEqualTo(to);
   }
@@ -70,8 +70,8 @@ public class UsermailBoxRepoImplTest {
     String toStr = "to";
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.selectByOwnerAndTo(fromStr,toStr);
-    Mockito.verify(usermailBoxMapper).selectByOwnerAndTo(fromCap.capture(),toCap.capture());
+    usermailBoxRepoImpl.listUsermailBoxsByOwnerAndTo(fromStr,toStr);
+    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwnerAndTo(fromCap.capture(),toCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(fromStr);
     assertThat(toCap.getValue()).isEqualTo(toStr);
   }
@@ -97,8 +97,8 @@ public class UsermailBoxRepoImplTest {
     String to = "to";
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.selectUsermailBox(owner,to);
-    Mockito.verify(usermailBoxMapper).selectUsermailBox(owerCap.capture(),toCap.capture());
+    usermailBoxRepoImpl.listUsermailBoxsByOwnerAndTo(owner,to);
+    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwnerAndTo(owerCap.capture(),toCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(owner);
     assertThat(toCap.getValue()).isEqualTo(to);
   }

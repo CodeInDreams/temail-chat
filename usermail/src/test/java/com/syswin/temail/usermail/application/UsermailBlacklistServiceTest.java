@@ -22,21 +22,21 @@ public class UsermailBlacklistServiceTest {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     Mockito.when(iUsermailAdapter.getUsermailBlacklistPkID()).thenReturn(1L);
     usermailBlacklistService.save(usermailBlacklist);
-    verify(usermailBlacklistRepo).insert(usermailBlacklist);
+    verify(usermailBlacklistRepo).insertUsermailBlacklist(usermailBlacklist);
   }
 
   @Test
   public void removeTest() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     usermailBlacklistService.remove(usermailBlacklist);
-    verify(usermailBlacklistRepo).deleteByAddresses(usermailBlacklist);
+    verify(usermailBlacklistRepo).deleteUsermailBlacklist(usermailBlacklist);
   }
 
   @Test
   public void findByTemailAddressTest() {
     String temail = "temail@syswin.com";
     usermailBlacklistService.findByTemailAddress(temail);
-    verify(usermailBlacklistRepo).selectByTemailAddress(temail);
+    verify(usermailBlacklistRepo).listUsermailBlacklists(temail);
   }
 
   @Test
@@ -44,7 +44,7 @@ public class UsermailBlacklistServiceTest {
     String temailAddress = "temail@syswin.com";
     String blackedAddress = "blackAddress@syswin.com";
     usermailBlacklistService.findByAddresses(temailAddress, blackedAddress);
-    verify(usermailBlacklistRepo).selectByAddresses(temailAddress, blackedAddress);
+    verify(usermailBlacklistRepo).getUsermailBlacklist(temailAddress, blackedAddress);
   }
 
   @Test

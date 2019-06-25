@@ -24,8 +24,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 插入的数量
    */
   @Override
-  public int insert(UsermailBlacklistDO usermailBlacklist) {
-    return usermailBlacklistMapper.insert(usermailBlacklist);
+  public int insertUsermailBlacklist(UsermailBlacklistDO usermailBlacklist) {
+    return usermailBlacklistMapper.insertUsermailBlacklist(usermailBlacklist);
   }
 
   /**
@@ -35,8 +35,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteByAddresses(UsermailBlacklistDO usermailBlacklist) {
-    return usermailBlacklistMapper.deleteByAddresses(usermailBlacklist);
+  public int deleteUsermailBlacklist(UsermailBlacklistDO usermailBlacklist) {
+    return usermailBlacklistMapper.deleteUsermailBlacklist(usermailBlacklist);
   }
 
   /**
@@ -47,8 +47,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 黑名单信息
    */
   @Override
-  public UsermailBlacklistDO selectByAddresses(String temailAddress, String blackedAddress) {
-    return usermailBlacklistMapper.selectByAddresses(temailAddress, blackedAddress);
+  public UsermailBlacklistDO getUsermailBlacklist(String temailAddress, String blackedAddress) {
+    return usermailBlacklistMapper.getUsermailBlacklist(temailAddress, blackedAddress);
   }
 
   /**
@@ -58,8 +58,8 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @return 黑名单列表
    */
   @Override
-  public List<UsermailBlacklistDO> selectByTemailAddress(String temailAddress) {
-    return usermailBlacklistMapper.selectByTemailAddress(temailAddress);
+  public List<UsermailBlacklistDO> listUsermailBlacklists(String temailAddress) {
+    return usermailBlacklistMapper.listUsermailBlacklists(temailAddress);
   }
 
   /**

@@ -19,7 +19,7 @@ public interface UsermailBoxRepo {
    * @param archiveStatus 归档状态
    * @return 会话列表
    */
-  List<UsermailBoxDO> getUsermailBoxByOwner(String mail, int archiveStatus);
+  List<UsermailBoxDO> listUsermailBoxsByOwner(String mail, int archiveStatus);
 
   /**
    * 删除指定会话
@@ -28,7 +28,7 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 删除的数量
    */
-  int deleteByOwnerAndTo(String from, String to);
+  int deleteUsermailBox(String from, String to);
 
   /**
    * 根据会话拥有者和另一位聊天者查询会话列表
@@ -37,7 +37,7 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 会话列表
    */
-  List<UsermailBoxDO> selectByOwnerAndTo(String from, String to);
+  List<UsermailBoxDO> listUsermailBoxsByOwnerAndTo(String from, String to);
 
   /**
    * 更新会话归档状态
@@ -56,6 +56,6 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 会话信息
    */
-  UsermailBoxDO selectUsermailBox(String owner, String to);
+  UsermailBoxDO getUsermailBox(String owner, String to);
 
 }

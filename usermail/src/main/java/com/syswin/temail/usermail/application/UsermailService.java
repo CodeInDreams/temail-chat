@@ -89,7 +89,7 @@ public class UsermailService {
     String sessionId = usermailSessionService.getSessionID(from, to);
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
-    UsermailBoxDO usermailBox = usermailBoxRepo.selectUsermailBox(owner, target);
+    UsermailBoxDO usermailBox = usermailBoxRepo.getUsermailBox(owner, target);
     if (usermailBox == null) {
       UsermailBoxDO box = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner);
       usermailBoxRepo.saveUsermailBox(box);
@@ -245,7 +245,7 @@ public class UsermailService {
   public List<MailboxDTO> mailboxes(String from, int archiveStatus,
       Map<String, String> usermailBoxes) {
     Map<String, String> localMailBoxes = CollectionUtils.isEmpty(usermailBoxes) ? new HashMap<>(0) : usermailBoxes;
-    List<UsermailBoxDO> dbBoxes = usermailBoxRepo.getUsermailBoxByOwner(from, archiveStatus);
+    List<UsermailBoxDO> dbBoxes = usermailBoxRepo.listUsermailBoxsByOwner(from, archiveStatus);
     List<MailboxDTO> mailBoxes = new ArrayList<>(dbBoxes.size());
     List<UsermailDO> lastUsermail;
     for (UsermailBoxDO dbBox : dbBoxes) {
@@ -350,7 +350,7 @@ public class UsermailService {
    */
   @Transactional
   public boolean deleteSession(CdtpHeaderDTO cdtpHeaderDto, DeleteMailBoxQueryDTO queryDto) {
-    usermailBoxRepo.deleteByOwnerAndTo(queryDto.getFrom(), queryDto.getTo());
+    usermailBoxRepo.deleteUsermailBox(queryDto.getFrom(), queryDto.getTo());
     LOGGER.info("Label-delete-usermail-session: delete session, params is {}", queryDto);
     if (queryDto.isDeleteAllMsg()) {
       String sessionId = usermailSessionService.getSessionID(queryDto.getTo(), queryDto.getFrom());
@@ -374,7 +374,7 @@ public class UsermailService {
    */
   @Transactional
   public boolean deleteGroupChatSession(String groupTemail, String owner) {
-    usermailBoxRepo.deleteByOwnerAndTo(owner, groupTemail);
+    usermailBoxRepo.deleteUsermailBox(owner, groupTemail);
     LOGGER
         .info("Label-delete-GroupChat-session: delete session, params is owner:{}, groupTemail:{}", owner, groupTemail);
     String sessionId = usermailSessionService.getSessionID(groupTemail, owner);

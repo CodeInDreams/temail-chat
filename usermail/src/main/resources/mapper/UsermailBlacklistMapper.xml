@@ -9,22 +9,22 @@
     <result column="status" jdbcType="TINYINT" property="status"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
   </resultMap>
-  <insert id="insert" parameterType="UsermailBlacklist">
+  <insert id="insertUsermailBlacklist" parameterType="UsermailBlacklist">
     insert into usermail_blacklist(`id`,`temail_address`, `blacked_address`)
     values (#{id},#{temailAddress},#{blackedAddress})
   </insert>
-  <delete id="deleteByAddresses">
+  <delete id="deleteUsermailBlacklist">
     delete from usermail_blacklist
     where `temail_address` = #{temailAddress}
     and `blacked_address` = #{blackedAddress}
   </delete>
-  <select id="selectByAddresses" parameterType="UsermailBlacklist" resultMap="BaseResultMap">
+  <select id="getUsermailBlacklist" parameterType="UsermailBlacklist" resultMap="BaseResultMap">
     select `id`,`temail_address`,`blacked_address`,`status`,`create_time`
     from usermail_blacklist ub
     where ub.`temail_address` = #{temailAddress}
     and ub.`blacked_address` = #{blackedAddress}
   </select>
-  <select id="selectByTemailAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="listUsermailBlacklists" parameterType="java.lang.String" resultMap="BaseResultMap">
     select `id`,`temail_address`,`blacked_address`,`status`,`create_time`
     from usermail_blacklist ub
     where ub.`temail_address` = #{temailAddress}

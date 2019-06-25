@@ -30,16 +30,16 @@ public class UsermailBlacklistRepoImplTest {
   @Test
   public void insert() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(1, "from@msg.com", "blacklist@msgseal.com");
-    Mockito.when(usermailBlacklistMapper.insert(usermailBlacklist)).thenReturn(1);
-    int row = usermailBlacklistRepoImpl.insert(usermailBlacklist);
+    Mockito.when(usermailBlacklistMapper.insertUsermailBlacklist(usermailBlacklist)).thenReturn(1);
+    int row = usermailBlacklistRepoImpl.insertUsermailBlacklist(usermailBlacklist);
     Assert.assertEquals(1,row);
   }
 
   @Test
   public void deleteByAddress() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(2, "from2@msgseal.com", "blacklist2@msgseal.com");
-    Mockito.when(usermailBlacklistMapper.deleteByAddresses(usermailBlacklist)).thenReturn(1);
-    int row = usermailBlacklistRepoImpl.deleteByAddresses(usermailBlacklist);
+    Mockito.when(usermailBlacklistMapper.deleteUsermailBlacklist(usermailBlacklist)).thenReturn(1);
+    int row = usermailBlacklistRepoImpl.deleteUsermailBlacklist(usermailBlacklist);
     Assert.assertEquals(1,row);
   }
 
@@ -48,8 +48,8 @@ public class UsermailBlacklistRepoImplTest {
     String temailAddress = "temail@msgseal.com";
     String blackAddress = "blacklist@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(3, temailAddress, blackAddress);
-    Mockito.when(usermailBlacklistMapper.selectByAddresses(temailAddress,blackAddress)).thenReturn(blacklist);
-    UsermailBlacklistDO blacklists = usermailBlacklistRepoImpl.selectByAddresses(temailAddress, blackAddress);
+    Mockito.when(usermailBlacklistMapper.getUsermailBlacklist(temailAddress,blackAddress)).thenReturn(blacklist);
+    UsermailBlacklistDO blacklists = usermailBlacklistRepoImpl.getUsermailBlacklist(temailAddress, blackAddress);
     assertThat(blacklists).isEqualTo(blacklist);
   }
 
@@ -58,8 +58,8 @@ public class UsermailBlacklistRepoImplTest {
     String temailAddress = "temail2@msgseal.com";
     String blackAddress = "blacklist2@msgseal.com";
     List<UsermailBlacklistDO> usermailBlacklists = new ArrayList<UsermailBlacklistDO>();
-    Mockito.when(usermailBlacklistMapper.selectByTemailAddress(temailAddress)).thenReturn(usermailBlacklists);
-    List<UsermailBlacklistDO> usermailBlacklist = usermailBlacklistRepoImpl.selectByTemailAddress(temailAddress);
+    Mockito.when(usermailBlacklistMapper.listUsermailBlacklists(temailAddress)).thenReturn(usermailBlacklists);
+    List<UsermailBlacklistDO> usermailBlacklist = usermailBlacklistRepoImpl.listUsermailBlacklists(temailAddress);
     assertThat(usermailBlacklists).isEqualTo(usermailBlacklist);
   }
 

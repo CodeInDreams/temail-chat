@@ -29,7 +29,7 @@ public class UsermailBlacklistService {
    */
   public int save(UsermailBlacklistDO usermailBlacklist) {
     usermailBlacklist.setId(iUsermailAdapter.getUsermailBlacklistPkID());
-    return usermailBlacklistRepo.insert(usermailBlacklist);
+    return usermailBlacklistRepo.insertUsermailBlacklist(usermailBlacklist);
   }
 
   /**
@@ -40,7 +40,7 @@ public class UsermailBlacklistService {
    */
   @Transactional
   public int remove(UsermailBlacklistDO usermailBlacklist) {
-    return usermailBlacklistRepo.deleteByAddresses(usermailBlacklist);
+    return usermailBlacklistRepo.deleteUsermailBlacklist(usermailBlacklist);
   }
 
   /**
@@ -51,7 +51,7 @@ public class UsermailBlacklistService {
    * @return 黑名单数据（temailAddress:发起人 blackedAddress:被拉黑人）
    */
   public UsermailBlacklistDO findByAddresses(String temailAddress, String blackedAddress) {
-    return usermailBlacklistRepo.selectByAddresses(temailAddress, blackedAddress);
+    return usermailBlacklistRepo.getUsermailBlacklist(temailAddress, blackedAddress);
   }
 
   /**
@@ -61,7 +61,7 @@ public class UsermailBlacklistService {
    * @return 发送人黑名单列表（temailAddress:发起人 blackedAddress:被拉黑人）
    */
   public List<UsermailBlacklistDO> findByTemailAddress(String temailAddress) {
-    return usermailBlacklistRepo.selectByTemailAddress(temailAddress);
+    return usermailBlacklistRepo.listUsermailBlacklists(temailAddress);
   }
 
   /**

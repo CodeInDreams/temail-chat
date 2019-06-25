@@ -22,7 +22,7 @@ public interface UsermailBoxMapper {
    * @param archiveStatus 归档状态
    * @return 会话列表
    */
-  List<UsermailBoxDO> getUsermailBoxByOwner(@Param("owner") String mail, @Param("archiveStatus") int archiveStatus);
+  List<UsermailBoxDO> listUsermailBoxsByOwner(@Param("owner") String mail, @Param("archiveStatus") int archiveStatus);
 
   /**
    * 删除指定会话
@@ -31,7 +31,7 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 删除的数量
    */
-  int deleteByOwnerAndTo(@Param("owner") String from, @Param("mail2") String to);
+  int deleteUsermailBox(@Param("owner") String from, @Param("mail2") String to);
 
   /**
    * 根据会话拥有者和另一位聊天者查询会话列表
@@ -40,7 +40,7 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 会话列表
    */
-  List<UsermailBoxDO> selectByOwnerAndTo(@Param("owner") String from, @Param("mail2") String to);
+  List<UsermailBoxDO> listUsermailBoxsByOwnerAndTo(@Param("owner") String from, @Param("mail2") String to);
 
   /**
    * 更新会话归档状态
@@ -59,5 +59,5 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 会话信息
    */
-  UsermailBoxDO selectUsermailBox(@Param("owner") String owner, @Param("mail2") String to);
+  UsermailBoxDO getUsermailBox(@Param("owner") String owner, @Param("mail2") String to);
 }

@@ -35,8 +35,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话列表
    */
   @Override
-  public List<UsermailBoxDO> getUsermailBoxByOwner(String mail, int archiveStatus) {
-    return usermailBoxMapper.getUsermailBoxByOwner(mail, archiveStatus);
+  public List<UsermailBoxDO> listUsermailBoxsByOwner(String mail, int archiveStatus) {
+    return usermailBoxMapper.listUsermailBoxsByOwner(mail, archiveStatus);
   }
 
   /**
@@ -47,8 +47,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteByOwnerAndTo(String from, String to) {
-    return usermailBoxMapper.deleteByOwnerAndTo(from, to);
+  public int deleteUsermailBox(String from, String to) {
+    return usermailBoxMapper.deleteUsermailBox(from, to);
   }
 
   /**
@@ -59,8 +59,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话列表
    */
   @Override
-  public List<UsermailBoxDO> selectByOwnerAndTo(String from, String to) {
-    return usermailBoxMapper.selectByOwnerAndTo(from, to);
+  public List<UsermailBoxDO> listUsermailBoxsByOwnerAndTo(String from, String to) {
+    return usermailBoxMapper.listUsermailBoxsByOwnerAndTo(from, to);
   }
 
   /**
@@ -84,8 +84,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话信息
    */
   @Override
-  public UsermailBoxDO selectUsermailBox(String owner, String to) {
-    return usermailBoxMapper.selectUsermailBox(owner, to);
+  public UsermailBoxDO getUsermailBox(String owner, String to) {
+    return usermailBoxMapper.getUsermailBox(owner, to);
   }
 
 }
