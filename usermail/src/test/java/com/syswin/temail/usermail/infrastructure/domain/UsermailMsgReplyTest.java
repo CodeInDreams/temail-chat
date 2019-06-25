@@ -30,7 +30,7 @@ public class UsermailMsgReplyTest {
   private UsermailMsgReplyRepo usermailMsgReplyRepo;
 
   @Test
-  public void saveMsgReply() {
+  public void saveMsgReplyTest() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
@@ -44,12 +44,12 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("jkasjkaslkjaskl");
     usermailMsgReplyRepo.insert(usermailMsgReply);
-    UsermailMsgReplyDO msgBean = getMsgBean();
+    UsermailMsgReplyDO msgBean = selectMsgReplyByConditon();
     Assert.assertNotNull(msgBean);
   }
 
   @Test
-  public void getMsgReply() {
+  public void selectMsgReplyTest() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
@@ -62,7 +62,7 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void getMsgReplys() {
+  public void listMsgReplysTest() {
     QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
     dto.setParentMsgid("syswin-1543456947958");
     dto.setOwner("A2018");
@@ -74,14 +74,14 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void updateBatchMsgReplys() {
+  public void updateBatchMsgReplysTest() {
     List<String> msgIds = new ArrayList<>(1);
     msgIds.add("syswin-1543572005953");
     usermailMsgReplyRepo.deleteMsgReplysByMsgIds("A2018", msgIds);
     Assert.assertTrue(true);
   }
 
-  private UsermailMsgReplyDO getMsgBean() {
+  private UsermailMsgReplyDO selectMsgReplyByConditon() {
     UsermailMsgReplyDO queryParam = new UsermailMsgReplyDO();
     queryParam.setParentMsgid("syswin-1543456947958");
     queryParam.setMsgid("syswin-1543572005953");
@@ -92,7 +92,7 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void deleteMsgByParentIdAndOwner() {
+  public void deleteMsgByParentIdAndOwnerTest() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
@@ -113,13 +113,13 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void batchDeleteBySessionId() throws Exception {
+  public void batchDeleteBySessionIdTest() {
     int count = usermailMsgReplyRepo.deleteMsgReplysBySessionId("", "test@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
   @Test
-  public void destroyAfterRead() {
+  public void updateDestroyAfterReadTest() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
@@ -144,12 +144,12 @@ public class UsermailMsgReplyTest {
     String owner = "A2019";
 
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
-    String parentMsgid = "syswin-1543456947959";
+    String parentMsgid = "syswin-1543456947958";
     usermailMsgReply.setParentMsgid(parentMsgid);
     usermailMsgReply.setFrom("A2019");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(184113);
+    usermailMsgReply.setId(185);
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);
@@ -189,7 +189,7 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void getLastUsermailReplyTest() {
+  public void selectLastUsermailReplyTest() {
     String owner = "A2018";
     String parentMsgid = "syswin-1543456947958";
     int status = TemailStatus.STATUS_NORMAL_0;
@@ -222,19 +222,19 @@ public class UsermailMsgReplyTest {
   }
 
   @Test
-  public void revertTest() {
+  public void updateRevertUsermailReplyTest() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
-    usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(184112);
+    usermailMsgReply.setMsgid("syswin-1543572005212112129531");
+    usermailMsgReply.setId(184115);
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
-    usermailMsgReply.setOwner("A2018");
+    usermailMsgReply.setOwner("A20181");
     usermailMsgReply.setType(1);
-    usermailMsgReply.setMsg("testsavemethod");
-    usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
+    usermailMsgReply.setMsg("testRevert");
+    usermailMsgReply.setSessionid("lkjasdjlk;sadklj1");
     usermailMsgReplyRepo.insert(usermailMsgReply);
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
     int count = usermailMsgReplyRepo.updateRevertUsermailReply(usermailMsgReply);
