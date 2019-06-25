@@ -35,8 +35,8 @@ public class UsermailRepoImplTest {
   public void saveUsermail() {
     UsermailDO usermailDO = new UsermailDO();
     ArgumentCaptor<UsermailDO> usermailDOCap = ArgumentCaptor.forClass(UsermailDO.class);
-    usermailRepoImpl.saveUsermail(usermailDO);
-    Mockito.verify(usermailMapper).saveUsermail(usermailDOCap.capture());
+    usermailRepoImpl.insertUsermail(usermailDO);
+    Mockito.verify(usermailMapper).insertUsermail(usermailDOCap.capture());
     assertThat(usermailDOCap.getValue()).isEqualTo(usermailDO);
   }
 
@@ -44,8 +44,8 @@ public class UsermailRepoImplTest {
   public void getUsermail() {
     UmQueryDTO umQueryDTO = new UmQueryDTO();
     ArgumentCaptor<UmQueryDTO> usermailDOCap = ArgumentCaptor.forClass(UmQueryDTO.class);
-    usermailRepoImpl.getUsermail(umQueryDTO);
-    Mockito.verify(usermailMapper).getUsermail(usermailDOCap.capture());
+    usermailRepoImpl.selectUsermail(umQueryDTO);
+    Mockito.verify(usermailMapper).selectUsermail(usermailDOCap.capture());
     assertThat(usermailDOCap.getValue()).isEqualTo(umQueryDTO);
   }
 
@@ -55,8 +55,8 @@ public class UsermailRepoImplTest {
     String owner = "owner";
     ArgumentCaptor<String> msgIdCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
-    usermailRepoImpl.getUsermailByMsgid(msgId,owner);
-    Mockito.verify(usermailMapper).getUsermailByMsgid(msgIdCap.capture(),ownerCap.capture());
+    usermailRepoImpl.selectUsermailByMsgid(msgId,owner);
+    Mockito.verify(usermailMapper).selectUsermailByMsgid(msgIdCap.capture(),ownerCap.capture());
     assertThat(msgIdCap.getValue()).isEqualTo(msgId);
     assertThat(ownerCap.getValue()).isEqualTo(owner);
   }
@@ -65,8 +65,8 @@ public class UsermailRepoImplTest {
   public void getLastUsermail() {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     ArgumentCaptor<UmQueryDTO> umQueryDtoCap = ArgumentCaptor.forClass(UmQueryDTO.class);
-    usermailRepoImpl.getLastUsermail(umQueryDto);
-    Mockito.verify(usermailMapper).getLastUsermail(umQueryDtoCap.capture());
+    usermailRepoImpl.selectLastUsermail(umQueryDto);
+    Mockito.verify(usermailMapper).selectLastUsermail(umQueryDtoCap.capture());
     assertThat(umQueryDtoCap.getValue()).isEqualTo(umQueryDto);
   }
 
@@ -74,8 +74,8 @@ public class UsermailRepoImplTest {
   public void revertUsermail() {
     RevertMailDTO revertMailDTO = new RevertMailDTO();
     ArgumentCaptor<RevertMailDTO> revertMailDTOCap = ArgumentCaptor.forClass(RevertMailDTO.class);
-    usermailRepoImpl.revertUsermail(revertMailDTO);
-    Mockito.verify(usermailMapper).revertUsermail(revertMailDTOCap.capture());
+    usermailRepoImpl.countRevertUsermail(revertMailDTO);
+    Mockito.verify(usermailMapper).countRevertUsermail(revertMailDTOCap.capture());
     assertThat(revertMailDTOCap.getValue()).isEqualTo(revertMailDTO);
   }
 
@@ -85,8 +85,8 @@ public class UsermailRepoImplTest {
     String owner = "owner";
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<String>> msgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
-    usermailRepoImpl.removeMsg(msgIds, owner);
-    Mockito.verify(usermailMapper).removeMsg(msgIdsCap.capture(),ownerCap.capture());
+    usermailRepoImpl.deleteMsg(msgIds, owner);
+    Mockito.verify(usermailMapper).deleteMsg(msgIdsCap.capture(),ownerCap.capture());
     assertThat(ownerCap.getValue()).isEqualTo(owner);
     assertThat(msgIdsCap.getValue()).isEqualTo(msgIds);
   }
@@ -99,8 +99,8 @@ public class UsermailRepoImplTest {
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCap = ArgumentCaptor.forClass(Integer.class);
-    usermailRepoImpl.destroyAfterRead(owner, msgid, status);
-    Mockito.verify(usermailMapper).destroyAfterRead(ownerCap.capture(),msgIdCap.capture(),statusCap.capture());
+    usermailRepoImpl.updateDestroyAfterReadStatus(owner, msgid, status);
+    Mockito.verify(usermailMapper).updateDestroyAfterReadStatus(ownerCap.capture(),msgIdCap.capture(),statusCap.capture());
     assertThat(ownerCap.getValue()).isEqualTo(owner);
     assertThat(msgIdCap.getValue()).isEqualTo(msgid);
     assertThat(statusCap.getValue()).isEqualTo(status);
@@ -112,8 +112,8 @@ public class UsermailRepoImplTest {
     String owner = "owner";
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> sessionIdCap = ArgumentCaptor.forClass(String.class);
-    usermailRepoImpl.batchDeleteBySessionId(sessionId, owner);
-    Mockito.verify(usermailMapper).batchDeleteBySessionId(sessionIdCap.capture(),ownerCap.capture());
+    usermailRepoImpl.deleteBatchBySessionId(sessionId, owner);
+    Mockito.verify(usermailMapper).deleteBatchBySessionId(sessionIdCap.capture(),ownerCap.capture());
     assertThat(sessionIdCap.getValue()).isEqualTo(sessionId);
     assertThat(ownerCap.getValue()).isEqualTo(owner);
   }
@@ -122,8 +122,8 @@ public class UsermailRepoImplTest {
   public void getUsermailListByMsgid() {
     String msgid = "msgid";
     ArgumentCaptor<String> msgidCap = ArgumentCaptor.forClass(String.class);
-    usermailRepoImpl.getUsermailListByMsgid(msgid);
-    Mockito.verify(usermailMapper).getUsermailListByMsgid(msgidCap.capture());
+    usermailRepoImpl.selectUsermailListByMsgid(msgid);
+    Mockito.verify(usermailMapper).selectUsermailListByMsgid(msgidCap.capture());
     assertThat(msgidCap.getValue()).isEqualTo(msgid);
   }
 
@@ -134,8 +134,8 @@ public class UsermailRepoImplTest {
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List> msgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
 
-    usermailRepoImpl.getUsermailByFromToMsgIds(from,msgIds);
-    Mockito.verify(usermailMapper).getUsermailByFromToMsgIds(fromCap.capture(),msgIdsCap.capture());
+    usermailRepoImpl.selectUsermailByFromToMsgIds(from,msgIds);
+    Mockito.verify(usermailMapper).selectUsermailByFromToMsgIds(fromCap.capture(),msgIdsCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(from);
     assertThat(msgIdsCap.getValue()).isEqualTo(msgIds);
   }
@@ -181,8 +181,8 @@ public class UsermailRepoImplTest {
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<TrashMailDTO>> trashMailsCap = ArgumentCaptor.forClass(ArrayList.class);
     ArgumentCaptor<Integer> statueCap = ArgumentCaptor.forClass(Integer.class);
-    usermailRepoImpl.removeMsgByStatus(trashMails,owner,status);
-    Mockito.verify(usermailMapper).removeMsgByStatus(trashMailsCap.capture(),ownerCap.capture(),statueCap.capture());
+    usermailRepoImpl.deleteMsgByStatus(trashMails,owner,status);
+    Mockito.verify(usermailMapper).deleteMsgByStatus(trashMailsCap.capture(),ownerCap.capture(),statueCap.capture());
     assertThat(trashMailsCap.getValue()).isEqualTo(trashMails);
     assertThat(ownerCap.getValue()).isEqualTo(owner);
     assertThat(statueCap.getValue()).isEqualTo(status);
@@ -198,8 +198,8 @@ public class UsermailRepoImplTest {
     ArgumentCaptor<List<TrashMailDTO>> trashMailsCap = ArgumentCaptor.forClass(ArrayList.class);
     ArgumentCaptor<Integer> statusCap = ArgumentCaptor.forClass(Integer.class);
     ArgumentCaptor<Integer> originStatusCap = ArgumentCaptor.forClass(Integer.class);
-    usermailRepoImpl.revertMsgFromTrash(trashMails,owner,status);
-    Mockito.verify(usermailMapper).revertMsgFromTrash(trashMailsCap.capture(),ownerCap.capture(),statusCap.capture(),originStatusCap.capture());
+    usermailRepoImpl.updateRevertMsgFromTrashStatus(trashMails,owner,status);
+    Mockito.verify(usermailMapper).updateRevertMsgFromTrashStatus(trashMailsCap.capture(),ownerCap.capture(),statusCap.capture(),originStatusCap.capture());
     assertThat(trashMailsCap.getValue()).isEqualTo(trashMails);
     assertThat(ownerCap.getValue()).isEqualTo(owner);
     assertThat(statusCap.getValue()).isEqualTo(status);

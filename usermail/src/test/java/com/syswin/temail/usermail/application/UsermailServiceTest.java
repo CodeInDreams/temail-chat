@@ -111,7 +111,7 @@ public class UsermailServiceTest {
     assertEquals(1L, usermailBox.getId());
 
     ArgumentCaptor<UsermailDO> argumentCaptor2 = ArgumentCaptor.forClass(UsermailDO.class);
-    verify(usermailRepo).saveUsermail(argumentCaptor2.capture());
+    verify(usermailRepo).insertUsermail(argumentCaptor2.capture());
     UsermailDO usermail = argumentCaptor2.getValue();
     assertEquals(from, usermail.getFrom());
     assertEquals(to, usermail.getTo());
@@ -150,7 +150,7 @@ public class UsermailServiceTest {
     assertEquals(1L, usermailBox.getId());
 
     ArgumentCaptor<UsermailDO> argumentCaptor2 = ArgumentCaptor.forClass(UsermailDO.class);
-    verify(usermailRepo).saveUsermail(argumentCaptor2.capture());
+    verify(usermailRepo).insertUsermail(argumentCaptor2.capture());
     UsermailDO usermail = argumentCaptor2.getValue();
     assertEquals(from, usermail.getFrom());
     assertEquals(to, usermail.getTo());
@@ -189,7 +189,7 @@ public class UsermailServiceTest {
     assertEquals(1L, usermailBox.getId());
 
     ArgumentCaptor<UsermailDO> argumentCaptor2 = ArgumentCaptor.forClass(UsermailDO.class);
-    verify(usermailRepo).saveUsermail(argumentCaptor2.capture());
+    verify(usermailRepo).insertUsermail(argumentCaptor2.capture());
     UsermailDO usermail = argumentCaptor2.getValue();
     assertEquals(from, usermail.getFrom());
     assertEquals(to, usermail.getTo());
@@ -214,7 +214,7 @@ public class UsermailServiceTest {
     List<UsermailDO> usermails = new ArrayList<>();
     UsermailDO usermail1 = new UsermailDO();
     usermails.add(usermail1);
-    when(usermailRepo.getUsermail(any())).thenReturn(usermails);
+    when(usermailRepo.selectUsermail(any())).thenReturn(usermails);
     List<UsermailDO> list = usermailService.getMails(from, to, fromSeqNo, pageSize, filterSeqIds, "before");
     assertNotNull(list);
   }
@@ -286,10 +286,10 @@ public class UsermailServiceTest {
     String to = "to@temail.com";
     String owner = from;
     String msgid = "msgid";
-    when(usermailRepo.revertUsermail(any(RevertMailDTO.class))).thenReturn(1);
+    when(usermailRepo.countRevertUsermail(any(RevertMailDTO.class))).thenReturn(1);
     usermailService.revertMqHandler(xPacketId, header, from, to, owner, msgid);
     ArgumentCaptor<RevertMailDTO> revertDtoCapture = ArgumentCaptor.forClass(RevertMailDTO.class);
-    verify(usermailRepo).revertUsermail(revertDtoCapture.capture());
+    verify(usermailRepo).countRevertUsermail(revertDtoCapture.capture());
     RevertMailDTO revertMailDto = revertDtoCapture.getValue();
     assertEquals(from, revertMailDto.getOwner());
     assertEquals(msgid, revertMailDto.getMsgid());
@@ -297,7 +297,7 @@ public class UsermailServiceTest {
         .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
 
     // 验证撤回失败的情况
-    when(usermailRepo.revertUsermail(any(RevertMailDTO.class))).thenReturn(0);
+    when(usermailRepo.countRevertUsermail(any(RevertMailDTO.class))).thenReturn(0);
     usermailService.revertMqHandler(xPacketId, header, from, to, owner, msgid);
     verify(usermail2NotifyMqService, times(1))
         .sendMqUpdateMsg(xPacketId, header, from, to, owner, msgid, SessionEventType.EVENT_TYPE_2);
@@ -341,17 +341,17 @@ public class UsermailServiceTest {
     String dbLastMsgid = "dbLastMsgid";
     UsermailDO lastUsermail = new UsermailDO(1L, dbLastMsgid, "sessionid", from, to,
         TemailStatus.STATUS_NORMAL_0, TemailType.TYPE_NORMAL_0, from, "", 3);
-    when(usermailRepo.getLastUsermail(any(UmQueryDTO.class))).thenReturn(Arrays.asList(lastUsermail));
+    when(usermailRepo.selectLastUsermail(any(UmQueryDTO.class))).thenReturn(Arrays.asList(lastUsermail));
     when(usermailAdapter.getLastMsgId(from, to)).thenReturn("cacheLaseMsgid");
 
     usermailService.removeMsg(headerInfo, from, to, msgIds);
 
-    verify(usermailRepo).removeMsg(msgIds, from);
+    verify(usermailRepo).deleteMsg(msgIds, from);
     verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
     verify(usermail2NotifyMqService)
         .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
     verify(usermailSessionService).getSessionID(from, to);
-    verify(usermailRepo).getLastUsermail(any(UmQueryDTO.class));
+    verify(usermailRepo).selectLastUsermail(any(UmQueryDTO.class));
     verify(usermailAdapter).getLastMsgId(from, to);
     verify(usermailAdapter).setLastMsgId(from, to, dbLastMsgid);
   }
@@ -363,16 +363,16 @@ public class UsermailServiceTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("ldfk");
     msgIds.add("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
-    when(usermailRepo.getLastUsermail(any(UmQueryDTO.class))).thenReturn(null);
+    when(usermailRepo.selectLastUsermail(any(UmQueryDTO.class))).thenReturn(null);
 
     usermailService.removeMsg(headerInfo, from, to, msgIds);
 
-    verify(usermailRepo).removeMsg(msgIds, from);
+    verify(usermailRepo).deleteMsg(msgIds, from);
     verify(usermailMsgReplyRepo).deleteMsgByParentIdAndOwner(from, msgIds);
     verify(usermail2NotifyMqService)
         .sendMqAfterUpdateStatus(eq(headerInfo), eq(from), eq(to), anyString(), eq(SessionEventType.EVENT_TYPE_4));
     verify(usermailSessionService).getSessionID(from, to);
-    verify(usermailRepo).getLastUsermail(any(UmQueryDTO.class));
+    verify(usermailRepo).selectLastUsermail(any(UmQueryDTO.class));
     verify(usermailAdapter).deleteLastMsgId(from, to);
   }
 
@@ -400,13 +400,13 @@ public class UsermailServiceTest {
     String author = "from@msgseal.com";
     UsermailDO usermail = new UsermailDO(22, msgId, "", from, "", 0, TemailType.TYPE_DESTROY_AFTER_READ_1, from, "", 1,
         "".getBytes(), author, null);
-    when(usermailRepo.getUsermailByMsgid(msgId, from)).thenReturn(usermail);
+    when(usermailRepo.selectUsermailByMsgid(msgId, from)).thenReturn(usermail);
     usermailService.destroyAfterRead(xPacketId, header, from, to, from, msgId);
 
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailRepo).destroyAfterRead(fromCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
+    verify(usermailRepo).updateDestroyAfterReadStatus(fromCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(from, fromCaptor.getValue());
     assertEquals(msgId, msgIdCaptor.getValue());
@@ -434,7 +434,7 @@ public class UsermailServiceTest {
     expectMailList.add(mail2);
     expectMailList.add(mail3);
 
-    Mockito.when(usermailRepo.getUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
+    Mockito.when(usermailRepo.selectUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
     Mockito.when(convertMsgService.convertMsg(expectMailList)).thenReturn(expectMailList);
     actualMailList = usermailService.batchQueryMsgs(from, msgIds);
     Assert.assertEquals(actualMailList, expectMailList);
@@ -464,7 +464,7 @@ public class UsermailServiceTest {
     expectMailList.add(mail2);
     expectMailList.add(mail3);
 
-    Mockito.when(usermailRepo.getUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
+    Mockito.when(usermailRepo.selectUsermailByFromToMsgIds(from, msgIds)).thenReturn(expectMailList);
 
     actualMailList = usermailService.batchQueryMsgsReplyCount(from, msgIds);
     Assert.assertEquals(actualMailList, expectMailList);
@@ -489,7 +489,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> sessIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> fromCaptor1 = ArgumentCaptor.forClass(String.class);
-    verify(usermailRepo).batchDeleteBySessionId(sessIdCaptor.capture(), fromCaptor1.capture());
+    verify(usermailRepo).deleteBatchBySessionId(sessIdCaptor.capture(), fromCaptor1.capture());
     String from1 = fromCaptor1.getValue();
     String sessionid = sessIdCaptor.getValue();
     assertEquals(from, from1);
@@ -558,7 +558,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
-        .revertMsgFromTrash(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
+        .updateRevertMsgFromTrashStatus(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(trashMailDtos, listArgumentCaptor.getValue());
     assertEquals(temail, temailCaptor.getValue());
@@ -592,7 +592,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
-        .removeMsgByStatus(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
+        .deleteMsgByStatus(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(trashMailDtos, listArgumentCaptor.getValue());
     assertEquals(temail, temailCaptor.getValue());
@@ -636,7 +636,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> temailCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
     verify(usermailRepo)
-        .removeMsgByStatus(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
+        .deleteMsgByStatus(listArgumentCaptor.capture(), temailCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(null, listArgumentCaptor.getValue());
     assertEquals(temail, temailCaptor.getValue());
@@ -662,11 +662,11 @@ public class UsermailServiceTest {
         new UsermailDO(22, "111", "", temail, "", 0, TemailType.TYPE_NORMAL_0, temail, "", 0, "".getBytes(), temail,
             null)
     );
-    when(usermailRepo.getUsermailByStatus((queryTrashDto))).thenReturn(result);
+    when(usermailRepo.selectUsermailByStatus((queryTrashDto))).thenReturn(result);
     when(convertMsgService.convertMsg(result)).thenReturn(result);
     List<UsermailDO> msgFromTrash = usermailService.getMsgFromTrash(temail, timestamp, pageSize, signal);
     ArgumentCaptor<QueryTrashDTO> trashCaptor = ArgumentCaptor.forClass(QueryTrashDTO.class);
-    verify(usermailRepo).getUsermailByStatus(trashCaptor.capture());
+    verify(usermailRepo).selectUsermailByStatus(trashCaptor.capture());
     QueryTrashDTO dtos = trashCaptor.getValue();
     assertEquals(temail, dtos.getOwner());
     assertEquals(msgFromTrash, result);

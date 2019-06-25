@@ -124,7 +124,7 @@ public class UsermailMsgReplyService {
           xPacketId, cdtpHeader, from, to, msgId, replyMsgParentId, owner);
       return;
     }
-    UsermailDO usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
+    UsermailDO usermail = usermailRepo.selectUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
@@ -250,7 +250,7 @@ public class UsermailMsgReplyService {
           xPacketId, cdtpHeader, from, to, msgId, owner);
       return;
     }
-    UsermailDO usermail = usermailRepo.getUsermailByMsgid(replyMsgParentId, owner);
+    UsermailDO usermail = usermailRepo.selectUsermailByMsgid(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
@@ -297,7 +297,7 @@ public class UsermailMsgReplyService {
    * @return 单聊对象列表
    */
   private List<UsermailDO> msgReplyTypeValidate(String parentMsgId) {
-    List<UsermailDO> usermails = usermailRepo.getUsermailListByMsgid(parentMsgId);
+    List<UsermailDO> usermails = usermailRepo.selectUsermailListByMsgid(parentMsgId);
     if (CollectionUtils.isEmpty(usermails)) {
       LOGGER.warn("parentMsgId status is error:{}", parentMsgId);
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);
@@ -314,7 +314,7 @@ public class UsermailMsgReplyService {
    */
   public UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
 
-    UsermailDO usermailByMsgid = usermailRepo.getUsermailByMsgid(parentMsgId, owner);
+    UsermailDO usermailByMsgid = usermailRepo.selectUsermailByMsgid(parentMsgId, owner);
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0
         && usermailByMsgid.getStatus() != TemailStatus.STATUS_TRASH_4)) {
       LOGGER.warn("parentMsgId is {}", parentMsgId);

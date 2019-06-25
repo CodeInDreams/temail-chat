@@ -28,8 +28,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param usermail 单聊消息
    */
   @Override
-  public void saveUsermail(UsermailDO usermail) {
-    usermailMapper.saveUsermail(usermail);
+  public void insertUsermail(UsermailDO usermail) {
+    usermailMapper.insertUsermail(usermail);
   }
 
   /**
@@ -39,8 +39,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> getUsermail(UmQueryDTO umQueryDto) {
-    return usermailMapper.getUsermail(umQueryDto);
+  public List<UsermailDO> selectUsermail(UmQueryDTO umQueryDto) {
+    return usermailMapper.selectUsermail(umQueryDto);
   }
 
   /**
@@ -51,8 +51,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息信息
    */
   @Override
-  public UsermailDO getUsermailByMsgid(String msgid, String owner) {
-    return usermailMapper.getUsermailByMsgid(msgid, owner);
+  public UsermailDO selectUsermailByMsgid(String msgid, String owner) {
+    return usermailMapper.selectUsermailByMsgid(msgid, owner);
   }
 
   /**
@@ -62,8 +62,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> getLastUsermail(UmQueryDTO umQueryDto) {
-    return usermailMapper.getLastUsermail(umQueryDto);
+  public List<UsermailDO> selectLastUsermail(UmQueryDTO umQueryDto) {
+    return usermailMapper.selectLastUsermail(umQueryDto);
   }
 
   /**
@@ -73,8 +73,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 撤回的数量
    */
   @Override
-  public int revertUsermail(RevertMailDTO revertMail) {
-    return usermailMapper.revertUsermail(revertMail);
+  public int countRevertUsermail(RevertMailDTO revertMail) {
+    return usermailMapper.countRevertUsermail(revertMail);
   }
 
   /**
@@ -85,20 +85,19 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 删除的数量
    */
   @Override
-  public int removeMsg(List<String> msgIds, String owner) {
-    return usermailMapper.removeMsg(msgIds, owner);
+  public int deleteMsg(List<String> msgIds, String owner) {
+    return usermailMapper.deleteMsg(msgIds, owner);
   }
 
   /**
    * 阅后即焚
-   *
-   * @param owner 消息拥有者
+   *  @param owner 消息拥有者
    * @param msgid 消息id
    * @param status 消息状态
    */
   @Override
-  public void destroyAfterRead(String owner, String msgid, int status) {
-    usermailMapper.destroyAfterRead(owner, msgid, status);
+  public void updateDestroyAfterReadStatus(String owner, String msgid, int status) {
+    usermailMapper.updateDestroyAfterReadStatus(owner, msgid, status);
   }
 
   /**
@@ -109,8 +108,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 删除的数量
    */
   @Override
-  public int batchDeleteBySessionId(String sessionId, String owner) {
-    return usermailMapper.batchDeleteBySessionId(sessionId, owner);
+  public int deleteBatchBySessionId(String sessionId, String owner) {
+    return usermailMapper.deleteBatchBySessionId(sessionId, owner);
   }
 
   /**
@@ -120,8 +119,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> getUsermailListByMsgid(String msgid) {
-    return usermailMapper.getUsermailListByMsgid(msgid);
+  public List<UsermailDO> selectUsermailListByMsgid(String msgid) {
+    return usermailMapper.selectUsermailListByMsgid(msgid);
   }
 
   /**
@@ -132,8 +131,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> getUsermailByFromToMsgIds(String from, List<String> msgIds) {
-    return usermailMapper.getUsermailByFromToMsgIds(from, msgIds);
+  public List<UsermailDO> selectUsermailByFromToMsgIds(String from, List<String> msgIds) {
+    return usermailMapper.selectUsermailByFromToMsgIds(from, msgIds);
   }
 
   /**
@@ -171,8 +170,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 删除的数量
    */
   @Override
-  public int removeMsgByStatus(List<TrashMailDTO> trashMails, String owner, int status) {
-    return usermailMapper.removeMsgByStatus(trashMails, owner, status);
+  public int deleteMsgByStatus(List<TrashMailDTO> trashMails, String owner, int status) {
+    return usermailMapper.deleteMsgByStatus(trashMails, owner, status);
   }
 
   /**
@@ -184,8 +183,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 更新的数量
    */
   @Override
-  public int revertMsgFromTrash(List<TrashMailDTO> trashMails, String owner, int status) {
-    return usermailMapper.revertMsgFromTrash(trashMails, owner, status, TemailStatus.STATUS_TRASH_4);
+  public int updateRevertMsgFromTrashStatus(List<TrashMailDTO> trashMails, String owner, int status) {
+    return usermailMapper.updateRevertMsgFromTrashStatus(trashMails, owner, status, TemailStatus.STATUS_TRASH_4);
   }
 
   /**
@@ -195,8 +194,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息列表
    */
   @Override
-  public List<UsermailDO> getUsermailByStatus(QueryTrashDTO queryDto) {
-    return usermailMapper.getUsermailByStatus(queryDto);
+  public List<UsermailDO> selectUsermailByStatus(QueryTrashDTO queryDto) {
+    return usermailMapper.selectUsermailByStatus(queryDto);
   }
 
 }

@@ -25,13 +25,13 @@
     <result column="filter" jdbcType="VARCHAR" property="filter"/>
   </resultMap>
 
-  <insert id="saveUsermail" parameterType="UserMail" keyProperty="id">
+  <insert id="insertUsermail" parameterType="UserMail" keyProperty="id">
     insert into usermail (`id`, `msgid`, `sessionid`, `from`, `to`, `type`, `status`, `seq_no`, `owner`,
                           `at`, `topic`, `zip_msg`, `author`,`filter`)
     values (#{id}, #{msgid}, #{sessionid}, #{from}, #{to}, #{type}, #{status}, #{seqNo}, #{owner}, #{at}, #{topic}, #{zipMsg}, #{author}, #{filter})
   </insert>
 
-  <select id="getUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
+  <select id="selectUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
     select *
     from usermail
     where
@@ -52,7 +52,7 @@
     </if>
   </select>
 
-  <update id="revertUsermail" parameterType="revertMail">
+  <update id="countRevertUsermail" parameterType="revertMail">
     update usermail
     set `status`= #{revertStatus,jdbcType=INTEGER},
         `zip_msg` = null,
@@ -62,7 +62,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <select id="getLastUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
+  <select id="selectLastUsermail" parameterType="umQuery" resultMap="UserMailResultMap">
     select *
     from usermail
     where
@@ -71,7 +71,7 @@
     order by seq_no desc limit 1
   </select>
 
-  <delete id="removeMsg">
+  <delete id="deleteMsg">
     delete from `usermail`
     where `msgid` in
     <foreach item="msgId" collection="msgIds"
@@ -81,7 +81,7 @@
     and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
 
-  <select id="getUsermailByMsgid" parameterType="String" resultMap="UserMailResultMap">
+  <select id="selectUsermailByMsgid" parameterType="String" resultMap="UserMailResultMap">
     select *
     from usermail
     where
@@ -89,7 +89,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </select>
 
-  <update id="destroyAfterRead" parameterType="umQuery">
+  <update id="updateDestroyAfterReadStatus" parameterType="umQuery">
     update `usermail`
     set `status`= #{status,jdbcType=INTEGER},
         `zip_msg` = null,
@@ -99,20 +99,20 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <delete id="batchDeleteBySessionId">
+  <delete id="deleteBatchBySessionId">
     delete
     from `usermail`
     where `sessionid` = #{sessionid,jdbcType=VARCHAR}
       and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
 
-  <select id="getUsermailListByMsgid" resultMap="UserMailResultMap">
+  <select id="selectUsermailListByMsgid" resultMap="UserMailResultMap">
     select *
     from `usermail`
     where `msgid` = #{msgid,jdbcType=VARCHAR}
   </select>
 
-  <select id="getUsermailByFromToMsgIds" resultMap="UserMailResultMap">
+  <select id="selectUsermailByFromToMsgIds" resultMap="UserMailResultMap">
     select *
     from `usermail`
     where `msgid` in
@@ -138,7 +138,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <update id="revertMsgFromTrash">
+  <update id="updateRevertMsgFromTrashStatus">
     update `usermail`
     set `status`= #{status,jdbcType=INTEGER}, `update_time` = CURRENT_TIMESTAMP()
     where `status`= #{originalStatus}
@@ -152,7 +152,7 @@
       and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <delete id="removeMsgByStatus">
+  <delete id="deleteMsgByStatus">
     delete from `usermail`
     where `status`= #{status,jdbcType=INTEGER}
     <if test="trashMails != null">
@@ -164,7 +164,7 @@
     </if>
       and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
-  <select id="getUsermailByStatus" parameterType="QueryTrashDto" resultMap="UserMailResultMap">
+  <select id="selectUsermailByStatus" parameterType="QueryTrashDto" resultMap="UserMailResultMap">
     select *
     from `usermail`
     where

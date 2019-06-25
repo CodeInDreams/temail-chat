@@ -65,14 +65,14 @@ public class UsermailMapperTest {
     userMail.setMessage("");
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
     long lastSeqno = 0;
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setPageSize(2);
     umQueryDto.setFromSeqNo(lastSeqno);
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner(from);
-    List<UsermailDO> usermail = usermailRepo.getUsermail(umQueryDto);
+    List<UsermailDO> usermail = usermailRepo.selectUsermail(umQueryDto);
     Assert.assertNotNull(usermail);
     Assert.assertTrue(usermail.size() >= 1);
   }
@@ -82,7 +82,7 @@ public class UsermailMapperTest {
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid("123456789");
     umQueryDto.setOwner("to@syswin.com");
-    List<UsermailDO> usermails = usermailRepo.getLastUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.selectLastUsermail(umQueryDto);
     Assert.assertEquals(0, usermails.size());
   }
 
@@ -91,23 +91,23 @@ public class UsermailMapperTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("ldfk");
     msgIds.add("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707");
-    int count = usermailRepo.removeMsg(msgIds, "from@syswin.com");
+    int count = usermailRepo.deleteMsg(msgIds, "from@syswin.com");
     assertThat(count).isEqualTo(0);
   }
 
   @Test
   public void getUsermailByMsgid() {
     UsermailDO usermailByMsgid = usermailRepo
-        .getUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
+        .selectUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermailByMsgid);
   }
 
   @Test
   public void destroyAfterRead() {
-    usermailRepo.destroyAfterRead("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
+    usermailRepo.updateDestroyAfterReadStatus("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     UsermailDO usermail = usermailRepo
-        .getUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
+        .selectUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermail);
   }
 
@@ -129,13 +129,13 @@ public class UsermailMapperTest {
     userMail.setMessage("");
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
 
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner("from@syswin.com");
     umQueryDto.setPageSize(10);
-    List<UsermailDO> usermails = usermailRepo.getUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.selectUsermail(umQueryDto);
     assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
@@ -157,20 +157,20 @@ public class UsermailMapperTest {
     userMail.setMessage("");
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
 
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setSessionid(SESSIONID);
     umQueryDto.setOwner(from);
     umQueryDto.setPageSize(10);
     umQueryDto.setFromSeqNo(10);
-    List<UsermailDO> usermails = usermailRepo.getUsermail(umQueryDto);
+    List<UsermailDO> usermails = usermailRepo.selectUsermail(umQueryDto);
     assertThat(usermails.get(0).getFrom()).isEqualTo(from);
   }
 
   @Test
   public void batchDeleteBySessionId() {
-    int count = usermailRepo.batchDeleteBySessionId("", "alice@temail.com");
+    int count = usermailRepo.deleteBatchBySessionId("", "alice@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
@@ -196,8 +196,8 @@ public class UsermailMapperTest {
     userMail.setStatus(status);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
-    List<UsermailDO> usermails = usermailRepo.getUsermailListByMsgid(msgid);
+    usermailRepo.insertUsermail(userMail);
+    List<UsermailDO> usermails = usermailRepo.selectUsermailListByMsgid(msgid);
 
     assertThat(usermails).isNotEmpty();
     assertThat(usermails.size()).isOne();
@@ -208,7 +208,7 @@ public class UsermailMapperTest {
     List<String> msgIds = new ArrayList<>();
     msgIds.add("AA");
     msgIds.add("BB");
-    List<UsermailDO> mail = usermailRepo.getUsermailByFromToMsgIds("a@systoontest.com", msgIds);
+    List<UsermailDO> mail = usermailRepo.selectUsermailByFromToMsgIds("a@systoontest.com", msgIds);
     Assert.assertEquals(0, mail.size());
   }
 
@@ -233,11 +233,11 @@ public class UsermailMapperTest {
     userMail.setStatus(TemailStatus.STATUS_NORMAL_0);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
     //更新消息seqNo
     usermailRepo.updateReplyCountAndLastReplyMsgid(msgId, from, 1, lastReplyMsgid);
     //验证最新回复消息id与消息回复总数（1）是否正常更新
-    UsermailDO usermailUpdated = usermailRepo.getUsermailByMsgid(msgId, from);
+    UsermailDO usermailUpdated = usermailRepo.selectUsermailByMsgid(msgId, from);
     Assert.assertEquals(usermailUpdated.getLastReplyMsgId(), lastReplyMsgid);
     Assert.assertTrue(usermailUpdated.getReplyCount() == 1);
   }
@@ -264,7 +264,7 @@ public class UsermailMapperTest {
     userMail.setStatus(TemailStatus.STATUS_NORMAL_0);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
 
     List<String> msgIds = new ArrayList<>();
     msgIds.add(msgId);
@@ -294,14 +294,14 @@ public class UsermailMapperTest {
     userMail.setStatus(status);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
 
     TrashMailDTO trashMails = new TrashMailDTO();
     trashMails.setFrom(from);
     trashMails.setTo(to);
     trashMails.setMsgId(msgid);
 
-    int count = usermailRepo.removeMsgByStatus(Arrays.asList(trashMails), owner, status);
+    int count = usermailRepo.deleteMsgByStatus(Arrays.asList(trashMails), owner, status);
 
     assertThat(count).isOne();
   }
@@ -328,14 +328,14 @@ public class UsermailMapperTest {
     userMail.setStatus(TemailStatus.STATUS_TRASH_4);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
 
     TrashMailDTO trashMails = new TrashMailDTO();
     trashMails.setFrom(from);
     trashMails.setTo(to);
     trashMails.setMsgId(msgid);
 
-    int count = usermailRepo.revertMsgFromTrash(Arrays.asList(trashMails), owner, TemailStatus.STATUS_NORMAL_0);
+    int count = usermailRepo.updateRevertMsgFromTrashStatus(Arrays.asList(trashMails), owner, TemailStatus.STATUS_NORMAL_0);
 
     assertThat(count).isOne();
   }
@@ -362,14 +362,14 @@ public class UsermailMapperTest {
     userMail.setStatus(status);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
+    usermailRepo.insertUsermail(userMail);
 
     QueryTrashDTO queryTrashDTO = new QueryTrashDTO();
     queryTrashDTO.setOwner(from);
     queryTrashDTO.setStatus(status);
     queryTrashDTO.setPageSize(2);
 
-    List<UsermailDO> usermailByStatus = usermailRepo.getUsermailByStatus(queryTrashDTO);
+    List<UsermailDO> usermailByStatus = usermailRepo.selectUsermailByStatus(queryTrashDTO);
 
     assertThat(usermailByStatus).isNotEmpty();
     assertThat(usermailByStatus.size()).isOne();
@@ -393,8 +393,8 @@ public class UsermailMapperTest {
     userMail.setStatus(TemailStatus.STATUS_NORMAL_0);
     userMail.setAuthor(from);
     userMail.setFilter(null);
-    usermailRepo.saveUsermail(userMail);
-    int count = usermailRepo.revertUsermail(
+    usermailRepo.insertUsermail(userMail);
+    int count = usermailRepo.countRevertUsermail(
         new RevertMailDTO(from, "3a2s1asd1c1a5s", TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     Assert.assertEquals(1, count);
   }
