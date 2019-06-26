@@ -46,7 +46,7 @@ public interface UsermailBlacklistMapper {
    * @param usermailBlacklist 黑名单信息
    * @return 删除的数量
    */
-  int deleteUsermailBlacklist(UsermailBlacklistDO usermailBlacklist);
+  int deleteByTemailAndBlackedAddress(UsermailBlacklistDO usermailBlacklist);
 
   /**
    * 根据发起者和被拉黑者查找黑名单信息
@@ -55,7 +55,7 @@ public interface UsermailBlacklistMapper {
    * @param blackedAddress 被拉黑地址
    * @return 黑名单信息
    */
-  UsermailBlacklistDO getUsermailBlacklist(@Param("temailAddress") String temailAddress, @Param("blackedAddress") String blackedAddress);
+  UsermailBlacklistDO selectByTemailAndBlackedAddress(@Param("temailAddress") String temailAddress, @Param("blackedAddress") String blackedAddress);
 
   /**
    * 查找当前地址的黑名单列表

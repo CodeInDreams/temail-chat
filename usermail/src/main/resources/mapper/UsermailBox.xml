@@ -45,7 +45,7 @@
 		values (#{id}, #{sessionid}, #{mail2}, #{owner} )
 	</insert>
 
-  <delete id="deleteUsermailBox" parameterType="String">
+  <delete id="deleteByOwnerAndMail2" parameterType="String">
    delete from usermail_box
    where `owner` = #{owner,jdbcType=VARCHAR}
    and `mail2` = #{mail2,jdbcType=VARCHAR}
@@ -57,7 +57,7 @@
     and `mail2` = #{mail2,jdbcType=VARCHAR}
   </select>
 
-  <select id="getUsermailBox" resultMap="UsermailBoxResultMap">
+  <select id="selectByOwnerAndMail2" resultMap="UsermailBoxResultMap">
     select
     <include refid="selectColumn"/>
     from `usermail_box`

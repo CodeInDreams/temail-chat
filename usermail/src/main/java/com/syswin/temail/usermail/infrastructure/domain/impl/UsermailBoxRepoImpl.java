@@ -71,8 +71,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteUsermailBox(String from, String to) {
-    return usermailBoxMapper.deleteUsermailBox(from, to);
+  public int deleteByOwnerAndMail2(String from, String to) {
+    return usermailBoxMapper.deleteByOwnerAndMail2(from, to);
   }
 
   /**
@@ -108,8 +108,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @return 会话信息
    */
   @Override
-  public UsermailBoxDO getUsermailBox(String owner, String to) {
-    return usermailBoxMapper.getUsermailBox(owner, to);
+  public UsermailBoxDO selectByOwnerAndMail2(String owner, String to) {
+    return usermailBoxMapper.selectByOwnerAndMail2(owner, to);
   }
 
 }

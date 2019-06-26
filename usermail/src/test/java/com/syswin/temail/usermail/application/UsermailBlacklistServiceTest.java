@@ -53,7 +53,7 @@ public class UsermailBlacklistServiceTest {
   public void removeTest() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     usermailBlacklistService.remove(usermailBlacklist);
-    verify(usermailBlacklistRepo).deleteUsermailBlacklist(usermailBlacklist);
+    verify(usermailBlacklistRepo).deleteByTemailAndBlackedAddress(usermailBlacklist);
   }
 
   @Test
@@ -68,7 +68,7 @@ public class UsermailBlacklistServiceTest {
     String temailAddress = "temail@syswin.com";
     String blackedAddress = "blackAddress@syswin.com";
     usermailBlacklistService.findByAddresses(temailAddress, blackedAddress);
-    verify(usermailBlacklistRepo).getUsermailBlacklist(temailAddress, blackedAddress);
+    verify(usermailBlacklistRepo).selectByTemailAndBlackedAddress(temailAddress, blackedAddress);
   }
 
   @Test

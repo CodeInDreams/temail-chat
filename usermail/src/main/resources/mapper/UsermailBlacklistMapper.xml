@@ -37,12 +37,12 @@
     insert into usermail_blacklist(`id`,`temail_address`, `blacked_address`)
     values (#{id},#{temailAddress},#{blackedAddress})
   </insert>
-  <delete id="deleteUsermailBlacklist">
+  <delete id="deleteByTemailAndBlackedAddress">
     delete from usermail_blacklist
     where `temail_address` = #{temailAddress}
     and `blacked_address` = #{blackedAddress}
   </delete>
-  <select id="getUsermailBlacklist" parameterType="UsermailBlacklist" resultMap="BaseResultMap">
+  <select id="selectByTemailAndBlackedAddress" parameterType="UsermailBlacklist" resultMap="BaseResultMap">
     select `id`,`temail_address`,`blacked_address`,`status`,`create_time`
     from usermail_blacklist ub
     where ub.`temail_address` = #{temailAddress}

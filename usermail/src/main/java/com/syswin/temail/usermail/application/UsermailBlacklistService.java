@@ -64,7 +64,7 @@ public class UsermailBlacklistService {
    */
   @Transactional
   public int remove(UsermailBlacklistDO usermailBlacklist) {
-    return usermailBlacklistRepo.deleteUsermailBlacklist(usermailBlacklist);
+    return usermailBlacklistRepo.deleteByTemailAndBlackedAddress(usermailBlacklist);
   }
 
   /**
@@ -75,7 +75,7 @@ public class UsermailBlacklistService {
    * @return 黑名单数据（temailAddress:发起人 blackedAddress:被拉黑人）
    */
   public UsermailBlacklistDO findByAddresses(String temailAddress, String blackedAddress) {
-    return usermailBlacklistRepo.getUsermailBlacklist(temailAddress, blackedAddress);
+    return usermailBlacklistRepo.selectByTemailAndBlackedAddress(temailAddress, blackedAddress);
   }
 
   /**

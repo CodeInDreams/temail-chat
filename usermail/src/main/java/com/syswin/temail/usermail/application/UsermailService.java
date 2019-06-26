@@ -113,7 +113,7 @@ public class UsermailService {
     String sessionId = usermailSessionService.getSessionID(from, to);
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
-    UsermailBoxDO usermailBox = usermailBoxRepo.getUsermailBox(owner, target);
+    UsermailBoxDO usermailBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
     if (usermailBox == null) {
       UsermailBoxDO box = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner);
       usermailBoxRepo.saveUsermailBox(box);
@@ -354,7 +354,7 @@ public class UsermailService {
   @Transactional
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
-    UsermailDO usermail = usermailRepo.selectUsermailByMsgid(msgId, owner);
+    UsermailDO usermail = usermailRepo.selectByMsgidAndOwner(msgId, owner);
     // 添加消息状态判断，防止通知重发
     if (usermail != null && usermail.getType() == TemailType.TYPE_DESTROY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
@@ -374,12 +374,12 @@ public class UsermailService {
    */
   @Transactional
   public boolean deleteSession(CdtpHeaderDTO cdtpHeaderDto, DeleteMailBoxQueryDTO queryDto) {
-    usermailBoxRepo.deleteUsermailBox(queryDto.getFrom(), queryDto.getTo());
+    usermailBoxRepo.deleteByOwnerAndMail2(queryDto.getFrom(), queryDto.getTo());
     LOGGER.info("Label-delete-usermail-session: delete session, params is {}", queryDto);
     if (queryDto.isDeleteAllMsg()) {
       String sessionId = usermailSessionService.getSessionID(queryDto.getTo(), queryDto.getFrom());
       usermailRepo
-          .deleteBySessionId(sessionId, queryDto.getFrom());
+          .deleteBySessionIdAndOwner(sessionId, queryDto.getFrom());
       usermailMsgReplyRepo.deleteMsgReplysBySessionId(sessionId, queryDto.getFrom());
     }
     usermail2NotifyMqService
@@ -398,11 +398,11 @@ public class UsermailService {
    */
   @Transactional
   public boolean deleteGroupChatSession(String groupTemail, String owner) {
-    usermailBoxRepo.deleteUsermailBox(owner, groupTemail);
+    usermailBoxRepo.deleteByOwnerAndMail2(owner, groupTemail);
     LOGGER
         .info("Label-delete-GroupChat-session: delete session, params is owner:{}, groupTemail:{}", owner, groupTemail);
     String sessionId = usermailSessionService.getSessionID(groupTemail, owner);
-    usermailRepo.deleteBySessionId(sessionId, owner);
+    usermailRepo.deleteBySessionIdAndOwner(sessionId, owner);
     return true;
   }
 

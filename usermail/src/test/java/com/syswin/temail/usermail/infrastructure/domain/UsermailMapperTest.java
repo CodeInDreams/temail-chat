@@ -122,7 +122,7 @@ public class UsermailMapperTest {
   @Test
   public void selectUsermailByMsgid() {
     UsermailDO usermailByMsgid = usermailRepo
-        .selectUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
+        .selectByMsgidAndOwner("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermailByMsgid);
   }
 
@@ -131,7 +131,7 @@ public class UsermailMapperTest {
     usermailRepo.updateDestroyAfterReadStatus("from@syswin.com", "syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707",
         TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     UsermailDO usermail = usermailRepo
-        .selectUsermailByMsgid("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
+        .selectByMsgidAndOwner("syswin-87532219-9c8a-41d6-976d-eaa805a145c1-1533886884707", "from@syswin.com");
     Assert.assertNull(usermail);
   }
 
@@ -194,7 +194,7 @@ public class UsermailMapperTest {
 
   @Test
   public void deleteBatchBySessionId() {
-    int count = usermailRepo.deleteBySessionId("", "alice@temail.com");
+    int count = usermailRepo.deleteBySessionIdAndOwner("", "alice@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
@@ -261,7 +261,7 @@ public class UsermailMapperTest {
     //更新消息seqNo
     usermailRepo.updateReplyCountAndLastReplyMsgid(msgId, from, 1, lastReplyMsgid);
     //验证最新回复消息id与消息回复总数（1）是否正常更新
-    UsermailDO usermailUpdated = usermailRepo.selectUsermailByMsgid(msgId, from);
+    UsermailDO usermailUpdated = usermailRepo.selectByMsgidAndOwner(msgId, from);
     Assert.assertEquals(usermailUpdated.getLastReplyMsgId(), lastReplyMsgid);
     Assert.assertTrue(usermailUpdated.getReplyCount() == 1);
   }

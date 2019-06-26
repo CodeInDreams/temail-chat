@@ -52,7 +52,7 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 删除的数量
    */
-  int deleteUsermailBox(String from, String to);
+  int deleteByOwnerAndMail2(String from, String to);
 
   /**
    * 根据会话拥有者和另一位聊天者查询会话列表
@@ -80,6 +80,6 @@ public interface UsermailBoxRepo {
    * @param to 收件人
    * @return 会话信息
    */
-  UsermailBoxDO getUsermailBox(String owner, String to);
+  UsermailBoxDO selectByOwnerAndMail2(String owner, String to);
 
 }

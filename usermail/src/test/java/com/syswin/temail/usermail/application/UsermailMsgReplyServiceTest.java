@@ -86,7 +86,7 @@ public class UsermailMsgReplyServiceTest {
     usermail.setMsgid(parentMsgid);
     usermail.setStatus(TemailStatus.STATUS_NORMAL_0);
     usermail.setZipMsg(msgCompressor.zipWithDecode(message));
-    when(usermailRepo.selectUsermailByMsgid(parentMsgid, to)).thenReturn(usermail);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, to)).thenReturn(usermail);
     when(usermailAdapter.getMsgSeqNo(from, to, to)).thenReturn(2L);
 
     usermailMsgReplyService
@@ -129,14 +129,14 @@ public class UsermailMsgReplyServiceTest {
     usermails.add(new UsermailDO());
     when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
-    when(usermailRepo.selectUsermailByMsgid(anyString(), anyString())).thenReturn(new UsermailDO());
+    when(usermailRepo.selectByMsgidAndOwner(anyString(), anyString())).thenReturn(new UsermailDO());
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
     usermail2NotifyMqService.sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid, type, parentMsgid);
     ArgumentCaptor<UsermailMsgReplyDO> msgReplyCaptor = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> parentMsgIdCaptor = ArgumentCaptor.forClass(String.class);
     Mockito.verify(usermailMsgReplyRepo).updateRevertUsermailReply(msgReplyCaptor.capture());
-    Mockito.verify(usermailRepo).selectUsermailByMsgid(parentMsgIdCaptor.capture(), ownerCaptor.capture());
+    Mockito.verify(usermailRepo).selectByMsgidAndOwner(parentMsgIdCaptor.capture(), ownerCaptor.capture());
     UsermailMsgReplyDO msgReply = msgReplyCaptor.getValue();
     Assert.assertEquals(TemailStatus.STATUS_REVERT_1, msgReply.getStatus());
     Assert.assertEquals(parentMsgid, parentMsgIdCaptor.getValue());
@@ -155,7 +155,7 @@ public class UsermailMsgReplyServiceTest {
     usermails.add(new UsermailDO());
     when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
-    when(usermailRepo.selectUsermailByMsgid(anyString(), anyString())).thenReturn(null);
+    when(usermailRepo.selectByMsgidAndOwner(anyString(), anyString())).thenReturn(null);
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
   }
 
@@ -197,7 +197,7 @@ public class UsermailMsgReplyServiceTest {
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
     UsermailDO usermail = new UsermailDO();
-    when(usermailRepo.selectUsermailByMsgid(parentMsgid, from)).thenReturn(usermail);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, from)).thenReturn(usermail);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
     usermail2NotifyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, from, msgIds, type, parentMsgid);
     ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
@@ -227,7 +227,7 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(usermailRepo.selectUsermailByMsgid(any(), any())).thenReturn(null);
+    when(usermailRepo.selectByMsgidAndOwner(any(), any())).thenReturn(null);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
   }
 
@@ -248,7 +248,7 @@ public class UsermailMsgReplyServiceTest {
     UsermailDO usermailByMsgid = new UsermailDO();
     usermailByMsgid.setLastReplyMsgId("lastReplyMsgid");
     usermailByMsgid.setOwner(from);
-    when(usermailRepo.selectUsermailByMsgid(any(), any())).thenReturn(usermailByMsgid);
+    when(usermailRepo.selectByMsgidAndOwner(any(), any())).thenReturn(usermailByMsgid);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
     ArgumentCaptor<String> parentCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
@@ -289,7 +289,7 @@ public class UsermailMsgReplyServiceTest {
       usermailMsgReplyList.add(usermailMsgReply);
     }
     UsermailDO usermail = new UsermailDO();
-    when(usermailRepo.selectUsermailByMsgid(parentMsgid, owner)).thenReturn(usermail);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(usermail);
     when(convertMsgService.convertReplyMsg(any())).thenReturn(usermailMsgReplyList);
     List<UsermailMsgReplyDO> result = usermailMsgReplyService
         .getMsgReplys(parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
@@ -331,7 +331,7 @@ public class UsermailMsgReplyServiceTest {
     String msgId = "2344";
     String replyMsgParentId = "13311";
     UsermailDO usermail = new UsermailDO(1, msgId, "", owner, "", 1, 1, owner, "", 0);
-    when(usermailRepo.selectUsermailByMsgid(replyMsgParentId, owner)).thenReturn(usermail);
+    when(usermailRepo.selectByMsgidAndOwner(replyMsgParentId, owner)).thenReturn(usermail);
     when(usermailMsgReplyRepo.updateDestroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2))
         .thenReturn(1);
     usermailMsgReplyService

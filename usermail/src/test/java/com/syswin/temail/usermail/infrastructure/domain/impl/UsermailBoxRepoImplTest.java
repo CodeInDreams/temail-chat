@@ -26,11 +26,8 @@ package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
-import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklistMapper;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper;
-import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -82,8 +79,8 @@ public class UsermailBoxRepoImplTest {
     String to = "to";
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.deleteUsermailBox(from,to);
-    Mockito.verify(usermailBoxMapper).deleteUsermailBox(fromCap.capture(),toCap.capture());
+    usermailBoxRepoImpl.deleteByOwnerAndMail2(from,to);
+    Mockito.verify(usermailBoxMapper).deleteByOwnerAndMail2(fromCap.capture(),toCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(from);
     assertThat(toCap.getValue()).isEqualTo(to);
   }
@@ -121,8 +118,8 @@ public class UsermailBoxRepoImplTest {
     String to = "to";
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.getUsermailBox(owner,to);
-    Mockito.verify(usermailBoxMapper).getUsermailBox(owerCap.capture(),toCap.capture());
+    usermailBoxRepoImpl.selectByOwnerAndMail2(owner,to);
+    Mockito.verify(usermailBoxMapper).selectByOwnerAndMail2(owerCap.capture(),toCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(owner);
     assertThat(toCap.getValue()).isEqualTo(to);
   }

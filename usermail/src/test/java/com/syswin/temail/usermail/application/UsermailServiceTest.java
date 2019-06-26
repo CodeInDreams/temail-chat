@@ -424,7 +424,7 @@ public class UsermailServiceTest {
     String author = "from@msgseal.com";
     UsermailDO usermail = new UsermailDO(22, msgId, "", from, "", 0, TemailType.TYPE_DESTROY_AFTER_READ_1, from, "", 1,
         "".getBytes(), author, null);
-    when(usermailRepo.selectUsermailByMsgid(msgId, from)).thenReturn(usermail);
+    when(usermailRepo.selectByMsgidAndOwner(msgId, from)).thenReturn(usermail);
     usermailService.destroyAfterRead(xPacketId, header, from, to, from, msgId);
 
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
@@ -508,13 +508,13 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
-    verify(usermailBoxRepo).deleteUsermailBox(fromCaptor.capture(), toCaptor.capture());
+    verify(usermailBoxRepo).deleteByOwnerAndMail2(fromCaptor.capture(), toCaptor.capture());
     assertEquals(from, fromCaptor.getValue());
     assertEquals(to, toCaptor.getValue());
 
     ArgumentCaptor<String> sessIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> fromCaptor1 = ArgumentCaptor.forClass(String.class);
-    verify(usermailRepo).deleteBySessionId(sessIdCaptor.capture(), fromCaptor1.capture());
+    verify(usermailRepo).deleteBySessionIdAndOwner(sessIdCaptor.capture(), fromCaptor1.capture());
     String from1 = fromCaptor1.getValue();
     String sessionid = sessIdCaptor.getValue();
     assertEquals(from, from1);

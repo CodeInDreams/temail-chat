@@ -58,7 +58,7 @@ public interface UsermailMapper {
    * @param owner 消息拥有者
    * @return 消息信息
    */
-  UsermailDO selectUsermailByMsgid(@Param("msgid") String msgid, @Param("owner") String owner);
+  UsermailDO selectByMsgidAndOwner(@Param("msgid") String msgid, @Param("owner") String owner);
 
   /**
    * 获取用户最新一条消息
@@ -100,7 +100,7 @@ public interface UsermailMapper {
    * @param owner 拥有者
    * @return 删除的数量
    */
-  int deleteBySessionId(@Param("sessionid") String sessionId, @Param("owner") String owner);
+  int deleteBySessionIdAndOwner(@Param("sessionid") String sessionId, @Param("owner") String owner);
 
   /**
    * 根据msgId获取用户消息列表

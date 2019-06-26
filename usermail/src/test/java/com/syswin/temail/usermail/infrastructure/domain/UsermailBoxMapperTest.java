@@ -71,7 +71,7 @@ public class UsermailBoxMapperTest {
   public void testDeleteUsermailBox() throws Exception {
     UsermailBoxDO box = new UsermailBoxDO(124L, "test-session-owner3", "mailreceive12@temail.com", "mailsend12@temail.com");
     usermailBoxRepo.saveUsermailBox(box);
-    int result = usermailBoxRepo.deleteUsermailBox("mailsend12@temail.com", "mailreceive12@temail.com");
+    int result = usermailBoxRepo.deleteByOwnerAndMail2("mailsend12@temail.com", "mailreceive12@temail.com");
     assertThat(result).isEqualTo(1);
   }
 
@@ -100,7 +100,7 @@ public class UsermailBoxMapperTest {
     UsermailBoxDO box = new UsermailBoxDO(243545, "test-session-owner4", "mailreceive2@msgseal.com",
         "mailsend2@msgseal.com");
     usermailBoxRepo.saveUsermailBox(box);
-    UsermailBoxDO usermailBox = usermailBoxRepo.getUsermailBox(box.getOwner(), box.getMail2());
+    UsermailBoxDO usermailBox = usermailBoxRepo.selectByOwnerAndMail2(box.getOwner(), box.getMail2());
     assertThat(usermailBox.getOwner()).isEqualTo(box.getOwner());
     assertThat(usermailBox.getSessionid()).isEqualTo(usermailBox.getSessionid());
   }

@@ -148,7 +148,7 @@ public class UsermailMsgReplyService {
           xPacketId, cdtpHeader, from, to, msgId, replyMsgParentId, owner);
       return;
     }
-    UsermailDO usermail = usermailRepo.selectUsermailByMsgid(replyMsgParentId, owner);
+    UsermailDO usermail = usermailRepo.selectByMsgidAndOwner(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
@@ -274,7 +274,7 @@ public class UsermailMsgReplyService {
           xPacketId, cdtpHeader, from, to, msgId, owner);
       return;
     }
-    UsermailDO usermail = usermailRepo.selectUsermailByMsgid(replyMsgParentId, owner);
+    UsermailDO usermail = usermailRepo.selectByMsgidAndOwner(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
@@ -338,7 +338,7 @@ public class UsermailMsgReplyService {
    */
   public UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
 
-    UsermailDO usermailByMsgid = usermailRepo.selectUsermailByMsgid(parentMsgId, owner);
+    UsermailDO usermailByMsgid = usermailRepo.selectByMsgidAndOwner(parentMsgId, owner);
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0
         && usermailByMsgid.getStatus() != TemailStatus.STATUS_TRASH_4)) {
       LOGGER.warn("parentMsgId is {}", parentMsgId);

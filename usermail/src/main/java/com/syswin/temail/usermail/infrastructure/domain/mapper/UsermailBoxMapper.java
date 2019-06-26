@@ -55,7 +55,7 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 删除的数量
    */
-  int deleteUsermailBox(@Param("owner") String from, @Param("mail2") String to);
+  int deleteByOwnerAndMail2(@Param("owner") String from, @Param("mail2") String to);
 
   /**
    * 根据会话拥有者和另一位聊天者查询会话列表
@@ -83,5 +83,5 @@ public interface UsermailBoxMapper {
    * @param to 收件人
    * @return 会话信息
    */
-  UsermailBoxDO getUsermailBox(@Param("owner") String owner, @Param("mail2") String to);
+  UsermailBoxDO selectByOwnerAndMail2(@Param("owner") String owner, @Param("mail2") String to);
 }

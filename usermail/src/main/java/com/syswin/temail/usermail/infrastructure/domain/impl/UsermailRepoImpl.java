@@ -75,8 +75,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 消息信息
    */
   @Override
-  public UsermailDO selectUsermailByMsgid(String msgid, String owner) {
-    return usermailMapper.selectUsermailByMsgid(msgid, owner);
+  public UsermailDO selectByMsgidAndOwner(String msgid, String owner) {
+    return usermailMapper.selectByMsgidAndOwner(msgid, owner);
   }
 
   /**
@@ -132,8 +132,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteBySessionId(String sessionId, String owner) {
-    return usermailMapper.deleteBySessionId(sessionId, owner);
+  public int deleteBySessionIdAndOwner(String sessionId, String owner) {
+    return usermailMapper.deleteBySessionIdAndOwner(sessionId, owner);
   }
 
   /**
