@@ -514,7 +514,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> sessIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> fromCaptor1 = ArgumentCaptor.forClass(String.class);
-    verify(usermailRepo).deleteBatchBySessionId(sessIdCaptor.capture(), fromCaptor1.capture());
+    verify(usermailRepo).deleteBySessionId(sessIdCaptor.capture(), fromCaptor1.capture());
     String from1 = fromCaptor1.getValue();
     String sessionid = sessIdCaptor.getValue();
     assertEquals(from, from1);

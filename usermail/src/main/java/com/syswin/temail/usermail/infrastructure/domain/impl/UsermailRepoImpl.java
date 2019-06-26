@@ -132,8 +132,8 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 删除的数量
    */
   @Override
-  public int deleteBatchBySessionId(String sessionId, String owner) {
-    return usermailMapper.deleteBatchBySessionId(sessionId, owner);
+  public int deleteBySessionId(String sessionId, String owner) {
+    return usermailMapper.deleteBySessionId(sessionId, owner);
   }
 
   /**

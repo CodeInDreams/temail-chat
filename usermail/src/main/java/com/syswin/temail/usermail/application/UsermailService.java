@@ -379,7 +379,7 @@ public class UsermailService {
     if (queryDto.isDeleteAllMsg()) {
       String sessionId = usermailSessionService.getSessionID(queryDto.getTo(), queryDto.getFrom());
       usermailRepo
-          .deleteBatchBySessionId(sessionId, queryDto.getFrom());
+          .deleteBySessionId(sessionId, queryDto.getFrom());
       usermailMsgReplyRepo.deleteMsgReplysBySessionId(sessionId, queryDto.getFrom());
     }
     usermail2NotifyMqService
@@ -402,7 +402,7 @@ public class UsermailService {
     LOGGER
         .info("Label-delete-GroupChat-session: delete session, params is owner:{}, groupTemail:{}", owner, groupTemail);
     String sessionId = usermailSessionService.getSessionID(groupTemail, owner);
-    usermailRepo.deleteBatchBySessionId(sessionId, owner);
+    usermailRepo.deleteBySessionId(sessionId, owner);
     return true;
   }
 

@@ -100,7 +100,7 @@ public interface UsermailMapper {
    * @param owner 拥有者
    * @return 删除的数量
    */
-  int deleteBatchBySessionId(@Param("sessionid") String sessionId, @Param("owner") String owner);
+  int deleteBySessionId(@Param("sessionid") String sessionId, @Param("owner") String owner);
 
   /**
    * 根据msgId获取用户消息列表

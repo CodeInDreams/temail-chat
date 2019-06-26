@@ -136,8 +136,8 @@ public class UsermailRepoImplTest {
     String owner = "owner";
     ArgumentCaptor<String> ownerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> sessionIdCap = ArgumentCaptor.forClass(String.class);
-    usermailRepoImpl.deleteBatchBySessionId(sessionId, owner);
-    Mockito.verify(usermailMapper).deleteBatchBySessionId(sessionIdCap.capture(),ownerCap.capture());
+    usermailRepoImpl.deleteBySessionId(sessionId, owner);
+    Mockito.verify(usermailMapper).deleteBySessionId(sessionIdCap.capture(),ownerCap.capture());
     assertThat(sessionIdCap.getValue()).isEqualTo(sessionId);
     assertThat(ownerCap.getValue()).isEqualTo(owner);
   }

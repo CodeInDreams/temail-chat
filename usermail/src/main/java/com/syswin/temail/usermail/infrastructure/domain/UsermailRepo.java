@@ -99,7 +99,7 @@ public interface UsermailRepo {
    * @param owner 拥有者
    * @return 删除的数量
    */
-  int deleteBatchBySessionId(String sessionId, String owner);
+  int deleteBySessionId(String sessionId, String owner);
 
   /**
    * 根据msgId获取用户消息列表

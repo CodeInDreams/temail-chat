@@ -194,7 +194,7 @@ public class UsermailMapperTest {
 
   @Test
   public void deleteBatchBySessionId() {
-    int count = usermailRepo.deleteBatchBySessionId("", "alice@temail.com");
+    int count = usermailRepo.deleteBySessionId("", "alice@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
