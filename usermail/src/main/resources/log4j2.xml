@@ -54,9 +54,9 @@
       </DefaultRolloverStrategy>
     </RollingFile>
     <!-- 异步输出文件 -->
-<!--    <Async name="Async">-->
-<!--      <AppenderRef ref="RollingFile"/>-->
-<!--    </Async>-->
+    <Async name="Async">
+      <AppenderRef ref="RollingFile"/>
+    </Async>
   </appenders>
   <loggers>
     <root level="info">
