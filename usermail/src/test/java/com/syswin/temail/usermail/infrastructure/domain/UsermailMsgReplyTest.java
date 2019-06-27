@@ -30,6 +30,8 @@ import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
+import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +53,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UsermailMsgReplyTest {
 
   @Autowired
-  private UsermailMsgReplyRepo usermailMsgReplyRepo;
+  private UsermailMsgReplyMapper usermailMsgReplyMapper;
 
   @Test
   public void saveMsgReplyTest() {
@@ -67,7 +69,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("jkasjkaslkjaskl");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
     UsermailMsgReplyDO msgBean = selectMsgReplyByConditon();
     Assert.assertNotNull(msgBean);
   }
@@ -81,7 +83,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsgid("syswin-1543572005953");
     usermailMsgReply.setOwner("A2018");
     usermailMsgReply.setTo("B2018");
-    usermailMsgReplyRepo.selectMsgReplyByCondition(usermailMsgReply);
+    usermailMsgReplyMapper.selectMsgReplyByCondition(usermailMsgReply);
     Assert.assertTrue(true);
   }
 
@@ -93,7 +95,7 @@ public class UsermailMsgReplyTest {
     dto.setFromSeqNo(0);
     dto.setPageSize(1);
     dto.setSignal("before");
-    usermailMsgReplyRepo.listMsgReplys(dto);
+    usermailMsgReplyMapper.listMsgReplys(dto);
     Assert.assertTrue(true);
   }
 
@@ -101,7 +103,7 @@ public class UsermailMsgReplyTest {
   public void updateBatchMsgReplysTest() {
     List<String> msgIds = new ArrayList<>(1);
     msgIds.add("syswin-1543572005953");
-    usermailMsgReplyRepo.deleteMsgReplysByMsgIds("A2018", msgIds);
+    usermailMsgReplyMapper.deleteMsgReplysByMsgIds("A2018", msgIds);
     Assert.assertTrue(true);
   }
 
@@ -112,7 +114,7 @@ public class UsermailMsgReplyTest {
     queryParam.setFrom("A2018");
     queryParam.setTo("B2018");
     queryParam.setOwner("A2018");
-    return usermailMsgReplyRepo.selectMsgReplyByCondition(queryParam);
+    return usermailMsgReplyMapper.selectMsgReplyByCondition(queryParam);
   }
 
   @Test
@@ -129,16 +131,16 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
     List<String> parentMsgIds = new ArrayList<>();
     parentMsgIds.add(usermailMsgReply.getParentMsgid());
-    int delete = usermailMsgReplyRepo.deleteMsgReplysByParentIds(usermailMsgReply.getOwner(), parentMsgIds);
+    int delete = usermailMsgReplyMapper.deleteMsgReplysByParentIds(usermailMsgReply.getOwner(), parentMsgIds);
     Assert.assertTrue(delete > 0);
   }
 
   @Test
   public void batchDeleteBySessionIdTest() {
-    int count = usermailMsgReplyRepo.deleteMsgReplysBySessionId("", "test@temail.com");
+    int count = usermailMsgReplyMapper.deleteMsgReplysBySessionId("", "test@temail.com");
     assertThat(count).isEqualTo(0);
   }
 
@@ -156,9 +158,10 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
-    int count = usermailMsgReplyRepo
-        .updateDestroyAfterRead("A@systoontest.com", "test111111", TemailStatus.STATUS_DESTROY_AFTER_READ_2);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
+    int count = usermailMsgReplyMapper
+        .updateDestroyAfterRead("A@systoontest.com", "test111111", TemailStatus.STATUS_DESTROY_AFTER_READ_2,
+            TemailStatus.STATUS_NORMAL_0);
     Assert.assertEquals(1, count);
     Assert.assertTrue(true);
   }
@@ -180,10 +183,10 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
     List<String> parentMsgids = Arrays.asList(parentMsgid);
     int status = TemailStatus.STATUS_TRASH_4;
-    int count = usermailMsgReplyRepo.updateMsgReplysByParentIds(owner, parentMsgids, status);
+    int count = usermailMsgReplyMapper.updateMsgReplysByParentIds(owner, parentMsgids, status);
 
     assertThat(count).isOne();
   }
@@ -205,9 +208,9 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
 
-    int count = usermailMsgReplyRepo.deleteMsgReplysByStatus(owner, status);
+    int count = usermailMsgReplyMapper.deleteMsgReplysByStatus(owner, status);
 
     assertThat(count).isOne();
   }
@@ -232,13 +235,13 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
     usermailMsgReply.setId(184113);
     usermailMsgReply.setMsgid("syswin-154357200521211212954");
     usermailMsgReply.setSeqNo(seqNo_second);
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
 
-    UsermailMsgReplyDO lastUsermailReply = usermailMsgReplyRepo.selectLastUsermailReply(parentMsgid, owner, status);
+    UsermailMsgReplyDO lastUsermailReply = usermailMsgReplyMapper.selectLastUsermailReply(parentMsgid, owner, status);
 
     assertThat(lastUsermailReply).isNotNull();
     assertThat(lastUsermailReply.getSeqNo()).isEqualTo(seqNo_second);
@@ -259,10 +262,46 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testRevert");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj1");
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
-    int count = usermailMsgReplyRepo.updateRevertUsermailReply(usermailMsgReply);
+    int count = usermailMsgReplyMapper.updateRevertUsermailReply(usermailMsgReply, TemailStatus.STATUS_NORMAL_0);
     Assert.assertEquals(1, count);
     Assert.assertTrue(true);
+  }
+
+  @Test
+  public void deleteMsgReplyLessThanTest() {
+    UsermailMsgReplyDO usermailMsgReply1 = new UsermailMsgReplyDO();
+    usermailMsgReply1.setParentMsgid("syswin-1543456947958");
+    usermailMsgReply1.setFrom("A2018");
+    usermailMsgReply1.setStatus(0);
+    usermailMsgReply1.setMsgid("syswin-reply-201906271700-001");
+    usermailMsgReply1.setId(198);
+    usermailMsgReply1.setSeqNo(0);
+    usermailMsgReply1.setTo("B2018");
+    usermailMsgReply1.setOwner("A2018");
+    usermailMsgReply1.setType(1);
+    usermailMsgReply1.setMsg("testsavemethod");
+    usermailMsgReply1.setSessionid("jkasjkaslkjaskl");
+    usermailMsgReplyMapper.insert(usermailMsgReply1);
+    UsermailMsgReplyDO usermailMsgReply2 = new UsermailMsgReplyDO();
+    usermailMsgReply2.setParentMsgid("syswin-1543456947958");
+    usermailMsgReply2.setFrom("A2018");
+    usermailMsgReply2.setStatus(0);
+    usermailMsgReply2.setMsgid("syswin-reply-201906271700-002");
+    usermailMsgReply2.setId(199);
+    usermailMsgReply2.setSeqNo(0);
+    usermailMsgReply2.setTo("B2018");
+    usermailMsgReply2.setOwner("A2018");
+    usermailMsgReply2.setType(1);
+    usermailMsgReply2.setMsg("testsavemethod");
+    usermailMsgReply2.setSessionid("jkasjkaslkjaskl");
+    usermailMsgReplyMapper.insert(usermailMsgReply2);
+
+    Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    int batchNum = 1;
+    int result = usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum);
+
+    assertThat(result).isOne();
   }
 }

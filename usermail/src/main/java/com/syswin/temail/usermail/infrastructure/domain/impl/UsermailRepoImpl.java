@@ -32,6 +32,7 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -220,6 +221,18 @@ public class UsermailRepoImpl implements UsermailRepo {
   @Override
   public List<UsermailDO> listUsermailsByStatus(QueryTrashDTO queryDto) {
     return usermailMapper.listUsermailsByStatus(queryDto);
+  }
+
+  /**
+   * 清除指定时间以前的数据，并限制清除量
+   *
+   * @param createTime 指定时间点
+   * @param batchNum 最多删除的数量
+   * @return 实际清除数量
+   */
+  @Override
+  public int deleteMsgLessThan(Timestamp createTime, int batchNum) {
+    return usermailMapper.deleteUseMsgLessThan(createTime, batchNum);
   }
 
 }

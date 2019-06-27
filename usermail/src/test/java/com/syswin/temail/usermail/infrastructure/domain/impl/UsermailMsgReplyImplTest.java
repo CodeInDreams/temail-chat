@@ -29,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -115,5 +116,16 @@ public class UsermailMsgReplyImplTest {
     assertThat(usermailMsgReplyCap.getValue()).isEqualTo(usermailMsgReply);
   }
 
+  @Test
+  public void deleteMsgReplyLessThanTest() {
+    Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    int batchNum = 100;
+    int count = 100;
+    Mockito.when(usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum)).thenReturn(count);
+
+    int result = usermailMsgReplyRepoImpl.deleteMsgReplyLessThan(createTime, batchNum);
+
+    assertThat(result).isEqualTo(count);
+  }
 
 }

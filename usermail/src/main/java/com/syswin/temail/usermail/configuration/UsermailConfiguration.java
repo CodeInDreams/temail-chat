@@ -79,5 +79,4 @@ public class UsermailConfiguration {
     return new RedisUsermailAdapter(redisTemplate);
   }
 
-
 }
