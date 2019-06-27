@@ -63,7 +63,7 @@ public class UsermailConfiguration {
         .group(config.mqTrashConsumer)
         .topic(config.mqUserMailAgentTopic)
         .listener(listener)
-        .implementation(config.mqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(config.mqType))
+        .implementation(config.receiverMqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(config.receiverMqType))
         .build();
   }
 
@@ -71,7 +71,7 @@ public class UsermailConfiguration {
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")
   MqProducerConfig usermailProducerConfig(UsermailConfig usermailConfig, RocketMqProperties rocketMqProperties) {
     return new MqProducerConfig(rocketMqProperties.getProducerGroup(),
-        usermailConfig.mqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(usermailConfig.mqType));
+        usermailConfig.senderMqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(usermailConfig.senderMqType));
   }
 
   @Bean

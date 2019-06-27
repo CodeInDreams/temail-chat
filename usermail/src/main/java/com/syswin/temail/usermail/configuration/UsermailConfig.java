@@ -52,6 +52,9 @@ public class UsermailConfig {
   /**
    * libraryMessage配置
    */
-  @Value("${spring.rocketmq.senderType:}")
-  public String mqType;
+  @Value("${spring.rocketmq.senderType:REDIS}")
+  public String senderMqType;
+
+  @Value("${spring.rocketmq.receiverType:REDIS}")
+  public String receiverMqType;
 }
