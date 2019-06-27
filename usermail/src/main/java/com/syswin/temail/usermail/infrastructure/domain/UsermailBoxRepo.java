@@ -82,4 +82,11 @@ public interface UsermailBoxRepo {
    */
   UsermailBoxDO selectByOwnerAndMail2(String owner, String to);
 
+  /**
+   * 分页清理域下数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   */
+  void removeDomain(String domain, int pageSize) throws InterruptedException;
 }

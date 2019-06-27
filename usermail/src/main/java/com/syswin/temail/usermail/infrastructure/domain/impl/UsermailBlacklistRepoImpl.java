@@ -30,6 +30,7 @@ import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklist
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
@@ -96,6 +97,22 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   @Override
   public int countByAddresses(String temailAddress, String blackedAddress) {
     return usermailBlacklistMapper.countByAddresses(temailAddress, blackedAddress);
+  }
+
+  /**
+   * 分页清理指定域数据数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   */
+  @Transactional
+  @Override
+  public void removeDomain(String domain, int pageSize) throws InterruptedException {
+    int count = 0;
+    do {
+      count = usermailBlacklistMapper.removeDomain(domain, pageSize);
+      Thread.sleep(1000);
+    } while (count != 0);
   }
 
 }

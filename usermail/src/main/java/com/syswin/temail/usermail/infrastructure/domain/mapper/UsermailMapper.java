@@ -181,4 +181,13 @@ public interface UsermailMapper {
    * @return 实际清除数量
    */
   int deleteUseMsgLessThan(@Param("createTime") Timestamp createTime, @Param("batchNum") int batchNum);
+
+  /**
+   * 分页清理指定域数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   * @return 实际删除数量
+   */
+  int removeDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }

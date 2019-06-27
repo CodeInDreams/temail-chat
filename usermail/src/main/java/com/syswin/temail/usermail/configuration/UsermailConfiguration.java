@@ -29,6 +29,7 @@ import com.syswin.library.messaging.all.spring.MqImplementation;
 import com.syswin.library.messaging.all.spring.MqProducerConfig;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
+import com.syswin.temail.usermail.interfaces.ManageBackgroundMQConsumer;
 import com.syswin.temail.usermail.interfaces.UsermailMQConsumer;
 import com.syswin.temail.usermail.redis.RedisUsermailAdapter;
 import com.syswin.temail.usermail.rocketmq.MqClient;
@@ -47,6 +48,13 @@ public class UsermailConfiguration {
   MqClient mqclient(UsermailConfig config, UsermailMQConsumer usermailMQConsumer) {
     return new MqClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer,
         config.namesrvAddr, usermailMQConsumer, MqClient.RocketMQModel.CLUSTERING);
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
+  MqClient mqclient(UsermailConfig config, ManageBackgroundMQConsumer manageBackgroundMQConsumer) {
+    return new MqClient(config.mqMgtTopic, "*", config.mqMgtGroup, config.namesrvAddr, manageBackgroundMQConsumer,
+        MqClient.RocketMQModel.CLUSTERING);
   }
 
   @Bean

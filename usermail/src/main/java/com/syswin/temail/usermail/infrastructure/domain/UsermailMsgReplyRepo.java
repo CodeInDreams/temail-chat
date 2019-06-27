@@ -138,4 +138,12 @@ public interface UsermailMsgReplyRepo {
    * @return 实际清除数量
    */
   int deleteMsgReplyLessThan(Timestamp createTime, int batchNum);
+
+  /**
+   * 分页清理域下数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   */
+  void removeDomain(String domain, int pageSize) throws InterruptedException;
 }

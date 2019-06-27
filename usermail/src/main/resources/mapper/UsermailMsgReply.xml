@@ -201,4 +201,9 @@
   <delete id="deleteMsgReplyLessThan">
     delete from `usermail_msg_reply` where `create_time` &lt; #{createTime} limit #{batchNum}
   </delete>
+
+  <delete id="removeDomain">
+    delete from `usermail_msg_reply` where `from` like "%"#{domain} order by id limit #{pageSize}
+  </delete>
+
 </mapper>

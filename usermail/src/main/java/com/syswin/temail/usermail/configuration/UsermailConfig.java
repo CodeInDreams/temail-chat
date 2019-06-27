@@ -48,6 +48,12 @@ public class UsermailConfig {
   @Value("${spring.rocketmq.host}")
   public String namesrvAddr;
 
+  @Value("${spring.rocketmq.temailmgt.topic}")
+  public String mqMgtTopic = "topic_oss_notice";
+
+  @Value("${spring.rocketmq.temailmgt.groupname}")
+  public String mqMgtGroup = "temail_oss_usermailagent";
+
 
   /**
    * libraryMessage配置

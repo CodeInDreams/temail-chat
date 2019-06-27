@@ -74,4 +74,12 @@ public interface UsermailBlacklistMapper {
    */
   int countByAddresses(@Param("temailAddress") String temailAddress, @Param("blackedAddress") String blackedAddress);
 
+  /**
+   * 分页清理指定域数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   * @return 实际清除数量
+   */
+  int removeDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }
