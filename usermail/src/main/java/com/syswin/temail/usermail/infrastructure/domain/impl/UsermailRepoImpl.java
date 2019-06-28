@@ -237,7 +237,7 @@ public class UsermailRepoImpl implements UsermailRepo {
   }
 
   /**
-   * 分页清理指定域数据数据
+   * 分页清理指定域数据
    *
    * @param domain 域
    * @param pageSize 页面大小
