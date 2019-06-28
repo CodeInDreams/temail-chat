@@ -197,4 +197,13 @@
       and `status` = #{status,jdbcType=INTEGER}
     order by seq_no desc limit 1
   </select>
+
+  <delete id="deleteMsgReplyLessThan">
+    delete from `usermail_msg_reply` where `create_time` &lt; #{createTime} limit #{batchNum}
+  </delete>
+
+  <delete id="removeDomain">
+    delete from `usermail_msg_reply` where `from` like "%"#{domain} order by id limit #{pageSize}
+  </delete>
+
 </mapper>

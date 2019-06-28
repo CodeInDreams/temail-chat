@@ -70,4 +70,12 @@ public interface UsermailBlacklistRepo {
    * @return 黑名单数量
    */
   int countByAddresses(String temailAddress, String blackedAddress);
+
+  /**
+   * 分页清理指定域数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   */
+  void removeDomain(String domain, int pageSize) throws InterruptedException;
 }

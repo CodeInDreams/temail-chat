@@ -204,5 +204,13 @@
     order by update_time desc limit #{pageSize}
   </select>
 
+  <delete id="deleteUseMsgLessThan" >
+    delete from `usermail` where `create_time` &lt; #{createTime} limit #{batchNum}
+  </delete>
+
+  <delete id="removeDomain">
+    delete from `usermail` where `from` like "%"#{domain} order by id limit #{pageSize}
+  </delete>
+
 </mapper>
 

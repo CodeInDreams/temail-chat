@@ -29,6 +29,7 @@ import com.syswin.library.messaging.all.spring.MqImplementation;
 import com.syswin.library.messaging.all.spring.MqProducerConfig;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
+import com.syswin.temail.usermail.interfaces.ManageBackgroundMQConsumer;
 import com.syswin.temail.usermail.interfaces.UsermailMQConsumer;
 import com.syswin.temail.usermail.redis.RedisUsermailAdapter;
 import com.syswin.temail.usermail.rocketmq.MqClient;
@@ -44,9 +45,16 @@ public class UsermailConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
-  MqClient mqclient(UsermailConfig config, UsermailMQConsumer usermailMQConsumer) {
+  MqClient usermailMqClient(UsermailConfig config, UsermailMQConsumer usermailMqConsumer) {
     return new MqClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer,
-        config.namesrvAddr, usermailMQConsumer, MqClient.RocketMQModel.CLUSTERING);
+        config.namesrvAddr, usermailMqConsumer, MqClient.RocketMQModel.CLUSTERING);
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
+  MqClient mgtMqClient(UsermailConfig config, ManageBackgroundMQConsumer manageBackgroundMqConsumer) {
+    return new MqClient(config.mqMgtTopic, "*", config.mqMgtGroup, config.namesrvAddr, manageBackgroundMqConsumer,
+        MqClient.RocketMQModel.CLUSTERING);
   }
 
   @Bean
@@ -63,7 +71,8 @@ public class UsermailConfiguration {
         .group(config.mqTrashConsumer)
         .topic(config.mqUserMailAgentTopic)
         .listener(listener)
-        .implementation(config.receiverMqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(config.receiverMqType))
+        .implementation(config.receiverMqType.isEmpty() ? MqImplementation.ROCKET_MQ
+            : MqImplementation.valueOf(config.receiverMqType))
         .build();
   }
 
@@ -71,13 +80,13 @@ public class UsermailConfiguration {
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")
   MqProducerConfig usermailProducerConfig(UsermailConfig usermailConfig, RocketMqProperties rocketMqProperties) {
     return new MqProducerConfig(rocketMqProperties.getProducerGroup(),
-        usermailConfig.senderMqType.isEmpty() ? MqImplementation.ROCKET_MQ : MqImplementation.valueOf(usermailConfig.senderMqType));
+        usermailConfig.senderMqType.isEmpty() ? MqImplementation.ROCKET_MQ
+            : MqImplementation.valueOf(usermailConfig.senderMqType));
   }
 
   @Bean
   public IUsermailAdapter usermailAdapter(RedisTemplate redisTemplate) {
     return new RedisUsermailAdapter(redisTemplate);
   }
-
 
 }

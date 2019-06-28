@@ -27,6 +27,7 @@ package com.syswin.temail.usermail.infrastructure.domain.mapper;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
+import java.sql.Timestamp;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -137,4 +138,22 @@ public interface UsermailMsgReplyMapper {
    */
   int updateRevertUsermailReply(@Param("usermailMsgReply") UsermailMsgReplyDO usermailMsgReply,
       @Param("originalStatus") int originalStatus);
+
+  /**
+   * 清除指定时间以前的数据，并限制清除量
+   *
+   * @param createTime 指定时间点
+   * @param batchNum 最多删除的数量
+   * @return 实际清除数量
+   */
+  int deleteMsgReplyLessThan(@Param("createTime") Timestamp createTime, @Param("batchNum") int batchNum);
+
+  /**
+   * 分页清理指定域数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   * @return 实际清除数量
+   */
+  int removeDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }

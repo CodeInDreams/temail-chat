@@ -29,9 +29,11 @@ import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
+import java.sql.Timestamp;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
@@ -172,5 +174,36 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   @Override
   public int updateRevertUsermailReply(UsermailMsgReplyDO usermailMsgReply) {
     return usermailMsgReplyMapper.updateRevertUsermailReply(usermailMsgReply, TemailStatus.STATUS_NORMAL_0);
+  }
+
+  /**
+   * 清除指定时间以前的数据，并限制清除量
+   *
+   * @param createTime 指定时间点
+   * @param batchNum 最多删除的数量
+   * @return 实际清除数量
+   */
+  @Override
+  public int deleteMsgReplyLessThan(Timestamp createTime, int batchNum) {
+    return usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum);
+  }
+
+  /**
+   * 分页清理指定域数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   */
+  @Transactional
+  @Override
+  public void removeDomain(String domain, int pageSize) throws InterruptedException {
+
+    int count = 0;
+
+    do {
+      count = usermailMsgReplyMapper.removeDomain(domain, pageSize);
+      Thread.sleep(1000);
+    } while (count != 0);
+
   }
 }

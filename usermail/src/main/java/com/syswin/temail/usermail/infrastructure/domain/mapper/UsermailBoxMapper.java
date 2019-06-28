@@ -84,4 +84,13 @@ public interface UsermailBoxMapper {
    * @return 会话信息
    */
   UsermailBoxDO selectByOwnerAndMail2(@Param("owner") String owner, @Param("mail2") String to);
+
+  /**
+   * 分页清理域下数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   * @return 实际删除数量
+   */
+  int removeDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }
