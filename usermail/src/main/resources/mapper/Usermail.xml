@@ -209,7 +209,7 @@
   </delete>
 
   <delete id="removeDomain">
-    delete from `usermail` where `from` like "%"#{domain} order by id limit #{pageSize}
+    delete from `usermail` where `from` like "%"#{domain} limit #{pageSize}
   </delete>
 
 </mapper>

@@ -83,7 +83,7 @@
   </update>
 
   <delete id="removeDomain">
-    delete from `usermail_box` where `mail1` like "%"#{domain} order by id limit #{pageSize}
+    delete from `usermail_box` where `mail1` like "%"#{domain} limit #{pageSize}
   </delete>
 
 </mapper>

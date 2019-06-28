@@ -61,7 +61,7 @@
   </select>
 
   <delete id="removeDomain">
-    delete from `usermail_blacklist` where `temail_address` like "%"#{domain} order by id limit #{pageSize}
+    delete from `usermail_blacklist` where `temail_address` like "%"#{domain} limit #{pageSize}
   </delete>
 
 </mapper>
