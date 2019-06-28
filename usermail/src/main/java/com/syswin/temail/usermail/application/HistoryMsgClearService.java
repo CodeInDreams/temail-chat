@@ -16,6 +16,12 @@ public class HistoryMsgClearService {
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
   }
 
+  /**
+   * 分页清除指定时间的历史数据
+   *
+   * @param beforeDays 时间
+   * @param batchNum 页面大小
+   */
   public void deleteHistoryMsg(int beforeDays, int batchNum) {
     long dateTime = System.currentTimeMillis() - beforeDays * 24 * 60 * 60 * 1000;
     Timestamp createTime = new Timestamp(dateTime);
@@ -24,17 +30,18 @@ public class HistoryMsgClearService {
   }
 
   private void deleteMsg(Timestamp createTime, int batchNum) {
-    while (batchNum > 0) {
-      int deleteCount = usermailRepo.deleteMsgLessThan(createTime, batchNum);
-      batchNum = deleteCount > 0 ? batchNum : 0;
-    }
+
+    int count = 0;
+    do {
+      count = usermailRepo.deleteMsgLessThan(createTime, batchNum);
+    } while (count > 0);
   }
 
   private void deleteMsgReply(Timestamp createTime, int batchNum) {
-    while (batchNum > 0) {
-      int deleteCount = usermailMsgReplyRepo.deleteMsgReplyLessThan(createTime, batchNum);
-      batchNum = deleteCount > 0 ? batchNum : 0;
-    }
+    int count = 0;
+    do{
+      count = usermailMsgReplyRepo.deleteMsgReplyLessThan(createTime, batchNum);
+    } while (count > 0);
   }
 
 }
