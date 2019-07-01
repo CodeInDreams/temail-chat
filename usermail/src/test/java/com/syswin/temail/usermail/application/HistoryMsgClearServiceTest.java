@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -25,8 +25,7 @@ public class HistoryMsgClearServiceTest {
   public void deleteHistoryMsg() {
     int beforeDays = 7;
     int batchNum = 100;
-    long dateTime = System.currentTimeMillis() - beforeDays * 24 * 60 * 60 * 1000;
-    Timestamp createTime = new Timestamp(dateTime);
+    LocalDate createTime = LocalDate.now().minusDays(beforeDays);
 
     historyMsgClearService.deleteHistoryMsg(beforeDays, batchNum);
 
