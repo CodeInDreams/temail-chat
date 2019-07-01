@@ -54,7 +54,7 @@ public class UsermailBoxRepoImplTest {
   @Test
   public void testSaveUsermailBox() {
     ArgumentCaptor<UsermailBoxDO> usermailBoxCap = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    UsermailBoxDO usermailBox = new UsermailBoxDO(1,"sessionId","mail2","a.test@");
+    UsermailBoxDO usermailBox = new UsermailBoxDO(1,"sessionId","mail2","a.test@", "sessionExtData");
     usermailBoxRepoImpl.saveUsermailBox(usermailBox);
     Mockito.verify(usermailBoxMapper).saveUsermailBox(usermailBoxCap.capture());
     assertThat(usermailBoxCap.getValue()).isEqualTo(usermailBox);

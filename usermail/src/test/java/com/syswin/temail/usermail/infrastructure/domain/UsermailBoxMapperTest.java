@@ -55,6 +55,7 @@ public class UsermailBoxMapperTest {
     usermailBox.setMail2("mailB@syswin.com");
     usermailBox.setSessionid("sessionid");
     usermailBox.setOwner("mailA@syswin.com");
+    usermailBox.setSessionExtData("sessionExtData");
     usermailBoxRepo.saveUsermailBox(usermailBox);
     Assert.assertTrue(true);
   }

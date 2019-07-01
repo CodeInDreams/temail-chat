@@ -50,7 +50,8 @@ public class GroupChatService {
   public void syncGroupChatMemberEvent(GroupChatEventDTO dto) {
     String groupTemail = dto.getFrom();
     String temail = dto.getTo();
-    usermailService.saveUsermailBoxInfo(groupTemail, temail, temail);
+    // todo 群聊入群事件增加 sessionExtData字段
+    usermailService.saveUsermailBoxInfo(groupTemail, temail, temail, "sessionExtData");
   }
 
 

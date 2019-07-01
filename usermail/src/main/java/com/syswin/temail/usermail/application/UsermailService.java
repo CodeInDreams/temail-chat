@@ -110,13 +110,13 @@ public class UsermailService {
    * @param owner 消息所属人
    * @return sessionId
    */
-  public String saveUsermailBoxInfo(String from, String to, String owner) {
+  public String saveUsermailBoxInfo(String from, String to, String owner, String sessionExtData) {
     String sessionId = usermailSessionService.getSessionID(from, to);
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
     UsermailBoxDO usermailBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
     if (usermailBox == null) {
-      UsermailBoxDO box = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner);
+      UsermailBoxDO box = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner, sessionExtData);
       usermailBoxRepo.saveUsermailBox(box);
     }
     return sessionId;
@@ -146,7 +146,7 @@ public class UsermailService {
 
     int attachmentSize = usermail.getAttachmentSize();
     long seqNo = usermailAdapter.getMsgSeqNo(from, to, owner);
-    String sessionid = saveUsermailBoxInfo(from, to, owner);
+    String sessionid = this.saveUsermailBoxInfo(from, to, owner, usermail.getSessionExtData());
     long pkid = usermailAdapter.getPkID();
     UsermailDO mail = new UsermailDO(pkid, usermail.getMsgId(), sessionid,
         from, to, TemailStatus.STATUS_NORMAL_0, usermail.getType(), owner, "",

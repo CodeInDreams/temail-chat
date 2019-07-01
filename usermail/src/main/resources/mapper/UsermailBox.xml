@@ -41,8 +41,8 @@
   </sql>
 
   <insert id="saveUsermailBox" parameterType="UserMail" keyProperty="id">
-		insert into usermail_box (`id`,`sessionid`,`mail2`,`owner` )
-		values (#{id}, #{sessionid}, #{mail2}, #{owner} )
+		insert into usermail_box (`id`,`sessionid`,`mail2`,`owner`, `session_ext_data` )
+		values (#{id}, #{sessionid}, #{mail2}, #{owner}, #{sessionExtData} )
 	</insert>
 
   <delete id="deleteByOwnerAndMail2" parameterType="String">

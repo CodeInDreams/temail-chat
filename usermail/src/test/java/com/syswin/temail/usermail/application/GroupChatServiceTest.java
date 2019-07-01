@@ -46,7 +46,8 @@ public class GroupChatServiceTest {
     groupChatEventDto.setFrom(from);
     groupChatEventDto.setTo(to);
     groupChatService.syncGroupChatMemberEvent(groupChatEventDto);
-    verify(usermailService).saveUsermailBoxInfo(from, to, to);
+    String sessionExtData = "sessionExtData";
+    verify(usermailService).saveUsermailBoxInfo(from, to, to, sessionExtData);
   }
 
   @Test
