@@ -2,7 +2,7 @@ package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,13 +23,12 @@ public class HistoryMsgClearService {
    * @param batchNum 页面大小
    */
   public void deleteHistoryMsg(int beforeDays, int batchNum) {
-    long dateTime = System.currentTimeMillis() - beforeDays * 24 * 60 * 60 * 1000;
-    Timestamp createTime = new Timestamp(dateTime);
-    this.deleteMsg(createTime, batchNum);
-    this.deleteMsgReply(createTime, batchNum);
+    LocalDate beforeData = LocalDate.now().minusDays(beforeDays);
+    this.deleteMsg(beforeData, batchNum);
+    this.deleteMsgReply(beforeData, batchNum);
   }
 
-  private void deleteMsg(Timestamp createTime, int batchNum) {
+  private void deleteMsg(LocalDate createTime, int batchNum) {
 
     int count = 0;
     do {
@@ -37,9 +36,9 @@ public class HistoryMsgClearService {
     } while (count > 0);
   }
 
-  private void deleteMsgReply(Timestamp createTime, int batchNum) {
+  private void deleteMsgReply(LocalDate createTime, int batchNum) {
     int count = 0;
-    do{
+    do {
       count = usermailMsgReplyRepo.deleteMsgReplyLessThan(createTime, batchNum);
     } while (count > 0);
   }

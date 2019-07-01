@@ -25,11 +25,14 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Before;
@@ -118,9 +121,10 @@ public class UsermailMsgReplyImplTest {
 
   @Test
   public void deleteMsgReplyLessThanTest() {
-    Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    LocalDate createTime = LocalDate.now();
     int batchNum = 100;
     int count = 100;
+
     Mockito.when(usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum)).thenReturn(count);
 
     int result = usermailMsgReplyRepoImpl.deleteMsgReplyLessThan(createTime, batchNum);

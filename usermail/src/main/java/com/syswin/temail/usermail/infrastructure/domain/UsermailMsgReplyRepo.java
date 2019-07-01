@@ -27,7 +27,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface UsermailMsgReplyRepo {
@@ -137,7 +137,7 @@ public interface UsermailMsgReplyRepo {
    * @param batchNum 最多删除的数量
    * @return 实际清除数量
    */
-  int deleteMsgReplyLessThan(Timestamp createTime, int batchNum);
+  int deleteMsgReplyLessThan(LocalDate createTime, int batchNum);
 
   /**
    * 分页清理域下数据

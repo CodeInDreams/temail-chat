@@ -35,7 +35,7 @@ import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -464,11 +464,11 @@ public class UsermailMapperTest {
     userMail2.setFilter(null);
     usermailMapper.insertUsermail(userMail2);
 
-    Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    LocalDate createTime = LocalDate.now().plusDays(1);
     int batchNum = 1;
     int count = usermailMapper.deleteUseMsgLessThan(createTime, batchNum);
 
-    assertThat(count).isOne();
+    assertThat(count).isEqualTo(1);
 
   }
 

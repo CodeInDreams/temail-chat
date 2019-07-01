@@ -31,7 +31,7 @@ import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -298,7 +298,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply2.setSessionid("jkasjkaslkjaskl");
     usermailMsgReplyMapper.insert(usermailMsgReply2);
 
-    Timestamp createTime = new Timestamp(System.currentTimeMillis());
+    LocalDate createTime = LocalDate.now().plusDays(1);
     int batchNum = 1;
     int result = usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum);
 

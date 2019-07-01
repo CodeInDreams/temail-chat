@@ -29,7 +29,7 @@ import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -180,7 +180,7 @@ public interface UsermailMapper {
    * @param batchNum 最多删除的数量
    * @return 实际清除数量
    */
-  int deleteUseMsgLessThan(@Param("createTime") Timestamp createTime, @Param("batchNum") int batchNum);
+  int deleteUseMsgLessThan(@Param("createTime") LocalDate createTime, @Param("batchNum") int batchNum);
 
   /**
    * 分页清理指定域数据
