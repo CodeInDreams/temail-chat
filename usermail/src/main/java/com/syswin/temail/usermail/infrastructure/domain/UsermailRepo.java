@@ -87,7 +87,8 @@ public interface UsermailRepo {
 
   /**
    * 阅后即焚
-   *  @param owner 消息拥有者
+   *
+   * @param owner 消息拥有者
    * @param msgid 消息id
    * @param status 消息状态
    */
@@ -182,6 +183,6 @@ public interface UsermailRepo {
    * @param domain 域
    * @param pageSize 页面大小
    */
-  void removeDomain(String domain, int pageSize) throws InterruptedException;
+  void removeDomain(String domain, int pageSize);
 
 }
