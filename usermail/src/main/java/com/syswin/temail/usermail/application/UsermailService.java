@@ -54,6 +54,7 @@ import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -245,8 +246,8 @@ public class UsermailService {
    */
   @Transactional
   public void revertMqHandler(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId) {
-    int count = usermailRepo
-        .countRevertUsermail(new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
+    int count = usermailRepo.countRevertUsermail(
+            new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     // 判断是否撤回成功，防止通知重复发送
     if (count > 0) {
       usermail2NotifyMqService
@@ -289,6 +290,34 @@ public class UsermailService {
       mailBoxes.add(mailBox);
     }
     return mailBoxes;
+  }
+
+  /**
+   * 拉取topN会话列表
+   *
+   * @param from 会话拥有者
+   * @param archiveStatus 归档状态
+   * @param pageSize 拉取数量上限
+   * @return 倒序排序后的会话列表
+   */
+  public List<MailboxDTO> getMailBoxs(String from, int archiveStatus, int pageSize) {
+    pageSize = pageSize > 50 ? 50 : pageSize;
+    List<UsermailBoxDO> usermailBoxDOes = usermailBoxRepo.selectTopNByOwner(from, archiveStatus, pageSize);
+    List<MailboxDTO> mailboxes = new ArrayList<>(usermailBoxDOes.size());
+    List<UsermailDO> lastUsermail;
+    for (UsermailBoxDO usermailBoxDO : usermailBoxDOes) {
+      MailboxDTO mailBox = new MailboxDTO();
+      UmQueryDTO umQuery = new UmQueryDTO(usermailBoxDO.getSessionid(), from);
+      lastUsermail = convertMsgService.convertMsg(usermailRepo.listLastUsermails(umQuery));
+      if (!CollectionUtils.isEmpty(lastUsermail)) {
+        mailBox.setLastMsg(lastUsermail.get(0));
+      }
+      mailBox.setTo(usermailBoxDO.getMail2());
+      mailBox.setArchiveStatus(usermailBoxDO.getArchiveStatus());
+      mailboxes.add(mailBox);
+    }
+    Collections.sort(mailboxes, new MailboxComparator());
+    return mailboxes;
   }
 
   /**

@@ -86,5 +86,15 @@
     delete from `usermail_box` where `mail1` like "%"#{domain} limit #{pageSize}
   </delete>
 
+  <select id="selectTopNByOwner" resultMap="UsermailBoxResultMap">
+    select * from `usermail_box`
+    where `owner` = #{owner}
+    <if test="archiveStatus != -1">
+      and `archive_status` = #{archiveStatus}
+    </if>
+    order by create_time desc limit #{pageSize}
+  </select>
+
+
 </mapper>
 

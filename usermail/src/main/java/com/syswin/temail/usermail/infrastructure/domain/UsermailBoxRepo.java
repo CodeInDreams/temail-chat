@@ -89,4 +89,14 @@ public interface UsermailBoxRepo {
    * @param pageSize 页面大小
    */
   void removeDomain(String domain, int pageSize) throws InterruptedException;
+
+  /**
+   * 拉取topN会话列表
+   *
+   * @param from  会话拥有者
+   * @param archiveStatus 归档状态
+   * @param pageSize 拉取数量上限
+   * @return 会话列表
+   */
+  List<UsermailBoxDO> selectTopNByOwner(String from, int archiveStatus, int pageSize);
 }

@@ -127,4 +127,16 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
     } while (count != 0);
   }
 
+  /**
+   * 拉取topN会话列表
+   *
+   * @param from  会话拥有者
+   * @param archiveStatus 归档状态
+   * @param pageSize 拉取数量上限
+   * @return 会话列表
+   */
+  @Override
+  public List<UsermailBoxDO> selectTopNByOwner(String from, int archiveStatus, int pageSize) {
+    return usermailBoxMapper.selectTopNByOwner(from, archiveStatus, pageSize);
+  }
 }

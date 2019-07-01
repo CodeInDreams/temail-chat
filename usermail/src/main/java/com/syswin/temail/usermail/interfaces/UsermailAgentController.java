@@ -423,6 +423,26 @@ public class UsermailAgentController {
   }
 
   /**
+   * 拉取topN会话列表并按倒序返回
+   *
+   * @param from  会话拥有者
+   * @param archiveStatus 归档状态
+   * @param pageSize 拉取数量上限
+   * @return 返回ResultDTO对象 包含会话列表
+   */
+  @ApiOperation(value = "拉取topN会话列表 (0x 2009)", notes = "拉取topN会话列表(有序)")
+  @GetMapping("/usermail/mailboxes/topN")
+  public ResultDTO getUsermailBoxes(
+      @ApiParam(value = "发送者mail", required = true) @RequestParam(value = "from", defaultValue = "") String from,
+      @ApiParam(value = "归档状态 0 正常 1 已归档 -1 全部（默认）") @RequestParam(value = "archiveStatus", defaultValue = "-1") int archiveStatus,
+      @ApiParam(value = "拉取数量上限(最大不可超过50)") @RequestParam(value = "pageSize") int pageSize) {
+    ResultDTO resultDTO = new ResultDTO();
+    List<MailboxDTO> mailBoxs = usermailService.getMailBoxs(from,archiveStatus,pageSize);
+    resultDTO.setData(mailBoxs);
+    return resultDTO;
+  }
+
+  /**
    * 获取HttpServletRequest指定header信息。
    *
    * @param request HttpServletRequest
