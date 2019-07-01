@@ -83,7 +83,7 @@
     and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
-  <delete id="removeDomain">
+  <delete id="deleteDomain">
     delete from `usermail_box` where `mail1` like "%"#{domain} limit #{pageSize}
   </delete>
 

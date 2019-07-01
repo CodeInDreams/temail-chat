@@ -304,4 +304,11 @@ public class UsermailMsgReplyTest {
 
     assertThat(result).isOne();
   }
+
+  @Test
+  public void deleteDomainTest() {
+    String domain = "domain";
+    int pageSize = 100;
+    usermailMsgReplyMapper.deleteDomain(domain, pageSize);
+  }
 }

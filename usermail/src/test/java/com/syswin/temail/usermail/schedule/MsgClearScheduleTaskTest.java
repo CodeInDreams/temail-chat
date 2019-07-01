@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
@@ -18,7 +17,7 @@ public class MsgClearScheduleTaskTest {
 
   @InjectMocks
   private MsgClearScheduleTask task;
-  @Mock
+  @Autowired
   private HistoryMsgClearService service;
 
   ScheduledTaskRegistrar registrar = new ScheduledTaskRegistrar();

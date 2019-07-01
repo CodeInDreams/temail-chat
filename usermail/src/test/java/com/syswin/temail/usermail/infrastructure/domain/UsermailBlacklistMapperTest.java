@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
+import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklistMapper;
 import java.util.List;
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,20 +46,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UsermailBlacklistMapperTest {
 
   @Autowired
-  private UsermailBlacklistRepo usermailBlacklistRepo;
+  private UsermailBlacklistMapper blacklistMapper;
 
   @Test
   public void testInsertUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(1, "from@msg.com", "blacklist@msgseal.com");
-    int result = usermailBlacklistRepo.insertUsermailBlacklist(usermailBlacklist);
+    int result = blacklistMapper.insertUsermailBlacklist(usermailBlacklist);
     assertThat(result).isEqualTo(1);
   }
 
   @Test
   public void testDeleteUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(2, "from2@msgseal.com", "blacklist2@msgseal.com");
-    usermailBlacklistRepo.insertUsermailBlacklist(usermailBlacklist);
-    int result = usermailBlacklistRepo.deleteByTemailAndBlackedAddress(usermailBlacklist);
+    blacklistMapper.insertUsermailBlacklist(usermailBlacklist);
+    int result = blacklistMapper.deleteByTemailAndBlackedAddress(usermailBlacklist);
     assertThat(result).isEqualTo(1);
   }
 
@@ -67,8 +68,8 @@ public class UsermailBlacklistMapperTest {
     String temailAddress = "temail@msgseal.com";
     String blackAddress = "blacklist@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(3, temailAddress, blackAddress);
-    usermailBlacklistRepo.insertUsermailBlacklist(blacklist);
-    UsermailBlacklistDO blacklists = usermailBlacklistRepo.selectByTemailAndBlackedAddress(temailAddress, blackAddress);
+    blacklistMapper.insertUsermailBlacklist(blacklist);
+    UsermailBlacklistDO blacklists = blacklistMapper.selectByTemailAndBlackedAddress(temailAddress, blackAddress);
     assertThat(blacklists.getBlackedAddress()).isEqualTo(blackAddress);
   }
 
@@ -77,8 +78,8 @@ public class UsermailBlacklistMapperTest {
     String temailAddress = "temail2@msgseal.com";
     String blackAddress = "blacklist2@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(4, temailAddress, blackAddress);
-    usermailBlacklistRepo.insertUsermailBlacklist(blacklist);
-    List<UsermailBlacklistDO> usermailBlacklists = usermailBlacklistRepo.listUsermailBlacklists(temailAddress);
+    blacklistMapper.insertUsermailBlacklist(blacklist);
+    List<UsermailBlacklistDO> usermailBlacklists = blacklistMapper.listUsermailBlacklists(temailAddress);
     assertThat(usermailBlacklists.get(0).getBlackedAddress()).isEqualTo(blackAddress);
   }
 
@@ -87,8 +88,15 @@ public class UsermailBlacklistMapperTest {
     String temailAddress = "temail3@msgseal.com";
     String blackAddress = "blacklist3@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(5, temailAddress, blackAddress);
-    usermailBlacklistRepo.insertUsermailBlacklist(blacklist);
-    int count = usermailBlacklistRepo.countByAddresses(temailAddress, blackAddress);
+    blacklistMapper.insertUsermailBlacklist(blacklist);
+    int count = blacklistMapper.countByAddresses(temailAddress, blackAddress);
     Assert.assertTrue(count >= 1);
+  }
+
+  @Test
+  public void deleteDomainTest() {
+    String domain = "domain";
+    int pageSize = 100;
+    blacklistMapper.deleteDomain(domain, pageSize);
   }
 }

@@ -202,7 +202,7 @@
     delete from `usermail_msg_reply` where `create_time` &lt; #{createTime} limit #{batchNum}
   </delete>
 
-  <delete id="removeDomain">
+  <delete id="deleteDomain">
     delete from `usermail_msg_reply` where `from` like "%"#{domain} id limit #{pageSize}
   </delete>
 

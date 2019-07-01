@@ -87,15 +87,6 @@ public interface UsermailBoxMapper {
   UsermailBoxDO selectByOwnerAndMail2(@Param("owner") String owner, @Param("mail2") String to);
 
   /**
-   * 分页清理域下数据
-   *
-   * @param domain 域
-   * @param pageSize 页面大小
-   * @return 实际删除数量
-   */
-  int removeDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
-
-  /**
    * 拉取topN会话列表
    *
    * @param owner  会话拥有者
@@ -111,4 +102,13 @@ public interface UsermailBoxMapper {
    * @param usermailBoxDO 更新参数
    */
   void updateSessionExtData(UsermailBoxDO usermailBoxDO);
+
+  /**
+   * 分页清理域下数据
+   *
+   * @param domain 域
+   * @param pageSize 页面大小
+   * @return 实际删除数量
+   */
+  int deleteDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }

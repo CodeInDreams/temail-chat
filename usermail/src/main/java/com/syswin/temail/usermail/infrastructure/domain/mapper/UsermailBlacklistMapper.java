@@ -81,5 +81,5 @@ public interface UsermailBlacklistMapper {
    * @param pageSize 页面大小
    * @return 实际清除数量
    */
-  int removeDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
+  int deleteDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }

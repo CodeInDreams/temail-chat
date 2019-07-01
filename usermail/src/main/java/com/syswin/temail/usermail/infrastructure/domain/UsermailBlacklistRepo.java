@@ -77,5 +77,5 @@ public interface UsermailBlacklistRepo {
    * @param domain 域
    * @param pageSize 页面大小
    */
-  void removeDomain(String domain, int pageSize) throws InterruptedException;
+  void removeDomain(String domain, int pageSize);
 }

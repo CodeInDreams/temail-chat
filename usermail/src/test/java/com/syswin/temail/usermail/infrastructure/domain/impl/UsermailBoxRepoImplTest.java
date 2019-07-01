@@ -25,6 +25,8 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper;
@@ -139,4 +141,14 @@ public class UsermailBoxRepoImplTest {
     Mockito.verify(usermailBoxMapper).selectTopNByOwner(fromCaptor.capture(),statusCaptor.capture());
     assertThat(fromCaptor.getValue()).isEqualTo(from);
   }
+
+  @Test
+  public void removeDomainTest() {
+    String domain = "domain";
+    int pageSize = 100;
+    when(usermailBoxMapper.deleteDomain(domain, pageSize)).thenReturn(50);
+    usermailBoxRepoImpl.removeDomain(domain, pageSize);
+    verify(usermailBoxMapper.deleteDomain(domain, pageSize));
+  }
+
 }

@@ -60,7 +60,7 @@
     and ub.`blacked_address` = #{blackedAddress}
   </select>
 
-  <delete id="removeDomain">
+  <delete id="deleteDomain">
     delete from `usermail_blacklist` where `temail_address` like "%"#{domain} limit #{pageSize}
   </delete>
 

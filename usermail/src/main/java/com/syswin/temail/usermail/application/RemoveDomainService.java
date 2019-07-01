@@ -1,6 +1,5 @@
 package com.syswin.temail.usermail.application;
 
-import com.syswin.temail.usermail.core.exception.UserMailException;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
@@ -22,8 +21,7 @@ public class RemoveDomainService {
   private final UsermailBoxRepo usermailBoxRepo;
 
   public RemoveDomainService(UsermailRepo usermailRepo, UsermailMsgReplyRepo usermailMsgReplyRepo,
-      UsermailBlacklistRepo usermailBlacklistRepo,
-      UsermailBoxRepo usermailBoxRepo) {
+      UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo) {
     this.usermailRepo = usermailRepo;
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
     this.usermailBlacklistRepo = usermailBlacklistRepo;
@@ -36,17 +34,10 @@ public class RemoveDomainService {
    * @param domain 域
    */
   public void removeDomain(String domain) {
-    try {
       usermailRepo.removeDomain(domain, pageSize);
       usermailMsgReplyRepo.removeDomain(domain, pageSize);
       usermailBlacklistRepo.removeDomain(domain, pageSize);
       usermailBoxRepo.removeDomain(domain, pageSize);
-    } catch (InterruptedException e) {
-      log.error("RemoveDomainService.removeDomain() encounter exception, paran:[{}], ", domain, e);
-      Thread.currentThread().interrupt();
-      throw new UserMailException(e);
-    }
-
   }
 
 }

@@ -481,4 +481,11 @@ public class UsermailMapperTest {
     } while (!isUnique);
     return id;
   }
+
+  @Test
+  public void deleteDomainTest() {
+    String domain = "domain";
+    int pageSize = 100;
+    usermailMapper.deleteDomain(domain, pageSize);
+  }
 }

@@ -132,4 +132,13 @@ public class UsermailMsgReplyImplTest {
     assertThat(result).isEqualTo(count);
   }
 
+  @Test
+  public void removeDomainTest() {
+    String domain = "domain";
+    int pageSize = 100;
+    when(usermailMsgReplyMapper.deleteDomain(domain, pageSize)).thenReturn(50);
+    usermailMsgReplyRepoImpl.removeDomain(domain, pageSize);
+    verify(usermailMsgReplyMapper.deleteDomain(domain, pageSize));
+  }
+
 }

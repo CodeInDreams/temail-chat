@@ -26,18 +26,18 @@ package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class UsermailBoxRepoImpl implements UsermailBoxRepo {
 
-  private final UsermailBoxMapper usermailBoxMapper;
+  private final com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper;
 
   @Autowired
-  public UsermailBoxRepoImpl(UsermailBoxMapper usermailBoxMapper) {
+  public UsermailBoxRepoImpl(com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper) {
     this.usermailBoxMapper = usermailBoxMapper;
   }
 
@@ -118,12 +118,12 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
    * @param domain 域
    * @param pageSize 页面大小
    */
+  @Async
   @Override
-  public void removeDomain(String domain, int pageSize) throws InterruptedException {
+  public void removeDomain(String domain, int pageSize) {
     int count = 0;
     do {
-      count = usermailBoxMapper.removeDomain(domain, pageSize);
-      Thread.sleep(1000);
+      count = usermailBoxMapper.deleteDomain(domain, pageSize);
     } while (count != 0);
   }
 

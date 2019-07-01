@@ -208,7 +208,7 @@
     delete from `usermail` where `create_time` &lt; #{createTime} limit #{batchNum}
   </delete>
 
-  <delete id="removeDomain">
+  <delete id="deleteDomain">
     delete from `usermail` where `from` like "%"#{domain} limit #{pageSize}
   </delete>
 

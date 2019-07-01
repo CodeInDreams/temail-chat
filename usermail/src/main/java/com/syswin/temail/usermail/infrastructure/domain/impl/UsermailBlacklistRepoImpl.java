@@ -29,6 +29,7 @@ import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklistMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,13 +106,13 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
    * @param domain 域
    * @param pageSize 页面大小
    */
+  @Async
   @Transactional
   @Override
-  public void removeDomain(String domain, int pageSize) throws InterruptedException {
+  public void removeDomain(String domain, int pageSize) {
     int count = 0;
     do {
-      count = usermailBlacklistMapper.removeDomain(domain, pageSize);
-      Thread.sleep(1000);
+      count = usermailBlacklistMapper.deleteDomain(domain, pageSize);
     } while (count != 0);
   }
 
