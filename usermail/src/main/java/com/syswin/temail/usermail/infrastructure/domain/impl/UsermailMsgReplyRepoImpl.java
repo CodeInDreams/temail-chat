@@ -29,7 +29,7 @@ import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -184,7 +184,7 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    * @return 实际清除数量
    */
   @Override
-  public int deleteMsgReplyLessThan(Timestamp createTime, int batchNum) {
+  public int deleteMsgReplyLessThan(LocalDate createTime, int batchNum) {
     return usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum);
   }
 

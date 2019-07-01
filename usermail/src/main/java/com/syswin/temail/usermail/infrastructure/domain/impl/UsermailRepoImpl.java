@@ -32,7 +32,7 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -232,7 +232,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @return 实际清除数量
    */
   @Override
-  public int deleteMsgLessThan(Timestamp createTime, int batchNum) {
+  public int deleteMsgLessThan(LocalDate createTime, int batchNum) {
     return usermailMapper.deleteUseMsgLessThan(createTime, batchNum);
   }
 
@@ -244,12 +244,11 @@ public class UsermailRepoImpl implements UsermailRepo {
    */
   @Transactional
   @Override
-  public void removeDomain(String domain, int pageSize) throws InterruptedException {
+  public void removeDomain(String domain, int pageSize) {
 
     int count = 0;
     do {
       count = usermailMapper.removeDomain(domain, pageSize);
-      Thread.sleep(1000);
     } while (count != 0);
 
   }
