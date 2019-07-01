@@ -95,10 +95,9 @@ public interface UsermailBoxRepo {
    *
    * @param from  会话拥有者
    * @param archiveStatus 归档状态
-   * @param pageSize 拉取数量上限
    * @return 会话列表
    */
-  List<UsermailBoxDO> selectTopNByOwner(String from, int archiveStatus, int pageSize);
+  List<UsermailBoxDO> selectTopNByOwner(String from, int archiveStatus);
 
   /**
    * 更新会话中对方的头像和昵称信息

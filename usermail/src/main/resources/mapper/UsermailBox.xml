@@ -93,7 +93,6 @@
     <if test="archiveStatus != -1">
       and `archive_status` = #{archiveStatus}
     </if>
-    order by create_time desc limit #{pageSize}
   </select>
 
 

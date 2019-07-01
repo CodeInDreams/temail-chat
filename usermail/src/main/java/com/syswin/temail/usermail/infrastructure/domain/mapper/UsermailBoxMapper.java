@@ -100,11 +100,10 @@ public interface UsermailBoxMapper {
    *
    * @param owner  会话拥有者
    * @param archiveStatus 归档状态
-   * @param pageSize 拉取数量上限
    * @return 会话列表
    */
-  List<UsermailBoxDO> selectTopNByOwner(@Param("owner") String owner, @Param("archiveStatus") int archiveStatus,
-      @Param("pageSize") int pageSize);
+  List<UsermailBoxDO> selectTopNByOwner(@Param("owner") String owner, @Param("archiveStatus") int archiveStatus);
+
 
   /**
    * 更新会话昵称头像信息

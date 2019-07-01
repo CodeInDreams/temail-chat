@@ -303,8 +303,7 @@ public class UsermailService {
    * @return 倒序排序后的会话列表
    */
   public List<MailboxDTO> getMailBoxs(String from, int archiveStatus, int pageSize) {
-    pageSize = pageSize > 50 ? 50 : pageSize;
-    List<UsermailBoxDO> usermailBoxDOes = usermailBoxRepo.selectTopNByOwner(from, archiveStatus, pageSize);
+    List<UsermailBoxDO> usermailBoxDOes = usermailBoxRepo.selectTopNByOwner(from, archiveStatus);
     List<MailboxDTO> mailboxes = new ArrayList<>(usermailBoxDOes.size());
     List<UsermailDO> lastUsermail;
     for (UsermailBoxDO usermailBoxDO : usermailBoxDOes) {
@@ -319,7 +318,8 @@ public class UsermailService {
       mailboxes.add(mailBox);
     }
     Collections.sort(mailboxes, new MailboxComparator());
-    return mailboxes;
+    pageSize = pageSize > 50 ? 50 : pageSize;
+    return mailboxes.subList(0,pageSize);
   }
 
   /**
