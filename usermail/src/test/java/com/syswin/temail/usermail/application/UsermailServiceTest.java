@@ -56,6 +56,7 @@ import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
+import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
@@ -746,6 +747,26 @@ public class UsermailServiceTest {
     int archiveStatus = 2;
     usermailService.updateUsermailBoxArchiveStatus(headerInfo, from, to, archiveStatus);
     verify(usermailBoxRepo).updateArchiveStatus(from, to, archiveStatus);
+  }
+
+  @Test
+  public void updateSessionExtDataTest() {
+    String from = "from";
+    String to = "to";
+    String sessionExtData = "sessionExtData";
+    UpdateSessionExtDataDTO updateDto = new UpdateSessionExtDataDTO(from, to, sessionExtData);
+
+    usermailService.updateSessionExtData(headerInfo, updateDto);
+    ArgumentCaptor<UsermailBoxDO> captorBox = ArgumentCaptor.forClass(UsermailBoxDO.class);
+    Mockito.verify(usermailBoxRepo).updateSessionExtData(captorBox.capture());
+    UsermailBoxDO captorBoxValue = captorBox.getValue();
+    assertThat(captorBoxValue).isNotNull();
+    assertThat(captorBoxValue.getOwner()).isEqualTo(updateDto.getFrom());
+    assertThat(captorBoxValue.getMail2()).isEqualTo(updateDto.getTo());
+    assertThat(captorBoxValue.getSessionExtData()).isEqualTo(updateDto.getSessionExtData());
+    Mockito.verify(usermail2NotifyMqService)
+        .sendMqUpdateSessionExtData(headerInfo, from, to, sessionExtData, SessionEventType.EVENT_TYPE_56);
+
   }
 
 }

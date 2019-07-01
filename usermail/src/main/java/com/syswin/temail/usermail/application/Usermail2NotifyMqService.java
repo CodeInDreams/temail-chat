@@ -258,6 +258,24 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
   }
 
   /**
+   * 修改会话头像昵称同步通知消息
+   *
+   * @param headerInfo 头信息（header和xPacketId）
+   * @param from 会话中对方账号
+   * @param to 会话的自己账号
+   * @param sessionExtData 头像昵称信息
+   * @param eventType 事件类型
+   */
+  public void sendMqUpdateSessionExtData(CdtpHeaderDTO headerInfo, String from, String to, String sessionExtData,
+      int eventType) {
+    Map<String, Object> eventMap = new HashMap<>(16);
+    this.combineNormalParam(headerInfo, eventType, from, to, eventMap);
+    eventMap.put(SessionEventKey.OWNER, from);
+    eventMap.put(SessionEventKey.SESSION_EXT_DATA, sessionExtData);
+    mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
+  }
+
+  /**
    * 组装公共参数
    *
    * @param headerInfo 头信息（header和xPacketId）

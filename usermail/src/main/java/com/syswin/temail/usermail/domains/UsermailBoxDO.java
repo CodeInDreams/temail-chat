@@ -72,4 +72,10 @@ public class UsermailBoxDO implements java.io.Serializable {
     this.mail2 = mail2;
     this.owner = owner;
   }
+
+  public UsermailBoxDO(String owner, String mail2, String sessionExtData) {
+    this.owner = owner;
+    this.mail2 = mail2;
+    this.sessionExtData = sessionExtData;
+  }
 }

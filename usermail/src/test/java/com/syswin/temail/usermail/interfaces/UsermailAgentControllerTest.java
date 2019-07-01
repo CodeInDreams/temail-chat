@@ -50,6 +50,7 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailsDTO;
 import com.syswin.temail.usermail.dto.UmDeleteMailDTO;
 import com.syswin.temail.usermail.dto.UpdateArchiveDTO;
+import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
 import com.syswin.temail.usermail.dto.UsermailDTO;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -510,5 +511,23 @@ public class UsermailAgentControllerTest {
             .content(mapper.writeValueAsString(archiveDto)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
+  }
+
+  @Test
+  public void shouldUpdateSessionExtDataSuccess() throws Exception {
+    UpdateSessionExtDataDTO updateDto =
+        new UpdateSessionExtDataDTO("bob@temail.com", "alice@temail.com", "sessionExtData");
+
+    ObjectMapper mapper = new ObjectMapper();
+    mockMvc.perform(
+        put("/usermail/msg/sessionExtData")
+            .accept(MediaType.APPLICATION_JSON_UTF8)
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .content(mapper.writeValueAsString(updateDto)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200));
+
   }
 }

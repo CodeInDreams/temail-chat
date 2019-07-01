@@ -106,4 +106,10 @@ public class UsermailBoxMapperTest {
     assertThat(usermailBox.getOwner()).isEqualTo(box.getOwner());
     assertThat(usermailBox.getSessionid()).isEqualTo(usermailBox.getSessionid());
   }
+
+  @Test
+  public void updateSessionExtDataTest() {
+    UsermailBoxDO usermailBoxDO = new UsermailBoxDO("owner", "mail2", "sessionExtData");
+    boxMapper.updateSessionExtData(usermailBoxDO);
+  }
 }

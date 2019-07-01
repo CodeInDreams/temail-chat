@@ -89,4 +89,8 @@ public interface SessionEventType {
    * 跨域消息类型
    */
   int EVENT_TYPE_51 = 51;
+  /**
+   * 同步会话头像、昵称
+   */
+  int EVENT_TYPE_56 = 56;
 }

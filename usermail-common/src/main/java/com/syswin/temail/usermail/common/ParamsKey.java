@@ -43,6 +43,7 @@ public class ParamsKey {
     String TEMAIL = "temail";
     String MESSAGE = "message";
     String DELETE_ALL_MSG = "deleteAllMsg";
+    String SESSION_EXT_DATA = "sessionExtData";
     /**
      * 回复父消息id
      */

@@ -121,4 +121,11 @@ public class UsermailBoxRepoImplTest {
     assertThat(owerCap.getValue()).isEqualTo(owner);
     assertThat(toCap.getValue()).isEqualTo(to);
   }
+
+  @Test
+  public void updateSessionExtDataTest() {
+    UsermailBoxDO usermailBoxDO = new UsermailBoxDO("owner", "mail2", "sessionExtData");
+    usermailBoxRepoImpl.updateSessionExtData(usermailBoxDO);
+    Mockito.verify(usermailBoxMapper).updateSessionExtData(usermailBoxDO);
+  }
 }

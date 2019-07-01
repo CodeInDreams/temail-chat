@@ -105,4 +105,11 @@ public interface UsermailBoxMapper {
    */
   List<UsermailBoxDO> selectTopNByOwner(@Param("owner") String owner, @Param("archiveStatus") int archiveStatus,
       @Param("pageSize") int pageSize);
+
+  /**
+   * 更新会话昵称头像信息
+   *
+   * @param usermailBoxDO 更新参数
+   */
+  void updateSessionExtData(UsermailBoxDO usermailBoxDO);
 }

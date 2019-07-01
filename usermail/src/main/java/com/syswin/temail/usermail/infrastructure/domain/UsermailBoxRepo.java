@@ -99,4 +99,11 @@ public interface UsermailBoxRepo {
    * @return 会话列表
    */
   List<UsermailBoxDO> selectTopNByOwner(String from, int archiveStatus, int pageSize);
+
+  /**
+   * 更新会话中对方的头像和昵称信息
+   *
+   * @param usermailBoxDO 更新参数
+   */
+  void updateSessionExtData(UsermailBoxDO usermailBoxDO);
 }

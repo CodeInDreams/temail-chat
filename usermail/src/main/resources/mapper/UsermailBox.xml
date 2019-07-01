@@ -34,10 +34,11 @@
     <result column="owner" jdbcType="VARCHAR" property="owner"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     <result column="archive_status" jdbcType="INTEGER" property="archiveStatus"/>
+    <result column="session_ext_data" jdbcType="VARCHAR" property="sessionExtData"/>
   </resultMap>
 
   <sql id="selectColumn">
-    `id`,`sessionid`,`mail2`,`owner`,`create_time`,`archive_status`
+    `id`,`sessionid`,`mail2`,`owner`, `session_ext_data`, `create_time`,`archive_status`
   </sql>
 
   <insert id="saveUsermailBox" parameterType="UserMail" keyProperty="id">
@@ -95,6 +96,12 @@
     order by create_time desc limit #{pageSize}
   </select>
 
+
+  <update id="updateSessionExtData" parameterType="UsermailBox">
+    update `usermail_box`
+    set `session_ext_data` = #{sessionExtData}, `update_time` = CURRENT_TIMESTAMP()
+    where `owner` = #{owner} and `mail2` = #{mail2}
+  </update>
 
 </mapper>
 

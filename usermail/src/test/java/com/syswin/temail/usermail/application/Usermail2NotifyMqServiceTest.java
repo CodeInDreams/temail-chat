@@ -48,6 +48,7 @@ import static org.mockito.Mockito.verify;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.syswin.temail.usermail.common.ParamsKey.SessionEventKey;
 import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
@@ -70,7 +71,7 @@ public class Usermail2NotifyMqServiceTest {
       usermailConfig);
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
-  private Gson gson = new Gson();;
+  private Gson gson = new Gson();
 
   @Test
   public void sendMqMsgSaveMail() {
@@ -348,4 +349,30 @@ public class Usermail2NotifyMqServiceTest {
     assertEquals(gson.toJson(trashMailDtos), jsonObject.get(TRASH_MSG_INFO).getAsString());
     assertEquals(jsonObject.size(), 6);
   }
+
+  @Test
+  public void sendMqUpdateSessionExtDataTest() {
+    String from = "from";
+    String to = "to";
+    String sessionExtData = "sessionExtData";
+    int eventType = SessionEventType.EVENT_TYPE_56;
+
+    usermail2NotifyMqService.sendMqUpdateSessionExtData(headerInfo, from, to, sessionExtData, eventType);
+
+    ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic), eq(from), messageCaptor.capture());
+    String message = messageCaptor.getValue();
+    JsonParser parser = new JsonParser();
+    JsonObject jsonObject = parser.parse(message).getAsJsonObject();
+    assertEquals(headerInfo.getCdtpHeader(), jsonObject.get(CDTP_HEADER).getAsString());
+    assertEquals(headerInfo.getxPacketId(), jsonObject.get(X_PACKET_ID).getAsString());
+    assertThat(jsonObject.get(TIMESTAMP)).isNotNull();
+    assertEquals(eventType, jsonObject.get(SESSION_MESSAGE_TYPE).getAsInt());
+    assertEquals(from, jsonObject.get(SessionEventKey.FROM).getAsString());
+    assertEquals(to, jsonObject.get(SessionEventKey.TO).getAsString());
+    assertEquals(from, jsonObject.get(SessionEventKey.OWNER).getAsString());
+    assertEquals(sessionExtData, jsonObject.get(SessionEventKey.SESSION_EXT_DATA).getAsString());
+    assertEquals(jsonObject.size(), 8);
+  }
+
 }

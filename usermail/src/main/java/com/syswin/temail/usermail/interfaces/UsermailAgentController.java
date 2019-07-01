@@ -45,6 +45,7 @@ import com.syswin.temail.usermail.dto.MoveTrashMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailsDTO;
 import com.syswin.temail.usermail.dto.UmDeleteMailDTO;
 import com.syswin.temail.usermail.dto.UpdateArchiveDTO;
+import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
 import com.syswin.temail.usermail.dto.UsermailDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -419,6 +420,20 @@ public class UsermailAgentController {
       UpdateArchiveDTO dto) {
     CdtpHeaderDTO cdtpHeaderDto = getHeaderInfoFromRequest(request);
     usermailService.updateUsermailBoxArchiveStatus(cdtpHeaderDto, dto.getFrom(), dto.getTo(), dto.getArchiveStatus());
+    return new ResultDTO();
+  }
+
+  /**
+   * 修改会话中的头像、昵称
+   * @param request 头信息
+   * @param updateDto 更新的参数
+   * @return 返回ResultDTO对象。
+   */
+  @ApiOperation(value = "修改单聊会话中的昵称、头像信息（0x 2008）")
+  @PutMapping(value = "usermail/msg/sessionExtData")
+  public ResultDTO updateSessionExtData(HttpServletRequest request, @RequestBody @Valid UpdateSessionExtDataDTO updateDto) {
+    CdtpHeaderDTO cdtpHeaderDTO = this.getHeaderInfoFromRequest(request);
+    usermailService.updateSessionExtData(cdtpHeaderDTO, updateDto);
     return new ResultDTO();
   }
 

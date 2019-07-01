@@ -49,6 +49,7 @@ import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
+import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
@@ -588,4 +589,18 @@ public class UsermailService {
     }
   }
 
+  /**
+   * 修改会话中的头像昵称信息
+   *
+   * @param headerInfo 头信息
+   * @param updateDto 更新信息
+   */
+  @Transactional
+  public void updateSessionExtData(CdtpHeaderDTO headerInfo, UpdateSessionExtDataDTO updateDto) {
+    usermailBoxRepo
+        .updateSessionExtData(new UsermailBoxDO(updateDto.getFrom(), updateDto.getTo(), updateDto.getSessionExtData()));
+    usermail2NotifyMqService
+        .sendMqUpdateSessionExtData(headerInfo, updateDto.getFrom(), updateDto.getTo(), updateDto.getSessionExtData(),
+            SessionEventType.EVENT_TYPE_56);
+  }
 }
