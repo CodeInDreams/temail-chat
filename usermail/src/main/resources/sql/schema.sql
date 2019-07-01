@@ -33,6 +33,7 @@ CREATE TABLE `usermail_box` (
   `owner` varchar(128) NOT NULL DEFAULT '' COMMENT '会话拥有者',
   `archive_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '归档状态',
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `session_ext_data` varchar(128) DEFAULT '' COMMENT '成员信息扩展字段',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
