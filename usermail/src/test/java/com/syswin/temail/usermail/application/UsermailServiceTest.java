@@ -329,18 +329,20 @@ public class UsermailServiceTest {
   }
 
   @Test
-  public void mailboxes() {
+  public void mailboxesTest() {
     String from = "from@temail.com";
     int archiveStatus = TemailArchiveStatus.STATUS_NORMAL_0;
     String to_1 = "to_1";
     String localMsgid_1 = "msgid_1";
     String sessionid_1 = "sessionid_1";
+    String sessionExtData_1 = "sessionExtData_1";
     String to_2 = "to_2";
     String localMsgid_2 = "msgid_2";
     String sessionod_2 = "sessionod_2";
+    String sessionExtData_2 = "sessionExtData_1";
     Map<String, String> localMailBoxes = ImmutableMap.of(to_1, localMsgid_1, to_2, localMsgid_2);
-    UsermailBoxDO box_1 = new UsermailBoxDO(1L, sessionid_1, to_1, from);
-    UsermailBoxDO box_2 = new UsermailBoxDO(2L, sessionod_2, to_2, from);
+    UsermailBoxDO box_1 = new UsermailBoxDO(1L, sessionid_1, to_1, from, sessionExtData_1);
+    UsermailBoxDO box_2 = new UsermailBoxDO(2L, sessionod_2, to_2, from, sessionExtData_2);
     when(usermailBoxRepo.listUsermailBoxsByOwner(from, archiveStatus)).thenReturn(Arrays.asList(box_1, box_2));
     when(usermailAdapter.getLastMsgId(from, to_1)).thenReturn(localMsgid_1);
     when(usermailAdapter.getLastMsgId(from, to_2)).thenReturn("msgid_other");
@@ -352,6 +354,7 @@ public class UsermailServiceTest {
     assertNotNull(list);
     assertThat(list.size()).isOne();
     assertThat(list.get(0).getTo()).isEqualTo(to_2);
+    assertThat(list.get(0).getSessionExtData()).isEqualTo(sessionExtData_2);
     assertThat(list.get(0).getLastMsg()).isEqualToComparingFieldByField(lastUsermail_to_2);
   }
 

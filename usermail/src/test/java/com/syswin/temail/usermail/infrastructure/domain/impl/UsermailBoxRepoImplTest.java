@@ -64,13 +64,11 @@ public class UsermailBoxRepoImplTest {
   public void testListUsermailBoxsByOwner() {
     String mail1 = "mail1";
     int archiveStatus = 0;
-    ArgumentCaptor<String> mailCap = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<Integer> archiveStatusCap = ArgumentCaptor.forClass(Integer.class);
-    List<UsermailBoxDO> usermailBoxList = new ArrayList<UsermailBoxDO>();
-    usermailBoxRepoImpl.listUsermailBoxsByOwner(mail1,archiveStatus);
-    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwner(mailCap.capture(),archiveStatusCap.capture());
-    assertThat(mailCap.getValue()).isEqualTo(mail1);
-    assertThat(archiveStatusCap.getValue()).isEqualTo(archiveStatus);
+    List<UsermailBoxDO> usermailBoxList = new ArrayList<>();
+    Mockito.when(usermailBoxMapper.listUsermailBoxsByOwner(mail1, archiveStatus)).thenReturn(usermailBoxList);
+    List<UsermailBoxDO> result = usermailBoxRepoImpl.listUsermailBoxsByOwner(mail1, archiveStatus);
+    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwner(mail1, archiveStatus);
+    assertThat(result).isEqualTo(usermailBoxList);
   }
 
   @Test

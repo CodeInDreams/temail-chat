@@ -54,6 +54,8 @@ public class MailboxDTO implements java.io.Serializable {
   private UsermailDO lastMsg;
   @ApiModelProperty(value = "归档状态")
   private int archiveStatus;
+  @ApiModelProperty(value = "会话中对方的头像和昵称")
+  private String sessionExtData;
 
   public MailboxDTO(int sessionType, String to, String title, boolean onTop, UsermailDO lastMsg,
       Integer archiveStatus) {

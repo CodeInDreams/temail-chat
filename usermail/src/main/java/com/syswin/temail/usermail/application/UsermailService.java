@@ -287,6 +287,7 @@ public class UsermailService {
       }
       mailBox.setTo(dbBox.getMail2());
       mailBox.setArchiveStatus(dbBox.getArchiveStatus());
+      mailBox.setSessionExtData(dbBox.getSessionExtData());
       mailBoxes.add(mailBox);
     }
     return mailBoxes;
