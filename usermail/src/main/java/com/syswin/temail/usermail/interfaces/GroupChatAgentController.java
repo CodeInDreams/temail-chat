@@ -30,6 +30,8 @@ import com.syswin.temail.usermail.dto.GroupChatEventDTO;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,6 +57,7 @@ public class GroupChatAgentController {
   @PostMapping(value = "/groupchat/event")
   public ResultDTO syncGroupChatMemberEvent(
       @ApiParam(value = "群事件信息", required = true) @RequestBody @Valid GroupChatEventDTO groupChatEventDto) {
+    Assert.isTrue(!StringUtils.isEmpty(groupChatEventDto.getSessionExtData()), "sessionExtData不能为空");
     groupChatService.syncGroupChatMemberEvent(groupChatEventDto);
     return new ResultDTO();
   }

@@ -39,14 +39,15 @@ public class GroupChatServiceTest {
   private final GroupChatService groupChatService = new GroupChatService(usermailService, usermailMqService);
 
   @Test
-  public void saveGroupChatMailBoxInfo() {
+  public void saveGroupChatMailBoxInfoTest() {
     String from = "from@temail.com";
     String to = "to@temail.com";
+    String sessionExtData = "sessionExtData";
     GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom(from);
     groupChatEventDto.setTo(to);
+    groupChatEventDto.setSessionExtData(sessionExtData);
     groupChatService.syncGroupChatMemberEvent(groupChatEventDto);
-    String sessionExtData = "sessionExtData";
     verify(usermailService).saveUsermailBoxInfo(from, to, to, sessionExtData);
   }
 

@@ -56,8 +56,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ActiveProfiles("test")
 public class GroupChatAgentControllerTest {
 
-  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
-      "{xPacketId:value}");
+  private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}", "{xPacketId:value}");
 
   @Autowired
   private WebApplicationContext wac;
@@ -77,6 +76,7 @@ public class GroupChatAgentControllerTest {
     GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom("asd@t.email");
     groupChatEventDto.setTo("groupChat@t.email");
+    groupChatEventDto.setSessionExtData("sessionExtData");
     Mockito.doNothing().when(groupChatService).syncGroupChatMemberEvent(groupChatEventDto);
     ObjectMapper mapper = new ObjectMapper();
     mockMvc.perform(
