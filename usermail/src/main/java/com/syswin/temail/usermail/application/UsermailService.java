@@ -172,7 +172,7 @@ public class UsermailService {
     }
     usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, owner, msgId, usermail.getMsgData(), seqNo, eventType, attachmentSize,
-            author, filter);
+            author, filter, usermail.getSessionExtData());
     usermailAdapter.setLastMsgId(owner, other, msgId);
     Map<String, Object> result = new HashMap<>(2);
     final String msgIdKey = "msgId";

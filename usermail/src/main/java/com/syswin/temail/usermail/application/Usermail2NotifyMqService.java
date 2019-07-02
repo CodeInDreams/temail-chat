@@ -66,9 +66,11 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
    * @param attachmentSize 附件大小
    * @param author 消息作者
    * @param filter 能接收到此条消息的人（群聊消息的前提下，字段为空即发送给群聊中的所有成员）
+   * @param sessionExtData 会话中另一方的头像和昵称（首次发消息需要传入）
    */
   public void sendMqMsgSaveMail(CdtpHeaderDTO headerInfo, String from, String to, String owner, String msgId,
-      String toMsg, long seqNo, int eventType, int attachmentSize, String author, List<String> filter) {
+      String toMsg, long seqNo, int eventType, int attachmentSize, String author, List<String> filter,
+      String sessionExtData) {
     Map<String, Object> eventMap = new HashMap<>(18);
     combineNormalParam(headerInfo, eventType, from, to, eventMap);
     eventMap.put(OWNER, owner);
@@ -79,6 +81,7 @@ public class Usermail2NotifyMqService implements SessionEventType, SessionEventK
     eventMap.put(ATTACHMENT_SIZE, attachmentSize);
     eventMap.put(AUTHOR, author);
     eventMap.put(FILTER, filter);
+    eventMap.put(SessionEventKey.SESSION_EXT_DATA, sessionExtData);
     mqAdapter.sendMessage(usermailConfig.mqTopic, from, gs.toJson(eventMap));
   }
 

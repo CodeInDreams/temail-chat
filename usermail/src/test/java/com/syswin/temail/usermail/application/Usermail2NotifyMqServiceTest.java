@@ -84,7 +84,7 @@ public class Usermail2NotifyMqServiceTest {
     int eventType = SessionEventType.EVENT_TYPE_0;
 
     usermail2NotifyMqService
-        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, toMsg, seqNo, eventType, attachmentSize, from, null);
+        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, toMsg, seqNo, eventType, attachmentSize, from, null, null);
 
     ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(eq(usermailConfig.mqTopic), eq(from), messageCaptor.capture());
@@ -104,6 +104,7 @@ public class Usermail2NotifyMqServiceTest {
     assertEquals(attachmentSize, jsonObj.get(ATTACHMENT_SIZE).getAsInt());
     assertEquals(from, jsonObj.get(AUTHOR).getAsString());
     assertThat(jsonObj.get(FILTER)).isNull();
+    assertThat(jsonObj.get(SessionEventKey.SESSION_EXT_DATA)).isNull();
     assertEquals(jsonObj.size(), 12);
   }
 

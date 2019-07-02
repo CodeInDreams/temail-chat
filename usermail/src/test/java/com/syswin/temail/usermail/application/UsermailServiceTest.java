@@ -126,7 +126,7 @@ public class UsermailServiceTest {
     when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
 
     usermail2NotifyMqService
-        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
+        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null, null);
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
@@ -165,7 +165,7 @@ public class UsermailServiceTest {
     when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
 
     usermail2NotifyMqService
-        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
+        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null, null);
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
@@ -204,7 +204,7 @@ public class UsermailServiceTest {
     when(usermailAdapter.getMsgSeqNo(from, to, from)).thenReturn(1L);
 
     usermail2NotifyMqService
-        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null);
+        .sendMqMsgSaveMail(headerInfo, from, to, from, msgid, msgData, 1L, eventType, attachmentSize, from, null, null);
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
