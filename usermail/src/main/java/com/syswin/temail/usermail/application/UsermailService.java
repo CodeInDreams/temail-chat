@@ -314,6 +314,7 @@ public class UsermailService {
         mailBox.setLastMsg(lastUsermail.get(0));
       }
       mailBox.setTo(usermailBoxDO.getMail2());
+      mailBox.setSessionExtData(usermailBoxDO.getSessionExtData());
       mailBox.setArchiveStatus(usermailBoxDO.getArchiveStatus());
       mailboxes.add(mailBox);
     }
