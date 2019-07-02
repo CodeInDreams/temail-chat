@@ -16,13 +16,13 @@ import lombok.ToString;
 @NoArgsConstructor
 public class UpdateSessionExtDataDTO implements Serializable {
 
-  @NotEmpty
+  @NotEmpty(message = "from不能为空")
   @ApiModelProperty(value = "会话中自己的账号")
   private String from;
-  @NotEmpty
+  @NotEmpty(message = "to不能为空")
   @ApiModelProperty(value = "会话中对方的账号")
   private String to;
-  @NotEmpty
+  @NotEmpty(message = "sessionExtData不能为空")
   @ApiModelProperty(value = "会话中对方的头像、昵称信息")
   private String sessionExtData;
 
