@@ -452,7 +452,7 @@ public class UsermailAgentController {
       @ApiParam(value = "归档状态 0 正常 1 已归档 -1 全部（默认）") @RequestParam(value = "archiveStatus", defaultValue = "-1") int archiveStatus,
       @ApiParam(value = "拉取数量上限(最大不可超过50)") @RequestParam(value = "pageSize") int pageSize) {
     ResultDTO resultDTO = new ResultDTO();
-    List<MailboxDTO> mailBoxs = usermailService.getMailBoxs(from,archiveStatus,pageSize);
+    List<MailboxDTO> mailBoxs = usermailService.getMailBoxes(from,archiveStatus,pageSize);
     resultDTO.setData(mailBoxs);
     return resultDTO;
   }

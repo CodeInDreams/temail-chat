@@ -302,7 +302,7 @@ public class UsermailService {
    * @param pageSize 拉取数量上限
    * @return 倒序排序后的会话列表
    */
-  public List<MailboxDTO> getMailBoxs(String from, int archiveStatus, int pageSize) {
+  public List<MailboxDTO> getMailBoxes(String from, int archiveStatus, int pageSize) {
     List<UsermailBoxDO> usermailBoxDOes = usermailBoxRepo.selectTopNByOwner(from, archiveStatus);
     List<MailboxDTO> mailboxes = new ArrayList<>(usermailBoxDOes.size());
     List<UsermailDO> lastUsermail;

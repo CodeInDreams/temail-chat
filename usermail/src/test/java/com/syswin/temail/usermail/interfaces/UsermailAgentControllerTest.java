@@ -546,7 +546,7 @@ public class UsermailAgentControllerTest {
     List<MailboxDTO> mailboxDTOList = new ArrayList<>(2);
     mailboxDTOList.add(mailboxDTO1);
     mailboxDTOList.add(mailboxDTO2);
-    when(usermailService.getMailBoxs(from,0,20)).thenReturn(mailboxDTOList);
+    when(usermailService.getMailBoxes(from,0,20)).thenReturn(mailboxDTOList);
     MvcResult result = mockMvc.perform(
         get("/usermail/mailboxes/topN")
             .param("from", from)

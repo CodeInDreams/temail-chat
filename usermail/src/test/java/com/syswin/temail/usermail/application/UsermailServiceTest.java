@@ -785,4 +785,47 @@ public class UsermailServiceTest {
 
   }
 
+  @Test
+  public void getTopNMailBoxes() {
+    String from = "from@t.email";
+    int pageSize = 2;
+    List<UsermailBoxDO> usermailBoxDOes = Arrays.asList(new UsermailBoxDO(222l, "378784", "to1@t.email", from, ""),
+        new UsermailBoxDO(223l, "37338784", "to2@t.email", from, ""));
+    Mockito.when(usermailBoxRepo.selectTopNByOwner(from, 0)).thenReturn(usermailBoxDOes);
+    UmQueryDTO umQueryDTO1 = new UmQueryDTO("378784", from);
+    UmQueryDTO umQueryDTO2 = new UmQueryDTO("37338784", from);
+    List<UsermailDO> usermails1 = Arrays.asList(
+        new UsermailDO(24, "122", "378784", from, "to1@t.email", 0, 0,
+            from, "test message", 2),
+        new UsermailDO(23, "133", "378784", from, "to1@t.email", 0, 0,
+            from, "test message1", 1)
+    );
+    List<UsermailDO> usermails2 = Arrays.asList(
+        new UsermailDO(35, "1444", "37338784", from, "to2@t.email", 0, 0,
+            from, "test message", 4),
+        new UsermailDO(33, "1211", "37338784", from, "to2@t.email", 0, 0,
+            from, "test message1", 3)
+    );
+    usermails1.get(0).setCreateTime(new Timestamp(4444));
+    usermails2.get(0).setCreateTime(new Timestamp(44477));
+    Mockito.when(usermailRepo.listLastUsermails(umQueryDTO1)).thenReturn(usermails1);
+    Mockito.when(usermailRepo.listLastUsermails(umQueryDTO2)).thenReturn(usermails2);
+    Mockito.when(convertMsgService.convertMsg(usermails1)).thenReturn(usermails1);
+    Mockito.when(convertMsgService.convertMsg(usermails2)).thenReturn(usermails2);
+    MailboxDTO mailboxDTO1 = new MailboxDTO();
+    MailboxDTO mailboxDTO2 = new MailboxDTO();
+    List<MailboxDTO> mailboxDTOS = new ArrayList<>(2);
+    mailboxDTO1.setLastMsg(usermails1.get(0));
+    mailboxDTO1.setTo(usermailBoxDOes.get(0).getMail2());
+    mailboxDTO1.setArchiveStatus(0);
+    mailboxDTO2.setLastMsg(usermails2.get(0));
+    mailboxDTO2.setArchiveStatus(0);
+    mailboxDTO2.setTo(usermailBoxDOes.get(1).getMail2());
+    mailboxDTOS.add(mailboxDTO1);
+    mailboxDTOS.add(mailboxDTO2);
+    List<MailboxDTO> mailBoxes = usermailService.getMailBoxes(from, 0, pageSize);
+    assertEquals(mailBoxes.size(),2);
+    assertEquals("to2@t.email",mailBoxes.get(0).getTo());
+
+  }
 }
