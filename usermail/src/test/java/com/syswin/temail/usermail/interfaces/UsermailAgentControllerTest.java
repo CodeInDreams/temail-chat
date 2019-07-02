@@ -25,6 +25,7 @@
 package com.syswin.temail.usermail.interfaces;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -529,5 +530,33 @@ public class UsermailAgentControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
 
+  }
+
+  @Test
+  public void shouldGetTopNMailBoxes() throws Exception{
+    String from = "bob@temail.com";
+    List<UsermailDO> usermails = Arrays.asList(
+        new UsermailDO(13, "12321314111", "43242314", from, "alice1@temail.com", 0, 0,
+            "bob@temail.com", "test message", 10),
+        new UsermailDO(23, "12321314121", "432412234", from, "alice2@temail.com", 0, 0,
+            "bob@temail.com", "test message1", 10)
+    );
+    MailboxDTO mailboxDTO1 = new MailboxDTO(1,"alice1@temail.email","title1",false,usermails.get(0),0);
+    MailboxDTO mailboxDTO2 = new MailboxDTO(1,"alice2@temail.email","title2",false,usermails.get(1),0);
+    List<MailboxDTO> mailboxDTOList = new ArrayList<>(2);
+    mailboxDTOList.add(mailboxDTO1);
+    mailboxDTOList.add(mailboxDTO2);
+    when(usermailService.getMailBoxs(from,0,20)).thenReturn(mailboxDTOList);
+    MvcResult result = mockMvc.perform(
+        get("/usermail/mailboxes/topN")
+            .param("from", from)
+            .param("archiveStatus", "0")
+            .param("pageSize", "20")
+            .accept(MediaType.APPLICATION_JSON_UTF8)).andReturn();
+    ObjectMapper mapper = new ObjectMapper();
+    ResultDTO resultDTO = new ResultDTO();
+    resultDTO.setData(mailboxDTOList);
+    String except = mapper.writeValueAsString(resultDTO);
+    assertThat(result.getResponse().getContentAsString()).isEqualTo(except);
   }
 }

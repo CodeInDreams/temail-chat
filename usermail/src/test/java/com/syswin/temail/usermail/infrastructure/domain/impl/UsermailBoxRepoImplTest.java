@@ -128,4 +128,15 @@ public class UsermailBoxRepoImplTest {
     usermailBoxRepoImpl.updateSessionExtData(usermailBoxDO);
     Mockito.verify(usermailBoxMapper).updateSessionExtData(usermailBoxDO);
   }
+
+
+  @Test
+  public void testGetTopNMailboxes(){
+    String from = "from@t.email";
+    usermailBoxRepoImpl.selectTopNByOwner(from,0);
+    ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
+    ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
+    Mockito.verify(usermailBoxMapper).selectTopNByOwner(fromCaptor.capture(),statusCaptor.capture());
+    assertThat(fromCaptor.getValue()).isEqualTo(from);
+  }
 }

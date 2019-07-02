@@ -112,4 +112,17 @@ public class UsermailBoxMapperTest {
     UsermailBoxDO usermailBoxDO = new UsermailBoxDO("owner", "mail2", "sessionExtData");
     boxMapper.updateSessionExtData(usermailBoxDO);
   }
+
+  @Test
+  public void testGetTopNMailboxes() {
+    String from = "from@t.email";
+    UsermailBoxDO usermailBoxDO1 = new UsermailBoxDO(100L, "483578", "to@t.email", from);
+    UsermailBoxDO usermailBoxDO2 = new UsermailBoxDO(102L, "4835378", "to2@t.email", from);
+    boxMapper.saveUsermailBox(usermailBoxDO1);
+    boxMapper.saveUsermailBox(usermailBoxDO2);
+    List<UsermailBoxDO> usermailBoxDOS = boxMapper.selectTopNByOwner(from, 0);
+    assertThat(usermailBoxDOS.get(0).getMail2()).isEqualTo(usermailBoxDO1.getMail2());
+    assertThat(usermailBoxDOS.get(0).getSessionid()).isEqualTo(usermailBoxDO1.getSessionid());
+    assertThat(usermailBoxDOS.size()).isEqualTo(2);
+  }
 }
