@@ -72,7 +72,7 @@ public class GroupChatAgentControllerTest {
   }
 
   @Test
-  public void createGroupChatMailBox() throws Exception {
+  public void createGroupChatMailBoxSuccessTest() throws Exception {
     GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom("asd@t.email");
     groupChatEventDto.setTo("groupChat@t.email");
@@ -89,6 +89,26 @@ public class GroupChatAgentControllerTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value(200));
   }
+
+  @Test
+  public void createGroupChatMailBoxFailIfParamIllegalTest() throws Exception {
+    GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
+    groupChatEventDto.setFrom("asd@t.email");
+    groupChatEventDto.setTo("groupChat@t.email");
+    groupChatEventDto.setSessionExtData("");
+    Mockito.doNothing().when(groupChatService).syncGroupChatMemberEvent(groupChatEventDto);
+    ObjectMapper mapper = new ObjectMapper();
+    mockMvc.perform(
+        post("/groupchat/event")
+            .contentType(MediaType.APPLICATION_JSON_UTF8)
+            .accept(MediaType.APPLICATION_JSON_UTF8)
+            .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
+            .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
+            .content(mapper.writeValueAsString(groupChatEventDto)))
+        .andExpect(status().is(500))
+        .andExpect(jsonPath("$.message").value("出现异常,异常信息为:sessionExtData不能为空"));
+  }
+
 
   @Test
   public void deleteGroupChatMailBox() throws Exception {
