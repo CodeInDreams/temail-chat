@@ -46,8 +46,8 @@ public class UsermailConfiguration {
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
   MqClient usermailMqClient(UsermailConfig config, UsermailMQConsumer usermailMqConsumer) {
-    return new MqClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer,
-        config.namesrvAddr, usermailMqConsumer, MqClient.RocketMQModel.CLUSTERING);
+    return new MqClient(config.mqUserMailAgentTopic, "*", config.mqTrashConsumer, config.namesrvAddr,
+        usermailMqConsumer, MqClient.RocketMQModel.CLUSTERING);
   }
 
   @Bean

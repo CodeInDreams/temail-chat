@@ -51,11 +51,11 @@ public interface UsermailBoxMapper {
   /**
    * 删除指定会话
    *
-   * @param from 发件人
-   * @param to 收件人
+   * @param owner 发件人
+   * @param mail2 收件人
    * @return 删除的数量
    */
-  int deleteByOwnerAndMail2(@Param("owner") String from, @Param("mail2") String to);
+  int deleteByOwnerAndMail2(@Param("owner") String owner, @Param("mail2") String mail2);
 
   /**
    * 根据会话拥有者和另一位聊天者查询会话列表

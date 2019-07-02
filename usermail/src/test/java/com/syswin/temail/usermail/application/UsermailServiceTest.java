@@ -45,6 +45,7 @@ import com.syswin.temail.usermail.common.ParamsKey;
 import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
+import com.syswin.temail.usermail.core.dto.Meta;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
@@ -120,6 +121,7 @@ public class UsermailServiceTest {
     int eventType = SessionEventType.EVENT_TYPE_0;
     CreateUsermailDTO createUsermailDto = new CreateUsermailDTO(msgid, from, to, type, storeType,
         msgData, attachmentSize);
+    createUsermailDto.setFilter(Arrays.asList("test1", "test2"));
 
     when(usermailAdapter.getPkID()).thenReturn(1L);
     when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
@@ -198,6 +200,7 @@ public class UsermailServiceTest {
     int eventType = SessionEventType.EVENT_TYPE_0;
     CreateUsermailDTO createUsermailDto = new CreateUsermailDTO(msgid, from, to, type, storeType,
         msgData, attachmentSize);
+    createUsermailDto.setMeta(new Meta("at", "topic", "extraData"));
 
     when(usermailAdapter.getPkID()).thenReturn(1L);
     when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
@@ -538,6 +541,19 @@ public class UsermailServiceTest {
     verify(usermailAdapter).deleteLastMsgId(fromCaptor3.capture(), toCaptor3.capture());
     assertEquals(from, fromCaptor3.getValue());
     assertEquals(to, toCaptor3.getValue());
+  }
+
+  @Test
+  public void deleteGroupChatSessionTest() {
+    String groupTemail = "groupTemail";
+    String owner = "owner";
+    String sessionid = "sessionid-groupTemail-owner";
+    when(usermailSessionService.getSessionID(groupTemail, owner)).thenReturn(sessionid);
+
+    boolean result = usermailService.deleteGroupChatSession(groupTemail, owner);
+
+    verify(usermailBoxRepo).deleteByOwnerAndMail2(owner, groupTemail);
+    verify(usermailRepo).deleteBySessionIdAndOwner(sessionid, owner);
   }
 
 

@@ -66,13 +66,13 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
   /**
    * 删除指定会话
    *
-   * @param from 发件人
-   * @param to 收件人
+   * @param owner 发件人
+   * @param mail2 收件人
    * @return 删除的数量
    */
   @Override
-  public int deleteByOwnerAndMail2(String from, String to) {
-    return usermailBoxMapper.deleteByOwnerAndMail2(from, to);
+  public int deleteByOwnerAndMail2(String owner, String mail2) {
+    return usermailBoxMapper.deleteByOwnerAndMail2(owner, mail2);
   }
 
   /**
