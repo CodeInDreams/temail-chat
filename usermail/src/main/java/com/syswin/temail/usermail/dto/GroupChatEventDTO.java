@@ -28,6 +28,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -47,6 +48,10 @@ public class GroupChatEventDTO {
   @NotBlank(message = "to不能为空")
   @ApiModelProperty(value = "群成员")
   private String to;
+
+  @NotEmpty(message = "sessionExtData不能为空")
+  @ApiModelProperty(value = "群会话头像昵称")
+  private String sessionExtData;
 
   @Override
   public boolean equals(Object o) {

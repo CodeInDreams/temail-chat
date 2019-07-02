@@ -44,14 +44,13 @@ public class GroupChatService {
   /**
    * 群聊入群事件，新建会话
    *
-   * @param dto 入群事件参数(from:群 to:群成员)
+   * @param dto 入群事件参数(from:群 to:群成员 sessionExtData:会话头像昵称)
    */
   @Transactional
   public void syncGroupChatMemberEvent(GroupChatEventDTO dto) {
     String groupTemail = dto.getFrom();
     String temail = dto.getTo();
-    // todo 群聊入群事件增加 sessionExtData字段
-    usermailService.saveUsermailBoxInfo(groupTemail, temail, temail, "sessionExtData");
+    usermailService.saveUsermailBoxInfo(groupTemail, temail, temail, dto.getSessionExtData());
   }
 
 
