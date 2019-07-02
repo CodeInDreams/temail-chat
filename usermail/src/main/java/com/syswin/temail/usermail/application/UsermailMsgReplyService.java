@@ -122,7 +122,7 @@ public class UsermailMsgReplyService {
   }
 
   /**
-   * 撤回单聊回复消息
+   * 撤回单聊回复消息(内部consumer处理方法)
    *
    * @param xPacketId 头信息中的xPacketId
    * @param cdtpHeader 头信息中的header
@@ -148,7 +148,7 @@ public class UsermailMsgReplyService {
     }
     UsermailDO usermail = usermailRepo.selectByMsgidAndOwner(replyMsgParentId, owner);
     if (usermail != null) {
-      updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
+      this.updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
           .sendMqAfterUpdateMsgReply(xPacketId, cdtpHeader, from, to, owner, msgId, SessionEventType.EVENT_TYPE_19,
               replyMsgParentId);
@@ -169,7 +169,7 @@ public class UsermailMsgReplyService {
   @Transactional
   public void revertMsgReply(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, String msgId, String from,
       String to) {
-    msgReplyTypeValidate(parentMsgReplyId);
+    this.msgReplyTypeValidate(parentMsgReplyId);
     usermailMqService.sendMqRevertReplyMsg(cdtpHeaderDto.getxPacketId(), cdtpHeaderDto.getCdtpHeader(), from, to, to,
         parentMsgReplyId, msgId);
     usermailMqService
@@ -345,6 +345,12 @@ public class UsermailMsgReplyService {
     return usermailByMsgid;
   }
 
+  /**
+   * 更新最新回复消息
+   * @param usermail 源消息
+   * @param parentMsgId 源消息ID
+   * @param msgId 最新消息ID
+   */
   private void updateUsermailLastReplyId(UsermailDO usermail, String parentMsgId, String msgId) {
     String lastReplyMsgId = usermail.getLastReplyMsgId();
     // 如果撤回或者阅后即焚的消息是最新的回复消息需要将最新回复消息回滚到上一条

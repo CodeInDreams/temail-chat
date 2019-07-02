@@ -24,11 +24,13 @@
 
 package com.syswin.temail.usermail.application;
 
+import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET_ID_SUFFIX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,6 +38,7 @@ import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
 import com.syswin.temail.usermail.common.ReplyCountEnum;
 import com.syswin.temail.usermail.common.ResultCodeEnum;
+import com.syswin.temail.usermail.common.SessionEventType;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
@@ -135,63 +138,115 @@ public class UsermailMsgReplyServiceTest {
   }
 
   @Test
-  public void testMqRevertMsgReply() {
+  public void revertMsgReplySuccessWhenRevertNotOnlyAndNotLast() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String to = "to@temail.com";
     String from = "from@temail.com";
-    String owner = to;
+    String owner = from;
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    int type = 1;
-    List<UsermailDO> usermails = new ArrayList<>(1);
-    usermails.add(new UsermailDO());
-    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
+    String lastReplyMsgid = "lastReplyMsgid";
+
+    // precondition
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
-    when(usermailRepo.selectByMsgidAndOwner(anyString(), anyString())).thenReturn(new UsermailDO());
-    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
-    usermail2NotifyMqService.sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid, type, parentMsgid);
-    ArgumentCaptor<UsermailMsgReplyDO> msgReplyCaptor = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
-    ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> parentMsgIdCaptor = ArgumentCaptor.forClass(String.class);
-    Mockito.verify(usermailMsgReplyRepo).updateRevertUsermailReply(msgReplyCaptor.capture());
-    Mockito.verify(usermailRepo).selectByMsgidAndOwner(parentMsgIdCaptor.capture(), ownerCaptor.capture());
-    UsermailMsgReplyDO msgReply = msgReplyCaptor.getValue();
-    Assert.assertEquals(TemailStatus.STATUS_REVERT_1, msgReply.getStatus());
-    Assert.assertEquals(parentMsgid, parentMsgIdCaptor.getValue());
-    Assert.assertEquals(from, ownerCaptor.getValue());
+    UsermailDO dbParentMsg = new UsermailDO();
+    dbParentMsg.setMsgid(parentMsgid);
+    dbParentMsg.setLastReplyMsgId(lastReplyMsgid);
+    dbParentMsg.setOwner(owner);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
+
+    // invoke method
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
+
+    //verify
+    verify(usermailRepo).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), lastReplyMsgid);
+    verify(usermail2NotifyMqService).sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid,  SessionEventType.EVENT_TYPE_19, parentMsgid);
   }
 
   @Test
-  public void testRevertMsgReplyParentMsgNull() {
+  public void revertMsgReplyFailParentMsgNullTest() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String to = "to@temail.com";
     String from = "from@temail.com";
+    String owner = from;
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     when(usermailRepo.selectByMsgidAndOwner(anyString(), anyString())).thenReturn(null);
-    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
+
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
+    verify(usermailRepo, never()).updateReplyCountAndLastReplyMsgid(anyString(), anyString(), anyInt(), anyString());
   }
 
   @Test
-  public void testRevertMsgReplyFail() {
+  public void revertMsgReplyFailIfMsgNotExistTest() {
     String xPacketId = UUID.randomUUID().toString();
     String header = "CDTP-header";
     String to = "to@temail.com";
     String from = "from@temail.com";
+    String owner = from;
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    List<UsermailDO> usermails = new ArrayList<>(1);
-    usermails.add(new UsermailDO());
-    when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(usermails);
     when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(0);
-    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, from, parentMsgid, msgid);
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
+    verify(usermailRepo, never()).selectByMsgidAndOwner(parentMsgid, owner);
   }
+
+  @Test
+  public void revertMsgReplySuccessWhenRevertLastTest() {
+    String xPacketId = UUID.randomUUID().toString();
+    String header = "CDTP-header";
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    String owner = from;
+    String msgid = "msgid";
+    String parentMsgid = "string201810241832";
+    String actualLastMsgid = "actualLastMsgid";
+    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    UsermailDO dbParentMsg = new UsermailDO();
+    dbParentMsg.setMsgid(parentMsgid);
+    // 假设最新回复消息为本次撤回的消息
+    dbParentMsg.setLastReplyMsgId(msgid);
+    dbParentMsg.setOwner(owner);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
+    UsermailMsgReplyDO replyDO = new UsermailMsgReplyDO();
+    replyDO.setParentMsgid(parentMsgid);
+    replyDO.setMsgid(actualLastMsgid);
+    when(usermailMsgReplyRepo.selectLastUsermailReply(parentMsgid, owner, TemailStatus.STATUS_NORMAL_0)).thenReturn(
+        replyDO);
+
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
+    // 验证撤回的消息为已有最新消息之后，设置的最新消息将回滚到上一条正常消息
+    verify(usermailRepo).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), actualLastMsgid);
+  }
+
+  @Test
+  public void revertMsgReplySuccessWhenRevertOnlyTest() {
+    String xPacketId = UUID.randomUUID().toString();
+    String header = "CDTP-header";
+    String to = "to@temail.com";
+    String from = "from@temail.com";
+    String owner = from;
+    String msgid = "msgid";
+    String parentMsgid = "string201810241832";
+    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    UsermailDO dbParentMsg = new UsermailDO();
+    dbParentMsg.setMsgid(parentMsgid);
+    // 假设最新回复消息为本次撤回的消息
+    dbParentMsg.setLastReplyMsgId(msgid);
+    dbParentMsg.setOwner(owner);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
+    when(usermailMsgReplyRepo.selectLastUsermailReply(parentMsgid, owner, TemailStatus.STATUS_NORMAL_0)).thenReturn(null);
+
+    usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
+    // 验证撤回的消息为唯一一条消息之后，设置最新消息ID为空字符串
+    verify(usermailRepo).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), "");
+  }
+
 
   @Test
   public void revertMsgReplyTest() {
@@ -201,6 +256,8 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     when(usermailRepo.listUsermailsByMsgid(parentMsgid)).thenReturn(Arrays.asList(new UsermailDO()));
     usermailMsgReplyService.revertMsgReply(headerInfo, parentMsgid, msgid, from, to);
+    verify(usermailMqService)
+        .sendMqRevertReplyMsg(headerInfo.getxPacketId() + PACKET_ID_SUFFIX, headerInfo.getCdtpHeader(), from, to, from, parentMsgid, msgid);
     verify(usermailMqService)
         .sendMqRevertReplyMsg(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, parentMsgid, msgid);
   }
@@ -231,7 +288,7 @@ public class UsermailMsgReplyServiceTest {
   public void testRemoveMsgReplyEmptyMsgids() {
     String to = "to@temail.com";
     String from = "from@temail.com";
-    List<String> msgIds = new ArrayList<>(1);
+    List<String> msgIds = new ArrayList<>(0);
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
