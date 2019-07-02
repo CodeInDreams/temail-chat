@@ -189,10 +189,10 @@ public class UsermailMsgReplyService {
   @Transactional
   public void removeMsgReplys(CdtpHeaderDTO cdtpHeaderDto, String parentMsgReplyId, List<String> msgIds, String from,
       String to) {
-    UsermailDO usermail = msgReplyTypeValidate(parentMsgReplyId, from);
     if (CollectionUtils.isEmpty(msgIds)) {
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_REQUEST_PARAM);
     }
+    UsermailDO usermail = this.msgReplyTypeValidate(parentMsgReplyId, from);
     LOGGER.info("Label-delete-usermail-reply: delete reply messages，from = {},to = {},msgIds = {}", from, to, msgIds);
     int count = usermailMsgReplyRepo.deleteMsgReplysByMsgIds(from, msgIds);
     String lastReplyMsgId = usermail.getLastReplyMsgId();
