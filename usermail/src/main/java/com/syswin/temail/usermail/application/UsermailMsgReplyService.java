@@ -98,11 +98,9 @@ public class UsermailMsgReplyService {
    */
   @Transactional
   public Map<String, Object> createMsgReply(CdtpHeaderDTO cdtpHeaderDto, String from, String to, String message,
-      String msgId,
-      String parentMsgId, int type, int attachmentSize, String owner) {
+      String msgId, String parentMsgId, int type, int attachmentSize, String owner) {
+    this.msgReplyTypeValidate(parentMsgId, owner);
     String sessionid = usermailSessionService.getSessionID(from, to);
-    msgReplyTypeValidate(parentMsgId, owner);
-    Map<String, Object> result = new HashMap<>(4);
     long msgReplySeqNo = usermailAdapter.getMsgReplySeqNo(parentMsgId, owner);
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO(usermailAdapter.getMsgReplyPkID(), parentMsgId, msgId,
         from, to, msgReplySeqNo, "", TemailStatus.STATUS_NORMAL_0, type, owner, sessionid,
@@ -110,12 +108,12 @@ public class UsermailMsgReplyService {
     usermailMsgReplyRepo.insert(usermailMsgReply);
 
     // 更新最新回复消息id
-    String lastReplyMsgid = usermailMsgReply.getMsgid();
-    usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), lastReplyMsgid);
-    LOGGER.debug("new rely created, update msgId={} lastReplyMsgid={}", parentMsgId, lastReplyMsgid);
+    usermailRepo.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), msgId);
+    LOGGER.debug("new rely created, update msgId={} lastReplyMsgid={}", parentMsgId, msgId);
     usermail2NotifyMqService
         .sendMqSaveMsgReply(cdtpHeaderDto, from, to, owner, msgId, message, msgReplySeqNo, attachmentSize,
             parentMsgId);
+    Map<String, Object> result = new HashMap<>(4);
     final String msgIdKey = "msgId";
     final String seqIdKey = "seqId";
     result.put(msgIdKey, msgId);
@@ -336,7 +334,7 @@ public class UsermailMsgReplyService {
    * @param owner 消息所属人
    * @return 单聊对象信息
    */
-  public UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
+  private UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
 
     UsermailDO usermailByMsgid = usermailRepo.selectByMsgidAndOwner(parentMsgId, owner);
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0

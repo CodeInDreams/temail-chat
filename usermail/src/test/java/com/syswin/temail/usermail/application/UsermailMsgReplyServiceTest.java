@@ -24,6 +24,7 @@
 
 package com.syswin.temail.usermail.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -33,6 +34,8 @@ import static org.mockito.Mockito.when;
 
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
+import com.syswin.temail.usermail.common.ReplyCountEnum;
+import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.dto.CdtpHeaderDTO;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
@@ -68,51 +71,67 @@ public class UsermailMsgReplyServiceTest {
       usermailAdapter, usermailMsgReplyRepo, usermail2NotifyMqService, usermailSessionService, msgCompressor,
       usermailMqService, convertMsgService);
 
-  @Test
-  public void sendUsermailMsgReply() {
-    String to = "to@temail.com";
+
+  @Test(expected = IllegalGmArgsException.class)
+  public void createMsgReplyFailIfParentMsgidIllegalTest() {
     String from = "from@temail.com";
+    String to = "to@temail.com";
     String message = Base64.getEncoder().encodeToString("Demo message.".getBytes());
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
     String owner = to;
-    int type = 1;
+    int type = TemailType.TYPE_NORMAL_0;
     int attachmentSize = 10;
-    int storeType = 1;
 
-    when(usermailAdapter.getMsgReplyPkID()).thenReturn(1L);
-    when(usermailAdapter.getMsgReplySeqNo(parentMsgid, "")).thenReturn(1L);
-    UsermailDO usermail = new UsermailDO();
-    usermail.setMsgid(parentMsgid);
-    usermail.setStatus(TemailStatus.STATUS_NORMAL_0);
-    usermail.setZipMsg(msgCompressor.zipWithDecode(message));
-    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, to)).thenReturn(usermail);
-    when(usermailAdapter.getMsgSeqNo(from, to, to)).thenReturn(2L);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(null);
 
+    try {
+      usermailMsgReplyService
+          .createMsgReply(headerInfo, from, to, message, msgid, parentMsgid, type, attachmentSize, owner);
+    } catch (IllegalGmArgsException e) {
+      assertEquals(e.getResultCode(), ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);
+      throw e;
+    }
+  }
+
+  @Test
+  public void createMsgReplySuccessTest() {
+    String from = "from@temail.com";
+    String to = "to@temail.com";
+    String message = Base64.getEncoder().encodeToString("Demo message.".getBytes());
+    String msgid = "msgid";
+    String parentMsgid = "string201810241832";
+    String owner = to;
+    int type = TemailType.TYPE_NORMAL_0;
+    int attachmentSize = 10;
+    String sessionid = "sessionid-from@temail.com-to@temail.co";
+    long seqNo = 1650L;
+
+    // precondition
+    UsermailDO parentMail = new UsermailDO();
+    parentMail.setMsgid(parentMsgid);
+    parentMail.setOwner(owner);
+    parentMail.setStatus(TemailStatus.STATUS_NORMAL_0);
+    when(usermailRepo.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(parentMail);
+    when(usermailSessionService.getSessionID(from, to)).thenReturn(sessionid);
+    when(usermailAdapter.getMsgReplySeqNo(parentMsgid, owner)).thenReturn(seqNo);
+
+    // invoke method
     usermailMsgReplyService
-        .createMsgReply(headerInfo, from, to, message, msgid, parentMsgid, type, attachmentSize, to);
-    usermail2NotifyMqService.sendMqSaveMsgReply(headerInfo, from, to, owner, msgid, message,
-        usermailAdapter.getMsgReplySeqNo(parentMsgid, ""), attachmentSize, parentMsgid);
-    ArgumentCaptor<UsermailMsgReplyDO> argumentCaptor2 = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
-    verify(usermailMsgReplyRepo).insert(argumentCaptor2.capture());
-    UsermailMsgReplyDO msgReply = argumentCaptor2.getValue();
-    assertEquals(from, msgReply.getFrom());
-    assertEquals(to, msgReply.getTo());
-    assertEquals(msgid, msgReply.getMsgid());
-    assertEquals(message, msgCompressor.unzipEncode(msgReply.getZipMsg()));
-    assertEquals(type, msgReply.getType());
+        .createMsgReply(headerInfo, from, to, message, msgid, parentMsgid, type, attachmentSize, owner);
 
-    ArgumentCaptor<String> parentMsgIdCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<Integer> replyCountCaptor = ArgumentCaptor.forClass(Integer.class);
-    ArgumentCaptor<String> lastReplyMsgidCaptor = ArgumentCaptor.forClass(String.class);
+    // verify
+    ArgumentCaptor<UsermailMsgReplyDO> msgReplyCaptor = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
+    verify(usermailMsgReplyRepo).insert(msgReplyCaptor.capture());
+    UsermailMsgReplyDO msgReplyCaptorValue = msgReplyCaptor.getValue();
+    UsermailMsgReplyDO expectMsgReplyDo = new UsermailMsgReplyDO(usermailAdapter.getMsgReplyPkID(), parentMsgid,
+        msgid, from, to, seqNo, "", TemailStatus.STATUS_NORMAL_0, type, owner, sessionid,
+        msgCompressor.zipWithDecode(message));
+    assertThat(msgReplyCaptorValue).isEqualToComparingOnlyGivenFields(expectMsgReplyDo);
+    verify(usermailRepo).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.INCR.value(), msgid);
+    verify(usermail2NotifyMqService)
+        .sendMqSaveMsgReply(headerInfo, from, to, owner, msgid, message, seqNo, attachmentSize, parentMsgid);
 
-    Mockito.verify(usermailRepo).updateReplyCountAndLastReplyMsgid(parentMsgIdCaptor.capture(),
-        ownerCaptor.capture(), replyCountCaptor.capture(), lastReplyMsgidCaptor.capture());
-    Assert.assertEquals(parentMsgIdCaptor.getValue(), parentMsgid);
-    Assert.assertEquals(ownerCaptor.getValue(), owner);
-    Assert.assertEquals(1, replyCountCaptor.getValue().intValue());
-//    Assert.assertEquals(seqNoCaptor.getValue().longValue(), 2L);
   }
 
   @Test
