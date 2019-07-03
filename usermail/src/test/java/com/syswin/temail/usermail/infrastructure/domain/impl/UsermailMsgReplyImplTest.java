@@ -25,9 +25,7 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
@@ -131,10 +129,9 @@ public class UsermailMsgReplyImplTest {
   public void removeDomainTest() {
     String domain = "domain";
     int pageSize = 100;
-    when(usermailMsgReplyMapper.deleteDomain("%@" + domain, pageSize)).thenReturn(50);
 
     usermailMsgReplyRepoImpl.removeDomain(domain, pageSize);
-    verify(usermailMsgReplyMapper, times(2)).deleteDomain(domain, pageSize);
+    verify(usermailMsgReplyMapper).deleteDomain("%@" + domain, pageSize);
   }
 
 }

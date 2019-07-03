@@ -25,7 +25,6 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -99,9 +98,9 @@ public class UsermailBlacklistRepoImplTest {
   public void removeDomainTest() {
     String domain = "domain";
     int pageSize = 100;
-    when(usermailBlacklistMapper.deleteDomain("%@" + domain, pageSize)).thenReturn(50);
+
     usermailBlacklistRepoImpl.removeDomain(domain, pageSize);
-    verify(usermailBlacklistMapper, times(2)).deleteDomain(domain, pageSize);
+    verify(usermailBlacklistMapper).deleteDomain("%@" + domain, pageSize);
   }
 
 }
