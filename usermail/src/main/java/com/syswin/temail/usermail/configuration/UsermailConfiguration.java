@@ -53,7 +53,7 @@ public class UsermailConfiguration {
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
   MqClient mgtMqClient(UsermailConfig config, ManageBackgroundMQConsumer manageBackgroundMqConsumer) {
-    return new MqClient(config.mqMgtTopic, "*", config.mqMgtGroup, config.namesrvAddr, manageBackgroundMqConsumer,
+    return new MqClient(config. mqMgtDeleteDomainTopic, "*", config.mqMgtGroup, config.namesrvAddr, manageBackgroundMqConsumer,
         MqClient.RocketMQModel.CLUSTERING);
   }
 
