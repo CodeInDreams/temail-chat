@@ -12,13 +12,10 @@ public class ManageBackgroundMQConsumer implements IMqConsumer {
   private RemoveDomainService removeDomainService;
 
   @Override
-  public boolean consumer(String message) {
+  public boolean consumer(String domain) {
 
-    // 转换message
-
-    String domain = "@test.com";
     removeDomainService.removeDomain(domain);
 
-    return false;
+    return true;
   }
 }
