@@ -107,21 +107,22 @@ public class UsermailService {
   /**
    * 保存单聊会话信息
    *
+   * @param sessionId 会话ID
    * @param from 发件人
    * @param to 收件人
    * @param owner 消息所属人
-   * @return sessionId
+   * @return UsermailBoxDO 当前数据库的会话信息
    */
-  public String saveUsermailBoxInfo(String from, String to, String owner, String sessionExtData) {
-    String sessionId = usermailSessionService.getSessionID(from, to);
+  public UsermailBoxDO saveUsermailBoxInfo(String sessionId, String from, String to, String owner, String sessionExtData) {
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
-    UsermailBoxDO usermailBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
-    if (usermailBox == null) {
-      UsermailBoxDO box = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner, sessionExtData);
-      usermailBoxRepo.saveUsermailBox(box);
+    UsermailBoxDO dbBox;
+     dbBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
+    if (dbBox == null) {
+      dbBox = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner, sessionExtData);
+      usermailBoxRepo.saveUsermailBox(dbBox);
     }
-    return sessionId;
+    return dbBox;
   }
 
   /**
@@ -148,9 +149,10 @@ public class UsermailService {
 
     int attachmentSize = usermail.getAttachmentSize();
     long seqNo = usermailAdapter.getMsgSeqNo(from, to, owner);
-    String sessionid = this.saveUsermailBoxInfo(from, to, owner, usermail.getSessionExtData());
+    String sessionId = usermailSessionService.getSessionID(from, to);
+    UsermailBoxDO dbBox = this.saveUsermailBoxInfo(sessionId, from, to, owner, usermail.getSessionExtData());
     long pkid = usermailAdapter.getPkID();
-    UsermailDO mail = new UsermailDO(pkid, usermail.getMsgId(), sessionid,
+    UsermailDO mail = new UsermailDO(pkid, usermail.getMsgId(), sessionId,
         from, to, TemailStatus.STATUS_NORMAL_0, usermail.getType(), owner, "",
         seqNo, msgCompressor.zipWithDecode(usermail.getMsgData()), author, filterStr);
     Meta meta = usermail.getMeta();
@@ -173,7 +175,7 @@ public class UsermailService {
     }
     usermail2NotifyMqService
         .sendMqMsgSaveMail(headerInfo, from, to, owner, msgId, usermail.getMsgData(), seqNo, eventType, attachmentSize,
-            author, filter, usermail.getSessionExtData());
+            author, filter, dbBox.getSessionExtData());
     usermailAdapter.setLastMsgId(owner, other, msgId);
     Map<String, Object> result = new HashMap<>(2);
     final String msgIdKey = "msgId";

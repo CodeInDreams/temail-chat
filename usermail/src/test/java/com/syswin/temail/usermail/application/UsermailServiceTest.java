@@ -98,9 +98,10 @@ public class UsermailServiceTest {
     String to = "to@temail.com";
     String owner = from;
     String sessionExtData = "sessionExtData";
+    String sessionId = "sessionid";
     when(usermailAdapter.getPkID()).thenReturn(1L);
-    when(usermailSessionService.getSessionID(from, to)).thenReturn("sessionid");
-    usermailService.saveUsermailBoxInfo(from, to, owner, sessionExtData);
+    when(usermailSessionService.getSessionID(from, to)).thenReturn(sessionId);
+    usermailService.saveUsermailBoxInfo(sessionId, from, to, owner, sessionExtData);
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
     verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
     UsermailBoxDO usermailBox = argumentCaptor1.getValue();

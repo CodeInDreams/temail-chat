@@ -36,19 +36,25 @@ public class GroupChatServiceTest {
 
   private final UsermailService usermailService = Mockito.mock(UsermailService.class);
 
-  private final GroupChatService groupChatService = new GroupChatService(usermailService, usermailMqService);
+  private final UsermailSessionService usermailSessionService = Mockito.mock(UsermailSessionService.class);
+
+  private final GroupChatService groupChatService = new GroupChatService(usermailService, usermailMqService,
+      usermailSessionService);
 
   @Test
   public void saveGroupChatMailBoxInfoTest() {
     String from = "from@temail.com";
     String to = "to@temail.com";
     String sessionExtData = "sessionExtData";
+    String sessionId = "sessionId";
     GroupChatEventDTO groupChatEventDto = new GroupChatEventDTO();
     groupChatEventDto.setFrom(from);
     groupChatEventDto.setTo(to);
     groupChatEventDto.setSessionExtData(sessionExtData);
+    Mockito.when(usermailSessionService.getSessionID(from, to)).thenReturn(sessionId);
+
     groupChatService.syncGroupChatMemberEvent(groupChatEventDto);
-    verify(usermailService).saveUsermailBoxInfo(from, to, to, sessionExtData);
+    verify(usermailService).saveUsermailBoxInfo(sessionId, from, to, to, sessionExtData);
   }
 
   @Test

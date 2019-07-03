@@ -35,11 +35,14 @@ public class GroupChatService {
 
   private final UsermailMqService usermailMqService;
 
-  public GroupChatService(UsermailService usermailService, UsermailMqService usermailMqService) {
+  private final UsermailSessionService usermailSessionService;
+
+  public GroupChatService(UsermailService usermailService, UsermailMqService usermailMqService,
+      UsermailSessionService usermailSessionService) {
     this.usermailService = usermailService;
     this.usermailMqService = usermailMqService;
+    this.usermailSessionService = usermailSessionService;
   }
-
 
   /**
    * 群聊入群事件，新建会话
@@ -50,7 +53,8 @@ public class GroupChatService {
   public void syncGroupChatMemberEvent(GroupChatEventDTO dto) {
     String groupTemail = dto.getFrom();
     String temail = dto.getTo();
-    usermailService.saveUsermailBoxInfo(groupTemail, temail, temail, dto.getSessionExtData());
+    String sessionId = usermailSessionService.getSessionID(groupTemail, temail);
+    usermailService.saveUsermailBoxInfo(sessionId, groupTemail, temail, temail, dto.getSessionExtData());
   }
 
 
