@@ -29,7 +29,6 @@ import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET
 import static com.syswin.temail.usermail.common.ResultCodeEnum.ERROR_REQUEST_PARAM;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.common.Constants.SessionPageSize;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
@@ -66,6 +65,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -83,6 +83,9 @@ public class UsermailService {
   private final UsermailMqService usermailMqService;
   private final MsgCompressor msgCompressor;
   private final ConvertMsgService convertMsgService;
+
+  @Value("${app.usermail.mailboxes.topN:50}")
+  private Integer topN;
 
 
   @Autowired
@@ -251,7 +254,7 @@ public class UsermailService {
   @Transactional
   public void revertMqHandler(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId) {
     int count = usermailRepo.countRevertUsermail(
-            new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
+        new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     // 判断是否撤回成功，防止通知重复发送
     if (count > 0) {
       usermail2NotifyMqService
@@ -322,8 +325,8 @@ public class UsermailService {
       mailboxes.add(mailBox);
     }
     Collections.sort(mailboxes, new MailboxComparator());
-    pageSize = pageSize > SessionPageSize.TOPN ? SessionPageSize.TOPN : pageSize;
-    return mailboxes.subList(0,pageSize);
+    pageSize = pageSize > topN ? topN : pageSize;
+    return mailboxes.subList(0, pageSize);
   }
 
   /**

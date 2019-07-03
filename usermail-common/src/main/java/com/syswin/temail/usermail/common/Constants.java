@@ -123,11 +123,4 @@ public final class Constants {
     int TYPE_CROSS_DOMAIN_GROUP_EVENT_2 = 2;
   }
 
-  public interface SessionPageSize{
-
-    /**
-     * 拉取会话数量上限
-     */
-    int TOPN = 50;
-  }
 }
