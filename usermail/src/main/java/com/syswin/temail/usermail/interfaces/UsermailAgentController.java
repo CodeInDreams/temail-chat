@@ -104,6 +104,8 @@ public class UsermailAgentController {
     } else if (storeType == TemailStoreType.STORE_TYPE_FROM_2) {
       owner = usermail.getFrom();
       other = usermail.getTo();
+      // owner为发件人时，首次发消息发件人获取不到收件人的头像昵称信息，可忽略传入的参数，避免误存
+      usermail.setSessionExtData("");
     } else {
       LOGGER.warn("storeType is error:usermail:{},storeType={}", usermail, storeType);
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_STORE_TYPE);

@@ -74,7 +74,7 @@ public class CreateUsermailDTO implements Serializable {
 
   private List<String> filter;
 
-  @ApiModelProperty(value = "会话另一方的头像昵称信息，与storeType关联使用。首次发送消息创建会话时需要传入")
+  @ApiModelProperty(value = "会话另一方的头像昵称信息，与storeType关联使用。只在首次发送消息创建会话时传入")
   private String sessionExtData;
 
   public CreateUsermailDTO(String msgId, String from, String to, int type, int storeType, String msgData,
