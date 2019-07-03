@@ -29,6 +29,7 @@ import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.PACKET
 import static com.syswin.temail.usermail.common.ResultCodeEnum.ERROR_REQUEST_PARAM;
 
 import com.google.gson.Gson;
+import com.syswin.temail.usermail.common.Constants.SessionPageSize;
 import com.syswin.temail.usermail.common.Constants.TemailArchiveStatus;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.common.Constants.TemailType;
@@ -319,7 +320,7 @@ public class UsermailService {
       mailboxes.add(mailBox);
     }
     Collections.sort(mailboxes, new MailboxComparator());
-    pageSize = pageSize > 50 ? 50 : pageSize;
+    pageSize = pageSize > SessionPageSize.TOPN ? SessionPageSize.TOPN : pageSize;
     return mailboxes.subList(0,pageSize);
   }
 
