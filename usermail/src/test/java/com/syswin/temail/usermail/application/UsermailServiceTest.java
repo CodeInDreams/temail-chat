@@ -68,9 +68,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
 public class UsermailServiceTest {
 
@@ -91,6 +93,11 @@ public class UsermailServiceTest {
 
   private CdtpHeaderDTO headerInfo = new CdtpHeaderDTO("{CDTP-header:value}",
       "{xPacketId:value}");
+
+  @Before
+  public void setUp() {
+    ReflectionTestUtils.setField(usermailService, "topN", 50);
+  }
 
   @Test
   public void saveUsermailBoxInfo() {
