@@ -274,8 +274,7 @@ public class UsermailService {
    * @param usermailBoxes 会话
    * @return 收件箱列表
    */
-  public List<MailboxDTO> mailboxes(String from, int archiveStatus,
-      Map<String, String> usermailBoxes) {
+  public List<MailboxDTO> mailboxes(String from, int archiveStatus, Map<String, String> usermailBoxes) {
     Map<String, String> localMailBoxes = CollectionUtils.isEmpty(usermailBoxes) ? new HashMap<>(0) : usermailBoxes;
     List<UsermailBoxDO> dbBoxes = usermailBoxRepo.listUsermailBoxsByOwner(from, archiveStatus);
     List<MailboxDTO> mailBoxes = new ArrayList<>(dbBoxes.size());
