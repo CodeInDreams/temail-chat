@@ -105,8 +105,7 @@ public class GroupChatAgentControllerTest {
             .header(ParamsKey.HttpHeaderKey.CDTP_HEADER, headerInfo.getCdtpHeader())
             .header(ParamsKey.HttpHeaderKey.X_PACKET_ID, headerInfo.getxPacketId())
             .content(mapper.writeValueAsString(groupChatEventDto)))
-        .andExpect(status().is(400))
-        .andExpect(jsonPath("$.message").value("出现异常,异常信息为:to不能为空"));
+        .andExpect(status().is(400));
   }
 
 
