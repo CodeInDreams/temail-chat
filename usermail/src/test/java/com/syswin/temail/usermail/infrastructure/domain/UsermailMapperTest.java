@@ -47,8 +47,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -62,12 +60,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class UsermailMapperTest {
 
   private static final String SESSIONID = "sessionid-1";
-  private static Logger logger = LoggerFactory.getLogger(UsermailMapperTest.class);
-  @Autowired
-  private UsermailMapper usermailMapper;
+  private static Set<Long> existIds = new HashSet<>();
   private String msgid;
   private MsgCompressor msgCompressor = new MsgCompressor();
-  private static Set<Long> existIds = new HashSet<>();
+
+  @Autowired
+  private UsermailMapper usermailMapper;
 
   @Before
   public void before() {
@@ -80,7 +78,7 @@ public class UsermailMapperTest {
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
-    userMail.setId(101L);
+    userMail.setId(this.generatePKid());
     userMail.setFrom(from);
     userMail.setTo(to);
     userMail.setOwner(from);
@@ -144,7 +142,7 @@ public class UsermailMapperTest {
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
-    userMail.setId(102L);
+    userMail.setId(this.generatePKid());
     userMail.setFrom(from);
     userMail.setTo(to);
     userMail.setOwner(from);
@@ -172,7 +170,7 @@ public class UsermailMapperTest {
     userMail.setSessionid(SESSIONID);
     String from = "from@syswin.com";
     String to = "to@syswin.com";
-    userMail.setId(100L);
+    userMail.setId(this.generatePKid());
     userMail.setFrom(from);
     userMail.setTo(to);
     userMail.setOwner(from);
@@ -472,6 +470,34 @@ public class UsermailMapperTest {
 
   }
 
+  @Test
+  public void deleteDomainTest() {
+    UsermailDO mail = new UsermailDO();
+    mail.setSessionid(SESSIONID);
+    String from = "from@deletedomain";
+    String to = "to@syswin.com";
+    mail.setId(this.generatePKid());
+    mail.setFrom(from);
+    mail.setTo(to);
+    mail.setOwner(from);
+    mail.setMsgid(msgid);
+    mail.setSeqNo(11);
+    mail.setType(TemailType.TYPE_NORMAL_0);
+    mail.setStatus(TemailStatus.STATUS_NORMAL_0);
+    mail.setMessage("");
+    mail.setAuthor(from);
+    mail.setFilter(null);
+    usermailMapper.insertUsermail(mail);
+    mail.setId(this.generatePKid());
+    mail.setMsgid(msgid + "002");
+    usermailMapper.insertUsermail(mail);
+    String pattern = "%@deletedomain";
+    int pageSize = 1;
+    int count = usermailMapper.deleteDomain(pattern, pageSize);
+
+    assertThat(count).isOne();
+  }
+
   private long generatePKid() {
     boolean isUnique;
     long id;
@@ -480,12 +506,5 @@ public class UsermailMapperTest {
       isUnique = existIds.add(id);
     } while (!isUnique);
     return id;
-  }
-
-  @Test
-  public void deleteDomainTest() {
-    String domain = "domain";
-    int pageSize = 100;
-    usermailMapper.deleteDomain(domain, pageSize);
   }
 }

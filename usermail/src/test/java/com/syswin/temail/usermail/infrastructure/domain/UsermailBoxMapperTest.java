@@ -27,24 +27,28 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import(UsermailAgentApplication.class)
 @ActiveProfiles("test")
+@DirtiesContext
 public class UsermailBoxMapperTest {
+
+  private static Set<Long> existIds = new HashSet<>();
 
   @Autowired
   private UsermailBoxMapper usermailBoxMapper;
@@ -52,7 +56,7 @@ public class UsermailBoxMapperTest {
   @Test
   public void saveUsermailBox() {
     UsermailBoxDO usermailBox = new UsermailBoxDO();
-    usermailBox.setId(2);
+    usermailBox.setId(this.generatePKid());
     usermailBox.setMail2("mailB@syswin.com");
     usermailBox.setSessionid("sessionid");
     usermailBox.setOwner("mailA@syswin.com");
@@ -62,7 +66,7 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testListUsermailBoxsByOwner() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(12345L, "test-session-owner2", "mailsend@temail.com", "mailsend@temail.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner2", "mailsend@temail.com", "mailsend@temail.com");
     usermailBoxMapper.saveUsermailBox(box);
     List<UsermailBoxDO> boxes = usermailBoxMapper.listUsermailBoxsByOwner("mailsend@temail.com", 0);
     assertThat(boxes.get(0).getOwner()).isEqualTo("mailsend@temail.com");
@@ -70,7 +74,7 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testDeleteUsermailBox() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(124L, "test-session-owner3", "mailreceive12@temail.com", "mailsend12@temail.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner3", "mailreceive12@temail.com", "mailsend12@temail.com");
     usermailBoxMapper.saveUsermailBox(box);
     int result = usermailBoxMapper.deleteByOwnerAndMail2("mailsend12@temail.com", "mailreceive12@temail.com");
     assertThat(result).isEqualTo(1);
@@ -80,7 +84,7 @@ public class UsermailBoxMapperTest {
   public void testListUsermailBoxsByOwnerAndTo() {
     String owner = "mailsend1@temail.com";
     String mail2 = "mailreceive1@temail.com";
-    UsermailBoxDO box = new UsermailBoxDO(123L, "test-session-owner3", mail2, owner);
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner3", mail2, owner);
     usermailBoxMapper.saveUsermailBox(box);
     List<UsermailBoxDO> usermailBoxes = usermailBoxMapper.listUsermailBoxsByOwnerAndTo(owner, mail2);
     assertThat(usermailBoxes).isNotNull();
@@ -89,7 +93,7 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testUpdateArchiveStatus() {
-    UsermailBoxDO box = new UsermailBoxDO(24355, "test-session-owner3", "mailreceive1@msgseal.com",
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner3", "mailreceive1@msgseal.com",
         "mailsend1@msgseal.com");
     usermailBoxMapper.saveUsermailBox(box);
     int result = usermailBoxMapper.updateArchiveStatus(box.getOwner(), box.getMail2(), box.getArchiveStatus());
@@ -98,7 +102,7 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testGetUsermailBox() {
-    UsermailBoxDO box = new UsermailBoxDO(243545, "test-session-owner4", "mailreceive2@msgseal.com",
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner4", "mailreceive2@msgseal.com",
         "mailsend2@msgseal.com");
     usermailBoxMapper.saveUsermailBox(box);
     UsermailBoxDO usermailBox = usermailBoxMapper.selectByOwnerAndMail2(box.getOwner(), box.getMail2());
@@ -108,9 +112,21 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void deleteDomainTest() {
-    String domain = "domain";
-    int pageSize = 100;
-    usermailBoxMapper.deleteDomain(domain, pageSize);
+    UsermailBoxDO usermailBox = new UsermailBoxDO();
+    usermailBox.setId(this.generatePKid());
+    usermailBox.setMail2("mailB@deleteDomain");
+    usermailBox.setSessionid("sessionid");
+    usermailBox.setOwner("mailA@deleteDomain");
+    usermailBoxMapper.saveUsermailBox(usermailBox);
+    usermailBox.setId(this.generatePKid());
+    usermailBox.setOwner("mailB@deleteDomain");
+    usermailBoxMapper.saveUsermailBox(usermailBox);
+
+    String domain = "%@deleteDomain";
+    int pageSize = 1;
+    int count = usermailBoxMapper.deleteDomain(domain, pageSize);
+
+    assertThat(count).isOne();
   }
 
   @Test
@@ -122,13 +138,23 @@ public class UsermailBoxMapperTest {
   @Test
   public void testGetTopNMailboxes() {
     String from = "from@t.email";
-    UsermailBoxDO usermailBoxDO1 = new UsermailBoxDO(100L, "483578", "to@t.email", from);
-    UsermailBoxDO usermailBoxDO2 = new UsermailBoxDO(102L, "4835378", "to2@t.email", from);
+    UsermailBoxDO usermailBoxDO1 = new UsermailBoxDO(this.generatePKid(), "483578", "to@t.email", from);
+    UsermailBoxDO usermailBoxDO2 = new UsermailBoxDO(this.generatePKid(), "4835378", "to2@t.email", from);
     usermailBoxMapper.saveUsermailBox(usermailBoxDO1);
     usermailBoxMapper.saveUsermailBox(usermailBoxDO2);
     List<UsermailBoxDO> usermailBoxes = usermailBoxMapper.selectTopNByOwner(from, 0);
     assertThat(usermailBoxes.get(0).getMail2()).isEqualTo(usermailBoxDO1.getMail2());
     assertThat(usermailBoxes.get(0).getSessionid()).isEqualTo(usermailBoxDO1.getSessionid());
     assertThat(usermailBoxes.size()).isEqualTo(2);
+  }
+
+  private long generatePKid() {
+    boolean isUnique;
+    long id;
+    do {
+      id = new Random().nextInt(100);
+      isUnique = existIds.add(id);
+    } while (!isUnique);
+    return id;
   }
 }

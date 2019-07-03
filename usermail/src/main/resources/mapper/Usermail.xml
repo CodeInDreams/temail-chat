@@ -159,7 +159,7 @@
     <foreach item="msgId" collection="msgIds" open="(" close=")" separator=",">
       #{msgId}
     </foreach>
-      and `owner` = #{owner,jdbcType=VARCHAR}
+    and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
   <update id="updateRevertMsgFromTrashStatus">
@@ -173,7 +173,7 @@
         #{trashMail.msgId}
       </foreach>
     </if>
-      and `owner` = #{owner,jdbcType=VARCHAR}
+    and `owner` = #{owner,jdbcType=VARCHAR}
   </update>
 
   <delete id="deleteMsgByStatus">
@@ -186,7 +186,7 @@
         #{trashMail.msgId}
       </foreach>
     </if>
-      and `owner` = #{owner,jdbcType=VARCHAR}
+    and `owner` = #{owner,jdbcType=VARCHAR}
   </delete>
 
   <select id="listUsermailsByStatus" parameterType="QueryTrashDto" resultMap="UserMailResultMap">
@@ -204,12 +204,12 @@
     order by update_time desc limit #{pageSize}
   </select>
 
-  <delete id="deleteUseMsgLessThan" >
+  <delete id="deleteUseMsgLessThan">
     delete from `usermail` where `create_time` &lt; #{createTime} limit #{batchNum}
   </delete>
 
   <delete id="deleteDomain">
-    delete from `usermail` where `from` like "%"#{domain} limit #{pageSize}
+    delete from `usermail` where `from` like #{domainPattern} limit #{pageSize}
   </delete>
 
 </mapper>

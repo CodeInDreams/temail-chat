@@ -26,7 +26,6 @@ package com.syswin.temail.usermail.infrastructure.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.syswin.temail.usermail.UsermailAgentApplication;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
@@ -34,23 +33,27 @@ import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyM
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import(UsermailAgentApplication.class)
 @ActiveProfiles("test")
 @DirtiesContext
 public class UsermailMsgReplyTest {
+
+  private static Set<Long> existIds = new HashSet<>();
 
   @Autowired
   private UsermailMsgReplyMapper usermailMsgReplyMapper;
@@ -62,7 +65,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-1543572005953");
-    usermailMsgReply.setId(184);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner("A2018");
@@ -124,7 +127,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-1543572005953");
-    usermailMsgReply.setId(1841);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner("A2018");
@@ -152,7 +155,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("test111111");
     usermailMsgReply.setOwner("A@systoontest.com");
-    usermailMsgReply.setId(183);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setType(1);
@@ -176,7 +179,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setFrom("A2019");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(185);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);
@@ -201,7 +204,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(status);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(184114);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);
@@ -228,7 +231,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(status);
     usermailMsgReply.setMsgid("syswin-154357200521211212953");
-    usermailMsgReply.setId(184112);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(seqNo_first);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner(owner);
@@ -236,7 +239,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("lkjasdjlk;sadklj");
     usermailMsgReplyMapper.insert(usermailMsgReply);
-    usermailMsgReply.setId(184113);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setMsgid("syswin-154357200521211212954");
     usermailMsgReply.setSeqNo(seqNo_second);
     usermailMsgReplyMapper.insert(usermailMsgReply);
@@ -255,7 +258,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setFrom("A2018");
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-1543572005212112129531");
-    usermailMsgReply.setId(184115);
+    usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
     usermailMsgReply.setTo("B2018");
     usermailMsgReply.setOwner("A20181");
@@ -276,7 +279,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply1.setFrom("A2018");
     usermailMsgReply1.setStatus(0);
     usermailMsgReply1.setMsgid("syswin-reply-201906271700-001");
-    usermailMsgReply1.setId(198);
+    usermailMsgReply1.setId(this.generatePKid());
     usermailMsgReply1.setSeqNo(0);
     usermailMsgReply1.setTo("B2018");
     usermailMsgReply1.setOwner("A2018");
@@ -289,7 +292,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply2.setFrom("A2018");
     usermailMsgReply2.setStatus(0);
     usermailMsgReply2.setMsgid("syswin-reply-201906271700-002");
-    usermailMsgReply2.setId(199);
+    usermailMsgReply2.setId(this.generatePKid());
     usermailMsgReply2.setSeqNo(0);
     usermailMsgReply2.setTo("B2018");
     usermailMsgReply2.setOwner("A2018");
@@ -307,8 +310,37 @@ public class UsermailMsgReplyTest {
 
   @Test
   public void deleteDomainTest() {
-    String domain = "domain";
-    int pageSize = 100;
-    usermailMsgReplyMapper.deleteDomain(domain, pageSize);
+    UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
+    usermailMsgReply.setParentMsgid("syswin-1543456947958");
+    usermailMsgReply.setFrom("A2018@deletedomain");
+    usermailMsgReply.setStatus(0);
+    usermailMsgReply.setMsgid("syswin-1543572005953");
+    usermailMsgReply.setId(this.generatePKid());
+    usermailMsgReply.setSeqNo(0);
+    usermailMsgReply.setTo("B2018");
+    usermailMsgReply.setOwner("A2018");
+    usermailMsgReply.setType(1);
+    usermailMsgReply.setMsg("testsavemethod");
+    usermailMsgReply.setSessionid("jkasjkaslkjaskl");
+    usermailMsgReplyMapper.insert(usermailMsgReply);
+    usermailMsgReply.setId(this.generatePKid());
+    usermailMsgReply.setMsgid(UUID.randomUUID().toString());
+    usermailMsgReplyMapper.insert(usermailMsgReply);
+
+    String domain = "%@deletedomain";
+    int pageSize = 1;
+    int count = usermailMsgReplyMapper.deleteDomain(domain, pageSize);
+
+    assertThat(count).isOne();
+  }
+
+  private long generatePKid() {
+    boolean isUnique;
+    long id;
+    do {
+      id = new Random().nextInt(100);
+      isUnique = existIds.add(id);
+    } while (!isUnique);
+    return id;
   }
 }

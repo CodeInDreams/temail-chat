@@ -25,6 +25,7 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,26 +33,21 @@ import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class UsermailBoxRepoImplTest {
 
+  @InjectMocks
   private UsermailBoxRepoImpl usermailBoxRepoImpl;
+  @Mock
   private UsermailBoxMapper usermailBoxMapper;
-
-  @Before
-  public void setup(){
-    this.usermailBoxMapper = Mockito.mock(UsermailBoxMapper.class);
-    this.usermailBoxRepoImpl = new UsermailBoxRepoImpl(usermailBoxMapper);
-  }
 
   @Test
   public void testSaveUsermailBox() {
@@ -146,9 +142,10 @@ public class UsermailBoxRepoImplTest {
   public void removeDomainTest() {
     String domain = "domain";
     int pageSize = 100;
-    when(usermailBoxMapper.deleteDomain(domain, pageSize)).thenReturn(50);
+    when(usermailBoxMapper.deleteDomain("%@" + domain, pageSize)).thenReturn(50);
+
     usermailBoxRepoImpl.removeDomain(domain, pageSize);
-    verify(usermailBoxMapper.deleteDomain(domain, pageSize));
+    verify(usermailBoxMapper, times(2)).deleteDomain(domain, pageSize);
   }
 
 }

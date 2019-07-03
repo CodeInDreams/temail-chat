@@ -203,7 +203,7 @@
   </delete>
 
   <delete id="deleteDomain">
-    delete from `usermail_msg_reply` where `from` like "%"#{domain} id limit #{pageSize}
+    delete from `usermail_msg_reply` where `from` like #{domainPattern} limit #{pageSize}
   </delete>
 
 </mapper>

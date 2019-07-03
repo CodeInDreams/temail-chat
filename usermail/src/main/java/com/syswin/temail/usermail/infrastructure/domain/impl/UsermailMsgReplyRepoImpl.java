@@ -200,9 +200,10 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
   @Override
   public void removeDomain(String domain, int pageSize) {
 
+    final String domainPattern = "%@" + domain;
     int count = 0;
     do {
-      count = usermailMsgReplyMapper.deleteDomain(domain, pageSize);
+      count = usermailMsgReplyMapper.deleteDomain(domainPattern, pageSize);
     } while (count != 0);
 
   }

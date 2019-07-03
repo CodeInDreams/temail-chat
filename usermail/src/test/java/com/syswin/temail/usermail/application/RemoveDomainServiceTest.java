@@ -4,19 +4,22 @@ import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RemoveDomainServiceTest {
 
+  private Integer pageSize = 100;
+
   @InjectMocks
   private RemoveDomainService removeDomainService;
-  private Integer pageSize = 100;
   @Mock
   private UsermailRepo usermailRepo;
   @Mock
@@ -25,6 +28,11 @@ public class RemoveDomainServiceTest {
   private UsermailBlacklistRepo usermailBlacklistRepo;
   @Mock
   private UsermailBoxRepo usermailBoxRepo;
+
+  @Before
+  public void setUp () {
+    ReflectionTestUtils.setField(removeDomainService, "pageSize", pageSize);
+  }
 
   @Test
   public void removeDomain() {

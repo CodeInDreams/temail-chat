@@ -84,7 +84,7 @@
   </update>
 
   <delete id="deleteDomain">
-    delete from `usermail_box` where `mail1` like "%"#{domain} limit #{pageSize}
+    delete from `usermail_box` where `owner` like #{domainPattern} limit #{pageSize}
   </delete>
 
   <select id="selectTopNByOwner" resultMap="UsermailBoxResultMap">

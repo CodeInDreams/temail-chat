@@ -25,33 +25,28 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklistMapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class UsermailBlacklistRepoImplTest {
 
+  @InjectMocks
   private UsermailBlacklistRepoImpl usermailBlacklistRepoImpl;
+  @Mock
   private UsermailBlacklistMapper usermailBlacklistMapper;
-
-  @Before
-  public void setup(){
-    this.usermailBlacklistMapper = mock(UsermailBlacklistMapper.class);
-    this.usermailBlacklistRepoImpl = new UsermailBlacklistRepoImpl(usermailBlacklistMapper);
-  }
 
   @Test
   public void testInsertUsermailBlacklist() {
@@ -104,9 +99,9 @@ public class UsermailBlacklistRepoImplTest {
   public void removeDomainTest() {
     String domain = "domain";
     int pageSize = 100;
-    when(usermailBlacklistMapper.deleteDomain(domain, pageSize)).thenReturn(50);
+    when(usermailBlacklistMapper.deleteDomain("%@" + domain, pageSize)).thenReturn(50);
     usermailBlacklistRepoImpl.removeDomain(domain, pageSize);
-    verify(usermailBlacklistMapper.deleteDomain(domain, pageSize));
+    verify(usermailBlacklistMapper, times(2)).deleteDomain(domain, pageSize);
   }
 
 }

@@ -77,9 +77,9 @@ public interface UsermailBlacklistMapper {
   /**
    * 分页清理指定域数据
    *
-   * @param domain 域
+   * @param domainPattern 域的like表达式
    * @param pageSize 页面大小
    * @return 实际清除数量
    */
-  int deleteDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
+  int deleteDomain(@Param("domainPattern") String domainPattern, @Param("pageSize") int pageSize);
 }

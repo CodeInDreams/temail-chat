@@ -25,36 +25,31 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class UsermailMsgReplyImplTest {
 
-    private UsermailMsgReplyRepoImpl usermailMsgReplyRepoImpl;
+  @InjectMocks
+  private UsermailMsgReplyRepoImpl usermailMsgReplyRepoImpl;
+  @Mock
   private UsermailMsgReplyMapper usermailMsgReplyMapper;
-
-  @Before
-  public void setup(){
-    this.usermailMsgReplyMapper = Mockito.mock(UsermailMsgReplyMapper.class);
-    this.usermailMsgReplyRepoImpl = new UsermailMsgReplyRepoImpl(usermailMsgReplyMapper);
-  }
 
   @Test
   public void insert() {
@@ -80,8 +75,8 @@ public class UsermailMsgReplyImplTest {
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<String>> msgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
     List<String> msgIds = new ArrayList<String>();
-    usermailMsgReplyRepoImpl.deleteMsgReplysByMsgIds(ower,msgIds);
-    Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysByMsgIds(owerCap.capture(),msgIdsCap.capture());
+    usermailMsgReplyRepoImpl.deleteMsgReplysByMsgIds(ower, msgIds);
+    Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysByMsgIds(owerCap.capture(), msgIdsCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(ower);
     assertThat(msgIdsCap.getValue()).isEqualTo(msgIds);
   }
@@ -90,10 +85,10 @@ public class UsermailMsgReplyImplTest {
   public void batchDeleteBySessionId() {
     String ower = "ower";
     String sessionId = "sessionId";
-    usermailMsgReplyRepoImpl.deleteMsgReplysBySessionId(sessionId,ower);
+    usermailMsgReplyRepoImpl.deleteMsgReplysBySessionId(sessionId, ower);
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> sessionIdCap = ArgumentCaptor.forClass(String.class);
-    Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysBySessionId(sessionIdCap.capture(),owerCap.capture());
+    Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysBySessionId(sessionIdCap.capture(), owerCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(ower);
     assertThat(sessionIdCap.getValue()).isEqualTo(sessionId);
   }
@@ -102,10 +97,10 @@ public class UsermailMsgReplyImplTest {
   public void deleteMsgByParentIdAndOwner() {
     String ower = "ower";
     List<String> parentMsgIds = new ArrayList<String>();
-    usermailMsgReplyRepoImpl.deleteMsgReplysByParentIds(ower,parentMsgIds);
+    usermailMsgReplyRepoImpl.deleteMsgReplysByParentIds(ower, parentMsgIds);
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<String>> parentMsgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
-    Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysByParentIds(owerCap.capture(),parentMsgIdsCap.capture());
+    Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysByParentIds(owerCap.capture(), parentMsgIdsCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(ower);
     assertThat(parentMsgIdsCap.getValue()).isEqualTo(parentMsgIds);
   }
@@ -136,9 +131,10 @@ public class UsermailMsgReplyImplTest {
   public void removeDomainTest() {
     String domain = "domain";
     int pageSize = 100;
-    when(usermailMsgReplyMapper.deleteDomain(domain, pageSize)).thenReturn(50);
+    when(usermailMsgReplyMapper.deleteDomain("%@" + domain, pageSize)).thenReturn(50);
+
     usermailMsgReplyRepoImpl.removeDomain(domain, pageSize);
-    verify(usermailMsgReplyMapper.deleteDomain(domain, pageSize));
+    verify(usermailMsgReplyMapper, times(2)).deleteDomain(domain, pageSize);
   }
 
 }

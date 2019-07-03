@@ -248,9 +248,10 @@ public class UsermailRepoImpl implements UsermailRepo {
   @Override
   public void removeDomain(String domain, int pageSize) {
 
+    final String domainPattern = "%@" + domain;
     int count = 0;
     do {
-      count = usermailMapper.deleteDomain(domain, pageSize);
+      count = usermailMapper.deleteDomain(domainPattern, pageSize);
     } while (count != 0);
 
   }

@@ -121,9 +121,10 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
   @Async
   @Override
   public void removeDomain(String domain, int pageSize) {
+    final String domainPattern = "%@" + domain;
     int count = 0;
     do {
-      count = usermailBoxMapper.deleteDomain(domain, pageSize);
+      count = usermailBoxMapper.deleteDomain(domainPattern, pageSize);
     } while (count != 0);
   }
 

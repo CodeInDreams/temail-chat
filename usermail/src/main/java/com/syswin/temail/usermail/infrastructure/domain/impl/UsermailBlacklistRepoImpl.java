@@ -110,9 +110,10 @@ public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
   @Transactional
   @Override
   public void removeDomain(String domain, int pageSize) {
+    final String domainPattern = "%@" + domain;
     int count = 0;
     do {
-      count = usermailBlacklistMapper.deleteDomain(domain, pageSize);
+      count = usermailBlacklistMapper.deleteDomain(domainPattern, pageSize);
     } while (count != 0);
   }
 
