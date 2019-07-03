@@ -124,6 +124,10 @@ public final class Constants {
   }
 
   public interface SessionPageSize{
+
+    /**
+     * 拉取会话数量上限
+     */
     int TOPN = 50;
   }
 }
