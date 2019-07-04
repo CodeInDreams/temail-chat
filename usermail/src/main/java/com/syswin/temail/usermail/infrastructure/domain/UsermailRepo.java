@@ -182,7 +182,8 @@ public interface UsermailRepo {
    *
    * @param domain 域
    * @param pageSize 页面大小
+   * @return 实际清除数量
    */
-  void removeDomain(String domain, int pageSize);
+  int deleteDomain(String domain, int pageSize);
 
 }

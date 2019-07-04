@@ -28,7 +28,6 @@ import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -37,7 +36,8 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
   private final com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper;
 
   @Autowired
-  public UsermailBoxRepoImpl(com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper) {
+  public UsermailBoxRepoImpl(
+      com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper) {
     this.usermailBoxMapper = usermailBoxMapper;
   }
 
@@ -113,25 +113,22 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
   }
 
   /**
-   * 分页清理域下数据
+   * 分页清理指定域数据
    *
    * @param domain 域
    * @param pageSize 页面大小
+   * @return 实际清除数量
    */
-  @Async
   @Override
-  public void removeDomain(String domain, int pageSize) {
+  public int deleteDomain(String domain, int pageSize) {
     final String domainPattern = "%@" + domain;
-    int count = 0;
-    do {
-      count = usermailBoxMapper.deleteDomain(domainPattern, pageSize);
-    } while (count != 0);
+    return usermailBoxMapper.deleteDomain(domainPattern, pageSize);
   }
 
   /**
    * 拉取topN会话列表
    *
-   * @param from  会话拥有者
+   * @param from 会话拥有者
    * @param archiveStatus 归档状态
    * @return 会话列表
    */
@@ -139,6 +136,7 @@ public class UsermailBoxRepoImpl implements UsermailBoxRepo {
   public List<UsermailBoxDO> selectTopNByOwner(String from, int archiveStatus) {
     return usermailBoxMapper.selectTopNByOwner(from, archiveStatus);
   }
+
   /**
    * 更新会话中对方的头像和昵称信息
    *

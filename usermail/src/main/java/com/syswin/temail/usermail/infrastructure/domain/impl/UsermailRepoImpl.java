@@ -35,9 +35,7 @@ import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class UsermailRepoImpl implements UsermailRepo {
@@ -118,7 +116,8 @@ public class UsermailRepoImpl implements UsermailRepo {
 
   /**
    * 阅后即焚
-   *  @param owner 消息拥有者
+   *
+   * @param owner 消息拥有者
    * @param msgid 消息id
    * @param status 消息状态
    */
@@ -242,18 +241,12 @@ public class UsermailRepoImpl implements UsermailRepo {
    *
    * @param domain 域
    * @param pageSize 页面大小
+   * @return 实际清除数量
    */
-  @Async
-  @Transactional
   @Override
-  public void removeDomain(String domain, int pageSize) {
-
+  public int deleteDomain(String domain, int pageSize) {
     final String domainPattern = "%@" + domain;
-    int count = 0;
-    do {
-      count = usermailMapper.deleteDomain(domainPattern, pageSize);
-    } while (count != 0);
-
+    return usermailMapper.deleteDomain(domainPattern, pageSize);
   }
 
 }

@@ -88,11 +88,13 @@ public interface UsermailMapper {
 
   /**
    * 阅后即焚
-   *  @param owner 消息拥有者
+   *
+   * @param owner 消息拥有者
    * @param msgid 消息id
    * @param status 消息状态
    */
-  void updateDestroyAfterReadStatus(@Param("owner") String owner, @Param("msgid") String msgid, @Param("status") int status);
+  void updateDestroyAfterReadStatus(@Param("owner") String owner, @Param("msgid") String msgid,
+      @Param("status") int status);
 
   /**
    * 根据会话id批量删除消息

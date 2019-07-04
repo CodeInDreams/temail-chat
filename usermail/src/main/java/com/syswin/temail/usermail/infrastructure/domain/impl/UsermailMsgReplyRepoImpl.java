@@ -32,9 +32,7 @@ import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyM
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
@@ -194,17 +192,11 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    *
    * @param domain 域
    * @param pageSize 页面大小
+   * @return 实际清除数量
    */
-  @Async
-  @Transactional
   @Override
-  public void removeDomain(String domain, int pageSize) {
-
+  public int deleteDomain(String domain, int pageSize) {
     final String domainPattern = "%@" + domain;
-    int count = 0;
-    do {
-      count = usermailMsgReplyMapper.deleteDomain(domainPattern, pageSize);
-    } while (count != 0);
-
+    return usermailMsgReplyMapper.deleteDomain(domainPattern, pageSize);
   }
 }

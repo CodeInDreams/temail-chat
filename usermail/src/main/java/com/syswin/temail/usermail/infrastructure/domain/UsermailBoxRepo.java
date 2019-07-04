@@ -83,17 +83,18 @@ public interface UsermailBoxRepo {
   UsermailBoxDO selectByOwnerAndMail2(String owner, String to);
 
   /**
-   * 分页清理域下数据
+   * 分页清理指定域数据
    *
    * @param domain 域
    * @param pageSize 页面大小
+   * @return 实际清除数量
    */
-  void removeDomain(String domain, int pageSize);
+  int deleteDomain(String domain, int pageSize);
 
   /**
    * 拉取topN会话列表
    *
-   * @param from  会话拥有者
+   * @param from 会话拥有者
    * @param archiveStatus 归档状态
    * @return 会话列表
    */

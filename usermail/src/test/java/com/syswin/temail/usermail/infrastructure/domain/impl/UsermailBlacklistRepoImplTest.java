@@ -99,7 +99,7 @@ public class UsermailBlacklistRepoImplTest {
     String domain = "domain";
     int pageSize = 100;
 
-    usermailBlacklistRepoImpl.removeDomain(domain, pageSize);
+    usermailBlacklistRepoImpl.deleteDomain(domain, pageSize);
     verify(usermailBlacklistMapper).deleteDomain("%@" + domain, pageSize);
   }
 

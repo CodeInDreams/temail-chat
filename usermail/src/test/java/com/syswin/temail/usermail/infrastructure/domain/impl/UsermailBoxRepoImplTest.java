@@ -141,7 +141,7 @@ public class UsermailBoxRepoImplTest {
     String domain = "domain";
     int pageSize = 100;
 
-    usermailBoxRepoImpl.removeDomain(domain, pageSize);
+    usermailBoxRepoImpl.deleteDomain(domain, pageSize);
     verify(usermailBoxMapper).deleteDomain("%@" + domain, pageSize);
   }
 

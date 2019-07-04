@@ -38,9 +38,9 @@ public class RemoveDomainServiceTest {
   public void removeDomain() {
     String domain = "domain";
     removeDomainService.removeDomain(domain);
-    Mockito.verify(usermailRepo).removeDomain(domain, pageSize);
-    Mockito.verify(usermailMsgReplyRepo).removeDomain(domain, pageSize);
-    Mockito.verify(usermailBlacklistRepo).removeDomain(domain, pageSize);
-    Mockito.verify(usermailBoxRepo).removeDomain(domain, pageSize);
+    Mockito.verify(usermailRepo).deleteDomain(domain, pageSize);
+    Mockito.verify(usermailMsgReplyRepo).deleteDomain(domain, pageSize);
+    Mockito.verify(usermailBlacklistRepo).deleteDomain(domain, pageSize);
+    Mockito.verify(usermailBoxRepo).deleteDomain(domain, pageSize);
   }
 }

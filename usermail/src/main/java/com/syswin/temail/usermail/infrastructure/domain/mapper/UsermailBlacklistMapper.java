@@ -55,7 +55,8 @@ public interface UsermailBlacklistMapper {
    * @param blackedAddress 被拉黑地址
    * @return 黑名单信息
    */
-  UsermailBlacklistDO selectByTemailAndBlackedAddress(@Param("temailAddress") String temailAddress, @Param("blackedAddress") String blackedAddress);
+  UsermailBlacklistDO selectByTemailAndBlackedAddress(@Param("temailAddress") String temailAddress,
+      @Param("blackedAddress") String blackedAddress);
 
   /**
    * 查找当前地址的黑名单列表

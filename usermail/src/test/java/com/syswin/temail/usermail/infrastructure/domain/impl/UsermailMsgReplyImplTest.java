@@ -130,7 +130,7 @@ public class UsermailMsgReplyImplTest {
     String domain = "domain";
     int pageSize = 100;
 
-    usermailMsgReplyRepoImpl.removeDomain(domain, pageSize);
+    usermailMsgReplyRepoImpl.deleteDomain(domain, pageSize);
     verify(usermailMsgReplyMapper).deleteDomain("%@" + domain, pageSize);
   }
 

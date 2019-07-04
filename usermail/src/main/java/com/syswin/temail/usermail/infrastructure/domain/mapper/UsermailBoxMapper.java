@@ -89,7 +89,7 @@ public interface UsermailBoxMapper {
   /**
    * 拉取topN会话列表
    *
-   * @param owner  会话拥有者
+   * @param owner 会话拥有者
    * @param archiveStatus 归档状态
    * @return 会话列表
    */
