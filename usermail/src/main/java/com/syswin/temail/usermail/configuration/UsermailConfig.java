@@ -55,7 +55,7 @@ public class UsermailConfig {
   public String mqMgtDeleteDomainTopic = "temail-oss-topic-deletedomain";
 
   @Value("${spring.rocketmq.domain.clear.consumer.group}")
-  public String mqMgtDeleteDomainGroup = "temail-usermail-oss-consumer";
+  public String mqMgtDeleteDomainGroup = "temail-usermailagent-oss-consumer";
 
   @Value("${spring.rocketmq.temailmgt.groupname}")
   public String mqMgtGroup = "temail_oss_usermailagent";
