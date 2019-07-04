@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class RemoveDomainService {
 
 
+  @Value("${app.temail.usermailagent.clear.domain.enabled:false}")
+  private String removeEnabled;
   @Value("${app.temail.usermailagent.clear.domain.pageSize:100}")
   private Integer pageSize;
   private final UsermailRepo usermailRepo;
@@ -34,10 +36,15 @@ public class RemoveDomainService {
    * @param domain 域
    */
   public void removeDomain(String domain) {
-    this.removeUsermail(domain, pageSize);
-    this.removeMsgReply(domain, pageSize);
-    this.removeBlack(domain, pageSize);
-    this.removeBox(domain, pageSize);
+    Boolean enabled = Boolean.valueOf(removeEnabled);
+    if (enabled) {
+      this.removeUsermail(domain, pageSize);
+      this.removeMsgReply(domain, pageSize);
+      this.removeBlack(domain, pageSize);
+      this.removeBox(domain, pageSize);
+    } else {
+      log.info("RemoveDomainService.removeDomain() remove domain is not enabled, removeEnabled: [{}]", removeEnabled);
+    }
   }
 
   private void removeUsermail(String domain, int pageSize) {
