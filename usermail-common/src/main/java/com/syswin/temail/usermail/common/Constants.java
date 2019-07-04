@@ -56,6 +56,22 @@ public final class Constants {
      * 删除群成员相关信息
      */
     int REMOVE_GROUP_CHAT_MEMBERS_6 = 6;
+    /**
+     * 清空指定域全部单聊消息
+     */
+    int REMOVE_ALL_USERMAIL_7 = 7;
+    /**
+     * 清空指定域全部单聊回复消息
+     */
+    int REMOVE_ALL_USERMAIL_MSG_REPLY_8 = 8;
+    /**
+     * 清空指定域全部黑名单信息
+     */
+    int REMOVE_ALL_USERMAIL_BLACK_LIST_9 = 9;
+    /**
+     * 清空指定域全部会话信息
+     */
+    int REMOVE_ALL_USERMAIL_BOX_10 = 10;
   }
 
 

@@ -25,6 +25,7 @@
 package com.syswin.temail.usermail.interfaces;
 
 import com.google.gson.Gson;
+import com.syswin.temail.usermail.application.RemoveDomainService;
 import com.syswin.temail.usermail.application.UsermailMsgReplyService;
 import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
@@ -38,14 +39,27 @@ import java.util.UUID;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
+//@TestPropertySource(locations = "classpath:application-develop.properties")
 public class UsermailMQConsumerTest {
 
   private UsermailService usermailService = Mockito.mock(UsermailService.class);
 
   private UsermailMsgReplyService usermailMsgReplyService = Mockito.mock(UsermailMsgReplyService.class);
 
-  private UsermailMQConsumer usermailMQConsumer = new UsermailMQConsumer(usermailService, usermailMsgReplyService);
+  private RemoveDomainService removeDomainService = Mockito.mock(RemoveDomainService.class);
+  private UsermailMQConsumer usermailMQConsumer = new UsermailMQConsumer(usermailService, usermailMsgReplyService,
+      removeDomainService);
 
+//  @Autowired
+//  private UsermailService usermailService;
+//
+//  @Autowired
+//  private UsermailMsgReplyService usermailMsgReplyService;
+//
+//  @Autowired
+//  private UsermailMQConsumer usermailMQConsumer;
   private String xPacketId = UUID.randomUUID().toString();
 
   private String cdtpHeader = "{'packetId':'12112'}";
@@ -101,6 +115,30 @@ public class UsermailMQConsumerTest {
   public void consume6Test(){
     usermailMQConsumer.consumer(getTestMessage(UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6));
     Mockito.verify(usermailService).deleteGroupChatSession(from, to);
+  }
+
+  @Test
+  public void consume7Test() {
+    String message = "{\"temailDomain\":\"deletedomain.com\",\"sessionMessageType\":7,\"timestamp\":1562230648093}\n";
+    usermailMQConsumer.consumer(message);
+  }
+
+  @Test
+  public void consume8Test() {
+    String message = "{\"temailDomain\":\"deletedomain.com\",\"sessionMessageType\":8,\"timestamp\":1562230667396}\n";
+    usermailMQConsumer.consumer(message);
+  }
+
+  @Test
+  public void consume9Test() {
+    String message = "{\"temailDomain\":\"deletedomain.com\",\"sessionMessageType\":9,\"timestamp\":1562230667408}";
+    usermailMQConsumer.consumer(message);
+  }
+
+  @Test
+  public void consume10Test() {
+    String message = "{\"temailDomain\":\"deletedomain.com\",\"sessionMessageType\":10,\"timestamp\":1562230667418}";
+    usermailMQConsumer.consumer(message);
   }
 
   private String getTestMessage(int type){

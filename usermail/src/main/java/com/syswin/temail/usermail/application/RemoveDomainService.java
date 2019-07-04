@@ -1,5 +1,6 @@
 package com.syswin.temail.usermail.application;
 
+import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
@@ -21,13 +22,16 @@ public class RemoveDomainService {
   private final UsermailMsgReplyRepo usermailMsgReplyRepo;
   private final UsermailBlacklistRepo usermailBlacklistRepo;
   private final UsermailBoxRepo usermailBoxRepo;
+  private final UsermailMqService usermailMqService;
 
   public RemoveDomainService(UsermailRepo usermailRepo, UsermailMsgReplyRepo usermailMsgReplyRepo,
-      UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo) {
+      UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo,
+      UsermailMqService usermailMqService) {
     this.usermailRepo = usermailRepo;
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
     this.usermailBlacklistRepo = usermailBlacklistRepo;
     this.usermailBoxRepo = usermailBoxRepo;
+    this.usermailMqService = usermailMqService;
   }
 
   /**
@@ -38,16 +42,22 @@ public class RemoveDomainService {
   public void removeDomain(String domain) {
     Boolean enabled = Boolean.valueOf(removeEnabled);
     if (enabled) {
-      this.removeUsermail(domain, pageSize);
-      this.removeMsgReply(domain, pageSize);
-      this.removeBlack(domain, pageSize);
-      this.removeBox(domain, pageSize);
+      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_7);
+      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_MSG_REPLY_8);
+      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BLACK_LIST_9);
+      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BOX_10);
     } else {
       log.info("RemoveDomainService.removeDomain() remove domain is not enabled, removeEnabled: [{}]", removeEnabled);
     }
   }
 
-  private void removeUsermail(String domain, int pageSize) {
+  /**
+   * 异步mq-清空指定域全部单聊消息
+   *
+   * @param domain 域
+   */
+  public void removeUsermail(String domain) {
+    log.info("RemoveDomainService.removeUsermail() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailRepo.deleteDomain(domain, pageSize);
@@ -55,7 +65,13 @@ public class RemoveDomainService {
     log.info("RemoveDomainService.removeUsermail() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 
-  private void removeMsgReply(String domain, int pageSize) {
+  /**
+   * 异步mq-清空指定域全部单聊回复消息
+   *
+   * @param domain 域
+   */
+  public void removeMsgReply(String domain) {
+    log.info("RemoveDomainService.removeMsgReply() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailMsgReplyRepo.deleteDomain(domain, pageSize);
@@ -63,7 +79,13 @@ public class RemoveDomainService {
     log.info("RemoveDomainService.removeMsgReply() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 
-  private void removeBlack(String domain, int pageSize) {
+  /**
+   * 异步mq-清空指定域全部单聊黑名单信息
+   *
+   * @param domain 域
+   */
+  public void removeBlack(String domain) {
+    log.info("RemoveDomainService.removeBlack() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailBlacklistRepo.deleteDomain(domain, pageSize);
@@ -71,7 +93,13 @@ public class RemoveDomainService {
     log.info("RemoveDomainService.removeBlack() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 
-  private void removeBox(String domain, int pageSize) {
+  /**
+   * 异步mq-清空指定域全部单聊会话信息
+   *
+   * @param domain 域
+   */
+  public void removeBox(String domain) {
+    log.info("RemoveDomainService.removeBox() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailBoxRepo.deleteDomain(domain, pageSize);

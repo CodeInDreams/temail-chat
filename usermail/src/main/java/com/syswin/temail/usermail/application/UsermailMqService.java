@@ -27,6 +27,7 @@ package com.syswin.temail.usermail.application;
 import com.google.gson.Gson;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.common.ParamsKey;
+import com.syswin.temail.usermail.common.ParamsKey.SessionEventKey;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
@@ -182,5 +183,19 @@ public class UsermailMqService {
     usermailMap.put(ParamsKey.SessionEventKey.TIMESTAMP, System.currentTimeMillis());
     usermailMap.put(ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE, UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6);
     mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, groupTemail, gson.toJson(usermailMap));
+  }
+
+  /**
+   * 单聊清除域下所有信息
+   *
+   * @param domain 域
+   * @param eventType 事件类型
+   */
+  public void sendMqRemoveDomain(String domain, int eventType) {
+    Map<String, Object> params = new HashMap<>(4);
+    params.put(SessionEventKey.TEMAIL_DOMAIN, domain);
+    params.put(SessionEventKey.SESSION_MESSAGE_TYPE, eventType);
+    params.put(SessionEventKey.TIMESTAMP, System.currentTimeMillis());
+    mqAdapter.sendMessage(usermailConfig.mqUserMailAgentTopic, domain, new Gson().toJson(params));
   }
 }

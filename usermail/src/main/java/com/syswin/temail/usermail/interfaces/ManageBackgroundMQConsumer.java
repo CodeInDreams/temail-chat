@@ -13,9 +13,7 @@ public class ManageBackgroundMQConsumer implements IMqConsumer {
 
   @Override
   public boolean consumer(String domain) {
-
     removeDomainService.removeDomain(domain);
-
     return true;
   }
 }

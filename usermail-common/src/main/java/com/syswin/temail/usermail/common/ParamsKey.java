@@ -44,6 +44,7 @@ public class ParamsKey {
     String MESSAGE = "message";
     String DELETE_ALL_MSG = "deleteAllMsg";
     String SESSION_EXT_DATA = "sessionExtData";
+    String TEMAIL_DOMAIN = "temailDomain";
     /**
      * 回复父消息id
      */
