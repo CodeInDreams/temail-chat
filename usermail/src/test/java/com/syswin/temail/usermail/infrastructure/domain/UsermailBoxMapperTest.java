@@ -143,8 +143,6 @@ public class UsermailBoxMapperTest {
     usermailBoxMapper.saveUsermailBox(usermailBoxDO1);
     usermailBoxMapper.saveUsermailBox(usermailBoxDO2);
     List<UsermailBoxDO> usermailBoxes = usermailBoxMapper.selectTopNByOwner(from, 0);
-    assertThat(usermailBoxes.get(0).getMail2()).isEqualTo(usermailBoxDO2.getMail2());
-    assertThat(usermailBoxes.get(0).getSessionid()).isEqualTo(usermailBoxDO2.getSessionid());
     assertThat(usermailBoxes.size()).isEqualTo(2);
   }
 
