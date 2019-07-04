@@ -1,11 +1,7 @@
 package com.syswin.temail.usermail.application;
 
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
+import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,36 +10,30 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class RemoveDomainServiceTest {
 
   private Integer pageSize = 100;
+  private String removeEnabled = "true";
 
   @InjectMocks
   private RemoveDomainService removeDomainService;
   @Mock
-  private UsermailRepo usermailRepo;
-  @Mock
-  private UsermailMsgReplyRepo usermailMsgReplyRepo;
-  @Mock
-  private UsermailBlacklistRepo usermailBlacklistRepo;
-  @Mock
-  private UsermailBoxRepo usermailBoxRepo;
+  private UsermailMqService usermailMqService;
 
   @Before
   public void setUp () {
     ReflectionTestUtils.setField(removeDomainService, "pageSize", pageSize);
+    ReflectionTestUtils.setField(removeDomainService, "removeEnabled", removeEnabled);
   }
 
   @Test
   public void removeDomain() {
     String domain = "domain";
     removeDomainService.removeDomain(domain);
-
-    Mockito.verify(usermailRepo).deleteDomain(domain, pageSize);
-    Mockito.verify(usermailMsgReplyRepo).deleteDomain(domain, pageSize);
-    Mockito.verify(usermailBlacklistRepo).deleteDomain(domain, pageSize);
-    Mockito.verify(usermailBoxRepo).deleteDomain(domain, pageSize);
+    Mockito.verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_7);
+    Mockito.verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_MSG_REPLY_8);
+    Mockito.verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BLACK_LIST_9);
+    Mockito.verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BOX_10);
   }
 }

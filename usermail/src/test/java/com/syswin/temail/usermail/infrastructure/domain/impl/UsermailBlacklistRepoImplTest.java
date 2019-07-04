@@ -100,7 +100,7 @@ public class UsermailBlacklistRepoImplTest {
     int pageSize = 100;
 
     usermailBlacklistRepoImpl.deleteDomain(domain, pageSize);
-    verify(usermailBlacklistMapper).deleteDomain("%@" + domain, pageSize);
+    verify(usermailBlacklistMapper).deleteDomain(domain, pageSize);
   }
 
 }

@@ -131,7 +131,7 @@ public class UsermailMsgReplyImplTest {
     int pageSize = 100;
 
     usermailMsgReplyRepoImpl.deleteDomain(domain, pageSize);
-    verify(usermailMsgReplyMapper).deleteDomain("%@" + domain, pageSize);
+    verify(usermailMsgReplyMapper).deleteDomain(domain, pageSize);
   }
 
 }
