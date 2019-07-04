@@ -327,7 +327,7 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setMsgid(UUID.randomUUID().toString());
     usermailMsgReplyMapper.insert(usermailMsgReply);
 
-    String domain = "%@deletedomain";
+    String domain = "deletedomain";
     int pageSize = 1;
     int count = usermailMsgReplyMapper.deleteDomain(domain, pageSize);
 

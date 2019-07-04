@@ -245,8 +245,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    */
   @Override
   public int deleteDomain(String domain, int pageSize) {
-    final String domainPattern = "%@" + domain;
-    return usermailMapper.deleteDomain(domainPattern, pageSize);
+    return usermailMapper.deleteDomain(domain, pageSize);
   }
 
 }

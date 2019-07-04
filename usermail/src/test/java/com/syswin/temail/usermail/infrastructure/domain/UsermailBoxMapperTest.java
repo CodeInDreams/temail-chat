@@ -122,7 +122,7 @@ public class UsermailBoxMapperTest {
     usermailBox.setOwner("mailB@deleteDomain");
     usermailBoxMapper.saveUsermailBox(usermailBox);
 
-    String domain = "%@deleteDomain";
+    String domain = "deleteDomain";
     int pageSize = 1;
     int count = usermailBoxMapper.deleteDomain(domain, pageSize);
 

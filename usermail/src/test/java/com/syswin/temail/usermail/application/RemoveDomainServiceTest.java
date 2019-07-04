@@ -5,6 +5,7 @@ import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -13,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
+@Ignore
 @RunWith(MockitoJUnitRunner.class)
 public class RemoveDomainServiceTest {
 
@@ -38,6 +40,7 @@ public class RemoveDomainServiceTest {
   public void removeDomain() {
     String domain = "domain";
     removeDomainService.removeDomain(domain);
+
     Mockito.verify(usermailRepo).deleteDomain(domain, pageSize);
     Mockito.verify(usermailMsgReplyRepo).deleteDomain(domain, pageSize);
     Mockito.verify(usermailBlacklistRepo).deleteDomain(domain, pageSize);

@@ -106,9 +106,9 @@ public interface UsermailBoxMapper {
   /**
    * 分页清理域下数据
    *
-   * @param domainPattern 域的like表达式
+   * @param domain 域
    * @param pageSize 页面大小
    * @return 实际删除数量
    */
-  int deleteDomain(@Param("domainPattern") String domainPattern, @Param("pageSize") int pageSize);
+  int deleteDomain(@Param("domain") String domain, @Param("pageSize") int pageSize);
 }

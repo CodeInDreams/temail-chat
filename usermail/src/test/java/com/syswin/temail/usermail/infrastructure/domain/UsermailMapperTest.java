@@ -491,9 +491,9 @@ public class UsermailMapperTest {
     mail.setId(this.generatePKid());
     mail.setMsgid(msgid + "002");
     usermailMapper.insertUsermail(mail);
-    String pattern = "%@deletedomain";
+    String domain = "deletedomain";
     int pageSize = 1;
-    int count = usermailMapper.deleteDomain(pattern, pageSize);
+    int count = usermailMapper.deleteDomain(domain, pageSize);
 
     assertThat(count).isOne();
   }

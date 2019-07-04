@@ -196,7 +196,6 @@ public class UsermailMsgReplyRepoImpl implements UsermailMsgReplyRepo {
    */
   @Override
   public int deleteDomain(String domain, int pageSize) {
-    final String domainPattern = "%@" + domain;
-    return usermailMsgReplyMapper.deleteDomain(domainPattern, pageSize);
+    return usermailMsgReplyMapper.deleteDomain(domain, pageSize);
   }
 }

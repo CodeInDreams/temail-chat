@@ -105,7 +105,7 @@ public class UsermailBlacklistMapperTest {
     usermailBlacklist.setBlackedAddress("sad@deleteDomain");
     blacklistMapper.insertUsermailBlacklist(usermailBlacklist);
 
-    String domain = "%@deleteDomain";
+    String domain = "deleteDomain";
     int pageSize = 1;
     int count = blacklistMapper.deleteDomain(domain, pageSize);
 

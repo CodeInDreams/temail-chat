@@ -84,6 +84,7 @@
   </update>
 
   <delete id="deleteDomain">
+    <bind name="domainPattern" value="'%@' + domain"/>
     delete from `usermail_box` where `owner` like #{domainPattern} limit #{pageSize}
   </delete>
 
