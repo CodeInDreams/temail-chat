@@ -35,8 +35,7 @@ CREATE TABLE `usermail_box` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   `session_ext_data` varchar(256) DEFAULT '' COMMENT '会话中对方的头像昵称信息',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `i_owner_mail2` (`owner`,`mail2`) USING BTREE,
-  KEY `index-sessionid` (`sessionid`) USING BTREE
+  UNIQUE KEY `i_owner_mail2` (`owner`,`mail2`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS `usermail_msg_reply`;
