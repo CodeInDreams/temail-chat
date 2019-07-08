@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 public class RemoveDomainService {
 
 
-  @Value("${app.temail.usermailagent.clear.domain.enabled:false}")
+  @Value("${app.usermailagent.clear.domain.enabled:false}")
   private String removeEnabled;
-  @Value("${app.temail.usermailagent.clear.domain.pageSize:100}")
+  @Value("${app.usermailagent.clear.domain.pageSize:100}")
   private Integer pageSize;
   private final UsermailRepo usermailRepo;
   private final UsermailMsgReplyRepo usermailMsgReplyRepo;

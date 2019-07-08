@@ -84,7 +84,7 @@ public class UsermailService {
   private final MsgCompressor msgCompressor;
   private final ConvertMsgService convertMsgService;
 
-  @Value("${app.temail.usermailagent.mailboxes.topN:50}")
+  @Value("${app.usermailagent.mailboxes.topN:50}")
   private Integer topN;
 
 

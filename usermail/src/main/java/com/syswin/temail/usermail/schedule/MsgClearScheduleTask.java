@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @EnableScheduling
 @Component
-@ConditionalOnProperty(name = "app.temail.usermailagent.clear.msg.task.enabled", havingValue = "true")
-@ConfigurationProperties(prefix = "app.temail.usermailagent.clear.msg.task")
+@ConditionalOnProperty(name = "app.usermailagent.clear.msg.task.enabled", havingValue = "true")
+@ConfigurationProperties(prefix = "app.usermailagent.clear.msg.task")
 public class MsgClearScheduleTask implements SchedulingConfigurer {
 
   private String cron;
