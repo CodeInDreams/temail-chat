@@ -11,7 +11,7 @@ public class MailboxComparator implements Comparator<MailboxDTO> {
   @Override
   public int compare(MailboxDTO o1, MailboxDTO o2) {
     if (o1 == null || o1.getLastMsg() == null || o1.getLastMsg().getCreateTime() == null) {
-      if (o2 == null) {
+      if (o2 ==  null || o2.getLastMsg() == null || o2.getLastMsg().getCreateTime() == null) {
         return -1;
       } else {
         return 1;
