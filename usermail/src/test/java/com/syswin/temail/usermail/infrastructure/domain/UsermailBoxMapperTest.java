@@ -66,7 +66,7 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testListUsermailBoxsByOwner() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner2", "mailsend@temail.com", "mailsend@temail.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner", "mailsend@temail.com", "mailsend@temail.com");
     usermailBoxMapper.saveUsermailBox(box);
     List<UsermailBoxDO> boxes = usermailBoxMapper.listUsermailBoxsByOwner("mailsend@temail.com", 0);
     assertThat(boxes.get(0).getOwner()).isEqualTo("mailsend@temail.com");
@@ -74,7 +74,7 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testDeleteUsermailBox() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner3", "mailreceive12@temail.com", "mailsend12@temail.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner2", "mailreceive12@temail.com", "mailsend12@temail.com");
     usermailBoxMapper.saveUsermailBox(box);
     int result = usermailBoxMapper.deleteByOwnerAndMail2("mailsend12@temail.com", "mailreceive12@temail.com");
     assertThat(result).isEqualTo(1);
@@ -82,8 +82,8 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testListUsermailBoxsByOwnerAndTo() {
-    String owner = "mailsend1@temail.com";
-    String mail2 = "mailreceive1@temail.com";
+    String owner = "mailsend3@temail.com";
+    String mail2 = "mailreceive3@temail.com";
     UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner3", mail2, owner);
     usermailBoxMapper.saveUsermailBox(box);
     List<UsermailBoxDO> usermailBoxes = usermailBoxMapper.listUsermailBoxsByOwnerAndTo(owner, mail2);
@@ -93,8 +93,8 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testUpdateArchiveStatus() {
-    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner3", "mailreceive1@msgseal.com",
-        "mailsend1@msgseal.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner4", "mailreceive4@msgseal.com",
+        "mailsend4@msgseal.com");
     usermailBoxMapper.saveUsermailBox(box);
     int result = usermailBoxMapper.updateArchiveStatus(box.getOwner(), box.getMail2(), box.getArchiveStatus());
     assertThat(result).isEqualTo(1);
@@ -102,8 +102,8 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testGetUsermailBox() {
-    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner4", "mailreceive2@msgseal.com",
-        "mailsend2@msgseal.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner5", "mailreceive5@msgseal.com",
+        "mailsend5@msgseal.com");
     usermailBoxMapper.saveUsermailBox(box);
     UsermailBoxDO usermailBox = usermailBoxMapper.selectByOwnerAndMail2(box.getOwner(), box.getMail2());
     assertThat(usermailBox.getOwner()).isEqualTo(box.getOwner());

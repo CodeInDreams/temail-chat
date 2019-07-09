@@ -116,11 +116,12 @@ public class UsermailService {
    * @param owner 消息所属人
    * @return UsermailBoxDO 当前数据库的会话信息
    */
-  public UsermailBoxDO saveUsermailBoxInfo(String sessionId, String from, String to, String owner, String sessionExtData) {
+  public UsermailBoxDO saveUsermailBoxInfo(String sessionId, String from, String to, String owner,
+      String sessionExtData) {
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
     UsermailBoxDO dbBox;
-     dbBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
+    dbBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
     if (dbBox == null) {
       dbBox = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner, sessionExtData);
       usermailBoxRepo.saveUsermailBox(dbBox);
@@ -325,7 +326,7 @@ public class UsermailService {
     }
     Collections.sort(mailboxes, new MailboxComparator());
     pageSize = pageSize > topN ? topN : pageSize;
-    return mailboxes.subList(0, pageSize);
+    return mailboxes.size() > pageSize ? mailboxes.subList(0, pageSize) : mailboxes;
   }
 
   /**
