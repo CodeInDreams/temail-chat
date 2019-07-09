@@ -31,7 +31,7 @@
   <parent>
     <artifactId>temail-usermail</artifactId>
     <groupId>com.syswin.temail</groupId>
-    <version>1.2.11-SNAPSHOT</version>
+    <version>1.2.12-SNAPSHOT</version>
   </parent>
   <artifactId>temail-usermailagent</artifactId>
 
