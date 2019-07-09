@@ -41,7 +41,7 @@ public class MailboxComparator implements Comparator<MailboxDTO> {
     Timestamp createTime1 = lastMsg1.getCreateTime();
     Timestamp createTime2 = lastMsg2.getCreateTime();
     if(createTime1 == null){
-      if(createTime1 == null) {
+      if(createTime2 == null) {
         return 0;
       } else {
         return 1;
