@@ -31,13 +31,13 @@ public class MailboxComparatorTest {
     dto3.setTo("to3");
 
     List<MailboxDTO> list = new ArrayList();
-    list.add(null);
+//    list.add(null);
     list.add(dto1);
-    list.add(null);
+//    list.add(null);
     list.add(dto3);
-    list.add(null);
+//    list.add(null);
     list.add(dto2);
-    list.add(null);
+//    list.add(null);
 
     Collections.sort(list, new MailboxComparator());
     for (int i = 0; i < list.size(); i++) {
@@ -46,10 +46,10 @@ public class MailboxComparatorTest {
     Assert.assertEquals("to2", list.get(0).getTo());
     Assert.assertEquals("to1", list.get(1).getTo());
     Assert.assertEquals("to3", list.get(2).getTo());
-    Assert.assertNull(list.get(3));
-    Assert.assertNull(list.get(4));
-    Assert.assertNull(list.get(5));
-    Assert.assertNull(list.get(6));
+//    Assert.assertNull(list.get(3));
+//    Assert.assertNull(list.get(4));
+//    Assert.assertNull(list.get(5));
+//    Assert.assertNull(list.get(6));
   }
 
 }
