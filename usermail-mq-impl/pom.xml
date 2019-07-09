@@ -30,7 +30,7 @@
   <parent>
     <artifactId>temail-usermail</artifactId>
     <groupId>com.syswin.temail</groupId>
-    <version>1.2.13-SNAPSHOT</version>
+    <version>1.2.14-SNAPSHOT</version>
   </parent>
 
   <artifactId>usermail-mq-impl</artifactId>
