@@ -30,9 +30,11 @@ public class MsgClearScheduleTask implements SchedulingConfigurer {
   public void configureTasks(ScheduledTaskRegistrar scheduledTaskRegistrar) {
     scheduledTaskRegistrar.addTriggerTask(() -> {
       try {
+        log.info("label-MsgClearScheduleTask begin, beforeDays: [{}], batchNum: [{}]", beforeDays, batchNum);
         clearService.deleteHistoryMsg(beforeDays, batchNum);
+        log.info("label-MsgClearScheduleTask end, beforeDays: [{}], batchNum: [{}]", beforeDays, batchNum);
       } catch (Exception e) {
-        log.error("label-MsgClearScheduleTask-exception: ", e);
+        log.error("label-MsgClearScheduleTask exception: ", e);
       }
     }, new CronTrigger(cron));
 
