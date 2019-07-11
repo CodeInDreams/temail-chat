@@ -111,6 +111,10 @@
     </dependency>
     <dependency>
       <groupId>com.syswin.temail</groupId>
+      <artifactId>usermail-mongodb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.syswin.temail</groupId>
       <artifactId>temail-sharding</artifactId>
     </dependency>
     <dependency>
@@ -257,6 +261,10 @@
                 <include>
                   <groupId>com.syswin.temail</groupId>
                   <artifactId>usermail-cassandra</artifactId>
+                </include>
+                <include>
+                  <groupId>com.syswin.temail</groupId>
+                  <artifactId>usermail-mongodb</artifactId>
                 </include>
               </includes>
             </configuration>
