@@ -19,7 +19,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class DomainClearServiceTest {
 
   private Integer pageSize = 100;
-  private String removeEnabled = "true";
+  private String enabled = "true";
 
   @InjectMocks
   private DomainClearService domainClearService;
@@ -38,7 +38,7 @@ public class DomainClearServiceTest {
   @Before
   public void setUp() {
     ReflectionTestUtils.setField(domainClearService, "pageSize", pageSize);
-    ReflectionTestUtils.setField(domainClearService, "removeEnabled", removeEnabled);
+    ReflectionTestUtils.setField(domainClearService, "enabled", enabled);
   }
 
   @Test

@@ -310,15 +310,18 @@ public class UsermailMsgReplyTest {
 
   @Test
   public void deleteDomainTest() {
+    String domain = "deletedomain";
+    String from = "A2018@" + domain;
+    String to = "B2018@t.email";
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setParentMsgid("syswin-1543456947958");
-    usermailMsgReply.setFrom("A2018@deletedomain");
+    usermailMsgReply.setFrom(from);
     usermailMsgReply.setStatus(0);
     usermailMsgReply.setMsgid("syswin-1543572005953");
     usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setSeqNo(0);
-    usermailMsgReply.setTo("B2018");
-    usermailMsgReply.setOwner("A2018");
+    usermailMsgReply.setTo(to);
+    usermailMsgReply.setOwner(from);
     usermailMsgReply.setType(1);
     usermailMsgReply.setMsg("testsavemethod");
     usermailMsgReply.setSessionid("jkasjkaslkjaskl");
@@ -326,8 +329,9 @@ public class UsermailMsgReplyTest {
     usermailMsgReply.setId(this.generatePKid());
     usermailMsgReply.setMsgid(UUID.randomUUID().toString());
     usermailMsgReplyMapper.insert(usermailMsgReply);
-
-    String domain = "deletedomain";
+    usermailMsgReply.setId(this.generatePKid());
+    usermailMsgReply.setOwner(to);
+    usermailMsgReplyMapper.insert(usermailMsgReply);
     int pageSize = 1;
     int count = usermailMsgReplyMapper.deleteDomain(domain, pageSize);
 
