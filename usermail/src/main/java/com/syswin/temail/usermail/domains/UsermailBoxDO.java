@@ -54,10 +54,6 @@ public class UsermailBoxDO implements java.io.Serializable {
   @ApiModelProperty(value = "会话中对方的昵称和头像")
   private String sessionExtData;
 
-  public static UsermailBoxDO Create(long id, String sessionid, String mail2, String owner, String sessionExtData) {
-    return new UsermailBoxDO(id, sessionid, mail2, owner, sessionExtData);
-  }
-
   public UsermailBoxDO(long id, String sessionid, String mail2, String owner, String sessionExtData) {
     this.id = id;
     this.sessionid = sessionid;
