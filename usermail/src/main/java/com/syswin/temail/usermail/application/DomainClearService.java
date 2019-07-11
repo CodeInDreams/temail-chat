@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class RemoveDomainService {
+public class DomainClearService {
 
 
   @Value("${app.usermailagent.clear.domain.enabled:false}")
-  private String removeEnabled;
+  private String enabled;
   @Value("${app.usermailagent.clear.domain.pageSize:100}")
   private Integer pageSize;
   private final UsermailRepo usermailRepo;
@@ -24,7 +24,7 @@ public class RemoveDomainService {
   private final UsermailBoxRepo usermailBoxRepo;
   private final UsermailMqService usermailMqService;
 
-  public RemoveDomainService(UsermailRepo usermailRepo, UsermailMsgReplyRepo usermailMsgReplyRepo,
+  public DomainClearService(UsermailRepo usermailRepo, UsermailMsgReplyRepo usermailMsgReplyRepo,
       UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo,
       UsermailMqService usermailMqService) {
     this.usermailRepo = usermailRepo;
@@ -39,15 +39,16 @@ public class RemoveDomainService {
    *
    * @param domain 域
    */
-  public void removeDomain(String domain) {
-    Boolean enabled = Boolean.valueOf(removeEnabled);
+  public void clearDomainAll(String domain) {
+    Boolean enabled = Boolean.valueOf(this.enabled);
     if (enabled) {
-      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_7);
-      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_MSG_REPLY_8);
-      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BLACK_LIST_9);
-      usermailMqService.sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BOX_10);
+      log.info("label-DomainClearService.clearDomainAll() clear domain begin, domain: [{}]", domain);
+      usermailMqService.sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_7);
+      usermailMqService.sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_MSG_REPLY_8);
+      usermailMqService.sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_BLACK_LIST_9);
+      usermailMqService.sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_BOX_10);
     } else {
-      log.info("RemoveDomainService.removeDomain() remove domain is not enabled, removeEnabled: [{}]", removeEnabled);
+      log.info("label-DomainClearService.clearDomainAll() clear domain is not enabled, enabled: [{}]", this.enabled);
     }
   }
 
@@ -56,13 +57,13 @@ public class RemoveDomainService {
    *
    * @param domain 域
    */
-  public void removeUsermail(String domain) {
-    log.info("RemoveDomainService.removeUsermail() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
+  public void clearUsermailAll(String domain) {
+    log.info("label-DomainClearService.clearUsermailAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailRepo.deleteDomain(domain, pageSize);
     } while (count > 0);
-    log.info("RemoveDomainService.removeUsermail() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
+    log.info("label-DomainClearService.clearUsermailAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 
   /**
@@ -70,13 +71,13 @@ public class RemoveDomainService {
    *
    * @param domain 域
    */
-  public void removeMsgReply(String domain) {
-    log.info("RemoveDomainService.removeMsgReply() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
+  public void clearMsgReplyAll(String domain) {
+    log.info("label-DomainClearService.clearMsgReplyAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailMsgReplyRepo.deleteDomain(domain, pageSize);
     } while (count > 0);
-    log.info("RemoveDomainService.removeMsgReply() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
+    log.info("label-DomainClearService.clearMsgReplyAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 
   /**
@@ -84,13 +85,13 @@ public class RemoveDomainService {
    *
    * @param domain 域
    */
-  public void removeBlack(String domain) {
-    log.info("RemoveDomainService.removeBlack() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
+  public void clearBlackAll(String domain) {
+    log.info("label-DomainClearService.clearBlackAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailBlacklistRepo.deleteDomain(domain, pageSize);
     } while (count > 0);
-    log.info("RemoveDomainService.removeBlack() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
+    log.info("label-DomainClearService.clearBlackAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 
   /**
@@ -98,12 +99,12 @@ public class RemoveDomainService {
    *
    * @param domain 域
    */
-  public void removeBox(String domain) {
-    log.info("RemoveDomainService.removeBox() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
+  public void clearBoxAll(String domain) {
+    log.info("label-DomainClearService.clearBoxAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
       count = usermailBoxRepo.deleteDomain(domain, pageSize);
     } while (count > 0);
-    log.info("RemoveDomainService.removeBox() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
+    log.info("label-DomainClearService.clearBoxAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
 }

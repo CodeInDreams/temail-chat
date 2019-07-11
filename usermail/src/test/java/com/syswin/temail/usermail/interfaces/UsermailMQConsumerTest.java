@@ -25,7 +25,7 @@
 package com.syswin.temail.usermail.interfaces;
 
 import com.google.gson.Gson;
-import com.syswin.temail.usermail.application.RemoveDomainService;
+import com.syswin.temail.usermail.application.DomainClearService;
 import com.syswin.temail.usermail.application.UsermailMsgReplyService;
 import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
@@ -48,9 +48,9 @@ public class UsermailMQConsumerTest {
 
   private UsermailMsgReplyService usermailMsgReplyService = Mockito.mock(UsermailMsgReplyService.class);
 
-  private RemoveDomainService removeDomainService = Mockito.mock(RemoveDomainService.class);
+  private DomainClearService domainClearService = Mockito.mock(DomainClearService.class);
   private UsermailMQConsumer usermailMQConsumer = new UsermailMQConsumer(usermailService, usermailMsgReplyService,
-      removeDomainService);
+      domainClearService);
 
 //  @Autowired
 //  private UsermailService usermailService;

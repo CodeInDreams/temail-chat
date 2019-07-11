@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.interfaces;
 
-import com.syswin.temail.usermail.application.RemoveDomainService;
+import com.syswin.temail.usermail.application.DomainClearService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -9,17 +9,17 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RemoveDomainMQConsumerTest {
+public class DomainClearMqConsumerTest {
 
   @InjectMocks
-  private RemoveDomainMQConsumer consumer;
+  private DomainClearMqConsumer consumer;
   @Mock
-  private RemoveDomainService service;
+  private DomainClearService service;
   private String message = "test.com";
 
   @Test
   public void consumer() {
     consumer.consumer(message);
-    Mockito.verify(service).removeDomain(message);
+    Mockito.verify(service).clearDomainAll(message);
   }
 }

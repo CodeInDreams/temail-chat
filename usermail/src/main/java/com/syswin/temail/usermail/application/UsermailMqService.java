@@ -191,7 +191,7 @@ public class UsermailMqService {
    * @param domain 域
    * @param eventType 事件类型
    */
-  public void sendMqRemoveDomain(String domain, int eventType) {
+  public void sendMqClearDomain(String domain, int eventType) {
     Map<String, Object> params = new HashMap<>(4);
     params.put(SessionEventKey.TEMAIL_DOMAIN, domain);
     params.put(SessionEventKey.SESSION_MESSAGE_TYPE, eventType);

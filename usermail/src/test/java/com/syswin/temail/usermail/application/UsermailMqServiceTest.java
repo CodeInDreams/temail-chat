@@ -190,8 +190,8 @@ public class UsermailMqServiceTest {
   @Test
   public void sendMqRemoveDomainTest() {
     String domain = "domain";
-    int eventType = UsermailAgentEventType.REMOVE_ALL_USERMAIL_7;
-    usermailMqService.sendMqRemoveDomain(domain, eventType);
+    int eventType = UsermailAgentEventType.CLEAR_ALL_USERMAIL_7;
+    usermailMqService.sendMqClearDomain(domain, eventType);
     ArgumentCaptor<String> mapCaptor = ArgumentCaptor.forClass(String.class);
     verify(mqAdapter).sendMessage(eq(usermailConfig.mqUserMailAgentTopic), eq(domain), mapCaptor.capture());
     String mapCaptorValue = mapCaptor.getValue();

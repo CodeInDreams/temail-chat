@@ -99,7 +99,7 @@ public class UsermailMsgReplyInterfaceTest {
     UsermailMsgReplyDO lastMsgInfos = getLastMsgInfo(deletereplyMsg);
     Assert.assertEquals(lastMsgInfos.getParentMsgid(), parentMsgId);
     //Assert.assertEquals(lastMsgInfos.getStatus(), TemailStatus.STATUS_DELETE_3);
-    System.out.println("removeMsgReply success--------------------------");
+    System.out.println("clearMsgReplyAll success--------------------------");
   }
 
   private void assertAfterRevert(ResponseEntity<String> replyMsgs, String parentMsgId) {

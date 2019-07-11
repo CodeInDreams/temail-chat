@@ -16,13 +16,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(MockitoJUnitRunner.class)
-public class RemoveDomainServiceTest {
+public class DomainClearServiceTest {
 
   private Integer pageSize = 100;
   private String removeEnabled = "true";
 
   @InjectMocks
-  private RemoveDomainService removeDomainService;
+  private DomainClearService domainClearService;
   @Mock
   private UsermailMqService usermailMqService;
   @Mock
@@ -37,45 +37,45 @@ public class RemoveDomainServiceTest {
 
   @Before
   public void setUp() {
-    ReflectionTestUtils.setField(removeDomainService, "pageSize", pageSize);
-    ReflectionTestUtils.setField(removeDomainService, "removeEnabled", removeEnabled);
+    ReflectionTestUtils.setField(domainClearService, "pageSize", pageSize);
+    ReflectionTestUtils.setField(domainClearService, "removeEnabled", removeEnabled);
   }
 
   @Test
   public void removeDomainTest() {
     String domain = "domain";
-    removeDomainService.removeDomain(domain);
-    verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_7);
-    verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_MSG_REPLY_8);
-    verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BLACK_LIST_9);
-    verify(usermailMqService).sendMqRemoveDomain(domain, UsermailAgentEventType.REMOVE_ALL_USERMAIL_BOX_10);
+    domainClearService.clearDomainAll(domain);
+    verify(usermailMqService).sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_7);
+    verify(usermailMqService).sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_MSG_REPLY_8);
+    verify(usermailMqService).sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_BLACK_LIST_9);
+    verify(usermailMqService).sendMqClearDomain(domain, UsermailAgentEventType.CLEAR_ALL_USERMAIL_BOX_10);
   }
 
   @Test
   public void removeUsermailTest() {
     String domain = "domain";
-    removeDomainService.removeUsermail(domain);
+    domainClearService.clearUsermailAll(domain);
     verify(usermailRepo).deleteDomain(domain, pageSize);
   }
 
   @Test
   public void removeMsgReplyTest() {
     String domain = "domain";
-    removeDomainService.removeMsgReply(domain);
+    domainClearService.clearMsgReplyAll(domain);
     verify(msgReplyRepo).deleteDomain(domain, pageSize);
   }
 
   @Test
   public void removeBlackTest() {
     String domain = "domain";
-    removeDomainService.removeBlack(domain);
+    domainClearService.clearBlackAll(domain);
     verify(blacklistRepo).deleteDomain(domain, pageSize);
   }
 
   @Test
   public void removeBoxTest() {
     String domain = "domain";
-    removeDomainService.removeBox(domain);
+    domainClearService.clearBoxAll(domain);
     verify(boxRepo).deleteDomain(domain, pageSize);
   }
 }

@@ -29,7 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.syswin.temail.usermail.application.RemoveDomainService;
+import com.syswin.temail.usermail.application.DomainClearService;
 import com.syswin.temail.usermail.application.UsermailMsgReplyService;
 import com.syswin.temail.usermail.application.UsermailService;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
@@ -53,14 +53,14 @@ public class UsermailMQConsumer implements IMqConsumer {
 
   private final UsermailMsgReplyService usermailMsgReplyService;
 
-  private final RemoveDomainService removeDomainService;
+  private final DomainClearService domainClearService;
 
   @Autowired
   public UsermailMQConsumer(UsermailService usermailService, UsermailMsgReplyService usermailMsgReplyService,
-      RemoveDomainService removeDomainService) {
+      DomainClearService domainClearService) {
     this.usermailService = usermailService;
     this.usermailMsgReplyService = usermailMsgReplyService;
-    this.removeDomainService = removeDomainService;
+    this.domainClearService = domainClearService;
   }
 
   /**
@@ -138,21 +138,21 @@ public class UsermailMQConsumer implements IMqConsumer {
         String member = root.get(ParamsKey.SessionEventKey.TEMAIL).getAsString();
         usermailService.deleteGroupChatSession(groupTemail, member);
         break;
-      case UsermailAgentEventType.REMOVE_ALL_USERMAIL_7:
+      case UsermailAgentEventType.CLEAR_ALL_USERMAIL_7:
         domain = root.get(SessionEventKey.TEMAIL_DOMAIN).getAsString();
-        removeDomainService.removeUsermail(domain);
+        domainClearService.clearUsermailAll(domain);
         break;
-      case UsermailAgentEventType.REMOVE_ALL_USERMAIL_MSG_REPLY_8:
+      case UsermailAgentEventType.CLEAR_ALL_USERMAIL_MSG_REPLY_8:
         domain = root.get(SessionEventKey.TEMAIL_DOMAIN).getAsString();
-        removeDomainService.removeMsgReply(domain);
+        domainClearService.clearMsgReplyAll(domain);
         break;
-      case UsermailAgentEventType.REMOVE_ALL_USERMAIL_BLACK_LIST_9:
+      case UsermailAgentEventType.CLEAR_ALL_USERMAIL_BLACK_LIST_9:
         domain = root.get(SessionEventKey.TEMAIL_DOMAIN).getAsString();
-        removeDomainService.removeBlack(domain);
+        domainClearService.clearBlackAll(domain);
         break;
-      case UsermailAgentEventType.REMOVE_ALL_USERMAIL_BOX_10:
+      case UsermailAgentEventType.CLEAR_ALL_USERMAIL_BOX_10:
         domain = root.get(SessionEventKey.TEMAIL_DOMAIN).getAsString();
-        removeDomainService.removeBox(domain);
+        domainClearService.clearBoxAll(domain);
         break;
       default:
         LOGGER.error("UsermailMQConsumer consumer eventType={}", eventType);
