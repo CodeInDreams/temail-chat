@@ -38,6 +38,7 @@
     <module>usermail-core</module>
     <module>usermail-redis</module>
     <module>usermail-mq-impl</module>
+    <module>usermail-mongodb</module>
   </modules>
 
   <properties>
