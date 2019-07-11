@@ -9,10 +9,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ManageBackgroundMQConsumerTest {
+public class RemoveDomainMQConsumerTest {
 
   @InjectMocks
-  private ManageBackgroundMQConsumer consumer;
+  private RemoveDomainMQConsumer consumer;
   @Mock
   private RemoveDomainService service;
   private String message = "test.com";

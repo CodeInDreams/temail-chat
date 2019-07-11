@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ManageBackgroundMQConsumer implements IMqConsumer {
+public class RemoveDomainMQConsumer implements IMqConsumer {
 
   @Autowired
   private RemoveDomainService removeDomainService;
