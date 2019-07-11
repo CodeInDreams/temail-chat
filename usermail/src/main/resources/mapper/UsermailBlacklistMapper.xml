@@ -62,7 +62,7 @@
 
   <delete id="deleteDomain">
     <bind name="domainPattern" value="'%@' + domain"/>
-    delete from `usermail_blacklist` where `temail_address` like #{domainPattern} limit #{pageSize}
+    delete from `usermail_blacklist` where `temail_address` like #{domainPattern} or `blacked_address` like #{domainPattern} limit #{pageSize}
   </delete>
 
 </mapper>

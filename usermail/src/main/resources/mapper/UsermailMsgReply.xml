@@ -204,7 +204,7 @@
 
   <delete id="deleteDomain">
     <bind name="domainPattern" value="'%@' + domain"/>
-    delete from `usermail_msg_reply` where `from` like #{domainPattern} limit #{pageSize}
+    delete from `usermail_msg_reply` where `owner` like #{domainPattern} limit #{pageSize}
   </delete>
 
 </mapper>
