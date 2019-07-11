@@ -31,11 +31,13 @@ import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.REPLY_
 import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.SESSION_MESSAGE_TYPE;
 import static com.syswin.temail.usermail.common.ParamsKey.SessionEventKey.TEMAIL;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
+import com.syswin.temail.usermail.common.ParamsKey.SessionEventKey;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
@@ -183,6 +185,20 @@ public class UsermailMqServiceTest {
     assertEquals(groupTemail, groupTemailCaptor.getValue());
     assertEquals(temail, jsonObject.get(TEMAIL).getAsString());
     assertEquals(UsermailAgentEventType.REMOVE_GROUP_CHAT_MEMBERS_6, jsonObject.get(SESSION_MESSAGE_TYPE).getAsInt());
+  }
+
+  @Test
+  public void sendMqRemoveDomainTest() {
+    String domain = "domain";
+    int eventType = UsermailAgentEventType.REMOVE_ALL_USERMAIL_7;
+    usermailMqService.sendMqRemoveDomain(domain, eventType);
+    ArgumentCaptor<String> mapCaptor = ArgumentCaptor.forClass(String.class);
+    verify(mqAdapter).sendMessage(eq(usermailConfig.mqUserMailAgentTopic), eq(domain), mapCaptor.capture());
+    String mapCaptorValue = mapCaptor.getValue();
+    JsonParser jsonParser = new JsonParser();
+    JsonObject jsonObject = jsonParser.parse(mapCaptorValue).getAsJsonObject();
+    assertEquals(domain, jsonObject.get(SessionEventKey.TEMAIL_DOMAIN).getAsString());
+    assertEquals(eventType, jsonObject.get(SessionEventKey.SESSION_MESSAGE_TYPE).getAsInt());
   }
 
 }
