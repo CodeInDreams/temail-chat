@@ -66,7 +66,8 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testListUsermailBoxsByOwner() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner", "mailsend@temail.com", "mailsend@temail.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner", "mailsend@temail.com",
+        "mailsend@temail.com");
     usermailBoxMapper.saveUsermailBox(box);
     List<UsermailBoxDO> boxes = usermailBoxMapper.listUsermailBoxsByOwner("mailsend@temail.com", 0);
     assertThat(boxes.get(0).getOwner()).isEqualTo("mailsend@temail.com");
@@ -74,7 +75,8 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void testDeleteUsermailBox() throws Exception {
-    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner2", "mailreceive12@temail.com", "mailsend12@temail.com");
+    UsermailBoxDO box = new UsermailBoxDO(this.generatePKid(), "test-session-owner2", "mailreceive12@temail.com",
+        "mailsend12@temail.com");
     usermailBoxMapper.saveUsermailBox(box);
     int result = usermailBoxMapper.deleteByOwnerAndMail2("mailsend12@temail.com", "mailreceive12@temail.com");
     assertThat(result).isEqualTo(1);
@@ -131,8 +133,21 @@ public class UsermailBoxMapperTest {
 
   @Test
   public void updateSessionExtDataTest() {
-    UsermailBoxDO usermailBoxDO = new UsermailBoxDO("owner", "mail2", "sessionExtData");
+    String owner = "owner";
+    String mail2 = "mail2";
+    UsermailBoxDO usermailBox = new UsermailBoxDO();
+    usermailBox.setId(this.generatePKid());
+    usermailBox.setMail2(mail2);
+    usermailBox.setSessionid("sessionid");
+    usermailBox.setOwner(owner);
+    usermailBox.setSessionExtData("sessionExtData");
+    usermailBoxMapper.saveUsermailBox(usermailBox);
+    String sessionExtDataUpdate = "sessionExtData-1";
+    UsermailBoxDO usermailBoxDO = new UsermailBoxDO(owner, mail2, sessionExtDataUpdate);
     usermailBoxMapper.updateSessionExtData(usermailBoxDO);
+
+    UsermailBoxDO dbBox = usermailBoxMapper.selectByOwnerAndMail2(owner, mail2);
+    assertThat(dbBox.getSessionExtData()).isEqualTo(sessionExtDataUpdate);
   }
 
   @Test
