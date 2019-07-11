@@ -27,10 +27,6 @@
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.syswin.temail</groupId>
       <artifactId>usermail-core</artifactId>
     </dependency>
@@ -38,10 +34,6 @@
       <groupId>com.syswin.temail</groupId>
       <artifactId>usermail-mq-impl</artifactId>
     </dependency>
-    <!--<dependency>
-      <groupId>com.syswin.temail</groupId>
-      <artifactId>temail-usermailagent</artifactId>
-    </dependency>-->
   </dependencies>
 
 </project>

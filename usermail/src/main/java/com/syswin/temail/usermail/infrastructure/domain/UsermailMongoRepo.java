@@ -1,5 +1,6 @@
 package com.syswin.temail.usermail.infrastructure.domain;
 
+import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
@@ -12,9 +13,12 @@ import java.util.List;
 public class UsermailMongoRepo implements UsermailRepo {
 
   private final IMqAdapter mqAdapter;
+  private final UsermailMongoMapper usermailMongoMapper;
 
-  public UsermailMongoRepo(IMqAdapter mqAdapter) {
+  public UsermailMongoRepo(IMqAdapter mqAdapter,
+      UsermailMongoMapper usermailMongoMapper) {
     this.mqAdapter = mqAdapter;
+    this.usermailMongoMapper = usermailMongoMapper;
   }
 
   @Override

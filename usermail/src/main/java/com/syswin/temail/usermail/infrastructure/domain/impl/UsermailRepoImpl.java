@@ -35,9 +35,7 @@ import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public class UsermailRepoImpl implements UsermailRepo {
 
   private final UsermailMapper usermailMapper;

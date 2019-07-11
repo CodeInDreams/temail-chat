@@ -1,20 +1,15 @@
-package com.syswin.temail.mongo.domains;
+package com.syswin.temail.usermail.mongo.domains;
 
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name="usermail")
+
 @Document(collection="usermail")
 public class MongoUsermail implements Serializable {
 
-  @Id
   private long id;
   private String msgid;
   private String sessionid;
@@ -29,7 +24,6 @@ public class MongoUsermail implements Serializable {
   private String topic;
   private Date createTime;
 
-  @Column(name = "last_Reply_Msgid")
   private String lastReplyMsgId;
 
   private Integer replyCount;

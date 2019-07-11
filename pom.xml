@@ -81,6 +81,11 @@
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
+        <artifactId>usermail-mongodb</artifactId>
+        <version>1.2.15-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-cassandra</artifactId>
         <version>1.1.0</version>
       </dependency>

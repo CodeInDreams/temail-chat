@@ -31,9 +31,7 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface UsermailRepo {
 
   /**

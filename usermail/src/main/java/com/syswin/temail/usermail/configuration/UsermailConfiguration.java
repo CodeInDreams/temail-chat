@@ -27,10 +27,17 @@ package com.syswin.temail.usermail.configuration;
 import com.syswin.library.messaging.all.spring.MqConsumerConfig;
 import com.syswin.library.messaging.all.spring.MqImplementation;
 import com.syswin.library.messaging.all.spring.MqProducerConfig;
+import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailMongoRepo;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
+import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailRepoImpl;
+import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
 import com.syswin.temail.usermail.interfaces.DomainClearMqConsumer;
 import com.syswin.temail.usermail.interfaces.UsermailMQConsumer;
+import com.syswin.temail.usermail.mongo.UsermailMongoMQConsumer;
+import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
 import com.syswin.temail.usermail.redis.RedisUsermailAdapter;
 import com.syswin.temail.usermail.rocketmq.MqClient;
 import com.syswin.temail.usermail.rocketmq.RocketMqProperties;
@@ -59,6 +66,14 @@ public class UsermailConfiguration {
   }
 
   @Bean
+  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
+  MqClient mongoMqClient(UsermailConfig config, UsermailMongoMQConsumer mongoMQConsumer) {
+    return new MqClient(config.mongoTopic, "*", config.mongoGroup, config.namesrvAddr,
+        mongoMQConsumer,
+        MqClient.RocketMQModel.CLUSTERING);
+  }
+
+  @Bean
   public MsgCompressor msgCompressor() {
     return new MsgCompressor();
   }
@@ -78,6 +93,17 @@ public class UsermailConfiguration {
   }
 
   @Bean
+  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "libraryMessage")
+  MqConsumerConfig usermailMongoConsumerConfig(UsermailConfig config, UsermailMongoMQConsumer consumer) {
+    Consumer<String> listener = consumer::consumer;
+    return MqConsumerConfig.create()
+        .group(config.mongoGroup).topic(config.mongoTopic).listener(listener)
+        .implementation(config.receiverMqType.isEmpty() ? MqImplementation.ROCKET_MQ
+            : MqImplementation.valueOf(config.receiverMqType))
+        .build();
+  }
+
+  @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")
   MqProducerConfig usermailProducerConfig(UsermailConfig usermailConfig, RocketMqProperties rocketMqProperties) {
     return new MqProducerConfig(rocketMqProperties.getProducerGroup(),
@@ -88,6 +114,18 @@ public class UsermailConfiguration {
   @Bean
   public IUsermailAdapter usermailAdapter(RedisTemplate redisTemplate) {
     return new RedisUsermailAdapter(redisTemplate);
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mysql", matchIfMissing = true)
+  UsermailRepo mysqlUsermailRepo(UsermailMapper usermailMapper) {
+    return new UsermailRepoImpl(usermailMapper);
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
+  UsermailRepo mongoUsermailRepo(IMqAdapter mqAdapter, UsermailMongoMapper mongoMapper) {
+    return new UsermailMongoRepo(mqAdapter, mongoMapper);
   }
 
 }

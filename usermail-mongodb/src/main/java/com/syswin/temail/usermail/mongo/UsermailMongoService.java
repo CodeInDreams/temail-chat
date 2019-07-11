@@ -1,8 +1,8 @@
-package com.syswin.temail.mongo;
+package com.syswin.temail.usermail.mongo;
 
 import com.google.gson.Gson;
-import com.syswin.temail.mongo.infrastructure.domain.UsermailMongoMapper;
-import com.syswin.temail.mongo.domains.MongoUsermail;
+import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
+import com.syswin.temail.usermail.mongo.domains.MongoUsermail;
 
 public class UsermailMongoService {
 
@@ -14,7 +14,7 @@ public class UsermailMongoService {
     int event = 0;
     switch (event){
       case 1:
-        mongoMapper.save(new MongoUsermail());
+
     }
     return true;
   }

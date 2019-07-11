@@ -1,4 +1,4 @@
-package com.syswin.temail.mongo;
+package com.syswin.temail.usermail.mongo;
 
 import com.syswin.temail.usermail.core.IMqConsumer;
 import org.springframework.stereotype.Component;
