@@ -4,7 +4,7 @@ import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,16 +18,16 @@ public class DomainClearService {
   private String enabled;
   @Value("${app.usermailagent.clear.domain.pageSize:100}")
   private Integer pageSize;
-  private final UsermailRepo usermailRepo;
+  private final IUsermailMsgDB IUsermailMsgDB;
   private final UsermailMsgReplyRepo usermailMsgReplyRepo;
   private final UsermailBlacklistRepo usermailBlacklistRepo;
   private final UsermailBoxRepo usermailBoxRepo;
   private final UsermailMqService usermailMqService;
 
-  public DomainClearService(UsermailRepo usermailRepo, UsermailMsgReplyRepo usermailMsgReplyRepo,
+  public DomainClearService(IUsermailMsgDB IUsermailMsgDB, UsermailMsgReplyRepo usermailMsgReplyRepo,
       UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo,
       UsermailMqService usermailMqService) {
-    this.usermailRepo = usermailRepo;
+    this.IUsermailMsgDB = IUsermailMsgDB;
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
     this.usermailBlacklistRepo = usermailBlacklistRepo;
     this.usermailBoxRepo = usermailBoxRepo;
@@ -61,7 +61,7 @@ public class DomainClearService {
     log.info("label-DomainClearService.clearUsermailAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
-      count = usermailRepo.deleteDomain(domain, pageSize);
+      count = IUsermailMsgDB.deleteDomain(domain, pageSize);
     } while (count > 0);
     log.info("label-DomainClearService.clearUsermailAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }

@@ -22,38 +22,24 @@
  * SOFTWARE.
  */
 
-package com.syswin.temail.usermail.infrastructure.domain.impl;
+package com.syswin.temail.usermail.infrastructure.domain;
 
-import com.syswin.temail.usermail.common.Constants.TemailStatus;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
-import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 
-public class UsermailRepoImpl implements UsermailRepo {
-
-  private final UsermailMapper usermailMapper;
-
-  @Autowired
-  public UsermailRepoImpl(UsermailMapper usermailMapper) {
-    this.usermailMapper = usermailMapper;
-  }
+public interface IUsermailMsgDB {
 
   /**
    * 保存单聊消息
    *
    * @param usermail 单聊消息
    */
-  @Override
-  public void insertUsermail(UsermailDO usermail) {
-    usermailMapper.insertUsermail(usermail);
-  }
+  void insertUsermail(UsermailDO usermail);
 
   /**
    * 根据用户会话id查询消息列表
@@ -61,10 +47,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param umQueryDto 消息列表查询条件
    * @return 消息列表
    */
-  @Override
-  public List<UsermailDO> listUsermails(UmQueryDTO umQueryDto) {
-    return usermailMapper.listUsermails(umQueryDto);
-  }
+  List<UsermailDO> listUsermails(UmQueryDTO umQueryDto);
 
   /**
    * 根据msgId获取消息
@@ -73,10 +56,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param owner 消息拥有者
    * @return 消息信息
    */
-  @Override
-  public UsermailDO selectByMsgidAndOwner(String msgid, String owner) {
-    return usermailMapper.selectByMsgidAndOwner(msgid, owner);
-  }
+  UsermailDO selectByMsgidAndOwner(String msgid, String owner);
 
   /**
    * 获取用户最新一条消息
@@ -84,10 +64,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param umQueryDto 查询条件
    * @return 消息列表
    */
-  @Override
-  public List<UsermailDO> listLastUsermails(UmQueryDTO umQueryDto) {
-    return usermailMapper.listLastUsermails(umQueryDto);
-  }
+  List<UsermailDO> listLastUsermails(UmQueryDTO umQueryDto);
 
   /**
    * 撤回消息
@@ -95,10 +72,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param revertMail 撤回条件
    * @return 撤回的数量
    */
-  @Override
-  public int countRevertUsermail(RevertMailDTO revertMail) {
-    return usermailMapper.countRevertUsermail(revertMail);
-  }
+  int countRevertUsermail(RevertMailDTO revertMail);
 
   /**
    * 批量删除消息
@@ -107,10 +81,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param owner 消息拥有者
    * @return 删除的数量
    */
-  @Override
-  public int deleteMsg(List<String> msgIds, String owner) {
-    return usermailMapper.deleteMsg(msgIds, owner);
-  }
+  int deleteMsg(List<String> msgIds, String owner);
 
   /**
    * 阅后即焚
@@ -119,10 +90,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param msgid 消息id
    * @param status 消息状态
    */
-  @Override
-  public void updateDestroyAfterReadStatus(String owner, String msgid, int status) {
-    usermailMapper.updateDestroyAfterReadStatus(owner, msgid, status);
-  }
+  void updateDestroyAfterReadStatus(String owner, String msgid, int status);
 
   /**
    * 根据会话id批量删除消息
@@ -131,10 +99,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param owner 拥有者
    * @return 删除的数量
    */
-  @Override
-  public int deleteBySessionIdAndOwner(String sessionId, String owner) {
-    return usermailMapper.deleteBySessionIdAndOwner(sessionId, owner);
-  }
+  int deleteBySessionIdAndOwner(String sessionId, String owner);
 
   /**
    * 根据msgId获取用户消息列表
@@ -142,10 +107,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param msgid 消息id
    * @return 消息列表
    */
-  @Override
-  public List<UsermailDO> listUsermailsByMsgid(String msgid) {
-    return usermailMapper.listUsermailsByMsgid(msgid);
-  }
+  List<UsermailDO> listUsermailsByMsgid(String msgid);
 
   /**
    * 根据msgIds获取消息列表
@@ -154,10 +116,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param msgIds 消息列表
    * @return 消息列表
    */
-  @Override
-  public List<UsermailDO> listUsermailsByFromToMsgIds(String from, List<String> msgIds) {
-    return usermailMapper.listUsermailsByFromToMsgIds(from, msgIds);
-  }
+  List<UsermailDO> listUsermailsByFromToMsgIds(String from, List<String> msgIds);
 
   /**
    * 更新消息的回复数
@@ -167,10 +126,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param count 要增加的数量
    * @param lastReplyMsgid 最近的msgId
    */
-  @Override
-  public void updateReplyCountAndLastReplyMsgid(String msgid, String owner, int count, String lastReplyMsgid) {
-    usermailMapper.updateReplyCountAndLastReplyMsgid(msgid, owner, count, lastReplyMsgid);
-  }
+  void updateReplyCountAndLastReplyMsgid(String msgid, String owner, int count, String lastReplyMsgid);
 
   /**
    * 根据msgIds批量更新消息状态
@@ -180,10 +136,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param status 消息状态
    * @return 更新的数量
    */
-  @Override
-  public int updateStatusByMsgIds(List<String> msgIds, String owner, int status) {
-    return usermailMapper.updateStatusByMsgIds(msgIds, owner, status);
-  }
+  int updateStatusByMsgIds(List<String> msgIds, String owner, int status);
 
   /**
    * 根据用户的消息状态批量删除消息
@@ -193,23 +146,17 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param status 消息状态
    * @return 删除的数量
    */
-  @Override
-  public int deleteMsgByStatus(List<TrashMailDTO> trashMails, String owner, int status) {
-    return usermailMapper.deleteMsgByStatus(trashMails, owner, status);
-  }
+  int deleteMsgByStatus(List<TrashMailDTO> trashMails, String owner, int status);
 
   /**
-   * 还原废纸篓消息
+   * 根据msgIds批量移出废纸篓（还原废纸篓消息）
    *
-   * @param trashMails 废纸篓消息
-   * @param owner 消息拥有着
+   * @param trashMails 要从废纸篓中还原的消息列表
+   * @param owner 消息拥有者
    * @param status 消息状态
    * @return 更新的数量
    */
-  @Override
-  public int updateRevertMsgFromTrashStatus(List<TrashMailDTO> trashMails, String owner, int status) {
-    return usermailMapper.updateRevertMsgFromTrashStatus(trashMails, owner, status, TemailStatus.STATUS_TRASH_4);
-  }
+  int updateRevertMsgFromTrashStatus(List<TrashMailDTO> trashMails, String owner, int status);
 
   /**
    * 查询指定状态的消息列表
@@ -217,10 +164,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param queryDto 查询条件
    * @return 消息列表
    */
-  @Override
-  public List<UsermailDO> listUsermailsByStatus(QueryTrashDTO queryDto) {
-    return usermailMapper.listUsermailsByStatus(queryDto);
-  }
+  List<UsermailDO> listUsermailsByStatus(QueryTrashDTO queryDto);
 
   /**
    * 清除指定时间以前的数据，并限制清除量
@@ -229,10 +173,7 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param batchNum 最多删除的数量
    * @return 实际清除数量
    */
-  @Override
-  public int deleteMsgLessThan(LocalDate createTime, int batchNum) {
-    return usermailMapper.deleteUseMsgLessThan(createTime, batchNum);
-  }
+  int deleteMsgLessThan(LocalDate createTime, int batchNum);
 
   /**
    * 分页清理指定域数据
@@ -241,9 +182,6 @@ public class UsermailRepoImpl implements UsermailRepo {
    * @param pageSize 页面大小
    * @return 实际清除数量
    */
-  @Override
-  public int deleteDomain(String domain, int pageSize) {
-    return usermailMapper.deleteDomain(domain, pageSize);
-  }
+  int deleteDomain(String domain, int pageSize);
 
 }

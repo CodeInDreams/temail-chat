@@ -1,7 +1,7 @@
 package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class HistoryMsgClearService {
 
-  private final UsermailRepo usermailRepo;
+  private final IUsermailMsgDB IUsermailMsgDB;
   private final UsermailMsgReplyRepo usermailMsgReplyRepo;
 
-  public HistoryMsgClearService(UsermailRepo usermailRepo, UsermailMsgReplyRepo usermailMsgReplyRepo) {
-    this.usermailRepo = usermailRepo;
+  public HistoryMsgClearService(IUsermailMsgDB IUsermailMsgDB, UsermailMsgReplyRepo usermailMsgReplyRepo) {
+    this.IUsermailMsgDB = IUsermailMsgDB;
     this.usermailMsgReplyRepo = usermailMsgReplyRepo;
   }
 
@@ -34,7 +34,7 @@ public class HistoryMsgClearService {
     log.info("label-deleteHistoryMsg deleteMsg begin, createTime: [{}], batchNum: [{}]", createTime, batchNum);
     int count = 0;
     do {
-      count = usermailRepo.deleteMsgLessThan(createTime, batchNum);
+      count = IUsermailMsgDB.deleteMsgLessThan(createTime, batchNum);
     } while (count > 0);
     log.info("label-deleteHistoryMsg deleteMsg end, createTime: [{}], batchNum: [{}]", createTime, batchNum);
   }

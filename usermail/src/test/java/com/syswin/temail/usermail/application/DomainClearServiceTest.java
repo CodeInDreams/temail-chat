@@ -6,7 +6,7 @@ import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,7 @@ public class DomainClearServiceTest {
   @Mock
   private UsermailMqService usermailMqService;
   @Mock
-  private UsermailRepo usermailRepo;
+  private IUsermailMsgDB IUsermailMsgDB;
   @Mock
   private UsermailMsgReplyRepo msgReplyRepo;
   @Mock
@@ -55,7 +55,7 @@ public class DomainClearServiceTest {
   public void removeUsermailTest() {
     String domain = "domain";
     domainClearService.clearUsermailAll(domain);
-    verify(usermailRepo).deleteDomain(domain, pageSize);
+    verify(IUsermailMsgDB).deleteDomain(domain, pageSize);
   }
 
   @Test

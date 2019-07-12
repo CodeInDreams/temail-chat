@@ -10,12 +10,12 @@ import com.syswin.temail.usermail.dto.UmQueryDTO;
 import java.time.LocalDate;
 import java.util.List;
 
-public class UsermailMongoRepo implements UsermailRepo {
+public class UsermailMsgMongoImpl implements IUsermailMsgDB {
 
   private final IMqAdapter mqAdapter;
   private final UsermailMongoMapper usermailMongoMapper;
 
-  public UsermailMongoRepo(IMqAdapter mqAdapter,
+  public UsermailMsgMongoImpl(IMqAdapter mqAdapter,
       UsermailMongoMapper usermailMongoMapper) {
     this.mqAdapter = mqAdapter;
     this.usermailMongoMapper = usermailMongoMapper;
