@@ -30,7 +30,7 @@ import com.syswin.library.messaging.all.spring.MqProducerConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgMongoImpl;
+import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailMsgMongoImpl;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailMsgMysqlImpl;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
