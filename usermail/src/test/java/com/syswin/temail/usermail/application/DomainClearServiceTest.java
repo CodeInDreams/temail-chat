@@ -5,7 +5,7 @@ import static org.mockito.Mockito.verify;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,9 +26,9 @@ public class DomainClearServiceTest {
   @Mock
   private UsermailMqService usermailMqService;
   @Mock
-  private IUsermailMsgDB IUsermailMsgDB;
+  private IUsermailMsgDB usermailMsgDB;
   @Mock
-  private UsermailMsgReplyRepo msgReplyRepo;
+  private IUsermailMsgReplyDB msgReplyRepo;
   @Mock
   private UsermailBoxRepo boxRepo;
   @Mock
@@ -55,7 +55,7 @@ public class DomainClearServiceTest {
   public void removeUsermailTest() {
     String domain = "domain";
     domainClearService.clearUsermailAll(domain);
-    verify(IUsermailMsgDB).deleteDomain(domain, pageSize);
+    verify(usermailMsgDB).deleteDomain(domain, pageSize);
   }
 
   @Test

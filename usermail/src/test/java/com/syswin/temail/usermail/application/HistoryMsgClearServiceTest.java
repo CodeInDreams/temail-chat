@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.application;
 
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.time.LocalDate;
 import org.junit.Test;
@@ -17,9 +17,9 @@ public class HistoryMsgClearServiceTest {
   @InjectMocks
   private HistoryMsgClearService historyMsgClearService;
   @Mock
-  private IUsermailMsgDB IUsermailMsgDB;
+  private IUsermailMsgDB usermailMsgDB;
   @Mock
-  private UsermailMsgReplyRepo usermailMsgReplyRepo;
+  private IUsermailMsgReplyDB usermailMsgReplyDB;
 
   @Test
   public void deleteHistoryMsg() {
@@ -29,7 +29,7 @@ public class HistoryMsgClearServiceTest {
 
     historyMsgClearService.deleteHistoryMsg(beforeDays, batchNum);
 
-    Mockito.verify(IUsermailMsgDB).deleteMsgLessThan(createTime, batchNum);
-    Mockito.verify(usermailMsgReplyRepo).deleteMsgReplyLessThan(createTime, batchNum);
+    Mockito.verify(usermailMsgDB).deleteMsgLessThan(createTime, batchNum);
+    Mockito.verify(usermailMsgReplyDB).deleteMsgReplyLessThan(createTime, batchNum);
   }
 }

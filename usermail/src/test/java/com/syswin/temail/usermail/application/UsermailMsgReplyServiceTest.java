@@ -46,7 +46,7 @@ import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,8 +60,8 @@ import org.mockito.Mockito;
 
 public class UsermailMsgReplyServiceTest {
 
-  private final IUsermailMsgDB IUsermailMsgDB = Mockito.mock(IUsermailMsgDB.class);
-  private final UsermailMsgReplyRepo usermailMsgReplyRepo = Mockito.mock(UsermailMsgReplyRepo.class);
+  private final IUsermailMsgDB usermailMsgDB = Mockito.mock(IUsermailMsgDB.class);
+  private final IUsermailMsgReplyDB usermailMsgReplyDB = Mockito.mock(IUsermailMsgReplyDB.class);
   private final IUsermailAdapter usermailAdapter = Mockito.mock(IUsermailAdapter.class);
   private final UsermailSessionService usermailSessionService = Mockito.mock(UsermailSessionService.class);
   private final Usermail2NotifyMqService usermail2NotifyMqService = Mockito.mock(Usermail2NotifyMqService.class);
@@ -70,8 +70,8 @@ public class UsermailMsgReplyServiceTest {
       "{xPacketId:value}");
   private MsgCompressor msgCompressor = new MsgCompressor();
   private final ConvertMsgService convertMsgService = Mockito.mock(ConvertMsgService.class);
-  private final UsermailMsgReplyService usermailMsgReplyService = new UsermailMsgReplyService(IUsermailMsgDB,
-      usermailAdapter, usermailMsgReplyRepo, usermail2NotifyMqService, usermailSessionService, msgCompressor,
+  private final UsermailMsgReplyService usermailMsgReplyService = new UsermailMsgReplyService(usermailMsgDB,
+      usermailAdapter, usermailMsgReplyDB, usermail2NotifyMqService, usermailSessionService, msgCompressor,
       usermailMqService, convertMsgService);
 
 
@@ -86,7 +86,7 @@ public class UsermailMsgReplyServiceTest {
     int type = TemailType.TYPE_NORMAL_0;
     int attachmentSize = 10;
 
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(null);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(null);
 
     try {
       usermailMsgReplyService
@@ -115,7 +115,7 @@ public class UsermailMsgReplyServiceTest {
     parentMail.setMsgid(parentMsgid);
     parentMail.setOwner(owner);
     parentMail.setStatus(TemailStatus.STATUS_NORMAL_0);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(parentMail);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(parentMail);
     when(usermailSessionService.getSessionID(from, to)).thenReturn(sessionid);
     when(usermailAdapter.getMsgReplySeqNo(parentMsgid, owner)).thenReturn(seqNo);
 
@@ -125,13 +125,13 @@ public class UsermailMsgReplyServiceTest {
 
     // verify
     ArgumentCaptor<UsermailMsgReplyDO> msgReplyCaptor = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
-    verify(usermailMsgReplyRepo).insert(msgReplyCaptor.capture());
+    verify(usermailMsgReplyDB).insert(msgReplyCaptor.capture());
     UsermailMsgReplyDO msgReplyCaptorValue = msgReplyCaptor.getValue();
     UsermailMsgReplyDO expectMsgReplyDo = new UsermailMsgReplyDO(usermailAdapter.getMsgReplyPkID(), parentMsgid,
         msgid, from, to, seqNo, "", TemailStatus.STATUS_NORMAL_0, type, owner, sessionid,
         msgCompressor.zipWithDecode(message));
     assertThat(msgReplyCaptorValue).isEqualToComparingOnlyGivenFields(expectMsgReplyDo);
-    verify(IUsermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.INCR.value(), msgid);
+    verify(usermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.INCR.value(), msgid);
     verify(usermail2NotifyMqService)
         .sendMqSaveMsgReply(headerInfo, from, to, owner, msgid, message, seqNo, attachmentSize, parentMsgid);
 
@@ -149,18 +149,18 @@ public class UsermailMsgReplyServiceTest {
     String lastReplyMsgid = "lastReplyMsgid";
 
     // precondition
-    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    when(usermailMsgReplyDB.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     UsermailDO dbParentMsg = new UsermailDO();
     dbParentMsg.setMsgid(parentMsgid);
     dbParentMsg.setLastReplyMsgId(lastReplyMsgid);
     dbParentMsg.setOwner(owner);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
 
     // invoke method
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
 
     //verify
-    verify(IUsermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), lastReplyMsgid);
+    verify(usermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), lastReplyMsgid);
     verify(usermail2NotifyMqService).sendMqAfterUpdateMsgReply(xPacketId, header, from, to, owner, msgid,  SessionEventType.EVENT_TYPE_19, parentMsgid);
   }
 
@@ -175,11 +175,11 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(anyString(), anyString())).thenReturn(null);
+    when(usermailMsgReplyDB.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    when(usermailMsgDB.selectByMsgidAndOwner(anyString(), anyString())).thenReturn(null);
 
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
-    verify(IUsermailMsgDB, never()).updateReplyCountAndLastReplyMsgid(anyString(), anyString(), anyInt(), anyString());
+    verify(usermailMsgDB, never()).updateReplyCountAndLastReplyMsgid(anyString(), anyString(), anyInt(), anyString());
   }
 
   @Test
@@ -191,9 +191,9 @@ public class UsermailMsgReplyServiceTest {
     String owner = from;
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(0);
+    when(usermailMsgReplyDB.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(0);
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
-    verify(IUsermailMsgDB, never()).selectByMsgidAndOwner(parentMsgid, owner);
+    verify(usermailMsgDB, never()).selectByMsgidAndOwner(parentMsgid, owner);
   }
 
   @Test
@@ -206,22 +206,22 @@ public class UsermailMsgReplyServiceTest {
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
     String actualLastMsgid = "actualLastMsgid";
-    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    when(usermailMsgReplyDB.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     UsermailDO dbParentMsg = new UsermailDO();
     dbParentMsg.setMsgid(parentMsgid);
     // 假设最新回复消息为本次撤回的消息
     dbParentMsg.setLastReplyMsgId(msgid);
     dbParentMsg.setOwner(owner);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
     UsermailMsgReplyDO replyDO = new UsermailMsgReplyDO();
     replyDO.setParentMsgid(parentMsgid);
     replyDO.setMsgid(actualLastMsgid);
-    when(usermailMsgReplyRepo.selectLastUsermailReply(parentMsgid, owner, TemailStatus.STATUS_NORMAL_0)).thenReturn(
+    when(usermailMsgReplyDB.selectLastUsermailReply(parentMsgid, owner, TemailStatus.STATUS_NORMAL_0)).thenReturn(
         replyDO);
 
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
     // 验证撤回的消息为已有最新消息之后，设置的最新消息将回滚到上一条正常消息
-    verify(IUsermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), actualLastMsgid);
+    verify(usermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), actualLastMsgid);
   }
 
   @Test
@@ -233,18 +233,18 @@ public class UsermailMsgReplyServiceTest {
     String owner = from;
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    when(usermailMsgReplyRepo.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
+    when(usermailMsgReplyDB.updateRevertUsermailReply(Mockito.any(UsermailMsgReplyDO.class))).thenReturn(1);
     UsermailDO dbParentMsg = new UsermailDO();
     dbParentMsg.setMsgid(parentMsgid);
     // 假设最新回复消息为本次撤回的消息
     dbParentMsg.setLastReplyMsgId(msgid);
     dbParentMsg.setOwner(owner);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
-    when(usermailMsgReplyRepo.selectLastUsermailReply(parentMsgid, owner, TemailStatus.STATUS_NORMAL_0)).thenReturn(null);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(dbParentMsg);
+    when(usermailMsgReplyDB.selectLastUsermailReply(parentMsgid, owner, TemailStatus.STATUS_NORMAL_0)).thenReturn(null);
 
     usermailMsgReplyService.revertMsgReply(xPacketId, header, from, to, owner, parentMsgid, msgid);
     // 验证撤回的消息为唯一一条消息之后，设置最新消息ID为空字符串
-    verify(IUsermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), "");
+    verify(usermailMsgDB).updateReplyCountAndLastReplyMsgid(parentMsgid, owner, ReplyCountEnum.DECR.value(), "");
   }
 
 
@@ -254,7 +254,7 @@ public class UsermailMsgReplyServiceTest {
     String from = "from@temail.com";
     String msgid = "msgid";
     String parentMsgid = "string201810241832";
-    when(IUsermailMsgDB.listUsermailsByMsgid(parentMsgid)).thenReturn(Arrays.asList(new UsermailDO()));
+    when(usermailMsgDB.listUsermailsByMsgid(parentMsgid)).thenReturn(Arrays.asList(new UsermailDO()));
     usermailMsgReplyService.revertMsgReply(headerInfo, parentMsgid, msgid, from, to);
     verify(usermailMqService)
         .sendMqRevertReplyMsg(headerInfo.getxPacketId() + PACKET_ID_SUFFIX, headerInfo.getCdtpHeader(), from, to, from, parentMsgid, msgid);
@@ -273,12 +273,12 @@ public class UsermailMsgReplyServiceTest {
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
     UsermailDO usermail = new UsermailDO();
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, from)).thenReturn(usermail);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, from)).thenReturn(usermail);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
     usermail2NotifyMqService.sendMqAfterRemoveMsgReply(headerInfo, from, to, from, msgIds, type, parentMsgid);
     ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List> argumentCaptor2 = ArgumentCaptor.forClass(List.class);
-    verify(usermailMsgReplyRepo)
+    verify(usermailMsgReplyDB)
         .deleteMsgReplysByMsgIds(argumentCaptor.capture(), argumentCaptor2.capture());
     List<String> msgIds2 = argumentCaptor2.getValue();
     Assert.assertEquals(msgIds, msgIds2);
@@ -303,7 +303,7 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     List<UsermailDO> usermails = new ArrayList<>(1);
     usermails.add(new UsermailDO());
-    when(IUsermailMsgDB.selectByMsgidAndOwner(any(), any())).thenReturn(null);
+    when(usermailMsgDB.selectByMsgidAndOwner(any(), any())).thenReturn(null);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
   }
 
@@ -319,18 +319,18 @@ public class UsermailMsgReplyServiceTest {
     usermails.add(new UsermailDO());
     UsermailMsgReplyDO lastUsermailMsgReply = new UsermailMsgReplyDO();
     lastUsermailMsgReply.setMsgid("updatelastMsgid");
-    when(usermailMsgReplyRepo.selectLastUsermailReply(any(), any(), anyInt())).thenReturn(lastUsermailMsgReply);
-    when(usermailMsgReplyRepo.deleteMsgReplysByMsgIds(any(), any())).thenReturn(1);
+    when(usermailMsgReplyDB.selectLastUsermailReply(any(), any(), anyInt())).thenReturn(lastUsermailMsgReply);
+    when(usermailMsgReplyDB.deleteMsgReplysByMsgIds(any(), any())).thenReturn(1);
     UsermailDO usermailByMsgid = new UsermailDO();
     usermailByMsgid.setLastReplyMsgId("lastReplyMsgid");
     usermailByMsgid.setOwner(from);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(any(), any())).thenReturn(usermailByMsgid);
+    when(usermailMsgDB.selectByMsgidAndOwner(any(), any())).thenReturn(usermailByMsgid);
     usermailMsgReplyService.removeMsgReplys(headerInfo, parentMsgid, msgIds, from, to);
     ArgumentCaptor<String> parentCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> lastMsgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> countCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(IUsermailMsgDB)
+    verify(usermailMsgDB)
         .updateReplyCountAndLastReplyMsgid(parentCaptor.capture(), ownerCaptor.capture(), countCaptor.capture(),
             lastMsgIdCaptor.capture());
     verify(usermail2NotifyMqService).sendMqAfterRemoveMsgReply(any(), any(), any(), any(), any(), anyInt(), any());
@@ -365,12 +365,12 @@ public class UsermailMsgReplyServiceTest {
       usermailMsgReplyList.add(usermailMsgReply);
     }
     UsermailDO usermail = new UsermailDO();
-    when(IUsermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(usermail);
+    when(usermailMsgDB.selectByMsgidAndOwner(parentMsgid, owner)).thenReturn(usermail);
     when(convertMsgService.convertReplyMsg(any())).thenReturn(usermailMsgReplyList);
     List<UsermailMsgReplyDO> result = usermailMsgReplyService
         .getMsgReplys(parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
     ArgumentCaptor<QueryMsgReplyDTO> argumentCaptor = ArgumentCaptor.forClass(QueryMsgReplyDTO.class);
-    verify(usermailMsgReplyRepo).listMsgReplys(argumentCaptor.capture());
+    verify(usermailMsgReplyDB).listMsgReplys(argumentCaptor.capture());
     QueryMsgReplyDTO queryMsgReplyDto = argumentCaptor.getValue();
     Assert.assertEquals(pageSize, queryMsgReplyDto.getPageSize());
     Assert.assertEquals(seqId, queryMsgReplyDto.getFromSeqNo());
@@ -388,10 +388,10 @@ public class UsermailMsgReplyServiceTest {
     reply.setOwner(from);
     reply.setMsgid(msgId);
     reply.setType(TemailType.TYPE_DESTROY_AFTER_READ_1);
-    Mockito.when(usermailMsgReplyRepo.selectMsgReplyByCondition(Mockito.any())).thenReturn(reply);
+    Mockito.when(usermailMsgReplyDB.selectMsgReplyByCondition(Mockito.any())).thenReturn(reply);
     List<UsermailDO> usermails = new ArrayList<>();
     usermails.add(new UsermailDO());
-    when(IUsermailMsgDB.listUsermailsByMsgid(reply.getParentMsgid())).thenReturn(usermails);
+    when(usermailMsgDB.listUsermailsByMsgid(reply.getParentMsgid())).thenReturn(usermails);
     usermailMsgReplyService.destroyAfterRead(headerInfo, from, to, msgId);
     verify(usermailMqService)
         .sendMqReplyMsgDestroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, to, msgId,
@@ -407,8 +407,8 @@ public class UsermailMsgReplyServiceTest {
     String msgId = "2344";
     String replyMsgParentId = "13311";
     UsermailDO usermail = new UsermailDO(1, msgId, "", owner, "", 1, 1, owner, "", 0);
-    when(IUsermailMsgDB.selectByMsgidAndOwner(replyMsgParentId, owner)).thenReturn(usermail);
-    when(usermailMsgReplyRepo.updateDestroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2))
+    when(usermailMsgDB.selectByMsgidAndOwner(replyMsgParentId, owner)).thenReturn(usermail);
+    when(usermailMsgReplyDB.updateDestroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2))
         .thenReturn(1);
     usermailMsgReplyService
         .destroyAfterRead(headerInfo.getxPacketId(), headerInfo.getCdtpHeader(), from, to, owner, msgId,
@@ -416,7 +416,7 @@ public class UsermailMsgReplyServiceTest {
     ArgumentCaptor<String> ownerCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> msgIdCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailMsgReplyRepo)
+    verify(usermailMsgReplyDB)
         .updateDestroyAfterRead(ownerCaptor.capture(), msgIdCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(TemailStatus.STATUS_DESTROY_AFTER_READ_2, status);

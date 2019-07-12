@@ -39,7 +39,7 @@ import com.syswin.temail.usermail.core.util.SeqIdFilter;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +57,9 @@ import org.springframework.util.CollectionUtils;
 public class UsermailMsgReplyService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UsermailMsgReplyService.class);
-  private final IUsermailMsgDB IUsermailMsgDB;
+  private final IUsermailMsgDB usermailMsgDB;
   private final IUsermailAdapter usermailAdapter;
-  private final UsermailMsgReplyRepo usermailMsgReplyRepo;
+  private final IUsermailMsgReplyDB usermailMsgReplyDB;
   private final Usermail2NotifyMqService usermail2NotifyMqService;
   private final UsermailSessionService usermailSessionService;
   private final MsgCompressor msgCompressor;
@@ -67,14 +67,14 @@ public class UsermailMsgReplyService {
   private final ConvertMsgService convertMsgService;
 
   @Autowired
-  public UsermailMsgReplyService(IUsermailMsgDB IUsermailMsgDB, IUsermailAdapter usermailAdapter,
-      UsermailMsgReplyRepo usermailMsgReplyRepo, Usermail2NotifyMqService usermail2NotifyMqService,
+  public UsermailMsgReplyService(IUsermailMsgDB usermailMsgDB, IUsermailAdapter usermailAdapter,
+      IUsermailMsgReplyDB usermailMsgReplyDB, Usermail2NotifyMqService usermail2NotifyMqService,
       UsermailSessionService usermailSessionService,
       MsgCompressor msgCompressor, UsermailMqService usermailMqService,
       ConvertMsgService convertMsgService) {
-    this.IUsermailMsgDB = IUsermailMsgDB;
+    this.usermailMsgDB = usermailMsgDB;
     this.usermailAdapter = usermailAdapter;
-    this.usermailMsgReplyRepo = usermailMsgReplyRepo;
+    this.usermailMsgReplyDB = usermailMsgReplyDB;
     this.usermail2NotifyMqService = usermail2NotifyMqService;
     this.usermailSessionService = usermailSessionService;
     this.msgCompressor = msgCompressor;
@@ -105,10 +105,10 @@ public class UsermailMsgReplyService {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO(usermailAdapter.getMsgReplyPkID(), parentMsgId, msgId,
         from, to, msgReplySeqNo, "", TemailStatus.STATUS_NORMAL_0, type, owner, sessionid,
         msgCompressor.zipWithDecode(message));
-    usermailMsgReplyRepo.insert(usermailMsgReply);
+    usermailMsgReplyDB.insert(usermailMsgReply);
 
     // 更新最新回复消息id
-    IUsermailMsgDB.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), msgId);
+    usermailMsgDB.updateReplyCountAndLastReplyMsgid(parentMsgId, owner, ReplyCountEnum.INCR.value(), msgId);
     LOGGER.debug("new rely created, update msgId={} lastReplyMsgid={}", parentMsgId, msgId);
     usermail2NotifyMqService
         .sendMqSaveMsgReply(cdtpHeaderDto, from, to, owner, msgId, message, msgReplySeqNo, attachmentSize,
@@ -139,14 +139,14 @@ public class UsermailMsgReplyService {
     usermailMsgReply.setMsgid(msgId);
     usermailMsgReply.setStatus(TemailStatus.STATUS_REVERT_1);
     usermailMsgReply.setOwner(owner);
-    int count = usermailMsgReplyRepo.updateRevertUsermailReply(usermailMsgReply);
+    int count = usermailMsgReplyDB.updateRevertUsermailReply(usermailMsgReply);
     if (count <= 0) {
       LOGGER.warn(
           "Message Reply revert failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, parentMsgId is {}, owner is {}",
           xPacketId, cdtpHeader, from, to, msgId, replyMsgParentId, owner);
       return;
     }
-    UsermailDO usermail = IUsermailMsgDB.selectByMsgidAndOwner(replyMsgParentId, owner);
+    UsermailDO usermail = usermailMsgDB.selectByMsgidAndOwner(replyMsgParentId, owner);
     if (usermail != null) {
       this.updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
@@ -194,11 +194,11 @@ public class UsermailMsgReplyService {
     }
     UsermailDO usermail = this.msgReplyTypeValidate(parentMsgReplyId, from);
     LOGGER.info("Label-delete-usermail-reply: delete reply messages，from = {},to = {},msgIds = {}", from, to, msgIds);
-    int count = usermailMsgReplyRepo.deleteMsgReplysByMsgIds(from, msgIds);
+    int count = usermailMsgReplyDB.deleteMsgReplysByMsgIds(from, msgIds);
     String lastReplyMsgId = usermail.getLastReplyMsgId();
     // 如果删除的消息中包含最新的回复消息，这需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgIds.contains(lastReplyMsgId)) {
-      UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
+      UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyDB
           .selectLastUsermailReply(parentMsgReplyId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
@@ -207,7 +207,7 @@ public class UsermailMsgReplyService {
         lastReplyMsgId = "";
       }
     }
-    IUsermailMsgDB.updateReplyCountAndLastReplyMsgid(parentMsgReplyId, usermail.getOwner(), -count, lastReplyMsgId);
+    usermailMsgDB.updateReplyCountAndLastReplyMsgid(parentMsgReplyId, usermail.getOwner(), -count, lastReplyMsgId);
     usermail2NotifyMqService
         .sendMqAfterRemoveMsgReply(cdtpHeaderDto, from, to, from, msgIds, SessionEventType.EVENT_TYPE_20,
             parentMsgReplyId);
@@ -235,7 +235,7 @@ public class UsermailMsgReplyService {
     dto.setParentMsgid(parentMsgid);
     dto.setSignal(signal);
     dto.setOwner(owner);
-    List<UsermailMsgReplyDO> data = this.convertMsgService.convertReplyMsg(usermailMsgReplyRepo.listMsgReplys(dto));
+    List<UsermailMsgReplyDO> data = this.convertMsgService.convertReplyMsg(usermailMsgReplyDB.listMsgReplys(dto));
     List<UsermailMsgReplyDO> dataFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(data)) {
       boolean isAfter = "after".equals(signal);
@@ -265,14 +265,14 @@ public class UsermailMsgReplyService {
   @Transactional
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId,
       String replyMsgParentId) {
-    int count = usermailMsgReplyRepo.updateDestroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
+    int count = usermailMsgReplyDB.updateDestroyAfterRead(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
     if (count <= 0) {
       LOGGER.warn(
           "Message updateDestroyAfterRead failed, xPacketId is {}, cdtpHeader is {}, from is {}, to is {}, msgId is {}, owner is {}",
           xPacketId, cdtpHeader, from, to, msgId, owner);
       return;
     }
-    UsermailDO usermail = IUsermailMsgDB.selectByMsgidAndOwner(replyMsgParentId, owner);
+    UsermailDO usermail = usermailMsgDB.selectByMsgidAndOwner(replyMsgParentId, owner);
     if (usermail != null) {
       updateUsermailLastReplyId(usermail, replyMsgParentId, msgId);
       usermail2NotifyMqService
@@ -295,7 +295,7 @@ public class UsermailMsgReplyService {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     usermailMsgReply.setOwner(from);
     usermailMsgReply.setMsgid(msgId);
-    UsermailMsgReplyDO msgReply = usermailMsgReplyRepo.selectMsgReplyByCondition(usermailMsgReply);
+    UsermailMsgReplyDO msgReply = usermailMsgReplyDB.selectMsgReplyByCondition(usermailMsgReply);
     if (msgReply != null && msgReply.getType() == TemailType.TYPE_DESTROY_AFTER_READ_1) {
       String parentMsgId = msgReply.getParentMsgid();
       usermailMqService
@@ -319,7 +319,7 @@ public class UsermailMsgReplyService {
    * @return 单聊对象列表
    */
   private List<UsermailDO> msgReplyTypeValidate(String parentMsgId) {
-    List<UsermailDO> usermails = IUsermailMsgDB.listUsermailsByMsgid(parentMsgId);
+    List<UsermailDO> usermails = usermailMsgDB.listUsermailsByMsgid(parentMsgId);
     if (CollectionUtils.isEmpty(usermails)) {
       LOGGER.warn("parentMsgId status is error:{}", parentMsgId);
       throw new IllegalGmArgsException(ResultCodeEnum.ERROR_ILLEGAL_PARENT_MSG_ID);
@@ -336,7 +336,7 @@ public class UsermailMsgReplyService {
    */
   private UsermailDO msgReplyTypeValidate(String parentMsgId, String owner) {
 
-    UsermailDO usermailByMsgid = IUsermailMsgDB.selectByMsgidAndOwner(parentMsgId, owner);
+    UsermailDO usermailByMsgid = usermailMsgDB.selectByMsgidAndOwner(parentMsgId, owner);
     if (usermailByMsgid == null || (usermailByMsgid.getStatus() != TemailStatus.STATUS_NORMAL_0
         && usermailByMsgid.getStatus() != TemailStatus.STATUS_TRASH_4)) {
       LOGGER.warn("parentMsgId is {}", parentMsgId);
@@ -355,7 +355,7 @@ public class UsermailMsgReplyService {
     String lastReplyMsgId = usermail.getLastReplyMsgId();
     // 如果撤回或者阅后即焚的消息是最新的回复消息需要将最新回复消息回滚到上一条
     if (!StringUtils.isEmpty(lastReplyMsgId) && msgId.equals(lastReplyMsgId)) {
-      UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyRepo
+      UsermailMsgReplyDO lastUsermailMsgReply = usermailMsgReplyDB
           .selectLastUsermailReply(parentMsgId, usermail.getOwner(), TemailStatus.STATUS_NORMAL_0);
       if (lastUsermailMsgReply != null) {
         lastReplyMsgId = lastUsermailMsgReply.getMsgid();
@@ -364,7 +364,7 @@ public class UsermailMsgReplyService {
         lastReplyMsgId = "";
       }
     }
-    IUsermailMsgDB
+    usermailMsgDB
         .updateReplyCountAndLastReplyMsgid(parentMsgId, usermail.getOwner(), ReplyCountEnum.DECR.value(),
             lastReplyMsgId);
   }

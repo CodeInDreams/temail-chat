@@ -51,7 +51,7 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -74,9 +74,9 @@ import org.springframework.util.CollectionUtils;
 public class UsermailService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UsermailService.class);
-  private final IUsermailMsgDB IUsermailMsgDB;
+  private final IUsermailMsgDB usermailMsgDB;
   private final UsermailBoxRepo usermailBoxRepo;
-  private final UsermailMsgReplyRepo usermailMsgReplyRepo;
+  private final IUsermailMsgReplyDB usermailMsgReplyDB;
   private final IUsermailAdapter usermailAdapter;
   private final UsermailSessionService usermailSessionService;
   private final Usermail2NotifyMqService usermail2NotifyMqService;
@@ -89,16 +89,16 @@ public class UsermailService {
 
 
   @Autowired
-  public UsermailService(IUsermailMsgDB IUsermailMsgDB, UsermailBoxRepo usermailBoxRepo,
-      UsermailMsgReplyRepo usermailMsgReplyRepo,
+  public UsermailService(IUsermailMsgDB usermailMsgDB, UsermailBoxRepo usermailBoxRepo,
+      IUsermailMsgReplyDB usermailMsgReplyDB,
       IUsermailAdapter usermailAdapter,
       UsermailSessionService usermailSessionService, Usermail2NotifyMqService usermail2NotifyMqService,
       UsermailMqService usermailMqService,
       MsgCompressor msgCompressor,
       ConvertMsgService convertMsgService) {
-    this.IUsermailMsgDB = IUsermailMsgDB;
+    this.usermailMsgDB = usermailMsgDB;
     this.usermailBoxRepo = usermailBoxRepo;
-    this.usermailMsgReplyRepo = usermailMsgReplyRepo;
+    this.usermailMsgReplyDB = usermailMsgReplyDB;
     this.usermailAdapter = usermailAdapter;
     this.usermailSessionService = usermailSessionService;
     this.usermail2NotifyMqService = usermail2NotifyMqService;
@@ -163,7 +163,7 @@ public class UsermailService {
     if (meta != null) {
       BeanUtils.copyProperties(meta, mail);
     }
-    IUsermailMsgDB.insertUsermail(mail);
+    usermailMsgDB.insertUsermail(mail);
     int eventType;
 
     switch (usermail.getType()) {
@@ -209,7 +209,7 @@ public class UsermailService {
     umQueryDto.setSessionid(sessionId);
     umQueryDto.setPageSize(pageSize);
     umQueryDto.setOwner(from);
-    List<UsermailDO> mails = convertMsgService.convertMsg(IUsermailMsgDB.listUsermails(umQueryDto));
+    List<UsermailDO> mails = convertMsgService.convertMsg(usermailMsgDB.listUsermails(umQueryDto));
     List<UsermailDO> resultFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(mails)) {
       final String afterFetch = "after";
@@ -254,7 +254,7 @@ public class UsermailService {
    */
   @Transactional
   public void revertMqHandler(String xPacketId, String cdtpHeader, String from, String to, String owner, String msgId) {
-    int count = IUsermailMsgDB.countRevertUsermail(
+    int count = usermailMsgDB.countRevertUsermail(
         new RevertMailDTO(owner, msgId, TemailStatus.STATUS_NORMAL_0, TemailStatus.STATUS_REVERT_1));
     // 判断是否撤回成功，防止通知重复发送
     if (count > 0) {
@@ -288,7 +288,7 @@ public class UsermailService {
       }
       MailboxDTO mailBox = new MailboxDTO();
       UmQueryDTO umQuery = new UmQueryDTO(dbBox.getSessionid(), from);
-      lastUsermail = convertMsgService.convertMsg(IUsermailMsgDB.listLastUsermails(umQuery));
+      lastUsermail = convertMsgService.convertMsg(usermailMsgDB.listLastUsermails(umQuery));
       if (!CollectionUtils.isEmpty(lastUsermail)) {
         mailBox.setLastMsg(lastUsermail.get(0));
       }
@@ -315,7 +315,7 @@ public class UsermailService {
     for (UsermailBoxDO usermailBoxDO : usermailBoxDOes) {
       MailboxDTO mailBox = new MailboxDTO();
       UmQueryDTO umQuery = new UmQueryDTO(usermailBoxDO.getSessionid(), from);
-      lastUsermail = convertMsgService.convertMsg(IUsermailMsgDB.listLastUsermails(umQuery));
+      lastUsermail = convertMsgService.convertMsg(usermailMsgDB.listLastUsermails(umQuery));
       if (!CollectionUtils.isEmpty(lastUsermail)) {
         mailBox.setLastMsg(lastUsermail.get(0));
       }
@@ -341,17 +341,17 @@ public class UsermailService {
   public void removeMsg(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
     // msg 內容更新为空串
     LOGGER.info("Label-delete-usermail-msg: delete msg by msgIds,from is {},to is {},ids is {}", from, to, msgIds);
-    IUsermailMsgDB.deleteMsg(msgIds, from);
+    usermailMsgDB.deleteMsg(msgIds, from);
     LOGGER.info("Label-delete-usermail-msg: delete reply msg by parentMsgId, owner is {}, parentMsgId is {}", from,
         msgIds);
-    usermailMsgReplyRepo.deleteMsgReplysByParentIds(from, msgIds);
+    usermailMsgReplyDB.deleteMsgReplysByParentIds(from, msgIds);
     usermail2NotifyMqService
         .sendMqAfterUpdateStatus(headerInfo, from, to, new Gson().toJson(msgIds), SessionEventType.EVENT_TYPE_4);
 
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setOwner(from);
     umQueryDto.setSessionid(usermailSessionService.getSessionID(from, to));
-    List<UsermailDO> usermails = IUsermailMsgDB.listLastUsermails(umQueryDto);
+    List<UsermailDO> usermails = usermailMsgDB.listLastUsermails(umQueryDto);
     if (CollectionUtils.isEmpty(usermails)) {
       usermailAdapter.deleteLastMsgId(from, to);
     } else {
@@ -392,11 +392,11 @@ public class UsermailService {
   @Transactional
   public void destroyAfterRead(String xPacketId, String cdtpHeader, String from, String to, String owner,
       String msgId) {
-    UsermailDO usermail = IUsermailMsgDB.selectByMsgidAndOwner(msgId, owner);
+    UsermailDO usermail = usermailMsgDB.selectByMsgidAndOwner(msgId, owner);
     // 添加消息状态判断，防止通知重发
     if (usermail != null && usermail.getType() == TemailType.TYPE_DESTROY_AFTER_READ_1
         && usermail.getStatus() == TemailStatus.STATUS_NORMAL_0) {
-      IUsermailMsgDB.updateDestroyAfterReadStatus(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
+      usermailMsgDB.updateDestroyAfterReadStatus(owner, msgId, TemailStatus.STATUS_DESTROY_AFTER_READ_2);
       usermail2NotifyMqService
           .sendMqUpdateMsg(xPacketId, cdtpHeader, to, from, owner, msgId, SessionEventType.EVENT_TYPE_3);
     } else {
@@ -416,9 +416,9 @@ public class UsermailService {
     LOGGER.info("Label-delete-usermail-session: delete session, params is {}", queryDto);
     if (queryDto.isDeleteAllMsg()) {
       String sessionId = usermailSessionService.getSessionID(queryDto.getTo(), queryDto.getFrom());
-      IUsermailMsgDB
+      usermailMsgDB
           .deleteBySessionIdAndOwner(sessionId, queryDto.getFrom());
-      usermailMsgReplyRepo.deleteMsgReplysBySessionId(sessionId, queryDto.getFrom());
+      usermailMsgReplyDB.deleteMsgReplysBySessionId(sessionId, queryDto.getFrom());
     }
     usermail2NotifyMqService
         .sendMqAfterDeleteSession(cdtpHeaderDto, queryDto.getFrom(), queryDto.getTo(), queryDto.isDeleteAllMsg(),
@@ -440,7 +440,7 @@ public class UsermailService {
     LOGGER
         .info("Label-delete-GroupChat-session: delete session, params is owner:{}, groupTemail:{}", owner, groupTemail);
     String sessionId = usermailSessionService.getSessionID(groupTemail, owner);
-    IUsermailMsgDB.deleteBySessionIdAndOwner(sessionId, owner);
+    usermailMsgDB.deleteBySessionIdAndOwner(sessionId, owner);
     return true;
   }
 
@@ -452,7 +452,7 @@ public class UsermailService {
    * @return 单聊对象列表
    */
   public List<UsermailDO> batchQueryMsgs(String from, List<String> msgIds) {
-    List<UsermailDO> usermailList = IUsermailMsgDB.listUsermailsByFromToMsgIds(from, msgIds);
+    List<UsermailDO> usermailList = usermailMsgDB.listUsermailsByFromToMsgIds(from, msgIds);
     return convertMsgService.convertMsg(usermailList);
   }
 
@@ -464,7 +464,7 @@ public class UsermailService {
    * @return 单聊回复消息列表
    */
   public List<UsermailDO> batchQueryMsgsReplyCount(String from, List<String> msgIds) {
-    List<UsermailDO> usermailList = IUsermailMsgDB.listUsermailsByFromToMsgIds(from, msgIds);
+    List<UsermailDO> usermailList = usermailMsgDB.listUsermailsByFromToMsgIds(from, msgIds);
     for (int i = 0; i < usermailList.size(); i++) {
       usermailList.get(i).setMessage(null);
       usermailList.get(i).setZipMsg(null);
@@ -482,8 +482,8 @@ public class UsermailService {
    */
   @Transactional
   public void moveMsgToTrash(CdtpHeaderDTO headerInfo, String from, String to, List<String> msgIds) {
-    IUsermailMsgDB.updateStatusByMsgIds(msgIds, from, TemailStatus.STATUS_TRASH_4);
-    usermailMsgReplyRepo.updateMsgReplysByParentIds(from, msgIds, TemailStatus.STATUS_TRASH_4);
+    usermailMsgDB.updateStatusByMsgIds(msgIds, from, TemailStatus.STATUS_TRASH_4);
+    usermailMsgReplyDB.updateMsgReplysByParentIds(from, msgIds, TemailStatus.STATUS_TRASH_4);
     usermail2NotifyMqService.sendMqMoveTrashNotify(headerInfo, from, to, msgIds, SessionEventType.EVENT_TYPE_35);
   }
 
@@ -500,8 +500,8 @@ public class UsermailService {
     for (TrashMailDTO dto : trashMails) {
       msgIds.add(dto.getMsgId());
     }
-    IUsermailMsgDB.updateRevertMsgFromTrashStatus(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
-    usermailMsgReplyRepo.updateMsgReplysByParentIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
+    usermailMsgDB.updateRevertMsgFromTrashStatus(trashMails, temail, TemailStatus.STATUS_NORMAL_0);
+    usermailMsgReplyDB.updateMsgReplysByParentIds(temail, msgIds, TemailStatus.STATUS_NORMAL_0);
     usermail2NotifyMqService
         .sendMqTrashMsgNotify(headerInfo, temail, trashMails, SessionEventType.EVENT_TYPE_36);
   }
@@ -534,11 +534,11 @@ public class UsermailService {
     for (TrashMailDTO dto : trashMails) {
       msgIds.add(dto.getMsgId());
     }
-    IUsermailMsgDB.deleteMsgByStatus(trashMails, temail, TemailStatus.STATUS_TRASH_4);
+    usermailMsgDB.deleteMsgByStatus(trashMails, temail, TemailStatus.STATUS_TRASH_4);
     LOGGER
         .info("Label-delete-usermail-trash: Mq consumer remove msg from trash, params is temail:{},msginfo:{}",
             temail, trashMails);
-    usermailMsgReplyRepo.deleteMsgReplysByParentIds(temail, msgIds);
+    usermailMsgReplyDB.deleteMsgReplysByParentIds(temail, msgIds);
   }
 
   /**
@@ -548,9 +548,9 @@ public class UsermailService {
    */
   @Transactional
   public void clearMsgFromTrash(String temail) {
-    IUsermailMsgDB.deleteMsgByStatus(null, temail, TemailStatus.STATUS_TRASH_4);
+    usermailMsgDB.deleteMsgByStatus(null, temail, TemailStatus.STATUS_TRASH_4);
     LOGGER.info("Label-delete-usermail-trash: Mq consumer clear trash, params is temail:{}", temail);
-    usermailMsgReplyRepo.deleteMsgReplysByStatus(temail, TemailStatus.STATUS_TRASH_4);
+    usermailMsgReplyDB.deleteMsgReplysByStatus(temail, TemailStatus.STATUS_TRASH_4);
   }
 
   /**
@@ -569,7 +569,7 @@ public class UsermailService {
     queryDto.setPageSize(pageSize);
     queryDto.setUpdateTime(new Timestamp(timestamp));
     queryDto.setStatus(TemailStatus.STATUS_TRASH_4);
-    List<UsermailDO> result = IUsermailMsgDB.listUsermailsByStatus(queryDto);
+    List<UsermailDO> result = usermailMsgDB.listUsermailsByStatus(queryDto);
     return convertMsgService.convertMsg(result);
   }
 

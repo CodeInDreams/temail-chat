@@ -1,6 +1,6 @@
 package com.syswin.temail.usermail.application;
 
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class HistoryMsgClearService {
 
-  private final IUsermailMsgDB IUsermailMsgDB;
-  private final UsermailMsgReplyRepo usermailMsgReplyRepo;
+  private final IUsermailMsgDB usermailMsgDB;
+  private final IUsermailMsgReplyDB usermailMsgReplyDB;
 
-  public HistoryMsgClearService(IUsermailMsgDB IUsermailMsgDB, UsermailMsgReplyRepo usermailMsgReplyRepo) {
-    this.IUsermailMsgDB = IUsermailMsgDB;
-    this.usermailMsgReplyRepo = usermailMsgReplyRepo;
+  public HistoryMsgClearService(IUsermailMsgDB usermailMsgDB, IUsermailMsgReplyDB usermailMsgReplyDB) {
+    this.usermailMsgDB = usermailMsgDB;
+    this.usermailMsgReplyDB = usermailMsgReplyDB;
   }
 
   /**
@@ -34,7 +34,7 @@ public class HistoryMsgClearService {
     log.info("label-deleteHistoryMsg deleteMsg begin, createTime: [{}], batchNum: [{}]", createTime, batchNum);
     int count = 0;
     do {
-      count = IUsermailMsgDB.deleteMsgLessThan(createTime, batchNum);
+      count = usermailMsgDB.deleteMsgLessThan(createTime, batchNum);
     } while (count > 0);
     log.info("label-deleteHistoryMsg deleteMsg end, createTime: [{}], batchNum: [{}]", createTime, batchNum);
   }
@@ -43,7 +43,7 @@ public class HistoryMsgClearService {
     log.info("label-deleteHistoryMsg deleteMsgReply begin, createTime: [{}], batchNum: [{}]", createTime, batchNum);
     int count = 0;
     do {
-      count = usermailMsgReplyRepo.deleteMsgReplyLessThan(createTime, batchNum);
+      count = usermailMsgReplyDB.deleteMsgReplyLessThan(createTime, batchNum);
     } while (count > 0);
     log.info("label-deleteHistoryMsg deleteMsgReply end, createTime: [{}], batchNum: [{}]", createTime, batchNum);
   }

@@ -3,7 +3,7 @@ package com.syswin.temail.usermail.application;
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
 import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailMsgReplyRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,17 +18,17 @@ public class DomainClearService {
   private String enabled;
   @Value("${app.usermailagent.clear.domain.pageSize:100}")
   private Integer pageSize;
-  private final IUsermailMsgDB IUsermailMsgDB;
-  private final UsermailMsgReplyRepo usermailMsgReplyRepo;
+  private final IUsermailMsgDB usermailMsgDB;
+  private final IUsermailMsgReplyDB usermailMsgReplyDB;
   private final UsermailBlacklistRepo usermailBlacklistRepo;
   private final UsermailBoxRepo usermailBoxRepo;
   private final UsermailMqService usermailMqService;
 
-  public DomainClearService(IUsermailMsgDB IUsermailMsgDB, UsermailMsgReplyRepo usermailMsgReplyRepo,
+  public DomainClearService(IUsermailMsgDB usermailMsgDB, IUsermailMsgReplyDB usermailMsgReplyDB,
       UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo,
       UsermailMqService usermailMqService) {
-    this.IUsermailMsgDB = IUsermailMsgDB;
-    this.usermailMsgReplyRepo = usermailMsgReplyRepo;
+    this.usermailMsgDB = usermailMsgDB;
+    this.usermailMsgReplyDB = usermailMsgReplyDB;
     this.usermailBlacklistRepo = usermailBlacklistRepo;
     this.usermailBoxRepo = usermailBoxRepo;
     this.usermailMqService = usermailMqService;
@@ -61,7 +61,7 @@ public class DomainClearService {
     log.info("label-DomainClearService.clearUsermailAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
-      count = IUsermailMsgDB.deleteDomain(domain, pageSize);
+      count = usermailMsgDB.deleteDomain(domain, pageSize);
     } while (count > 0);
     log.info("label-DomainClearService.clearUsermailAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
@@ -75,7 +75,7 @@ public class DomainClearService {
     log.info("label-DomainClearService.clearMsgReplyAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
-      count = usermailMsgReplyRepo.deleteDomain(domain, pageSize);
+      count = usermailMsgReplyDB.deleteDomain(domain, pageSize);
     } while (count > 0);
     log.info("label-DomainClearService.clearMsgReplyAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
