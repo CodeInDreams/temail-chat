@@ -239,7 +239,9 @@ public class UsermailMsgReplyService {
     List<UsermailMsgReplyDO> dataFilter = new ArrayList<>();
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(data)) {
       boolean isAfter = "after".equals(signal);
-      SeqIdFilter filter = new SeqIdFilter(filterSeqIds, isAfter);
+      long beginSeqId = data.get(0).getSeqNo();
+      long endSeqId = data.get(data.size() - 1).getSeqNo();
+      SeqIdFilter filter = new SeqIdFilter(filterSeqIds, isAfter, beginSeqId, endSeqId);
       for (int i = 0; i < data.size(); i++) {
         if (filter.filter(data.get(i).getSeqNo())) {
           dataFilter.add(data.get(i));

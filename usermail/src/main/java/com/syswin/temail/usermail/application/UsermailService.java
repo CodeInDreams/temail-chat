@@ -214,7 +214,9 @@ public class UsermailService {
     if (StringUtils.isNotEmpty(filterSeqIds) && !CollectionUtils.isEmpty(mails)) {
       final String afterFetch = "after";
       boolean isAfter = afterFetch.equals(signal);
-      SeqIdFilter seqIdFilter = new SeqIdFilter(filterSeqIds, isAfter);
+      long beginSeqId = mails.get(0).getSeqNo();
+      long endSeqId = mails.get(mails.size() - 1).getSeqNo();
+      SeqIdFilter seqIdFilter = new SeqIdFilter(filterSeqIds, isAfter, beginSeqId, endSeqId);
       for (UsermailDO mail : mails) {
         if (seqIdFilter.filter(mail.getSeqNo())) {
           resultFilter.add(mail);

@@ -43,7 +43,7 @@ public class SeqIdFilterTest {
     // 有限区间，向后拉取：after=true
     strFilter = "3_5,7_10";
     after = true;
-    seqIdFilter = new SeqIdFilter(strFilter, after);
+    seqIdFilter = new SeqIdFilter(strFilter, after, 1, 11);
 
     long seqId = 4L;
     boolean result = seqIdFilter.filter(seqId);
@@ -56,7 +56,7 @@ public class SeqIdFilterTest {
     // 有限区间，向后拉取：after=false
     strFilter = "13_9,7_4,3_1";
     after = false;
-    seqIdFilter = new SeqIdFilter(strFilter, after);
+    seqIdFilter = new SeqIdFilter(strFilter, after, 0, 14);
 
     long seqId = 4L;
     boolean result = seqIdFilter.filter(seqId);
@@ -70,7 +70,7 @@ public class SeqIdFilterTest {
     // 有限区间，向后拉取：after=true
     strFilter = "3_5,7_-1";
     after = true;
-    seqIdFilter = new SeqIdFilter(strFilter, after);
+    seqIdFilter = new SeqIdFilter(strFilter, after, 9, 0);
 
     long seqId = 9L;
     boolean result = seqIdFilter.filter(seqId);
@@ -84,7 +84,7 @@ public class SeqIdFilterTest {
     // 有限区间，向后拉取：after=false
     strFilter = "23_20,18_-1";
     after = false;
-    seqIdFilter = new SeqIdFilter(strFilter, after);
+    seqIdFilter = new SeqIdFilter(strFilter, after, 24, 0);
 
     long seqId = 11L;
     boolean result = seqIdFilter.filter(seqId);
@@ -97,7 +97,7 @@ public class SeqIdFilterTest {
     strFilter = "23,25";
     after = true;
     try {
-      seqIdFilter = new SeqIdFilter(strFilter, after);
+      seqIdFilter = new SeqIdFilter(strFilter, after, 0, 26);
     } catch (IllegalGmArgsException e) {
       assertThat(e.getResultCode()).isEqualTo(ResultCodeEnum.ERROR_FILTER_SEQIDS);
       assertThat(e.getMessage()).isEqualTo(strFilter);

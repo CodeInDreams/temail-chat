@@ -31,23 +31,28 @@ import java.util.List;
 
 public class SeqIdFilter {
 
+  private static final int MAX_SEQ_ID_SIZE = 100;
   private List<Long> existSeqId;
   private long last = -1L;
   private boolean after = true;
+  private long beginSeqId = -1l;
+  private long endSeqId = -1l;
 
-  public SeqIdFilter(String strFilter, boolean after) {
+  public SeqIdFilter(String strFilter, boolean after, long beginSeqId, long endSeqId) {
     this.after = after;
-    init(strFilter);
+    this.beginSeqId = beginSeqId;
+    this.endSeqId = endSeqId;
+    init(strFilter, beginSeqId, endSeqId);
   }
 
-  public SeqIdFilter(String strFilter) {
-    init(strFilter);
+  public SeqIdFilter(String strFilter, long beginSeqId, long endSeqId) {
+    init(strFilter, beginSeqId, endSeqId);
   }
 
-  private void init(String strFilter) {
+  private void init(String strFilter, long beginSeqId, long endSeqId) {
     try {
       String[] filters = strFilter.split(",");
-      existSeqId = new ArrayList<>();
+      existSeqId = new ArrayList<>(MAX_SEQ_ID_SIZE);
       for (int i = 0; i < filters.length; i++) {
         String tmp = filters[i];
         String[] filterRange = tmp.split("_");
@@ -57,12 +62,30 @@ public class SeqIdFilter {
           last = start;
         } else {
           if (after) {
+            if(start  < beginSeqId){
+              start = beginSeqId - 1;
+            }
+            if(end > endSeqId){
+              end = endSeqId + 1;
+            }
             for (long j = start + 1; j < end; j++) {
               existSeqId.add(j);
+              if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
+                break;
+              }
             }
           } else {
+            if(start > beginSeqId){
+              start = beginSeqId + 1;
+            }
+            if(end < endSeqId){
+              end = endSeqId - 1;
+            }
             for (long j = start - 1; j > end; j--) {
               existSeqId.add(j);
+              if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
+                break;
+              }
             }
           }
         }
