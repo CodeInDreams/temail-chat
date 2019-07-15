@@ -24,10 +24,15 @@
 
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
+import com.google.gson.Gson;
+import com.syswin.temail.usermail.common.MongoEventEnum;
+import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
+import com.syswin.temail.usermail.mongo.dto.MongoEventDTO;
+import com.syswin.temail.usermail.mongo.dto.UsermailReplyMsgDataDTO;
 import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailReplyMongoMapper;
 import java.time.LocalDate;
 import java.util.List;
@@ -43,15 +48,24 @@ public class UsermailMsgReplyMongoImpl implements IUsermailMsgReplyDB {
 
   private final IMqAdapter mqAdapter;
   private final UsermailReplyMongoMapper replyMongoMapper;
+  private final UsermailConfig usermailConfig;
+  private final Gson gson = new Gson();
+
 
   public UsermailMsgReplyMongoImpl(IMqAdapter mqAdapter,
-      UsermailReplyMongoMapper replyMongoMapper) {
+      UsermailReplyMongoMapper replyMongoMapper, UsermailConfig usermailConfig) {
     this.mqAdapter = mqAdapter;
     this.replyMongoMapper = replyMongoMapper;
+    this.usermailConfig = usermailConfig;
   }
 
   @Override
-  public int insert(UsermailMsgReplyDO record) {
+  public int insert(UsermailMsgReplyDO usermailMsgReply) {
+    UsermailReplyMsgDataDTO usermailReplyMsgDataDTO = new UsermailReplyMsgDataDTO();
+    usermailReplyMsgDataDTO.setFrom(usermailMsgReply.getFrom());
+    //....
+    MongoEventDTO mongoEventDTO = new MongoEventDTO(MongoEventEnum.MONGO_USERMAIL_REPLY_EVENT,usermailReplyMsgDataDTO);
+    mqAdapter.sendMessage(usermailConfig.mongoTopic,usermailMsgReply.getFrom(), gson.toJson(mongoEventDTO));
     return 0;
   }
 
