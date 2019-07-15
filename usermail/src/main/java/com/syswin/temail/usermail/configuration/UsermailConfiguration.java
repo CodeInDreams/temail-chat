@@ -30,9 +30,9 @@ import com.syswin.library.messaging.all.spring.MqProducerConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailMsgMongoImpl;
-import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailMsgMysqlImpl;
 import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailMsgReplyMongoImpl;
 import com.syswin.temail.usermail.infrastructure.domain.impl.UsermailMsgReplyMysqlImpl;
@@ -123,26 +123,40 @@ public class UsermailConfiguration {
 
   @Bean
   @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mysql", matchIfMissing = true)
-  IUsermailMsgDB mysqlUsermailRepo(UsermailMapper usermailMapper) {
+  IUsermailMsgDB mysqlUsermailDB(UsermailMapper usermailMapper) {
     return new UsermailMsgMysqlImpl(usermailMapper);
   }
 
   @Bean
   @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
-  IUsermailMsgDB mongoUsermailRepo(IMqAdapter mqAdapter, UsermailMongoMapper mongoMapper, UsermailConfig usermailConfig) {
+  IUsermailMsgDB mongoUsermailDB(IMqAdapter mqAdapter, UsermailMongoMapper mongoMapper,
+      UsermailConfig usermailConfig) {
     return new UsermailMsgMongoImpl(mqAdapter, mongoMapper, usermailConfig);
   }
 
   @Bean
-  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mysql",matchIfMissing = true)
-  IUsermailMsgReplyDB mysqlUsermailReplyRepo(UsermailMsgReplyMapper usermailMsgReplyMapper){
+  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mysql", matchIfMissing = true)
+  IUsermailMsgReplyDB mysqlUsermailReplyDB(UsermailMsgReplyMapper usermailMsgReplyMapper) {
     return new UsermailMsgReplyMysqlImpl(usermailMsgReplyMapper);
   }
 
   @Bean
   @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
-  IUsermailMsgReplyDB mongoUsermailReplyRepo(IMqAdapter mqAdapter, UsermailReplyMongoMapper usermailReplyMongoMapper, UsermailConfig usermailConfig){
-    return new UsermailMsgReplyMongoImpl(mqAdapter,usermailReplyMongoMapper,usermailConfig);
+  IUsermailMsgReplyDB mongoUsermailReplyDB(IMqAdapter mqAdapter, UsermailReplyMongoMapper usermailReplyMongoMapper,
+      UsermailConfig usermailConfig) {
+    return new UsermailMsgReplyMongoImpl(mqAdapter, usermailReplyMongoMapper, usermailConfig);
   }
 
+  @Bean
+  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
+  UsermailReplyMongoMapper usermailReplyMongoMapper() {
+    return new UsermailReplyMongoMapper();
+  }
+
+  @Bean
+  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
+  UsermailMongoMapper usermailMongoMapper() {
+    return new UsermailMongoMapper();
+  }
+  
 }
