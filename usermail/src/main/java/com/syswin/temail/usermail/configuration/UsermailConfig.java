@@ -54,10 +54,10 @@ public class UsermailConfig {
   @Value("${spring.rocketmq.domain.clear.consumer.group}")
   public String mqMgtDeleteDomainGroup = "temail-usermailagent-oss-consumer";
 
-  @Value("${spring.rocketmq.mongo.clear.consumer.topic}")
+  @Value("${spring.rocketmq.usermail.mongo.topic}")
   public String mongoTopic = "temail-usermailagent-mongo";
 
-  @Value("${spring.rocketmq.mongo.consumer.group}")
+  @Value("${spring.rocketmq.usermail.mongo.consumer.group}")
   public String mongoGroup = "temail-usermailagent-mongo-consumer";
 
   /**
