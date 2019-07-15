@@ -26,10 +26,15 @@ package com.syswin.temail.usermail.core.util;
 
 import com.syswin.temail.usermail.common.ResultCodeEnum;
 import com.syswin.temail.usermail.core.exception.IllegalGmArgsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class SeqIdFilter {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SeqIdFilter.class);
 
   private static final int MAX_SEQ_ID_SIZE = 100;
   private List<Long> existSeqId;
@@ -71,6 +76,7 @@ public class SeqIdFilter {
             for (long j = start + 1; j < end; j++) {
               existSeqId.add(j);
               if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
+                LOGGER.warn("Usermail existSeqId List Size is full, strFiler={}, beginSeqId={}, endSeqId={}", strFilter, beginSeqId, endSeqId);
                 break;
               }
             }
@@ -84,6 +90,7 @@ public class SeqIdFilter {
             for (long j = start - 1; j > end; j--) {
               existSeqId.add(j);
               if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
+                LOGGER.warn("Usermail existSeqId List Size is full, strFiler={}, beginSeqId={}, endSeqId={}", strFilter, beginSeqId, endSeqId);
                 break;
               }
             }
