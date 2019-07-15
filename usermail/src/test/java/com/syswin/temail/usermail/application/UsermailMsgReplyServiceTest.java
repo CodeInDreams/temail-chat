@@ -351,7 +351,7 @@ public class UsermailMsgReplyServiceTest {
     String parentMsgid = "string201810241832";
     String filterSeqIds = "5_3,3_1";
     List<UsermailMsgReplyDO> usermailMsgReplyList = new ArrayList<>(1);
-    for (int i = 1; i < 11; i++) {
+    for (int i = 10; i >0 ; i--) {
       UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
       usermailMsgReply.setParentMsgid(parentMsgid);
       usermailMsgReply.setOwner(owner);
