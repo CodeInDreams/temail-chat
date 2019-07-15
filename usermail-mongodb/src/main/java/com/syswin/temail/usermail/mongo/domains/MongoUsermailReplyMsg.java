@@ -25,7 +25,7 @@
 package com.syswin.temail.usermail.mongo.domains;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Arrays;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -41,8 +41,8 @@ public class MongoUsermailReplyMsg implements Serializable {
   private String msg;
   private int status;
   private int type;
-  private Timestamp createTime;
-  private Timestamp updateTime;
+  private Date createTime;
+  private Date updateTime;
   private String owner;
   private String sessionid;
   private byte[] zipMsg;
@@ -153,19 +153,19 @@ public class MongoUsermailReplyMsg implements Serializable {
     this.type = type;
   }
 
-  public Timestamp getCreateTime() {
+  public Date getCreateTime() {
     return createTime;
   }
 
-  public void setCreateTime(Timestamp createTime) {
+  public void setCreateTime(Date createTime) {
     this.createTime = createTime;
   }
 
-  public Timestamp getUpdateTime() {
+  public Date getUpdateTime() {
     return updateTime;
   }
 
-  public void setUpdateTime(Timestamp updateTime) {
+  public void setUpdateTime(Date updateTime) {
     this.updateTime = updateTime;
   }
 
