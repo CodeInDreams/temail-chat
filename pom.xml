@@ -31,7 +31,7 @@
   <groupId>com.syswin.temail</groupId>
   <artifactId>temail-usermail</artifactId>
   <packaging>pom</packaging>
-  <version>1.2.15-SNAPSHOT</version>
+  <version>1.2.16-SNAPSHOT</version>
   <modules>
     <module>usermail</module>
     <module>usermail-common</module>
@@ -57,32 +57,32 @@
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>temail-usermailagent</artifactId>
-        <version>1.2.15-SNAPSHOT</version>
+        <version>1.2.16-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-common</artifactId>
-        <version>1.2.15-SNAPSHOT</version>
+        <version>1.2.16-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-core</artifactId>
-        <version>1.2.15-SNAPSHOT</version>
+        <version>1.2.16-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-redis</artifactId>
-        <version>1.2.15-SNAPSHOT</version>
+        <version>1.2.16-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-mq-impl</artifactId>
-        <version>1.2.15-SNAPSHOT</version>
+        <version>1.2.16-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
         <artifactId>usermail-mongodb</artifactId>
-        <version>1.2.15-SNAPSHOT</version>
+        <version>1.2.16-SNAPSHOT</version>
       </dependency>
       <dependency>
         <groupId>com.syswin.temail</groupId>
