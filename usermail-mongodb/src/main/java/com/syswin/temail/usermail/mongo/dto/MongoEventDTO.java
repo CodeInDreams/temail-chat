@@ -2,7 +2,11 @@ package com.syswin.temail.usermail.mongo.dto;
 
 import com.syswin.temail.usermail.common.MongoEventEnum;
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class MongoEventDTO<T> implements Serializable {
 
   private MongoEventEnum mongoEvent;

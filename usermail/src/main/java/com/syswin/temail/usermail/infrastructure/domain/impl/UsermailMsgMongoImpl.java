@@ -1,13 +1,18 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
-import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
-import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
+import static com.syswin.temail.usermail.common.MongoEventEnum.MONGO_USERMAIL_EVENT;
+
+import com.google.gson.Gson;
+import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
+import com.syswin.temail.usermail.mongo.dto.MongoEventDTO;
+import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -15,17 +20,22 @@ public class UsermailMsgMongoImpl implements IUsermailMsgDB {
 
   private final IMqAdapter mqAdapter;
   private final UsermailMongoMapper usermailMongoMapper;
+  private final UsermailConfig usermailConfig;
+  private final Gson gson = new Gson();
 
   public UsermailMsgMongoImpl(IMqAdapter mqAdapter,
-      UsermailMongoMapper usermailMongoMapper) {
+      UsermailMongoMapper usermailMongoMapper,
+      UsermailConfig usermailConfig) {
     this.mqAdapter = mqAdapter;
     this.usermailMongoMapper = usermailMongoMapper;
+    this.usermailConfig = usermailConfig;
   }
 
   @Override
   public void insertUsermail(UsermailDO usermail) {
     //usermail转MongoDB event
-    mqAdapter.sendMessage("usermail-mongodb", "test", "mongo-event");
+    MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO<>(MONGO_USERMAIL_EVENT, usermail);
+    mqAdapter.sendMessage(usermailConfig.mongoTopic, usermail.getFrom(), gson.toJson(eventDTO));
   }
 
   @Override
