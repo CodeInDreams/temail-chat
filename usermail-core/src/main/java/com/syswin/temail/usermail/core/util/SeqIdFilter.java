@@ -72,33 +72,41 @@ public class SeqIdFilter {
           last = rangeBeginSeqId;
         } else {
           if (after) {
-            rangeBeginSeqId = rangeBeginSeqId + 1;
-            rangeBeginSeqId = Math.max(rangeBeginSeqId, dataBeginSeqId);
+              //去掉边界值
+              rangeBeginSeqId = rangeBeginSeqId + 1;
+              //升序排列时起始值裁掉小于实际值的部分缩小筛选范围
+              long beginSeqId = Math.max(rangeBeginSeqId, dataBeginSeqId);
 
-            rangeEndSeqId = rangeEndSeqId - 1;
-            rangeEndSeqId = Math.min(rangeEndSeqId, rangeEndSeqId);
+              //去掉边界值
+              rangeEndSeqId = rangeEndSeqId - 1;
+              //升序排列时终止值裁掉超出实际值的部分缩小筛选范围
+              long endSeqId = Math.min(rangeEndSeqId, rangeEndSeqId);
 
-            for (long j = rangeBeginSeqId; j <= rangeEndSeqId; j++) {
-              existSeqId.add(j);
-              if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
-                LOGGER.warn("existSeqId List Size is full, strFiler={}, dataBeginSeqId={}, dataEndSeqId={}", strFilter, dataBeginSeqId, dataEndSeqId);
-                break;
+              for (long j = beginSeqId; j <= endSeqId; j++) {
+                  existSeqId.add(j);
+                  if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
+                      LOGGER.warn("existSeqId List Size is full, strFiler={}, dataBeginSeqId={}, dataEndSeqId={}", strFilter, dataBeginSeqId, dataEndSeqId);
+                      break;
+                  }
               }
-            }
           } else {
-            rangeBeginSeqId = rangeBeginSeqId - 1;
-            rangeBeginSeqId = Math.min(rangeBeginSeqId, dataBeginSeqId);
+              //去掉边界值
+              rangeBeginSeqId = rangeBeginSeqId - 1;
+              //降序排列时起始值裁掉超出实际值的部分缩小筛选范围
+              long beginSeqId = Math.min(rangeBeginSeqId, dataBeginSeqId);
 
-            rangeEndSeqId = rangeEndSeqId + 1;
-            rangeEndSeqId = Math.max(rangeEndSeqId, dataEndSeqId);
+              //去掉边界值
+              rangeEndSeqId = rangeEndSeqId + 1;
+              //降序排列时终止值裁掉小于实际值的部分缩小筛选范围
+              long endSeqId = Math.max(rangeEndSeqId, dataEndSeqId);
 
-            for (long j = rangeBeginSeqId; j >= rangeEndSeqId; j--) {
-              existSeqId.add(j);
-              if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
-                LOGGER.warn("existSeqId List Size is full, strFiler={}, dataBeginSeqId={}, dataEndSeqId={}", strFilter, dataBeginSeqId, dataEndSeqId);
-                break;
+              for (long j = beginSeqId; j >= endSeqId; j--) {
+                  existSeqId.add(j);
+                  if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
+                      LOGGER.warn("existSeqId List Size is full, strFiler={}, dataBeginSeqId={}, dataEndSeqId={}", strFilter, dataBeginSeqId, dataEndSeqId);
+                      break;
+                  }
               }
-            }
           }
         }
       }
