@@ -24,8 +24,6 @@
 
 package com.syswin.temail.usermail.mongo.infrastructure.domain;
 
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import com.syswin.temail.usermail.mongo.domains.MongoUsermailReplyMsg;
 import com.syswin.temail.usermail.mongo.dto.QueryMsgReplyDTO;
 import java.time.LocalDate;
@@ -34,10 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.stereotype.Repository;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class UsermailReplyMongoMapper {
@@ -71,22 +69,19 @@ public class UsermailReplyMongoMapper {
     return mongoTemplate.find(query, MongoUsermailReplyMsg.class, COLLECTION_NAME);
   }
 
-  public int deleteMsgReplysByMsgIds(String owner, List<String> msgIds) {
+  public void deleteMsgReplysByMsgIds(String owner, List<String> msgIds) {
     Query query = Query.query(Criteria.where("owner").is(owner).and("msgid").in(msgIds));
-    DeleteResult remove = mongoTemplate.remove(query, COLLECTION_NAME);
-    return (int) remove.getDeletedCount();
+    mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
-  public int deleteMsgReplysBySessionId(String sessionId, String owner) {
+  public void deleteMsgReplysBySessionId(String sessionId, String owner) {
     Query query = Query.query(Criteria.where("owner").is(owner).and("sessionid").is(sessionId));
-    DeleteResult deleteResult = mongoTemplate.remove(query, COLLECTION_NAME);
-    return (int) deleteResult.getDeletedCount();
+    mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
-  public int deleteMsgReplysByParentIds(String owner, List<String> parentMsgIds) {
+  public void deleteMsgReplysByParentIds(String owner, List<String> parentMsgIds) {
     Query query = Query.query(Criteria.where("owner").is(owner).and("parentMsgid").in(parentMsgIds));
-    DeleteResult deleteResult = mongoTemplate.remove(query, COLLECTION_NAME);
-    return (int) deleteResult.getDeletedCount();
+    mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
   public MongoUsermailReplyMsg selectMsgReplyByCondition(MongoUsermailReplyMsg usermailMsgReply) {
@@ -96,31 +91,28 @@ public class UsermailReplyMongoMapper {
     return mongoTemplate.findOne(query, MongoUsermailReplyMsg.class, COLLECTION_NAME);
   }
 
-  public int updateDestroyAfterRead(String owner, String msgid, int status, int originalStatus) {
+  public void updateDestroyAfterRead(String owner, String msgid, int status, int originalStatus) {
     Query query = Query
         .query(Criteria.where("status").is(originalStatus).and("msgid").is(msgid).and("owner").is(owner));
     Update update = new Update();
     update.set("status", status);
     update.set("zipMsg", null);
     update.set("updateTime", System.currentTimeMillis());
-    UpdateResult updateResult = mongoTemplate.updateFirst(query, update, COLLECTION_NAME);
-    return (int) updateResult.getModifiedCount();
+    mongoTemplate.updateFirst(query, update, COLLECTION_NAME);
   }
 
-  public int updateMsgReplysByParentIds(String owner, List<String> parentMsgIds, int status) {
+  public void updateMsgReplysByParentIds(String owner, List<String> parentMsgIds, int status) {
     Query query = Query.query(Criteria.where("owner").is(owner).and("parentMsgid").in(parentMsgIds));
     Update update = new Update();
     update.set("status", status);
     //这里获取的是系统的时间是没有问题的吧
     update.set("updateTime", System.currentTimeMillis());
-    UpdateResult updateResult = mongoTemplate.updateMulti(query, update, COLLECTION_NAME);
-    return (int) updateResult.getModifiedCount();
+    mongoTemplate.updateMulti(query, update, COLLECTION_NAME);
   }
 
-  public int deleteMsgReplysByStatus(String owner, int status) {
+  public void deleteMsgReplysByStatus(String owner, int status) {
     Query query = Query.query(Criteria.where("owner").is(owner).and("status").is(status));
-    DeleteResult deleteResult = mongoTemplate.remove(query, COLLECTION_NAME);
-    return (int) deleteResult.getDeletedCount();
+    mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
   public MongoUsermailReplyMsg selectLastUsermailReply(String parentMsgid, String owner, int status) {
@@ -130,7 +122,7 @@ public class UsermailReplyMongoMapper {
     return mongoTemplate.findOne(query, MongoUsermailReplyMsg.class, COLLECTION_NAME);
   }
 
-  public int updateRevertUsermailReply(MongoUsermailReplyMsg usermailMsgReply, int originalStatus) {
+  public void updateRevertUsermailReply(MongoUsermailReplyMsg usermailMsgReply, int originalStatus) {
     Criteria criteria = Criteria.where("status").is(originalStatus).and("msgid").is(usermailMsgReply.getMsgid())
         .and("owner").is(usermailMsgReply.getOwner());
     Update update = new Update();
@@ -138,21 +130,18 @@ public class UsermailReplyMongoMapper {
     update.set("zipMsg", null);
     update.set("updateTime", System.currentTimeMillis());
     Query query = Query.query(criteria);
-    UpdateResult updateResult = mongoTemplate.updateFirst(query, update, COLLECTION_NAME);
-    return (int) updateResult.getModifiedCount();
+    mongoTemplate.updateFirst(query, update, COLLECTION_NAME);
   }
 
-  public int deleteMsgReplyLessThan(LocalDate createTime, int batchNum) {
+  public void deleteMsgReplyLessThan(LocalDate createTime, int batchNum) {
     Criteria criteria = Criteria.where("createTime").lt(createTime);
     Query query = Query.query(criteria).limit(batchNum);
-    DeleteResult deleteResult = mongoTemplate.remove(query, MongoUsermailReplyMsg.class);
-    return (int) deleteResult.getDeletedCount();
+    mongoTemplate.remove(query, MongoUsermailReplyMsg.class);
   }
 
-  public int deleteDomain(String domain, int pageSize) {
+  public void deleteDomain(String domain, int pageSize) {
     Criteria criteria = Criteria.where("owner").regex("@" + domain);
     Query query = Query.query(criteria).limit(pageSize);
-    DeleteResult deleteResult = mongoTemplate.remove(query, COLLECTION_NAME);
-    return (int) deleteResult.getDeletedCount();
+    mongoTemplate.remove(query, COLLECTION_NAME);
   }
 }
