@@ -75,14 +75,14 @@ public class UsermailMongoMapper {
     return mongoUsermail;
   }
 
-  public MongoUsermail listLastUsermails(String sessionid, String owner, long seqNo) {
+  public List<MongoUsermail> listLastUsermails(String sessionid, String owner, long seqNo) {
     Query query = new Query();
     Criteria criteria = new Criteria();
     criteria.where(SESSIONID).is(sessionid).and(OWNER).is(owner);
     query.with(new Sort(Direction.DESC, SEQNO)).limit(1);
     query.addCriteria(criteria);
-    MongoUsermail mongoUsermail = mongoTemplate.findOne(query, MongoUsermail.class);
-    return mongoUsermail;
+    List<MongoUsermail> mongoUsermails = mongoTemplate.find(query, MongoUsermail.class);
+    return mongoUsermails;
   }
 
   public List<MongoUsermail> listUsermailsByMsgid(String msgid) {

@@ -40,10 +40,15 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
+import com.syswin.temail.usermail.mongo.domains.MongoUsermail;
 import com.syswin.temail.usermail.mongo.dto.MongoEventDTO;
 import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -72,11 +77,12 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public void insertUsermail(UsermailDO usermail) {
-    if(MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
       usermailMapper.insertUsermail(usermail);
     }
-    if(MONGO_DB.equals(usermailConfig.getDbSelector())) {
-      MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO(MONGO_USERMAIL_EVENT, usermail, MongoMsgEventEnum.SEND_USERMAIL_MSG);
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO(MONGO_USERMAIL_EVENT, usermail,
+          MongoMsgEventEnum.SEND_USERMAIL_MSG);
       mqAdapter.sendMessage(usermailConfig.mongoTopic, usermail.getFrom(), gson.toJson(eventDTO));
     }
   }
@@ -89,7 +95,17 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public List<UsermailDO> listUsermails(UmQueryDTO umQueryDto) {
-    return usermailMapper.listUsermails(umQueryDto);
+    List<UsermailDO> usermailDOS = new ArrayList<>();
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      return usermailMapper.listUsermails(umQueryDto);
+    }
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      List<MongoUsermail> mongoUsermails = usermailMongoMapper
+          .listUsermails(umQueryDto.getFromSeqNo(), umQueryDto.getPageSize(), umQueryDto.getSessionid(),
+              umQueryDto.getOwner(), umQueryDto.getSignal());
+      usermailDOS = getUsermailDOs(mongoUsermails);
+    }
+    return usermailDOS;
   }
 
   /**
@@ -101,7 +117,18 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public UsermailDO selectByMsgidAndOwner(String msgid, String owner) {
-    return usermailMapper.selectByMsgidAndOwner(msgid, owner);
+    UsermailDO usermailDO = new UsermailDO();
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      return usermailMapper.selectByMsgidAndOwner(msgid, owner);
+    }
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      MongoUsermail mongoUsermail = usermailMongoMapper.selectByMsgidAndOwner(msgid, owner);
+      BeanUtils.copyProperties(mongoUsermail, usermailDO);
+      usermailDO.setCreateTime(new Timestamp(mongoUsermail.getCreateTime().getTime()));
+      usermailDO.setUpdateTime(new Timestamp(mongoUsermail.getUpdateTime().getTime()));
+    }
+    return usermailDO;
+
   }
 
   /**
@@ -112,7 +139,17 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public List<UsermailDO> listLastUsermails(UmQueryDTO umQueryDto) {
-    return usermailMapper.listLastUsermails(umQueryDto);
+    List<UsermailDO> usermailDOS = new ArrayList<>();
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      return usermailMapper.listLastUsermails(umQueryDto);
+    }
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      List<MongoUsermail> mongoUsermails = usermailMongoMapper
+          .listLastUsermails(umQueryDto.getSessionid(), umQueryDto.getOwner(), umQueryDto.getFromSeqNo());
+      usermailDOS = getUsermailDOs(mongoUsermails);
+    }
+    return usermailDOS;
+
   }
 
   /**
@@ -170,7 +207,16 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public List<UsermailDO> listUsermailsByMsgid(String msgid) {
-    return usermailMapper.listUsermailsByMsgid(msgid);
+    List<UsermailDO> usermailDOS = new ArrayList<>();
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      return usermailMapper.listUsermailsByMsgid(msgid);
+    }
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      List<MongoUsermail> mongoUsermails = usermailMongoMapper.listUsermailsByMsgid(msgid);
+      usermailDOS = getUsermailDOs(mongoUsermails);
+    }
+    return usermailDOS;
+
   }
 
   /**
@@ -182,7 +228,16 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public List<UsermailDO> listUsermailsByFromToMsgIds(String from, List<String> msgIds) {
-    return usermailMapper.listUsermailsByFromToMsgIds(from, msgIds);
+    List<UsermailDO> usermailDOS = new ArrayList<>();
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      return usermailMapper.listUsermailsByFromToMsgIds(from, msgIds);
+    }
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      List<MongoUsermail> mongoUsermails = usermailMongoMapper.listUsermailsByFromToMsgIds(from, msgIds);
+      usermailDOS = getUsermailDOs(mongoUsermails);
+    }
+    return usermailDOS;
+
   }
 
   /**
@@ -245,7 +300,18 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
    */
   @Override
   public List<UsermailDO> listUsermailsByStatus(QueryTrashDTO queryDto) {
-    return usermailMapper.listUsermailsByStatus(queryDto);
+    List<UsermailDO> usermailDOS = new ArrayList<>();
+    if (MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      return usermailMapper.listUsermailsByStatus(queryDto);
+    }
+    if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      List<MongoUsermail> mongoUsermails = usermailMongoMapper
+          .listUsermailsByStatus(queryDto.getStatus(), queryDto.getOwner(), queryDto.getSignal(),
+              new Date(queryDto.getUpdateTime().getTime()), queryDto.getPageSize());
+      usermailDOS = getUsermailDOs(mongoUsermails);
+    }
+    return usermailDOS;
+
   }
 
   /**
@@ -270,6 +336,24 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
   @Override
   public int deleteDomain(String domain, int pageSize) {
     return usermailMapper.deleteDomain(domain, pageSize);
+  }
+
+  /**
+   * 转化bean对象
+   * @param mongoUsermails 源对象
+   * @return List<UsermailDO>
+   */
+  private List<UsermailDO> getUsermailDOs(List<MongoUsermail> mongoUsermails) {
+    List<UsermailDO> usermailDOS = new ArrayList<>();
+    for (int i = 0; i < mongoUsermails.size(); i++) {
+      MongoUsermail mongoUsermail = mongoUsermails.get(i);
+      UsermailDO usermailDO = new UsermailDO();
+      BeanUtils.copyProperties(mongoUsermail, usermailDO);
+      usermailDO.setCreateTime(new Timestamp(mongoUsermail.getCreateTime().getTime()));
+      usermailDO.setUpdateTime(new Timestamp(mongoUsermail.getUpdateTime().getTime()));
+      usermailDOS.add(usermailDO);
+    }
+    return usermailDOS;
   }
 
 }
