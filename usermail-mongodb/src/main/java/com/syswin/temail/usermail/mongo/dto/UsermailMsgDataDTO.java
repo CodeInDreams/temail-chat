@@ -14,6 +14,7 @@ public class UsermailMsgDataDTO implements Serializable {
   private String to;
   private int type;
   private int status;
+
   private long seqNo;
   private String owner;
   //private String message;
@@ -39,8 +40,7 @@ public class UsermailMsgDataDTO implements Serializable {
   public String getMsgId() {
     return msgId;
   }
-
-  public void setMsgId(String msgId) {
+    public void setMsgId(String msgId) {
     this.msgId = msgId;
   }
 

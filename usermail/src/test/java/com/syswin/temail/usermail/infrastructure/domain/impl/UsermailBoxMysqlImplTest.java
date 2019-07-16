@@ -40,18 +40,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UsermailBoxRepoImplTest {
+public class UsermailBoxMysqlImplTest {
 
   @InjectMocks
-  private UsermailBoxRepoImpl usermailBoxRepoImpl;
+  private UsermailBoxMysqlImpl usermailBoxMysqlImpl;
   @Mock
   private UsermailBoxMapper usermailBoxMapper;
 
   @Test
   public void testSaveUsermailBox() {
     ArgumentCaptor<UsermailBoxDO> usermailBoxCap = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    UsermailBoxDO usermailBox = new UsermailBoxDO(1,"sessionId","mail2","a.test@", "sessionExtData");
-    usermailBoxRepoImpl.saveUsermailBox(usermailBox);
+    UsermailBoxDO usermailBox = new UsermailBoxDO(1, "sessionId", "mail2", "a.test@", "sessionExtData");
+    usermailBoxMysqlImpl.saveUsermailBox(usermailBox);
     Mockito.verify(usermailBoxMapper).saveUsermailBox(usermailBoxCap.capture());
     assertThat(usermailBoxCap.getValue()).isEqualTo(usermailBox);
   }
@@ -62,7 +62,7 @@ public class UsermailBoxRepoImplTest {
     int archiveStatus = 0;
     List<UsermailBoxDO> usermailBoxList = new ArrayList<>();
     Mockito.when(usermailBoxMapper.listUsermailBoxsByOwner(mail1, archiveStatus)).thenReturn(usermailBoxList);
-    List<UsermailBoxDO> result = usermailBoxRepoImpl.listUsermailBoxsByOwner(mail1, archiveStatus);
+    List<UsermailBoxDO> result = usermailBoxMysqlImpl.listUsermailBoxsByOwner(mail1, archiveStatus);
     Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwner(mail1, archiveStatus);
     assertThat(result).isEqualTo(usermailBoxList);
   }
@@ -73,8 +73,8 @@ public class UsermailBoxRepoImplTest {
     String to = "to";
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.deleteByOwnerAndMail2(from,to);
-    Mockito.verify(usermailBoxMapper).deleteByOwnerAndMail2(fromCap.capture(),toCap.capture());
+    usermailBoxMysqlImpl.deleteByOwnerAndMail2(from, to);
+    Mockito.verify(usermailBoxMapper).deleteByOwnerAndMail2(fromCap.capture(), toCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(from);
     assertThat(toCap.getValue()).isEqualTo(to);
   }
@@ -85,8 +85,8 @@ public class UsermailBoxRepoImplTest {
     String toStr = "to";
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.listUsermailBoxsByOwnerAndTo(fromStr,toStr);
-    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwnerAndTo(fromCap.capture(),toCap.capture());
+    usermailBoxMysqlImpl.listUsermailBoxsByOwnerAndTo(fromStr, toStr);
+    Mockito.verify(usermailBoxMapper).listUsermailBoxsByOwnerAndTo(fromCap.capture(), toCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(fromStr);
     assertThat(toCap.getValue()).isEqualTo(toStr);
   }
@@ -99,8 +99,9 @@ public class UsermailBoxRepoImplTest {
     ArgumentCaptor<String> fromCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> archiveStatusCap = ArgumentCaptor.forClass(Integer.class);
-    usermailBoxRepoImpl.updateArchiveStatus(from,to,archiveStatus);
-    Mockito.verify(usermailBoxMapper).updateArchiveStatus(fromCap.capture(),toCap.capture(),archiveStatusCap.capture());
+    usermailBoxMysqlImpl.updateArchiveStatus(from, to, archiveStatus);
+    Mockito.verify(usermailBoxMapper)
+        .updateArchiveStatus(fromCap.capture(), toCap.capture(), archiveStatusCap.capture());
     assertThat(fromCap.getValue()).isEqualTo(from);
     assertThat(toCap.getValue()).isEqualTo(to);
     assertThat(archiveStatusCap.getValue()).isEqualTo(archiveStatus);
@@ -112,8 +113,8 @@ public class UsermailBoxRepoImplTest {
     String to = "to";
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCap = ArgumentCaptor.forClass(String.class);
-    usermailBoxRepoImpl.selectByOwnerAndMail2(owner,to);
-    Mockito.verify(usermailBoxMapper).selectByOwnerAndMail2(owerCap.capture(),toCap.capture());
+    usermailBoxMysqlImpl.selectByOwnerAndMail2(owner, to);
+    Mockito.verify(usermailBoxMapper).selectByOwnerAndMail2(owerCap.capture(), toCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(owner);
     assertThat(toCap.getValue()).isEqualTo(to);
   }
@@ -121,18 +122,18 @@ public class UsermailBoxRepoImplTest {
   @Test
   public void updateSessionExtDataTest() {
     UsermailBoxDO usermailBoxDO = new UsermailBoxDO("owner", "mail2", "sessionExtData");
-    usermailBoxRepoImpl.updateSessionExtData(usermailBoxDO);
+    usermailBoxMysqlImpl.updateSessionExtData(usermailBoxDO);
     Mockito.verify(usermailBoxMapper).updateSessionExtData(usermailBoxDO);
   }
 
 
   @Test
-  public void testGetTopNMailboxes(){
+  public void testGetTopNMailboxes() {
     String from = "from@t.email";
-    usermailBoxRepoImpl.selectTopNByOwner(from,0);
+    usermailBoxMysqlImpl.selectTopNByOwner(from, 0);
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    Mockito.verify(usermailBoxMapper).selectTopNByOwner(fromCaptor.capture(),statusCaptor.capture());
+    Mockito.verify(usermailBoxMapper).selectTopNByOwner(fromCaptor.capture(), statusCaptor.capture());
     assertThat(fromCaptor.getValue()).isEqualTo(from);
   }
 
@@ -141,7 +142,7 @@ public class UsermailBoxRepoImplTest {
     String domain = "domain";
     int pageSize = 100;
 
-    usermailBoxRepoImpl.deleteDomain(domain, pageSize);
+    usermailBoxMysqlImpl.deleteDomain(domain, pageSize);
     verify(usermailBoxMapper).deleteDomain("%@" + domain, pageSize);
   }
 

@@ -27,7 +27,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
 import java.util.List;
 
-public interface UsermailBoxRepo {
+public interface IUsermailBoxDB {
 
   /**
    * 新增单聊会话信息

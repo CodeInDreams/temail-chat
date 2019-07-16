@@ -50,7 +50,7 @@ import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBoxDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import java.sql.Timestamp;
@@ -75,7 +75,7 @@ public class UsermailService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UsermailService.class);
   private final IUsermailMsgDB usermailMsgDB;
-  private final UsermailBoxRepo usermailBoxRepo;
+  private final IUsermailBoxDB usermailBoxDB;
   private final IUsermailMsgReplyDB usermailMsgReplyDB;
   private final IUsermailAdapter usermailAdapter;
   private final UsermailSessionService usermailSessionService;
@@ -89,7 +89,7 @@ public class UsermailService {
 
 
   @Autowired
-  public UsermailService(IUsermailMsgDB usermailMsgDB, UsermailBoxRepo usermailBoxRepo,
+  public UsermailService(IUsermailMsgDB usermailMsgDB, IUsermailBoxDB usermailBoxDB,
       IUsermailMsgReplyDB usermailMsgReplyDB,
       IUsermailAdapter usermailAdapter,
       UsermailSessionService usermailSessionService, Usermail2NotifyMqService usermail2NotifyMqService,
@@ -97,7 +97,7 @@ public class UsermailService {
       MsgCompressor msgCompressor,
       ConvertMsgService convertMsgService) {
     this.usermailMsgDB = usermailMsgDB;
-    this.usermailBoxRepo = usermailBoxRepo;
+    this.usermailBoxDB = usermailBoxDB;
     this.usermailMsgReplyDB = usermailMsgReplyDB;
     this.usermailAdapter = usermailAdapter;
     this.usermailSessionService = usermailSessionService;
@@ -121,10 +121,10 @@ public class UsermailService {
     // 保证mail2和owner是相反的，逐渐去掉mail1字段
     String target = owner.equals(from) ? to : from;
     UsermailBoxDO dbBox;
-    dbBox = usermailBoxRepo.selectByOwnerAndMail2(owner, target);
+    dbBox = usermailBoxDB.selectByOwnerAndMail2(owner, target);
     if (dbBox == null) {
       dbBox = new UsermailBoxDO(usermailAdapter.getPkID(), sessionId, target, owner, sessionExtData);
-      usermailBoxRepo.saveUsermailBox(dbBox);
+      usermailBoxDB.saveUsermailBox(dbBox);
     }
     return dbBox;
   }
@@ -279,7 +279,7 @@ public class UsermailService {
    */
   public List<MailboxDTO> mailboxes(String from, int archiveStatus, Map<String, String> usermailBoxes) {
     Map<String, String> localMailBoxes = CollectionUtils.isEmpty(usermailBoxes) ? new HashMap<>(0) : usermailBoxes;
-    List<UsermailBoxDO> dbBoxes = usermailBoxRepo.listUsermailBoxsByOwner(from, archiveStatus);
+    List<UsermailBoxDO> dbBoxes = usermailBoxDB.listUsermailBoxsByOwner(from, archiveStatus);
     List<MailboxDTO> mailBoxes = new ArrayList<>(dbBoxes.size());
     List<UsermailDO> lastUsermail;
     for (UsermailBoxDO dbBox : dbBoxes) {
@@ -311,7 +311,7 @@ public class UsermailService {
    * @return 倒序排序后的会话列表
    */
   public List<MailboxDTO> getMailBoxes(String from, int archiveStatus, int pageSize) {
-    List<UsermailBoxDO> usermailBoxDOes = usermailBoxRepo.selectTopNByOwner(from, archiveStatus);
+    List<UsermailBoxDO> usermailBoxDOes = usermailBoxDB.selectTopNByOwner(from, archiveStatus);
     List<MailboxDTO> mailboxes = new ArrayList<>(usermailBoxDOes.size());
     List<UsermailDO> lastUsermail;
     for (UsermailBoxDO usermailBoxDO : usermailBoxDOes) {
@@ -414,7 +414,7 @@ public class UsermailService {
    */
   @Transactional
   public boolean deleteSession(CdtpHeaderDTO cdtpHeaderDto, DeleteMailBoxQueryDTO queryDto) {
-    usermailBoxRepo.deleteByOwnerAndMail2(queryDto.getFrom(), queryDto.getTo());
+    usermailBoxDB.deleteByOwnerAndMail2(queryDto.getFrom(), queryDto.getTo());
     LOGGER.info("Label-delete-usermail-session: delete session, params is {}", queryDto);
     if (queryDto.isDeleteAllMsg()) {
       String sessionId = usermailSessionService.getSessionID(queryDto.getTo(), queryDto.getFrom());
@@ -438,7 +438,7 @@ public class UsermailService {
    */
   @Transactional
   public boolean deleteGroupChatSession(String groupTemail, String owner) {
-    usermailBoxRepo.deleteByOwnerAndMail2(owner, groupTemail);
+    usermailBoxDB.deleteByOwnerAndMail2(owner, groupTemail);
     LOGGER
         .info("Label-delete-GroupChat-session: delete session, params is owner:{}, groupTemail:{}", owner, groupTemail);
     String sessionId = usermailSessionService.getSessionID(groupTemail, owner);
@@ -590,7 +590,7 @@ public class UsermailService {
         && archiveStatus != TemailArchiveStatus.STATUS_ARCHIVE_1)) {
       throw new IllegalGmArgsException(ERROR_REQUEST_PARAM);
     }
-    usermailBoxRepo.updateArchiveStatus(from, to, archiveStatus);
+    usermailBoxDB.updateArchiveStatus(from, to, archiveStatus);
     if (archiveStatus == TemailArchiveStatus.STATUS_NORMAL_0) {
       usermail2NotifyMqService.sendMqAfterUpdateArchiveStatus(headerInfo, from, to, SessionEventType.EVENT_TYPE_34);
     } else {
@@ -606,7 +606,7 @@ public class UsermailService {
    */
   @Transactional
   public void updateSessionExtData(CdtpHeaderDTO headerInfo, UpdateSessionExtDataDTO updateDto) {
-    usermailBoxRepo
+    usermailBoxDB
         .updateSessionExtData(new UsermailBoxDO(updateDto.getFrom(), updateDto.getTo(), updateDto.getSessionExtData()));
     usermail2NotifyMqService
         .sendMqUpdateSessionExtData(headerInfo, updateDto.getFrom(), updateDto.getTo(), updateDto.getSessionExtData(),

@@ -58,9 +58,9 @@ import com.syswin.temail.usermail.dto.RevertMailDTO;
 import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.dto.UpdateSessionExtDataDTO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBoxDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,7 +77,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 public class UsermailServiceTest {
 
   private final IUsermailMsgDB usermailMsgDB = Mockito.mock(IUsermailMsgDB.class);
-  private final UsermailBoxRepo usermailBoxRepo = Mockito.mock(UsermailBoxRepo.class);
+  private final IUsermailBoxDB usermailBoxDB = Mockito.mock(IUsermailBoxDB.class);
   private final IUsermailMsgReplyDB usermailMsgReplyDB = Mockito.mock(IUsermailMsgReplyDB.class);
   private final IUsermailAdapter usermailAdapter = Mockito.mock(IUsermailAdapter.class);
   private final UsermailSessionService usermailSessionService = Mockito.mock(UsermailSessionService.class);
@@ -86,7 +86,7 @@ public class UsermailServiceTest {
   private final UsermailMqService usermailMqService = Mockito.mock(UsermailMqService.class, RETURNS_SMART_NULLS);
   private final ConvertMsgService convertMsgService = Mockito.mock(ConvertMsgService.class);
   private final UsermailService usermailService = new UsermailService(
-      usermailMsgDB, usermailBoxRepo, usermailMsgReplyDB, usermailAdapter, usermailSessionService,
+      usermailMsgDB, usermailBoxDB, usermailMsgReplyDB, usermailAdapter, usermailSessionService,
       usermail2NotifyMqService,
       usermailMqService, new MsgCompressor(), convertMsgService
   );
@@ -110,7 +110,7 @@ public class UsermailServiceTest {
     when(usermailSessionService.getSessionID(from, to)).thenReturn(sessionId);
     usermailService.saveUsermailBoxInfo(sessionId, from, to, owner, sessionExtData);
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
+    verify(usermailBoxDB).saveUsermailBox(argumentCaptor1.capture());
     UsermailBoxDO usermailBox = argumentCaptor1.getValue();
     assertEquals(to, usermailBox.getMail2());
     assertEquals(owner, usermailBox.getOwner());
@@ -140,7 +140,7 @@ public class UsermailServiceTest {
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
+    verify(usermailBoxDB).saveUsermailBox(argumentCaptor1.capture());
     UsermailBoxDO usermailBox = argumentCaptor1.getValue();
     assertEquals(to, usermailBox.getMail2());
     assertEquals("sessionid", usermailBox.getSessionid());
@@ -179,7 +179,7 @@ public class UsermailServiceTest {
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
+    verify(usermailBoxDB).saveUsermailBox(argumentCaptor1.capture());
     UsermailBoxDO usermailBox = argumentCaptor1.getValue();
     assertEquals(to, usermailBox.getMail2());
     assertEquals("sessionid", usermailBox.getSessionid());
@@ -219,7 +219,7 @@ public class UsermailServiceTest {
     usermailService.sendMail(headerInfo, createUsermailDto, owner, to);
 
     ArgumentCaptor<UsermailBoxDO> argumentCaptor1 = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    verify(usermailBoxRepo).saveUsermailBox(argumentCaptor1.capture());
+    verify(usermailBoxDB).saveUsermailBox(argumentCaptor1.capture());
     UsermailBoxDO usermailBox = argumentCaptor1.getValue();
     assertEquals(to, usermailBox.getMail2());
     assertEquals("sessionid", usermailBox.getSessionid());
@@ -355,7 +355,7 @@ public class UsermailServiceTest {
     Map<String, String> localMailBoxes = ImmutableMap.of(to_1, localMsgid_1, to_2, localMsgid_2);
     UsermailBoxDO box_1 = new UsermailBoxDO(1L, sessionid_1, to_1, from, sessionExtData_1);
     UsermailBoxDO box_2 = new UsermailBoxDO(2L, sessionod_2, to_2, from, sessionExtData_2);
-    when(usermailBoxRepo.listUsermailBoxsByOwner(from, archiveStatus)).thenReturn(Arrays.asList(box_1, box_2));
+    when(usermailBoxDB.listUsermailBoxsByOwner(from, archiveStatus)).thenReturn(Arrays.asList(box_1, box_2));
     when(usermailAdapter.getLastMsgId(from, to_1)).thenReturn(localMsgid_1);
     when(usermailAdapter.getLastMsgId(from, to_2)).thenReturn("msgid_other");
     UsermailDO lastUsermail_to_2 = new UsermailDO(1L, "msgid_2_actualLast", sessionod_2, from, to_2,
@@ -524,7 +524,7 @@ public class UsermailServiceTest {
 
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
-    verify(usermailBoxRepo).deleteByOwnerAndMail2(fromCaptor.capture(), toCaptor.capture());
+    verify(usermailBoxDB).deleteByOwnerAndMail2(fromCaptor.capture(), toCaptor.capture());
     assertEquals(from, fromCaptor.getValue());
     assertEquals(to, toCaptor.getValue());
 
@@ -560,7 +560,7 @@ public class UsermailServiceTest {
 
     boolean result = usermailService.deleteGroupChatSession(groupTemail, owner);
 
-    verify(usermailBoxRepo).deleteByOwnerAndMail2(owner, groupTemail);
+    verify(usermailBoxDB).deleteByOwnerAndMail2(owner, groupTemail);
     verify(usermailMsgDB).deleteBySessionIdAndOwner(sessionid, owner);
   }
 
@@ -739,7 +739,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailBoxRepo).updateArchiveStatus(fromCaptor.capture(), toCaptor.capture(), statusCaptor.capture());
+    verify(usermailBoxDB).updateArchiveStatus(fromCaptor.capture(), toCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(from, fromCaptor.getValue());
     assertEquals(to, toCaptor.getValue());
@@ -757,7 +757,7 @@ public class UsermailServiceTest {
     ArgumentCaptor<String> fromCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Integer> statusCaptor = ArgumentCaptor.forClass(Integer.class);
-    verify(usermailBoxRepo).updateArchiveStatus(fromCaptor.capture(), toCaptor.capture(), statusCaptor.capture());
+    verify(usermailBoxDB).updateArchiveStatus(fromCaptor.capture(), toCaptor.capture(), statusCaptor.capture());
     int status = statusCaptor.getValue();
     assertEquals(from, fromCaptor.getValue());
     assertEquals(to, toCaptor.getValue());
@@ -770,7 +770,7 @@ public class UsermailServiceTest {
     String to = "to@msgseal.com";
     int archiveStatus = 2;
     usermailService.updateUsermailBoxArchiveStatus(headerInfo, from, to, archiveStatus);
-    verify(usermailBoxRepo).updateArchiveStatus(from, to, archiveStatus);
+    verify(usermailBoxDB).updateArchiveStatus(from, to, archiveStatus);
   }
 
   @Test
@@ -782,7 +782,7 @@ public class UsermailServiceTest {
 
     usermailService.updateSessionExtData(headerInfo, updateDto);
     ArgumentCaptor<UsermailBoxDO> captorBox = ArgumentCaptor.forClass(UsermailBoxDO.class);
-    Mockito.verify(usermailBoxRepo).updateSessionExtData(captorBox.capture());
+    Mockito.verify(usermailBoxDB).updateSessionExtData(captorBox.capture());
     UsermailBoxDO captorBoxValue = captorBox.getValue();
     assertThat(captorBoxValue).isNotNull();
     assertThat(captorBoxValue.getOwner()).isEqualTo(updateDto.getFrom());
@@ -799,7 +799,7 @@ public class UsermailServiceTest {
     int pageSize = 2;
     List<UsermailBoxDO> usermailBoxDOes = Arrays.asList(new UsermailBoxDO(222l, "378784", "to1@t.email", from, ""),
         new UsermailBoxDO(223l, "37338784", "to2@t.email", from, ""));
-    Mockito.when(usermailBoxRepo.selectTopNByOwner(from, 0)).thenReturn(usermailBoxDOes);
+    Mockito.when(usermailBoxDB.selectTopNByOwner(from, 0)).thenReturn(usermailBoxDOes);
     UmQueryDTO umQueryDTO1 = new UmQueryDTO("378784", from);
     UmQueryDTO umQueryDTO2 = new UmQueryDTO("37338784", from);
     List<UsermailDO> usermails1 = Arrays.asList(
@@ -832,8 +832,8 @@ public class UsermailServiceTest {
     mailboxDTOS.add(mailboxDTO1);
     mailboxDTOS.add(mailboxDTO2);
     List<MailboxDTO> mailBoxes = usermailService.getMailBoxes(from, 0, pageSize);
-    assertEquals(mailBoxes.size(),2);
-    assertEquals("to2@t.email",mailBoxes.get(0).getTo());
+    assertEquals(mailBoxes.size(), 2);
+    assertEquals("to2@t.email", mailBoxes.get(0).getTo());
 
   }
 }

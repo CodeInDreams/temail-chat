@@ -25,18 +25,18 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.UsermailBoxDO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBoxDB;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UsermailBoxRepoImpl implements UsermailBoxRepo {
+public class UsermailBoxMysqlImpl implements IUsermailBoxDB {
 
   private final com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper;
 
   @Autowired
-  public UsermailBoxRepoImpl(
+  public UsermailBoxMysqlImpl(
       com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper) {
     this.usermailBoxMapper = usermailBoxMapper;
   }
