@@ -85,4 +85,26 @@ public class ParamsKey {
      */
     String MESSAGE = "message";
   }
+
+  public interface MongoCollectionFields {
+    String ID = "id";
+    String MSGID = "msgid";
+    String SESSIONID = "sessionid";
+    String FROM = "from";
+    String TO = "to";
+    String STATUS = "status";
+    String TYPE = "type";
+    String OWNER = "owner";
+    String SEQNO= "seqNo";
+    String AT = "at";
+    String TOPIC = "topic";
+    String CREATETIME = "createTime";
+    String UPDATETIME = "updateTime";
+    String LASTREPLYMSGID = "lastReplyMsgId";
+    String REPLYCOUNT = "replyCount";
+    String AUTHOR = "author";
+    String ZIPMSG = "zipMsg";
+    String FILTER = "filter";
+    String PARENTMSGID = "parentMsgid";
+  }
 }

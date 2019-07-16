@@ -1,5 +1,13 @@
 package com.syswin.temail.usermail.mongo.infrastructure.domain;
 
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.FROM;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.MSGID;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.OWNER;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.SEQNO;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.SESSIONID;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.STATUS;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.UPDATETIME;
+
 import com.syswin.temail.usermail.mongo.domains.MongoUsermail;
 import java.util.Date;
 import java.util.List;
@@ -28,18 +36,18 @@ public class UsermailMongoMapper {
       String signal) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    criteria.where("sessionid").is(sessionid).and("owner").is(owner);
+    criteria.where(SESSIONID).is(sessionid).and(OWNER).is(owner);
     if (fromSeqNo == 0l) {
       if ("after".equals(signal)) {
-        criteria.and("seqNo").gt(fromSeqNo);
-        query.with(new Sort(Direction.ASC, "seqNo"));
+        criteria.and(SEQNO).gt(fromSeqNo);
+        query.with(new Sort(Direction.ASC, SEQNO));
       }
       if ("before".equals(signal)) {
-        criteria.and("seqNo").lt(fromSeqNo);
-        query.with(new Sort(Direction.DESC, "seqNo"));
+        criteria.and(SEQNO).lt(fromSeqNo);
+        query.with(new Sort(Direction.DESC, SEQNO));
       }
     } else {
-      query.with(new Sort(Direction.DESC, "seqNo"));
+      query.with(new Sort(Direction.DESC, SEQNO));
     }
     query.addCriteria(criteria);
     query.limit(pageSize);
@@ -50,7 +58,7 @@ public class UsermailMongoMapper {
   public MongoUsermail selectByMsgidAndOwner(String msgid, String owner) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    criteria.where("msgid").is(msgid).and("owner").is(owner);
+    criteria.where(MSGID).is(msgid).and(OWNER).is(owner);
     query.addCriteria(criteria);
     MongoUsermail mongoUsermail = mongoTemplate.findOne(query, MongoUsermail.class);
     return mongoUsermail;
@@ -59,20 +67,20 @@ public class UsermailMongoMapper {
   public MongoUsermail listLastUsermails(String sessionid, String owner, long seqNo) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    criteria.where("sessionid").is(sessionid).and("owner").is(owner);
-    query.with(new Sort(Direction.DESC, "seqNo")).limit(1);
+    criteria.where(SESSIONID).is(sessionid).and(OWNER).is(owner);
+    query.with(new Sort(Direction.DESC, SEQNO)).limit(1);
     query.addCriteria(criteria);
     MongoUsermail mongoUsermail = mongoTemplate.findOne(query, MongoUsermail.class);
     return mongoUsermail;
   }
 
   public List<MongoUsermail> listUsermailsByMsgid(String msgid) {
-    Query query = new Query(Criteria.where("msgid").is(msgid));
+    Query query = new Query(Criteria.where(MSGID).is(msgid));
     return mongoTemplate.find(query, MongoUsermail.class);
   }
 
   public List<MongoUsermail> listUsermailsByFromToMsgIds(String from, List<String> msgIds) {
-    Query query = new Query(Criteria.where("from").is(from).and("msgid").in(msgIds));
+    Query query = new Query(Criteria.where(FROM).is(from).and(MSGID).in(msgIds));
     return mongoTemplate.find(query, MongoUsermail.class);
   }
 
@@ -80,17 +88,17 @@ public class UsermailMongoMapper {
       int pageSize) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    criteria.and("status").is(status).and("owner").is(owner);
+    criteria.and(STATUS).is(status).and(OWNER).is(owner);
     if (updateTime != null) {
       if ("after".equals(signal)) {
-        criteria.and("updateTime").gt(updateTime);
+        criteria.and(UPDATETIME).gt(updateTime);
       }
       if ("before".equals(signal)) {
-        criteria.and("updateTime").lt(updateTime);
+        criteria.and(UPDATETIME).lt(updateTime);
       }
     }
     query.addCriteria(criteria);
-    query.with(new Sort(Direction.DESC, "updateTime")).limit(pageSize);
+    query.with(new Sort(Direction.DESC, UPDATETIME)).limit(pageSize);
     return mongoTemplate.find(query, MongoUsermail.class);
   }
 
