@@ -87,6 +87,7 @@ public class ParamsKey {
   }
 
   public interface MongoCollectionFields {
+
     String ID = "id";
     String MSGID = "msgid";
     String SESSIONID = "sessionid";
@@ -95,7 +96,7 @@ public class ParamsKey {
     String STATUS = "status";
     String TYPE = "type";
     String OWNER = "owner";
-    String SEQNO= "seqNo";
+    String SEQNO = "seqNo";
     String AT = "at";
     String TOPIC = "topic";
     String CREATETIME = "createTime";
@@ -107,4 +108,11 @@ public class ParamsKey {
     String FILTER = "filter";
     String PARENTMSGID = "parentMsgid";
   }
+
+  public interface DbSelector {
+
+    String MONGO_DB = "mongodb";
+    String MYSQL_DB = "mysqldb";
+  }
+
 }

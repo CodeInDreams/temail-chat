@@ -32,12 +32,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UsermailBlacklistMysqlImpl implements IUsermailBlacklistDB {
+public class UsermailBlacklistDBImpl implements IUsermailBlacklistDB {
 
   private final UsermailBlacklistMapper usermailBlacklistMapper;
 
   @Autowired
-  public UsermailBlacklistMysqlImpl(UsermailBlacklistMapper usermailBlacklistMapper) {
+  public UsermailBlacklistDBImpl(UsermailBlacklistMapper usermailBlacklistMapper) {
     this.usermailBlacklistMapper = usermailBlacklistMapper;
   }
 

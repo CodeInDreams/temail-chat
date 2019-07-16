@@ -31,12 +31,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UsermailBoxMysqlImpl implements IUsermailBoxDB {
+public class UsermailBoxDBImpl implements IUsermailBoxDB {
 
   private final com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper;
 
   @Autowired
-  public UsermailBoxMysqlImpl(
+  public UsermailBoxDBImpl(
       com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBoxMapper usermailBoxMapper) {
     this.usermailBoxMapper = usermailBoxMapper;
   }

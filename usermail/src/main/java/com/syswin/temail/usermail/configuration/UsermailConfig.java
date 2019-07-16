@@ -68,4 +68,51 @@ public class UsermailConfig {
 
   @Value("${spring.rocketmq.receiverType:REDIS}")
   public String receiverMqType;
+
+  @Value("${app.usermail.message.db:mongodb}")
+  public String dbSelector = "mongodb";
+
+  public String getMqTopic() {
+    return mqTopic;
+  }
+
+  public String getMqUserMailAgentTopic() {
+    return mqUserMailAgentTopic;
+  }
+
+  public String getMqTrashConsumer() {
+    return mqTrashConsumer;
+  }
+
+  public String getNamesrvAddr() {
+    return namesrvAddr;
+  }
+
+  public String getMqMgtDeleteDomainTopic() {
+    return mqMgtDeleteDomainTopic;
+  }
+
+  public String getMqMgtDeleteDomainGroup() {
+    return mqMgtDeleteDomainGroup;
+  }
+
+  public String getMongoTopic() {
+    return mongoTopic;
+  }
+
+  public String getMongoGroup() {
+    return mongoGroup;
+  }
+
+  public String getSenderMqType() {
+    return senderMqType;
+  }
+
+  public String getReceiverMqType() {
+    return receiverMqType;
+  }
+
+  public String getDbSelector() {
+    return dbSelector;
+  }
 }

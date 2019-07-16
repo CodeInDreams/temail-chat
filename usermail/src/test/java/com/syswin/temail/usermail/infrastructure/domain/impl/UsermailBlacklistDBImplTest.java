@@ -40,10 +40,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UsermailBlacklistMysqlImplTest {
+public class UsermailBlacklistDBImplTest {
 
   @InjectMocks
-  private UsermailBlacklistMysqlImpl usermailBlacklistMysql;
+  private UsermailBlacklistDBImpl usermailBlacklistMysql;
   @Mock
   private UsermailBlacklistMapper usermailBlacklistMapper;
 

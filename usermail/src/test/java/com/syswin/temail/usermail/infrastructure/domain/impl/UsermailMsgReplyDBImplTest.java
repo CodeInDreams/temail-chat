@@ -42,10 +42,10 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UsermailMsgReplyImplTest {
+public class UsermailMsgReplyDBImplTest {
 
   @InjectMocks
-  private UsermailMsgReplyMysqlImpl usermailMsgReplyMysqlImpl;
+  private UsermailMsgReplyDBImpl usermailMsgReplyDBImpl;
   @Mock
   private UsermailMsgReplyMapper usermailMsgReplyMapper;
 
@@ -53,7 +53,7 @@ public class UsermailMsgReplyImplTest {
   public void insert() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
     ArgumentCaptor<UsermailMsgReplyDO> usermailMsgReplyCap = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
-    usermailMsgReplyMysqlImpl.insert(usermailMsgReply);
+    usermailMsgReplyDBImpl.insert(usermailMsgReply);
     Mockito.verify(usermailMsgReplyMapper).insert(usermailMsgReplyCap.capture());
     assertThat(usermailMsgReplyCap.getValue()).isEqualTo(usermailMsgReply);
   }
@@ -62,7 +62,7 @@ public class UsermailMsgReplyImplTest {
   public void getMsgReplys() {
     QueryMsgReplyDTO queryMsgReplyDTO = new QueryMsgReplyDTO();
     ArgumentCaptor<QueryMsgReplyDTO> queryMsgReplyDTOCap = ArgumentCaptor.forClass(QueryMsgReplyDTO.class);
-    usermailMsgReplyMysqlImpl.listMsgReplys(queryMsgReplyDTO);
+    usermailMsgReplyDBImpl.listMsgReplys(queryMsgReplyDTO);
     Mockito.verify(usermailMsgReplyMapper).listMsgReplys(queryMsgReplyDTOCap.capture());
     assertThat(queryMsgReplyDTOCap.getValue()).isEqualTo(queryMsgReplyDTO);
   }
@@ -73,7 +73,7 @@ public class UsermailMsgReplyImplTest {
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<String>> msgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
     List<String> msgIds = new ArrayList<String>();
-    usermailMsgReplyMysqlImpl.deleteMsgReplysByMsgIds(ower, msgIds);
+    usermailMsgReplyDBImpl.deleteMsgReplysByMsgIds(ower, msgIds);
     Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysByMsgIds(owerCap.capture(), msgIdsCap.capture());
     assertThat(owerCap.getValue()).isEqualTo(ower);
     assertThat(msgIdsCap.getValue()).isEqualTo(msgIds);
@@ -83,7 +83,7 @@ public class UsermailMsgReplyImplTest {
   public void batchDeleteBySessionId() {
     String ower = "ower";
     String sessionId = "sessionId";
-    usermailMsgReplyMysqlImpl.deleteMsgReplysBySessionId(sessionId, ower);
+    usermailMsgReplyDBImpl.deleteMsgReplysBySessionId(sessionId, ower);
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<String> sessionIdCap = ArgumentCaptor.forClass(String.class);
     Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysBySessionId(sessionIdCap.capture(), owerCap.capture());
@@ -95,7 +95,7 @@ public class UsermailMsgReplyImplTest {
   public void deleteMsgByParentIdAndOwner() {
     String ower = "ower";
     List<String> parentMsgIds = new ArrayList<String>();
-    usermailMsgReplyMysqlImpl.deleteMsgReplysByParentIds(ower, parentMsgIds);
+    usermailMsgReplyDBImpl.deleteMsgReplysByParentIds(ower, parentMsgIds);
     ArgumentCaptor<String> owerCap = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<List<String>> parentMsgIdsCap = ArgumentCaptor.forClass(ArrayList.class);
     Mockito.verify(usermailMsgReplyMapper).deleteMsgReplysByParentIds(owerCap.capture(), parentMsgIdsCap.capture());
@@ -106,7 +106,7 @@ public class UsermailMsgReplyImplTest {
   @Test
   public void getMsgReplyByCondition() {
     UsermailMsgReplyDO usermailMsgReply = new UsermailMsgReplyDO();
-    usermailMsgReplyMysqlImpl.selectMsgReplyByCondition(usermailMsgReply);
+    usermailMsgReplyDBImpl.selectMsgReplyByCondition(usermailMsgReply);
     ArgumentCaptor<UsermailMsgReplyDO> usermailMsgReplyCap = ArgumentCaptor.forClass(UsermailMsgReplyDO.class);
     Mockito.verify(usermailMsgReplyMapper).selectMsgReplyByCondition(usermailMsgReplyCap.capture());
     assertThat(usermailMsgReplyCap.getValue()).isEqualTo(usermailMsgReply);
@@ -120,7 +120,7 @@ public class UsermailMsgReplyImplTest {
 
     Mockito.when(usermailMsgReplyMapper.deleteMsgReplyLessThan(createTime, batchNum)).thenReturn(count);
 
-    int result = usermailMsgReplyMysqlImpl.deleteMsgReplyLessThan(createTime, batchNum);
+    int result = usermailMsgReplyDBImpl.deleteMsgReplyLessThan(createTime, batchNum);
 
     assertThat(result).isEqualTo(count);
   }
@@ -130,7 +130,7 @@ public class UsermailMsgReplyImplTest {
     String domain = "domain";
     int pageSize = 100;
 
-    usermailMsgReplyMysqlImpl.deleteDomain(domain, pageSize);
+    usermailMsgReplyDBImpl.deleteDomain(domain, pageSize);
     verify(usermailMsgReplyMapper).deleteDomain(domain, pageSize);
   }
 

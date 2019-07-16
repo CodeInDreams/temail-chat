@@ -24,7 +24,15 @@
 
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
+import static com.syswin.temail.usermail.common.MongoEventEnum.MONGO_USERMAIL_EVENT;
+import static com.syswin.temail.usermail.common.ParamsKey.DbSelector.MONGO_DB;
+import static com.syswin.temail.usermail.common.ParamsKey.DbSelector.MYSQL_DB;
+
+import com.google.gson.Gson;
 import com.syswin.temail.usermail.common.Constants.TemailStatus;
+import com.syswin.temail.usermail.common.MongoMsgEventEnum;
+import com.syswin.temail.usermail.configuration.UsermailConfig;
+import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.domains.UsermailDO;
 import com.syswin.temail.usermail.dto.QueryTrashDTO;
 import com.syswin.temail.usermail.dto.RevertMailDTO;
@@ -32,17 +40,29 @@ import com.syswin.temail.usermail.dto.TrashMailDTO;
 import com.syswin.temail.usermail.dto.UmQueryDTO;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMapper;
+import com.syswin.temail.usermail.mongo.dto.MongoEventDTO;
+import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailMongoMapper;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-public class UsermailMsgMysqlImpl implements IUsermailMsgDB {
+@Repository
+public class UsermailMsgDBImpl implements IUsermailMsgDB {
 
   private final UsermailMapper usermailMapper;
+  private final IMqAdapter mqAdapter;
+  private final UsermailMongoMapper usermailMongoMapper;
+  private final UsermailConfig usermailConfig;
+  private final Gson gson = new Gson();
 
   @Autowired
-  public UsermailMsgMysqlImpl(UsermailMapper usermailMapper) {
+  public UsermailMsgDBImpl(UsermailMapper usermailMapper, IMqAdapter mqAdapter,
+      UsermailMongoMapper usermailMongoMapper, UsermailConfig usermailConfig) {
     this.usermailMapper = usermailMapper;
+    this.mqAdapter = mqAdapter;
+    this.usermailMongoMapper = usermailMongoMapper;
+    this.usermailConfig = usermailConfig;
   }
 
   /**
@@ -52,7 +72,13 @@ public class UsermailMsgMysqlImpl implements IUsermailMsgDB {
    */
   @Override
   public void insertUsermail(UsermailDO usermail) {
-    usermailMapper.insertUsermail(usermail);
+    if(MYSQL_DB.equals(usermailConfig.getDbSelector())) {
+      usermailMapper.insertUsermail(usermail);
+    }
+    if(MONGO_DB.equals(usermailConfig.getDbSelector())) {
+      MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO(MONGO_USERMAIL_EVENT, usermail, MongoMsgEventEnum.SEND_USERMAIL_MSG);
+      mqAdapter.sendMessage(usermailConfig.mongoTopic, usermail.getFrom(), gson.toJson(eventDTO));
+    }
   }
 
   /**
