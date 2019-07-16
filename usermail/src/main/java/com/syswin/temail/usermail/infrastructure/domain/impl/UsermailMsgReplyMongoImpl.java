@@ -26,6 +26,7 @@ package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.google.gson.Gson;
 import com.syswin.temail.usermail.common.MongoEventEnum;
+import com.syswin.temail.usermail.common.MongoMsgReplyEventEnum;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
@@ -64,8 +65,9 @@ public class UsermailMsgReplyMongoImpl implements IUsermailMsgReplyDB {
     UsermailReplyMsgDataDTO usermailReplyMsgDataDTO = new UsermailReplyMsgDataDTO();
     usermailReplyMsgDataDTO.setFrom(usermailMsgReply.getFrom());
     //....
-    MongoEventDTO mongoEventDTO = new MongoEventDTO(MongoEventEnum.MONGO_USERMAIL_REPLY_EVENT,usermailReplyMsgDataDTO);
-    mqAdapter.sendMessage(usermailConfig.mongoTopic,usermailMsgReply.getFrom(), gson.toJson(mongoEventDTO));
+    MongoEventDTO mongoEventDTO = new MongoEventDTO(MongoEventEnum.MONGO_USERMAIL_REPLY_EVENT, usermailReplyMsgDataDTO,
+        MongoMsgReplyEventEnum.SEND_USERMAIL_REPLY_MSG);
+    mqAdapter.sendMessage(usermailConfig.mongoTopic, usermailMsgReply.getFrom(), gson.toJson(mongoEventDTO));
     return 0;
   }
 

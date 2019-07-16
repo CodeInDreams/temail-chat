@@ -147,16 +147,4 @@ public class UsermailConfiguration {
     return new UsermailMsgReplyMongoImpl(mqAdapter, usermailReplyMongoMapper, usermailConfig);
   }
 
-  @Bean
-  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
-  UsermailReplyMongoMapper usermailReplyMongoMapper() {
-    return new UsermailReplyMongoMapper();
-  }
-
-  @Bean
-  @ConditionalOnProperty(name = "app.usermail.message.db", havingValue = "mongodb")
-  UsermailMongoMapper usermailMongoMapper() {
-    return new UsermailMongoMapper();
-  }
-  
 }

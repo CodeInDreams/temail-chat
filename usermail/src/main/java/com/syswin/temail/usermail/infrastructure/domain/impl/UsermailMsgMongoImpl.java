@@ -3,6 +3,7 @@ package com.syswin.temail.usermail.infrastructure.domain.impl;
 import static com.syswin.temail.usermail.common.MongoEventEnum.MONGO_USERMAIL_EVENT;
 
 import com.google.gson.Gson;
+import com.syswin.temail.usermail.common.MongoMsgEventEnum;
 import com.syswin.temail.usermail.configuration.UsermailConfig;
 import com.syswin.temail.usermail.core.IMqAdapter;
 import com.syswin.temail.usermail.domains.UsermailDO;
@@ -33,8 +34,7 @@ public class UsermailMsgMongoImpl implements IUsermailMsgDB {
 
   @Override
   public void insertUsermail(UsermailDO usermail) {
-    //usermail转MongoDB event
-    MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO<>(MONGO_USERMAIL_EVENT, usermail);
+    MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO(MONGO_USERMAIL_EVENT, usermail, MongoMsgEventEnum.SEND_USERMAIL_MSG);
     mqAdapter.sendMessage(usermailConfig.mongoTopic, usermail.getFrom(), gson.toJson(eventDTO));
   }
 

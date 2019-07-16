@@ -1,38 +1,33 @@
 package com.syswin.temail.usermail.mongo.dto;
 
 import com.syswin.temail.usermail.common.MongoEventEnum;
+import com.syswin.temail.usermail.common.MongoMsgEventEnum;
+import com.syswin.temail.usermail.common.MongoMsgReplyEventEnum;
 import java.io.Serializable;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class MongoEventDTO<T> implements Serializable {
 
   private MongoEventEnum mongoEvent;
   private T dataDto;
+  private MongoMsgEventEnum msgEventEnum;
+  private MongoMsgReplyEventEnum msgReplyEventEnum;
 
-  public MongoEventEnum getMongoEvent() {
-    return mongoEvent;
+  public MongoEventDTO() {
   }
 
-  public void setMongoEvent(MongoEventEnum mongoEvent) {
+  public MongoEventDTO(MongoEventEnum mongoEvent, T dataDto,
+      MongoMsgEventEnum msgEventEnum) {
     this.mongoEvent = mongoEvent;
-  }
-
-  public T getDataDto() {
-    return dataDto;
-  }
-
-  public void setDataDto(T dataDto) {
     this.dataDto = dataDto;
+    this.msgEventEnum = msgEventEnum;
   }
 
-  @Override
-  public String toString() {
-    return "MongoEventDTO{" +
-        "mongoEvent=" + mongoEvent +
-        ", dataDto=" + dataDto +
-        '}';
+  public MongoEventDTO(MongoEventEnum mongoEvent, T dataDto,
+      MongoMsgReplyEventEnum msgReplyEventEnum) {
+    this.mongoEvent = mongoEvent;
+    this.dataDto = dataDto;
+    this.msgReplyEventEnum = msgReplyEventEnum;
   }
 }
