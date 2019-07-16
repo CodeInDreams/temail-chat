@@ -202,6 +202,8 @@ public class UsermailService {
    */
   public List<UsermailDO> getMails(String from, String to, long fromSeqNo, int pageSize, String filterSeqIds,
       String signal) {
+    LOGGER.info("GetMails action input param from={}, to={}, fromSeqNo={}, pageSize={}, " +
+            "filterSeqIds={}", from, to, fromSeqNo, pageSize, filterSeqIds);
     UmQueryDTO umQueryDto = new UmQueryDTO();
     umQueryDto.setFromSeqNo(fromSeqNo);
     umQueryDto.setSignal(signal);
@@ -216,6 +218,7 @@ public class UsermailService {
       boolean isAfter = afterFetch.equals(signal);
       long beginSeqId = mails.get(0).getSeqNo();
       long endSeqId = mails.get(mails.size() - 1).getSeqNo();
+
       SeqIdFilter seqIdFilter = new SeqIdFilter(filterSeqIds, isAfter, beginSeqId, endSeqId);
       for (UsermailDO mail : mails) {
         if (seqIdFilter.filter(mail.getSeqNo())) {

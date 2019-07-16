@@ -228,6 +228,8 @@ public class UsermailMsgReplyService {
 
   public List<UsermailMsgReplyDO> getMsgReplys(String parentMsgid, int pageSize, long seqId, String signal,
       String owner, String filterSeqIds) {
+    LOGGER.info("GetMsgReply action input param parentMsgId={},pageSize={},seqId={}, signal={}, onwer={}, " +
+            "filterSeqIds={}", parentMsgid, pageSize, seqId, signal, owner, filterSeqIds);
     msgReplyTypeValidate(parentMsgid, owner);
     QueryMsgReplyDTO dto = new QueryMsgReplyDTO();
     dto.setFromSeqNo(seqId);
@@ -241,6 +243,7 @@ public class UsermailMsgReplyService {
       boolean isAfter = "after".equals(signal);
       long beginSeqId = data.get(0).getSeqNo();
       long endSeqId = data.get(data.size() - 1).getSeqNo();
+
       SeqIdFilter filter = new SeqIdFilter(filterSeqIds, isAfter, beginSeqId, endSeqId);
       for (int i = 0; i < data.size(); i++) {
         if (filter.filter(data.get(i).getSeqNo())) {

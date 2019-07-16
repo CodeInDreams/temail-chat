@@ -40,57 +40,62 @@ public class SeqIdFilter {
   private List<Long> existSeqId;
   private long last = -1L;
   private boolean after = true;
-  private long beginSeqId = -1l;
-  private long endSeqId = -1l;
+  private long actualBeginSeqId = -1l;
+  private long actualEndSeqId = -1l;
 
-  public SeqIdFilter(String strFilter, boolean after, long beginSeqId, long endSeqId) {
+  public SeqIdFilter(String strFilter, boolean after, long actualBeginSeqId, long actualEndSeqId) {
     this.after = after;
-    this.beginSeqId = beginSeqId;
-    this.endSeqId = endSeqId;
-    init(strFilter, beginSeqId, endSeqId);
+    this.actualBeginSeqId = actualBeginSeqId;
+    this.actualEndSeqId = actualEndSeqId;
+    //兼容查询参数seqNo为0，升序查询的场景
+    if(after && actualBeginSeqId > actualEndSeqId){
+      this.actualBeginSeqId = actualEndSeqId;
+      this.actualEndSeqId = actualBeginSeqId;
+    }
+    init(strFilter, this.actualBeginSeqId, this.actualEndSeqId);
   }
 
-  public SeqIdFilter(String strFilter, long beginSeqId, long endSeqId) {
-    init(strFilter, beginSeqId, endSeqId);
+  public SeqIdFilter(String strFilter, long actualBeginSeqId, long actualEndSeqId) {
+    init(strFilter, actualBeginSeqId, actualEndSeqId);
   }
 
-  private void init(String strFilter, long beginSeqId, long endSeqId) {
+  private void init(String strFilter, long actualBeginSeqId, long actualEndSeqId) {
     try {
       String[] filters = strFilter.split(",");
       existSeqId = new ArrayList<>(MAX_SEQ_ID_SIZE);
       for (int i = 0; i < filters.length; i++) {
         String tmp = filters[i];
         String[] filterRange = tmp.split("_");
-        long start = Long.parseLong(filterRange[0]);
-        long end = Long.parseLong(filterRange[1]);
-        if (end == -1) {
-          last = start;
+        long expectedBeginSeqId = Long.parseLong(filterRange[0]);
+        long expectedEndSeqId = Long.parseLong(filterRange[1]);
+        if (expectedEndSeqId == -1) {
+          last = expectedBeginSeqId;
         } else {
           if (after) {
-            if(start  < beginSeqId){
-              start = beginSeqId - 1;
+            if(expectedBeginSeqId  < actualBeginSeqId){
+              expectedBeginSeqId = actualBeginSeqId - 1;
             }
-            if(end > endSeqId){
-              end = endSeqId + 1;
+            if(expectedEndSeqId > actualEndSeqId){
+              expectedEndSeqId = actualEndSeqId + 1;
             }
-            for (long j = start + 1; j < end; j++) {
+            for (long j = expectedBeginSeqId + 1; j < expectedEndSeqId; j++) {
               existSeqId.add(j);
               if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
-                LOGGER.warn("Usermail existSeqId List Size is full, strFiler={}, beginSeqId={}, endSeqId={}", strFilter, beginSeqId, endSeqId);
+                LOGGER.warn("Usermail existSeqId List Size is full, strFiler={}, actualBeginSeqId={}, actualEndSeqId={}", strFilter, actualBeginSeqId, actualEndSeqId);
                 break;
               }
             }
           } else {
-            if(start > beginSeqId){
-              start = beginSeqId + 1;
+            if(expectedBeginSeqId > actualBeginSeqId){
+              expectedBeginSeqId = actualBeginSeqId + 1;
             }
-            if(end < endSeqId){
-              end = endSeqId - 1;
+            if(expectedEndSeqId < actualEndSeqId){
+              expectedEndSeqId = actualEndSeqId - 1;
             }
-            for (long j = start - 1; j > end; j--) {
+            for (long j = expectedBeginSeqId - 1; j > expectedEndSeqId; j--) {
               existSeqId.add(j);
               if (existSeqId.size() >= MAX_SEQ_ID_SIZE){
-                LOGGER.warn("Usermail existSeqId List Size is full, strFiler={}, beginSeqId={}, endSeqId={}", strFilter, beginSeqId, endSeqId);
+                LOGGER.warn("Usermail existSeqId List Size is full, strFiler={}, actualBeginSeqId={}, actualEndSeqId={}", strFilter, actualBeginSeqId, actualEndSeqId);
                 break;
               }
             }
