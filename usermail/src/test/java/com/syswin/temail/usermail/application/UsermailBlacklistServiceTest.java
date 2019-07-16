@@ -28,17 +28,17 @@ import static org.mockito.Mockito.verify;
 
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBlacklistDB;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 public class UsermailBlacklistServiceTest {
 
-  private UsermailBlacklistRepo usermailBlacklistRepo = Mockito.mock(UsermailBlacklistRepo.class);
+  private IUsermailBlacklistDB usermailBlacklistDB = Mockito.mock(IUsermailBlacklistDB.class);
 
   private IUsermailAdapter iUsermailAdapter = Mockito.mock(IUsermailAdapter.class);
 
-  private UsermailBlacklistService usermailBlacklistService = new UsermailBlacklistService(usermailBlacklistRepo,
+  private UsermailBlacklistService usermailBlacklistService = new UsermailBlacklistService(usermailBlacklistDB,
       iUsermailAdapter);
 
   @Test
@@ -46,21 +46,21 @@ public class UsermailBlacklistServiceTest {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     Mockito.when(iUsermailAdapter.getUsermailBlacklistPkID()).thenReturn(1L);
     usermailBlacklistService.save(usermailBlacklist);
-    verify(usermailBlacklistRepo).insertUsermailBlacklist(usermailBlacklist);
+    verify(usermailBlacklistDB).insertUsermailBlacklist(usermailBlacklist);
   }
 
   @Test
   public void removeTest() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO();
     usermailBlacklistService.remove(usermailBlacklist);
-    verify(usermailBlacklistRepo).deleteByTemailAndBlackedAddress(usermailBlacklist);
+    verify(usermailBlacklistDB).deleteByTemailAndBlackedAddress(usermailBlacklist);
   }
 
   @Test
   public void findByTemailAddressTest() {
     String temail = "temail@syswin.com";
     usermailBlacklistService.findByTemailAddress(temail);
-    verify(usermailBlacklistRepo).listUsermailBlacklists(temail);
+    verify(usermailBlacklistDB).listUsermailBlacklists(temail);
   }
 
   @Test
@@ -68,7 +68,7 @@ public class UsermailBlacklistServiceTest {
     String temailAddress = "temail@syswin.com";
     String blackedAddress = "blackAddress@syswin.com";
     usermailBlacklistService.findByAddresses(temailAddress, blackedAddress);
-    verify(usermailBlacklistRepo).selectByTemailAndBlackedAddress(temailAddress, blackedAddress);
+    verify(usermailBlacklistDB).selectByTemailAndBlackedAddress(temailAddress, blackedAddress);
   }
 
   @Test
@@ -76,6 +76,6 @@ public class UsermailBlacklistServiceTest {
     String from = "from@syswin.com";
     String to = "to@syswin.com";
     usermailBlacklistService.isInBlacklist(from, to);
-    verify(usermailBlacklistRepo).countByAddresses(to, from);
+    verify(usermailBlacklistDB).countByAddresses(to, from);
   }
 }

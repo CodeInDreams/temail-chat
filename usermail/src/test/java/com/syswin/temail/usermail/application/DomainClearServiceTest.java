@@ -3,10 +3,10 @@ package com.syswin.temail.usermail.application;
 import static org.mockito.Mockito.verify;
 
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBlacklistDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +32,7 @@ public class DomainClearServiceTest {
   @Mock
   private UsermailBoxRepo boxRepo;
   @Mock
-  private UsermailBlacklistRepo blacklistRepo;
+  private IUsermailBlacklistDB usermailBlacklistDB;
 
 
   @Before
@@ -69,7 +69,7 @@ public class DomainClearServiceTest {
   public void removeBlackTest() {
     String domain = "domain";
     domainClearService.clearBlackAll(domain);
-    verify(blacklistRepo).deleteDomain(domain, pageSize);
+    verify(usermailBlacklistDB).deleteDomain(domain, pageSize);
   }
 
   @Test

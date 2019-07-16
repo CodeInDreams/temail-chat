@@ -40,10 +40,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class UsermailBlacklistRepoImplTest {
+public class UsermailBlacklistMysqlImplTest {
 
   @InjectMocks
-  private UsermailBlacklistRepoImpl usermailBlacklistRepoImpl;
+  private UsermailBlacklistMysqlImpl usermailBlacklistMysql;
   @Mock
   private UsermailBlacklistMapper usermailBlacklistMapper;
 
@@ -51,16 +51,16 @@ public class UsermailBlacklistRepoImplTest {
   public void testInsertUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(1, "from@msg.com", "blacklist@msgseal.com");
     when(usermailBlacklistMapper.insertUsermailBlacklist(usermailBlacklist)).thenReturn(1);
-    int row = usermailBlacklistRepoImpl.insertUsermailBlacklist(usermailBlacklist);
-    Assert.assertEquals(1,row);
+    int row = usermailBlacklistMysql.insertUsermailBlacklist(usermailBlacklist);
+    Assert.assertEquals(1, row);
   }
 
   @Test
   public void testDeleteUsermailBlacklist() {
     UsermailBlacklistDO usermailBlacklist = new UsermailBlacklistDO(2, "from2@msgseal.com", "blacklist2@msgseal.com");
     when(usermailBlacklistMapper.deleteByTemailAndBlackedAddress(usermailBlacklist)).thenReturn(1);
-    int row = usermailBlacklistRepoImpl.deleteByTemailAndBlackedAddress(usermailBlacklist);
-    Assert.assertEquals(1,row);
+    int row = usermailBlacklistMysql.deleteByTemailAndBlackedAddress(usermailBlacklist);
+    Assert.assertEquals(1, row);
   }
 
   @Test
@@ -68,8 +68,9 @@ public class UsermailBlacklistRepoImplTest {
     String temailAddress = "temail@msgseal.com";
     String blackAddress = "blacklist@msgseal.com";
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(3, temailAddress, blackAddress);
-    when(usermailBlacklistMapper.selectByTemailAndBlackedAddress(temailAddress,blackAddress)).thenReturn(blacklist);
-    UsermailBlacklistDO blacklists = usermailBlacklistRepoImpl.selectByTemailAndBlackedAddress(temailAddress, blackAddress);
+    when(usermailBlacklistMapper.selectByTemailAndBlackedAddress(temailAddress, blackAddress)).thenReturn(blacklist);
+    UsermailBlacklistDO blacklists = usermailBlacklistMysql
+        .selectByTemailAndBlackedAddress(temailAddress, blackAddress);
     assertThat(blacklists).isEqualTo(blacklist);
   }
 
@@ -79,7 +80,7 @@ public class UsermailBlacklistRepoImplTest {
     String blackAddress = "blacklist2@msgseal.com";
     List<UsermailBlacklistDO> usermailBlacklists = new ArrayList<UsermailBlacklistDO>();
     when(usermailBlacklistMapper.listUsermailBlacklists(temailAddress)).thenReturn(usermailBlacklists);
-    List<UsermailBlacklistDO> usermailBlacklist = usermailBlacklistRepoImpl.listUsermailBlacklists(temailAddress);
+    List<UsermailBlacklistDO> usermailBlacklist = usermailBlacklistMysql.listUsermailBlacklists(temailAddress);
     assertThat(usermailBlacklists).isEqualTo(usermailBlacklist);
   }
 
@@ -90,7 +91,7 @@ public class UsermailBlacklistRepoImplTest {
     int a = 2;
     UsermailBlacklistDO blacklist = new UsermailBlacklistDO(5, temailAddress, blackAddress);
     when(usermailBlacklistMapper.countByAddresses(temailAddress, blackAddress)).thenReturn(a);
-    int count = usermailBlacklistRepoImpl.countByAddresses(temailAddress, blackAddress);
+    int count = usermailBlacklistMysql.countByAddresses(temailAddress, blackAddress);
     assertThat(count).isEqualTo(a);
   }
 
@@ -99,7 +100,7 @@ public class UsermailBlacklistRepoImplTest {
     String domain = "domain";
     int pageSize = 100;
 
-    usermailBlacklistRepoImpl.deleteDomain(domain, pageSize);
+    usermailBlacklistMysql.deleteDomain(domain, pageSize);
     verify(usermailBlacklistMapper).deleteDomain(domain, pageSize);
   }
 

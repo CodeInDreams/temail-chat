@@ -26,7 +26,7 @@ package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBlacklistDB;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,13 +35,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UsermailBlacklistService {
 
-  private final UsermailBlacklistRepo usermailBlacklistRepo;
+  private final IUsermailBlacklistDB usermailBlacklistDB;
 
   private final IUsermailAdapter iUsermailAdapter;
 
   @Autowired
-  public UsermailBlacklistService(UsermailBlacklistRepo usermailBlacklistRepo, IUsermailAdapter iUsermailAdapter) {
-    this.usermailBlacklistRepo = usermailBlacklistRepo;
+  public UsermailBlacklistService(IUsermailBlacklistDB usermailBlacklistDB, IUsermailAdapter iUsermailAdapter) {
+    this.usermailBlacklistDB = usermailBlacklistDB;
     this.iUsermailAdapter = iUsermailAdapter;
   }
 
@@ -53,7 +53,7 @@ public class UsermailBlacklistService {
    */
   public int save(UsermailBlacklistDO usermailBlacklist) {
     usermailBlacklist.setId(iUsermailAdapter.getUsermailBlacklistPkID());
-    return usermailBlacklistRepo.insertUsermailBlacklist(usermailBlacklist);
+    return usermailBlacklistDB.insertUsermailBlacklist(usermailBlacklist);
   }
 
   /**
@@ -64,7 +64,7 @@ public class UsermailBlacklistService {
    */
   @Transactional
   public int remove(UsermailBlacklistDO usermailBlacklist) {
-    return usermailBlacklistRepo.deleteByTemailAndBlackedAddress(usermailBlacklist);
+    return usermailBlacklistDB.deleteByTemailAndBlackedAddress(usermailBlacklist);
   }
 
   /**
@@ -75,7 +75,7 @@ public class UsermailBlacklistService {
    * @return 黑名单数据（temailAddress:发起人 blackedAddress:被拉黑人）
    */
   public UsermailBlacklistDO findByAddresses(String temailAddress, String blackedAddress) {
-    return usermailBlacklistRepo.selectByTemailAndBlackedAddress(temailAddress, blackedAddress);
+    return usermailBlacklistDB.selectByTemailAndBlackedAddress(temailAddress, blackedAddress);
   }
 
   /**
@@ -85,7 +85,7 @@ public class UsermailBlacklistService {
    * @return 发送人黑名单列表（temailAddress:发起人 blackedAddress:被拉黑人）
    */
   public List<UsermailBlacklistDO> findByTemailAddress(String temailAddress) {
-    return usermailBlacklistRepo.listUsermailBlacklists(temailAddress);
+    return usermailBlacklistDB.listUsermailBlacklists(temailAddress);
   }
 
   /**
@@ -97,6 +97,6 @@ public class UsermailBlacklistService {
    */
   public int isInBlacklist(String from, String to) {
     // from to 对应黑名单要反过来查询，确认自己是否被[to]加入黑名单
-    return usermailBlacklistRepo.countByAddresses(to, from);
+    return usermailBlacklistDB.countByAddresses(to, from);
   }
 }

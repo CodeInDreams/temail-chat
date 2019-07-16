@@ -27,7 +27,7 @@ package com.syswin.temail.usermail.infrastructure.domain;
 import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
 import java.util.List;
 
-public interface UsermailBlacklistRepo {
+public interface IUsermailBlacklistDB {
 
   /**
    * 新增黑名单

@@ -25,19 +25,19 @@
 package com.syswin.temail.usermail.infrastructure.domain.impl;
 
 import com.syswin.temail.usermail.domains.UsermailBlacklistDO;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBlacklistDB;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailBlacklistMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UsermailBlacklistRepoImpl implements UsermailBlacklistRepo {
+public class UsermailBlacklistMysqlImpl implements IUsermailBlacklistDB {
 
   private final UsermailBlacklistMapper usermailBlacklistMapper;
 
   @Autowired
-  public UsermailBlacklistRepoImpl(UsermailBlacklistMapper usermailBlacklistMapper) {
+  public UsermailBlacklistMysqlImpl(UsermailBlacklistMapper usermailBlacklistMapper) {
     this.usermailBlacklistMapper = usermailBlacklistMapper;
   }
 

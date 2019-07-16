@@ -1,10 +1,10 @@
 package com.syswin.temail.usermail.application;
 
 import com.syswin.temail.usermail.common.Constants.UsermailAgentEventType;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBlacklistRepo;
-import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
-import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailBlacklistDB;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgDB;
+import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
+import com.syswin.temail.usermail.infrastructure.domain.UsermailBoxRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,16 +20,16 @@ public class DomainClearService {
   private Integer pageSize;
   private final IUsermailMsgDB usermailMsgDB;
   private final IUsermailMsgReplyDB usermailMsgReplyDB;
-  private final UsermailBlacklistRepo usermailBlacklistRepo;
+  private final IUsermailBlacklistDB usermailBlacklistDB;
   private final UsermailBoxRepo usermailBoxRepo;
   private final UsermailMqService usermailMqService;
 
-  public DomainClearService(IUsermailMsgDB usermailMsgDB, IUsermailMsgReplyDB usermailMsgReplyDB,
-      UsermailBlacklistRepo usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo,
+  public DomainClearService(IUsermailMsgDB usermailMsgDB, IUsermailMsgReplyDB usermailBlacklistDB,
+      IUsermailBlacklistDB usermailBlacklistRepo, UsermailBoxRepo usermailBoxRepo,
       UsermailMqService usermailMqService) {
     this.usermailMsgDB = usermailMsgDB;
-    this.usermailMsgReplyDB = usermailMsgReplyDB;
-    this.usermailBlacklistRepo = usermailBlacklistRepo;
+    this.usermailMsgReplyDB = usermailBlacklistDB;
+    this.usermailBlacklistDB = usermailBlacklistRepo;
     this.usermailBoxRepo = usermailBoxRepo;
     this.usermailMqService = usermailMqService;
   }
@@ -89,7 +89,7 @@ public class DomainClearService {
     log.info("label-DomainClearService.clearBlackAll() begin, domain: [{}], pageSize: [{}]", domain, pageSize);
     int count;
     do {
-      count = usermailBlacklistRepo.deleteDomain(domain, pageSize);
+      count = usermailBlacklistDB.deleteDomain(domain, pageSize);
     } while (count > 0);
     log.info("label-DomainClearService.clearBlackAll() complete, domain: [{}], pageSize: [{}]", domain, pageSize);
   }
