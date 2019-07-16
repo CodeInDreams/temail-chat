@@ -32,12 +32,23 @@ public class UsermailMongoMapper {
     mongoTemplate.insert(mongoUsermail);
   }
 
+  /**
+   * 根据用户会话id查询消息列表
+   *
+   * @param fromSeqNo 拉取位置
+   * @param pageSize 拉取条数
+   * @param sessionid 会话id
+   * @param owner 消息所属人
+   * @param signal 向前向后拉取标志
+   * @return List<MongoUsermail>
+   * @See MongoUsermail
+   */
   public List<MongoUsermail> listUsermails(long fromSeqNo, int pageSize, String sessionid, String owner,
       String signal) {
     Query query = new Query();
     Criteria criteria = new Criteria();
-    criteria.where(SESSIONID).is(sessionid).and(OWNER).is(owner);
-    if (fromSeqNo == 0l) {
+    criteria.and(SESSIONID).is(sessionid).and(OWNER).is(owner);
+    if (fromSeqNo > 0l) {
       if ("after".equals(signal)) {
         criteria.and(SEQNO).gt(fromSeqNo);
         query.with(new Sort(Direction.ASC, SEQNO));
