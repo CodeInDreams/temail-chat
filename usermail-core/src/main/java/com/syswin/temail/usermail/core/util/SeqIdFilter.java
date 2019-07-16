@@ -86,7 +86,7 @@ public class SeqIdFilter {
               }
             }
           } else {
-            rangeBeginSeqId = rangeEndSeqId - 1;
+            rangeBeginSeqId = rangeBeginSeqId - 1;
             rangeBeginSeqId = Math.min(rangeBeginSeqId, dataBeginSeqId);
 
             rangeEndSeqId = rangeEndSeqId + 1;
