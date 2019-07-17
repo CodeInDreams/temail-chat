@@ -3,13 +3,18 @@ package com.syswin.temail.usermail.mongo.domains;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-@Document(collection="usermail")
+@Entity
+@Table(name = "usermail")
+@Document(collection = "usermail")
 public class MongoUsermail implements Serializable {
 
+  @Id
   private long id;
   private String msgid;
   private String sessionid;
@@ -18,12 +23,12 @@ public class MongoUsermail implements Serializable {
   private int status;
   private int type;
   private String owner;
-//  private String message;
   private long seqNo;
   private String at;
   private String topic;
   private Date createTime;
 
+  @Column(name = "last_Reply_Msgid")
   private String lastReplyMsgId;
 
   private Integer replyCount;
@@ -94,7 +99,6 @@ public class MongoUsermail implements Serializable {
   }
 
 
-
   public int getStatus() {
     return status;
   }
@@ -110,14 +114,6 @@ public class MongoUsermail implements Serializable {
   public void setOwner(String owner) {
     this.owner = owner;
   }
-
-//  public String getMessage() {
-//    return message;
-//  }
-//
-//  public void setMessage(String message) {
-//    this.message = message;
-//  }
 
   public long getSeqNo() {
     return seqNo;

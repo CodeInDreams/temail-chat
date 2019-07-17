@@ -28,7 +28,7 @@ public class UsermailMongoMapper {
     this.mongoTemplate = mongoTemplate;
   }
 
-  public void sendUsermailMsg(MongoUsermail mongoUsermail) {
+  public void insertUsermail(MongoUsermail mongoUsermail) {
     mongoTemplate.insert(mongoUsermail);
   }
 

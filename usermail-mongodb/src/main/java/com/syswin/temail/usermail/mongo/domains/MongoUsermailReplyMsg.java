@@ -24,77 +24,49 @@
 
 package com.syswin.temail.usermail.mongo.domains;
 
+
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Arrays;
+import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Entity
+@Table(name = "usermail_msg_reply")
 @Document(collection = "usermail_msg_reply")
 public class MongoUsermailReplyMsg implements Serializable {
 
+  @Id
   private long id;
-  private String parentMsgid;
   private String msgid;
+  private String sessionid;
   private String from;
   private String to;
-  private long seqNo;
-  private String msg;
   private int status;
   private int type;
-  private Date createTime;
-  private Date updateTime;
   private String owner;
-  private String sessionid;
+  private long seqNo;
+  private Date createTime;
+  private String parentMsgid;
+  private Date updateTime;
   private byte[] zipMsg;
 
-  public MongoUsermailReplyMsg() {
+  public Date getCreateTime() {
+    return createTime;
   }
 
-  public MongoUsermailReplyMsg(long id, String parentMsgid, String msgid, String from, String to, long seqNo,
-      String msg, int status, int type, String owner, String sessionid, byte[] zipMsg) {
-    this.id = id;
-    this.parentMsgid = parentMsgid;
-    this.msgid = msgid;
-    this.from = from;
-    this.to = to;
-    this.seqNo = seqNo;
-    this.msg = msg;
-    this.status = status;
-    this.type = type;
-    this.owner = owner;
-    this.sessionid = sessionid;
-    this.zipMsg = zipMsg;
+  public void setCreateTime(Date createTime) {
+    this.createTime = createTime;
   }
 
-  public MongoUsermailReplyMsg(long id, String parentMsgid, String msgid, String from, String to, long seqNo,
-      String msg, int status, int type, String owner, String sessionid) {
-    this.id = id;
-    this.parentMsgid = parentMsgid;
-    this.msgid = msgid;
-    this.from = from;
-    this.to = to;
-    this.seqNo = seqNo;
-    this.msg = msg;
-    this.status = status;
-    this.type = type;
-    this.owner = owner;
-    this.sessionid = sessionid;
+  public Date getUpdateTime() {
+    return updateTime;
   }
 
-  public long getId() {
-    return id;
-  }
-
-  public void setId(long id) {
-    this.id = id;
-  }
-
-  public String getParentMsgid() {
-    return parentMsgid;
-  }
-
-  public void setParentMsgid(String parentMsgid) {
-    this.parentMsgid = parentMsgid;
+  public void setUpdateTime(Date updateTime) {
+    this.updateTime = updateTime;
   }
 
   public String getMsgid() {
@@ -121,20 +93,12 @@ public class MongoUsermailReplyMsg implements Serializable {
     this.to = to;
   }
 
-  public long getSeqNo() {
-    return seqNo;
+  public String getParentMsgid() {
+    return parentMsgid;
   }
 
-  public void setSeqNo(long seqNo) {
-    this.seqNo = seqNo;
-  }
-
-  public String getMsg() {
-    return msg;
-  }
-
-  public void setMsg(String msg) {
-    this.msg = msg;
+  public void setParentMsgid(String parentMsgid) {
+    this.parentMsgid = parentMsgid;
   }
 
   public int getStatus() {
@@ -145,30 +109,6 @@ public class MongoUsermailReplyMsg implements Serializable {
     this.status = status;
   }
 
-  public int getType() {
-    return type;
-  }
-
-  public void setType(int type) {
-    this.type = type;
-  }
-
-  public Date getCreateTime() {
-    return createTime;
-  }
-
-  public void setCreateTime(Date createTime) {
-    this.createTime = createTime;
-  }
-
-  public Date getUpdateTime() {
-    return updateTime;
-  }
-
-  public void setUpdateTime(Date updateTime) {
-    this.updateTime = updateTime;
-  }
-
   public String getOwner() {
     return owner;
   }
@@ -177,12 +117,36 @@ public class MongoUsermailReplyMsg implements Serializable {
     this.owner = owner;
   }
 
+  public long getSeqNo() {
+    return seqNo;
+  }
+
+  public void setSeqNo(long seqNo) {
+    this.seqNo = seqNo;
+  }
+
+  public int getType() {
+    return type;
+  }
+
+  public void setType(int type) {
+    this.type = type;
+  }
+
   public String getSessionid() {
     return sessionid;
   }
 
   public void setSessionid(String sessionid) {
     this.sessionid = sessionid;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
   }
 
   public byte[] getZipMsg() {
@@ -195,20 +159,19 @@ public class MongoUsermailReplyMsg implements Serializable {
 
   @Override
   public String toString() {
-    return "MongoUsermailReplyMsg{" +
+    return "MongoUsermailMsgReply{" +
         "id=" + id +
-        ", parentMsgid='" + parentMsgid + '\'' +
         ", msgid='" + msgid + '\'' +
+        ", sessionid='" + sessionid + '\'' +
         ", from='" + from + '\'' +
         ", to='" + to + '\'' +
-        ", seqNo=" + seqNo +
-        ", msg='" + msg + '\'' +
         ", status=" + status +
         ", type=" + type +
-        ", createTime=" + createTime +
-        ", updateTime=" + updateTime +
         ", owner='" + owner + '\'' +
-        ", sessionid='" + sessionid + '\'' +
+        ", seqNo=" + seqNo +
+        ", createTime=" + createTime +
+        ", parentMsgid='" + parentMsgid + '\'' +
+        ", updateTime=" + updateTime +
         ", zipMsg=" + Arrays.toString(zipMsg) +
         '}';
   }

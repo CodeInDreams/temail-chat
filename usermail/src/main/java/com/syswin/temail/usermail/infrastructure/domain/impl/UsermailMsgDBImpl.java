@@ -81,7 +81,7 @@ public class UsermailMsgDBImpl implements IUsermailMsgDB {
       usermailMapper.insertUsermail(usermail);
     }
     if (MONGO_DB.equals(usermailConfig.getDbSelector())) {
-      MongoEventDTO<UsermailDO> eventDTO = new MongoEventDTO(MONGO_USERMAIL_EVENT, usermail,
+      MongoEventDTO eventDTO = new MongoEventDTO(MONGO_USERMAIL_EVENT, gson.toJson(usermail),
           MongoMsgEventEnum.SEND_USERMAIL_MSG);
       mqAdapter.sendMessage(usermailConfig.mongoTopic, usermail.getFrom(), gson.toJson(eventDTO));
     }

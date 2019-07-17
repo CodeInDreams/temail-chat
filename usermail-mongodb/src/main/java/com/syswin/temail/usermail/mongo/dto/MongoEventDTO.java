@@ -7,24 +7,24 @@ import java.io.Serializable;
 import lombok.Data;
 
 @Data
-public class MongoEventDTO<T> implements Serializable {
+public class MongoEventDTO implements Serializable {
 
   private MongoEventEnum mongoEvent;
-  private T dataDto;
+  private String dataDto;
   private MongoMsgEventEnum msgEventEnum;
   private MongoMsgReplyEventEnum msgReplyEventEnum;
 
   public MongoEventDTO() {
   }
 
-  public MongoEventDTO(MongoEventEnum mongoEvent, T dataDto,
+  public MongoEventDTO(MongoEventEnum mongoEvent, String dataDto,
       MongoMsgEventEnum msgEventEnum) {
     this.mongoEvent = mongoEvent;
     this.dataDto = dataDto;
     this.msgEventEnum = msgEventEnum;
   }
 
-  public MongoEventDTO(MongoEventEnum mongoEvent, T dataDto,
+  public MongoEventDTO(MongoEventEnum mongoEvent, String dataDto,
       MongoMsgReplyEventEnum msgReplyEventEnum) {
     this.mongoEvent = mongoEvent;
     this.dataDto = dataDto;
