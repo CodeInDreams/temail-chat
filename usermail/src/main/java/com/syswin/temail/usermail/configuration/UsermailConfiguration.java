@@ -58,14 +58,6 @@ public class UsermailConfiguration {
         MqClient.RocketMQModel.CLUSTERING);
   }
 
-/*  @Bean
-  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
-  MqClient mongoMqClient(UsermailConfig config, UsermailMongoMQConsumer mongoMQConsumer) {
-    return new MqClient(config.mongoTopic, "*", config.mongoGroup, config.namesrvAddr,
-        mongoMQConsumer,
-        MqClient.RocketMQModel.CLUSTERING);
-  }*/
-
   @Bean
   public MsgCompressor msgCompressor() {
     return new MsgCompressor();
@@ -85,18 +77,6 @@ public class UsermailConfiguration {
         .build();
   }
 
-/*
-  @Bean
-  @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "libraryMessage")
-  MqConsumerConfig usermailMongoConsumerConfig(UsermailConfig config, UsermailMongoMQConsumer consumer) {
-    Consumer<String> listener = consumer::consumer;
-    return MqConsumerConfig.create()
-        .group(config.mongoGroup).topic(config.mongoTopic).listener(listener)
-        .implementation(config.receiverMqType.isEmpty() ? MqImplementation.ROCKET_MQ
-            : MqImplementation.valueOf(config.receiverMqType))
-        .build();
-  }
-*/
 
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")
