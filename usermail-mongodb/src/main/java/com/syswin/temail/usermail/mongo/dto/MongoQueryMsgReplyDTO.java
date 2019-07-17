@@ -35,8 +35,7 @@ import org.apache.ibatis.type.Alias;
 @Setter
 @ToString
 @NoArgsConstructor
-@Alias("QueryMsgReplyDTO")
-public class QueryMsgReplyDTO implements Serializable {
+public class MongoQueryMsgReplyDTO implements Serializable {
 
   private long fromSeqNo;
   private int pageSize;

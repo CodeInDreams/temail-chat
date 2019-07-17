@@ -35,7 +35,7 @@ import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.
 import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.ZIPMSG;
 
 import com.syswin.temail.usermail.mongo.domains.MongoUsermailReplyMsg;
-import com.syswin.temail.usermail.mongo.dto.QueryMsgReplyDTO;
+import com.syswin.temail.usermail.mongo.dto.MongoQueryMsgReplyDTO;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +59,7 @@ public class UsermailReplyMongoMapper {
     mongoTemplate.save(usermailReplyMsg);
   }
 
-  public List<MongoUsermailReplyMsg> listMsgReplys(QueryMsgReplyDTO msgReplyDTO) {
+  public List<MongoUsermailReplyMsg> listMsgReplys(MongoQueryMsgReplyDTO msgReplyDTO) {
 
     Criteria criteria = Criteria.where(PARENTMSGID).is(msgReplyDTO.getParentMsgid()).and(OWNER)
         .is(msgReplyDTO.getOwner());
