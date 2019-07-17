@@ -24,6 +24,16 @@
 
 package com.syswin.temail.usermail.mongo.infrastructure.domain;
 
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.CREATETIME;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.MSGID;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.OWNER;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.PARENTMSGID;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.SEQNO;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.SESSIONID;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.STATUS;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.UPDATETIME;
+import static com.syswin.temail.usermail.common.ParamsKey.MongoCollectionFields.ZIPMSG;
+
 import com.syswin.temail.usermail.mongo.domains.MongoUsermailReplyMsg;
 import com.syswin.temail.usermail.mongo.dto.QueryMsgReplyDTO;
 import java.time.LocalDate;
@@ -51,7 +61,7 @@ public class UsermailReplyMongoMapper {
 
   public List<MongoUsermailReplyMsg> listMsgReplys(QueryMsgReplyDTO msgReplyDTO) {
 
-    Criteria criteria = Criteria.where("parentMsgid").is(msgReplyDTO.getParentMsgid()).and("owner")
+    Criteria criteria = Criteria.where(PARENTMSGID).is(msgReplyDTO.getParentMsgid()).and(OWNER)
         .is(msgReplyDTO.getOwner());
     Query query = new Query();
     long fromSeqNo = msgReplyDTO.getFromSeqNo();
@@ -59,33 +69,33 @@ public class UsermailReplyMongoMapper {
     int pageSize = msgReplyDTO.getPageSize();
     if (fromSeqNo != 0) {
       if ("before".equals(signal)) {
-        query.addCriteria(criteria.and("seqNo").lt(fromSeqNo)).with(new Sort(Direction.DESC, "seqNo")).limit(pageSize);
+        query.addCriteria(criteria.and(SEQNO).lt(fromSeqNo)).with(new Sort(Direction.DESC, SEQNO)).limit(pageSize);
       } else if ("after".equals(signal)) {
-        query.addCriteria(criteria.and("seqNo").gt(fromSeqNo)).with(Sort.by("seqNo")).limit(pageSize);
+        query.addCriteria(criteria.and(SEQNO).gt(fromSeqNo)).with(Sort.by(SEQNO)).limit(pageSize);
       }
     } else {
-      query.addCriteria(criteria).with(new Sort(Direction.DESC, "seqNo")).limit(pageSize);
+      query.addCriteria(criteria).with(new Sort(Direction.DESC, SEQNO)).limit(pageSize);
     }
     return mongoTemplate.find(query, MongoUsermailReplyMsg.class, COLLECTION_NAME);
   }
 
   public void deleteMsgReplysByMsgIds(String owner, List<String> msgIds) {
-    Query query = Query.query(Criteria.where("owner").is(owner).and("msgid").in(msgIds));
+    Query query = Query.query(Criteria.where(OWNER).is(owner).and(MSGID).in(msgIds));
     mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
   public void deleteMsgReplysBySessionId(String sessionId, String owner) {
-    Query query = Query.query(Criteria.where("owner").is(owner).and("sessionid").is(sessionId));
+    Query query = Query.query(Criteria.where(OWNER).is(owner).and(SESSIONID).is(sessionId));
     mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
   public void deleteMsgReplysByParentIds(String owner, List<String> parentMsgIds) {
-    Query query = Query.query(Criteria.where("owner").is(owner).and("parentMsgid").in(parentMsgIds));
+    Query query = Query.query(Criteria.where(OWNER).is(owner).and(PARENTMSGID).in(parentMsgIds));
     mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
   public MongoUsermailReplyMsg selectMsgReplyByCondition(MongoUsermailReplyMsg usermailMsgReply) {
-    Criteria criteria = Criteria.where("owner").is(usermailMsgReply.getOwner()).and("msgid")
+    Criteria criteria = Criteria.where(OWNER).is(usermailMsgReply.getOwner()).and(MSGID)
         .is(usermailMsgReply.getMsgid());
     Query query = Query.query(criteria);
     return mongoTemplate.findOne(query, MongoUsermailReplyMsg.class, COLLECTION_NAME);
@@ -93,54 +103,54 @@ public class UsermailReplyMongoMapper {
 
   public void updateDestroyAfterRead(String owner, String msgid, int status, int originalStatus) {
     Query query = Query
-        .query(Criteria.where("status").is(originalStatus).and("msgid").is(msgid).and("owner").is(owner));
+        .query(Criteria.where(STATUS).is(originalStatus).and(MSGID).is(msgid).and(OWNER).is(owner));
     Update update = new Update();
-    update.set("status", status);
-    update.set("zipMsg", null);
-    update.set("updateTime", System.currentTimeMillis());
+    update.set(STATUS, status);
+    update.set(ZIPMSG, null);
+    update.set(UPDATETIME, System.currentTimeMillis());
     mongoTemplate.updateFirst(query, update, COLLECTION_NAME);
   }
 
   public void updateMsgReplysByParentIds(String owner, List<String> parentMsgIds, int status) {
-    Query query = Query.query(Criteria.where("owner").is(owner).and("parentMsgid").in(parentMsgIds));
+    Query query = Query.query(Criteria.where(OWNER).is(owner).and(PARENTMSGID).in(parentMsgIds));
     Update update = new Update();
-    update.set("status", status);
+    update.set(STATUS, status);
     //这里获取的是系统的时间是没有问题的吧
-    update.set("updateTime", System.currentTimeMillis());
+    update.set(UPDATETIME, System.currentTimeMillis());
     mongoTemplate.updateMulti(query, update, COLLECTION_NAME);
   }
 
   public void deleteMsgReplysByStatus(String owner, int status) {
-    Query query = Query.query(Criteria.where("owner").is(owner).and("status").is(status));
+    Query query = Query.query(Criteria.where(OWNER).is(owner).and(STATUS).is(status));
     mongoTemplate.remove(query, COLLECTION_NAME);
   }
 
   public MongoUsermailReplyMsg selectLastUsermailReply(String parentMsgid, String owner, int status) {
     Query query = Query.query(
-        Criteria.where("parentMsgid").is(parentMsgid).and("owner").is(owner).and("status").is(status)).with(
-        new Sort(Direction.DESC, "seq_no")).limit(1);
+        Criteria.where(PARENTMSGID).is(parentMsgid).and(OWNER).is(owner).and(STATUS).is(status)).with(
+        new Sort(Direction.DESC, SEQNO)).limit(1);
     return mongoTemplate.findOne(query, MongoUsermailReplyMsg.class, COLLECTION_NAME);
   }
 
   public void updateRevertUsermailReply(MongoUsermailReplyMsg usermailMsgReply, int originalStatus) {
-    Criteria criteria = Criteria.where("status").is(originalStatus).and("msgid").is(usermailMsgReply.getMsgid())
-        .and("owner").is(usermailMsgReply.getOwner());
+    Criteria criteria = Criteria.where(STATUS).is(originalStatus).and(MSGID).is(usermailMsgReply.getMsgid())
+        .and(OWNER).is(usermailMsgReply.getOwner());
     Update update = new Update();
-    update.set("status", usermailMsgReply.getStatus());
-    update.set("zipMsg", null);
-    update.set("updateTime", System.currentTimeMillis());
+    update.set(STATUS, usermailMsgReply.getStatus());
+    update.set(ZIPMSG, null);
+    update.set(UPDATETIME, System.currentTimeMillis());
     Query query = Query.query(criteria);
     mongoTemplate.updateFirst(query, update, COLLECTION_NAME);
   }
 
   public void deleteMsgReplyLessThan(LocalDate createTime, int batchNum) {
-    Criteria criteria = Criteria.where("createTime").lt(createTime);
+    Criteria criteria = Criteria.where(CREATETIME).lt(createTime);
     Query query = Query.query(criteria).limit(batchNum);
     mongoTemplate.remove(query, MongoUsermailReplyMsg.class);
   }
 
   public void deleteDomain(String domain, int pageSize) {
-    Criteria criteria = Criteria.where("owner").regex("@" + domain);
+    Criteria criteria = Criteria.where(OWNER).regex("@" + domain);
     Query query = Query.query(criteria).limit(pageSize);
     mongoTemplate.remove(query, COLLECTION_NAME);
   }
