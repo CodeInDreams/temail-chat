@@ -80,7 +80,7 @@ public class SeqIdFilter {
               //去掉边界值
               rangeEndSeqId = rangeEndSeqId - 1;
               //升序排列时终止值裁掉超出实际值的部分缩小筛选范围
-              long endSeqId = Math.min(rangeEndSeqId, rangeEndSeqId);
+              long endSeqId = Math.min(rangeEndSeqId, dataEndSeqId);
 
               for (long j = beginSeqId; j <= endSeqId; j++) {
                   existSeqId.add(j);
