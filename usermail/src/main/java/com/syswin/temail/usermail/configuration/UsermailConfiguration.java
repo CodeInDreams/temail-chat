@@ -31,7 +31,6 @@ import com.syswin.temail.usermail.core.IUsermailAdapter;
 import com.syswin.temail.usermail.core.util.MsgCompressor;
 import com.syswin.temail.usermail.interfaces.DomainClearMqConsumer;
 import com.syswin.temail.usermail.interfaces.UsermailMQConsumer;
-import com.syswin.temail.usermail.mongo.UsermailMongoMQConsumer;
 import com.syswin.temail.usermail.redis.RedisUsermailAdapter;
 import com.syswin.temail.usermail.rocketmq.MqClient;
 import com.syswin.temail.usermail.rocketmq.RocketMqProperties;
@@ -59,13 +58,13 @@ public class UsermailConfiguration {
         MqClient.RocketMQModel.CLUSTERING);
   }
 
-  @Bean
+/*  @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "ROCKETMQ", matchIfMissing = true)
   MqClient mongoMqClient(UsermailConfig config, UsermailMongoMQConsumer mongoMQConsumer) {
     return new MqClient(config.mongoTopic, "*", config.mongoGroup, config.namesrvAddr,
         mongoMQConsumer,
         MqClient.RocketMQModel.CLUSTERING);
-  }
+  }*/
 
   @Bean
   public MsgCompressor msgCompressor() {
@@ -86,6 +85,7 @@ public class UsermailConfiguration {
         .build();
   }
 
+/*
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.receiver", havingValue = "libraryMessage")
   MqConsumerConfig usermailMongoConsumerConfig(UsermailConfig config, UsermailMongoMQConsumer consumer) {
@@ -96,6 +96,7 @@ public class UsermailConfiguration {
             : MqImplementation.valueOf(config.receiverMqType))
         .build();
   }
+*/
 
   @Bean
   @ConditionalOnProperty(name = "spring.rocketmq.sender", havingValue = "libraryMessage")

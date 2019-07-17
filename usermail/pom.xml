@@ -109,10 +109,10 @@
       <groupId>com.syswin.temail</groupId>
       <artifactId>usermail-mq-impl</artifactId>
     </dependency>
-    <dependency>
+    <!--<dependency>
       <groupId>com.syswin.temail</groupId>
       <artifactId>usermail-mongodb</artifactId>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>com.syswin.temail</groupId>
       <artifactId>temail-sharding</artifactId>
@@ -261,10 +261,10 @@
                   <groupId>com.syswin.temail</groupId>
                   <artifactId>usermail-cassandra</artifactId>
                 </include>
-                <include>
+               <!-- <include>
                   <groupId>com.syswin.temail</groupId>
                   <artifactId>usermail-mongodb</artifactId>
-                </include>
+                </include>-->
               </includes>
             </configuration>
             <executions>

@@ -32,7 +32,6 @@ import com.syswin.temail.usermail.domains.UsermailMsgReplyDO;
 import com.syswin.temail.usermail.dto.QueryMsgReplyDTO;
 import com.syswin.temail.usermail.infrastructure.domain.IUsermailMsgReplyDB;
 import com.syswin.temail.usermail.infrastructure.domain.mapper.UsermailMsgReplyMapper;
-import com.syswin.temail.usermail.mongo.infrastructure.domain.UsermailReplyMongoMapper;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,20 +42,20 @@ public class UsermailMsgReplyDBImpl implements IUsermailMsgReplyDB {
 
   private final UsermailMsgReplyMapper usermailMsgReplyMapper;
   private final IMqAdapter mqAdapter;
-  private final UsermailReplyMongoMapper replyMongoMapper;
+  //  private final UsermailReplyMongoMapper replyMongoMapper;
   private final UsermailConfig usermailConfig;
   private final Gson gson = new Gson();
 
   @Autowired
   public UsermailMsgReplyDBImpl(
-      UsermailMsgReplyMapper usermailMsgReplyMapper, IMqAdapter mqAdapter,
-      UsermailReplyMongoMapper replyMongoMapper, UsermailConfig usermailConfig) {
+      UsermailMsgReplyMapper usermailMsgReplyMapper, IMqAdapter mqAdapter, UsermailConfig usermailConfig) {
     this.usermailMsgReplyMapper = usermailMsgReplyMapper;
     this.mqAdapter = mqAdapter;
-    this.replyMongoMapper = replyMongoMapper;
+//    this.replyMongoMapper = replyMongoMapper;
     this.usermailConfig = usermailConfig;
   }
-/**
+
+  /**
    * 新增回复消息
    *
    * @param record 回复消息信息
