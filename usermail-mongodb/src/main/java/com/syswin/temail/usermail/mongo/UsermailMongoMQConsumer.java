@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.syswin.temail.usermail.common.MongoEventEnum;
 import com.syswin.temail.usermail.common.MongoMsgEventEnum;
 import com.syswin.temail.usermail.core.IMqConsumer;
+import com.syswin.temail.usermail.mongo.application.UsermailMongoService;
 import com.syswin.temail.usermail.mongo.dto.MongoEventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

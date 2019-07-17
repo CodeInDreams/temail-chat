@@ -1,4 +1,4 @@
-package com.syswin.temail.usermail.mongo;
+package com.syswin.temail.usermail.mongo.application;
 
 import com.google.gson.Gson;
 import com.syswin.temail.usermail.common.MongoMsgEventEnum;
